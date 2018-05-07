@@ -1,0 +1,176 @@
+This is obvously not a completely realistic simulation.  For example,
+the temperature of the tank contents is based on the current outside 
+temperature using a simple formula (Tank temperature = Current Outside 
+Temperature - (72 - Current outside temperature)/5).  In reality this 
+would be a much more complex formula based on the outside temperature, 
+the insulating properties of the tank walls, and the current temperature 
+of the tank.  And that all assumes that the fluid is well mixed and 
+homogeneous.
+
+Other simplifications include
+- When ships arrive, they take 1 hour to get ready, and then the transfer
+  starts at full speed.
+- The refinery units produce w/o incidents and w/constant efficiency.
+  Always generating the same proportions of gasoline, fuel oil, etc.
+- The products produced by the simulator are, with the system configuration
+  field used to define the refinery percentage.
+	Gasoline		GASOLINE-PERCENT
+	Fuel Oil		FUEL-OIL-PERCENT
+	Jet Fuel		JET-FUEL-PERCENT
+	Still Gas		STILL-GAS-PERCENT
+	Residual Fuel Oil	RFO-PERCENT
+	Liquid Refinery Gas	LRG-PERCENT
+	Asphalt			ASPHALT-PERCENT
+	Other Refined Products	ORP-PERCENT
+	Lubricants		LUBRICANT-PERCENT
+- FWIW, I assume that the Still Gas is used to power the refinery and 
+  so we don't have do dispose of it.
+- Other products of the distillation process, like the coke, are just 
+  ignored.
+- Pumping is done by the initiator and nothing is lost to the destination
+  (i.e., no intermediate pumps are required)
+- All volume units are barrels, one barrel is 42 US gallons.
+- For the simulator, crude comes in via ships and refined products leave 
+  via tank cars and trucks. Transfers can be set up manually to ship refined
+  products via ships, but this is not done automatically by the simulator.
+
+Each ship berth (slip, type code SB) has 4 pumps.  When a ship docks, the 
+simulator creates a transfer for each hold in the ship, up to 4.  There are 
+two ship berths in the DE City refinery.
+
+Each pump has associated w/it 3 variables.  
+From the perspective of the system: 
+- a digital output which allows the system to turn the pump on and off
+- a digital input which allows the system to know what state the pump is in.
+- a analog output which allows the system to set the speed of the pump.
+
+Each tank has 2 variables.  In reality, a tank would probably have more; what
+they are is beyond the scope of this (and my knowledge).  Besides, this is 
+monitoring Oil Movement, not a complete refinery simulation.
+- a level, from which the volume is computed
+- a temperature, with which the adjustments are made for 72 degrees and 
+  creating a standard volume
+
+Explanation of tag types
+AnalogInput
+	Code: AI
+	Description: Field sensor analog
+	Explanation: Used to define the input for an analog field sensor.  The 			input values are always doubles.
+AnalogOutput
+	Code: AO
+	Description: Analog Output value
+	Explanation: Used to define the intermediate value for setting an analog
+		value on a device.  This would typically be the setpoint for
+		a control block or just the value for the device to be set at
+		Think 11 on the amplifier.
+ControlBlock
+	Code: CB
+	Description: Field control device
+	Explanation: Used to define an analog output device for which the 
+		process runs some algorithm to determine how to control a
+		device.  NOT IMPLEMENTED.
+DigitalInput
+	Code: DI
+	Description: Field sensor digital
+	Explanation: Used to define single bit inputs On/Off, Yes/No states for
+		devices.  Since the "scan_value" field is a double, there is
+		actually no reason this could be a multi-bit (integer) value.
+DigitalOutput
+	Code: DO
+	Description: Digital output
+	Explanation: The digital (single bit) equivalent of the digital input
+Field
+	Code: FLD
+	Description: Refinery field
+	Explanation: The tag that associates a geographical area with a set of
+		tags, typically tanks, pumps, valves, ships/slips, pipes
+Hot Spot
+	Code: HS
+	Description: Hot spot (link to another page)
+	Explanation: used to define a portion of an image to a page link.
+		There's	some justification for combining this with either 
+		Field or process unit since Tanks actually generate their own
+		hotspot based on the "NW Corner" fields and their tank
+		dimensions.  And since all tags have a NW Corner, we would 
+		only need to add a couple of "size" tags to the tag table to
+		eliminate the hot_spot table.
+		Pumps usually have associated with them an on/off switch
+		(digital output), an on/off sensor (digital input), 			and optionally, a speed setting (analog output).
+Pipe
+	Code: P
+	Description: Field pipe
+	Explanation: Used to define the appearance of pipes on the 1) site and
+		field pages and 2) the transfer pages.  There are currently
+		unresolved questions about how to represent the turns as well
+		as how to draw these.  None of this is currently implemented.
+Plot Group
+	Code: PG
+	Description: Group of 4 tags plotted simultaneously
+	Explanation: Used to group 4 tags together for plots to make convenient
+		comparison.
+ProcessUnit
+	Code: PU
+	Description: Process Unit
+	Explanation: Used to group a set of tags for convenient comparison of
+		values and alarm states.  This is the tabular form of the 
+		field.  Maybe they should be combined?
+RefineryUnit
+	Code:	RU
+	Description: Refinery Unit
+	Explanation: Used to define the unit that actually does the work. It
+		is used as a convenient end point for the transfers to and from
+		the process equipment (crackers, towers, etc) that actually
+		do the refining of the oil.  There are typically a few pumps
+		for sending the the products of the refining to the storage 
+		tanks prior to shipment.
+Ship
+	Code: S
+	Description: Ship
+	Explanation: Used to define the ships used to bring crude into (and 
+		potentially refined products from) the refinery.  The ships
+		have a set number of holds with defined capacities
+ShipBerth
+	Code: SB
+	Description: Slip at Refinery Dock
+	Explanation: Used to associate a ship (which changes) with the pumps
+		used to extract/insert the material for that ship.
+TankCar
+	Code: TC
+	Description: Railroad tank car
+	Explanation: Used to define a railroad car used as the source/
+		destination of product.  This probably is not a good way to
+		do this; There should probably be a "train station" similar
+		to the ship berth that could be used to send/receive material.
+		We could, in principal, track all the tank cars, but the 
+		effort seems prohibitive.
+Tank
+	Code: TK
+	Description: Liquid container
+	Explanation: Container for the crude oil used as the raw product and
+		the refined products.
+		Tanks have associated with them a level value (analog input)
+		and a temperature sensor (analog input)
+TankTruck
+	Code: TT
+	Description: Tank truck
+	Explanation: Used to define a tank truck used to receive refined
+		products and take them to market.
+		See the discussion about tank cars, it's the same issue.
+Valve
+	Code: V
+	Description: Valve
+	Explanation: Used to either turn flow on/off for a pipe or to divert 
+		material from the source pipe to two different pipes.
+		Valves usually have associated with them an on/off (1/2) switch
+		(digital output), an on/off (1/2) sensor (digital input), 			and optionally, a "aperture-sizing" setting (analog output)
+		used to set how open the valve is.
+Transfer
+	Code: XFR
+	Description: Defines the exchange of material
+	Explanation: There are two types of transfers a template and an
+		executable transfer.  The template allows the user to define
+		an automatically restartable transfer to eliminate user action
+		when a transfer completes.  I'm still not sure how I want to 
+		do that though.
+
+

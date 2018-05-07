@@ -1,0 +1,325 @@
+Table,tag,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data,,,
+name,description,tag_type_code,js_draw_file,c1_lat,c1_long,c2_lat,c2_long,active
+DeCity,Delaware City Refinery,FLD,,39.592313,-75.641903,39.579168,-75.619368,Y
+StCroix,St. Croix USVI Refinery,FLD,,39.583824,-75.627185,39.583002,-75.627185,N
+Crude,Crude Field Delaware City,FLD,,39.585193,-75.628699,39.580756,-75.623171,Y
+Refined,Refined Products Delaware City,FLD,,39.591601,-75.629544,39.587110,-75.620741,Y
+Gasoline,Gasoline Delaware City,FLD,,39.591683,-75.629544,39.587165,-75.624333,Y
+FuelOils,Fuel Oils Delaware City,FLD,,39.590369,-75.627995,39.587110,-75.623312,Y
+Asphalts,Asphalts Delaware City,FLD,,39.590232,-75.624298,39.587137,-75.620143,Y
+DCTK-C101,Crude Tank 1,TK,,39.584946,-75.628100,39.584207,-75.627185,Y
+DCTK-C102,Crude Tank 2,TK,,39.583851,-75.628100,39.583002,-75.627185,Y
+DCTK-C103,Crude Tank 3,TK,,39.582755,-75.628100,39.581961,-75.627185,Y
+DCTK-C104,Crude Tank 4,TK,,39.581687,-75.628100,39.580784,-75.627185,Y
+DCTK-C105,Crude Tank 5,TK,,39.584946,-75.626340,39.584207,-75.625459,Y
+DCTK-C106,Crude Tank 6,TK,,39.583851,-75.626340,39.583002,-75.625459,Y
+DCTK-C107,Crude Tank 7,TK,,39.582755,-75.626340,39.581961,-75.625459,Y
+DCTK-C108,Crude Tank 8,TK,,39.581687,-75.626340,39.580784,-75.625459,Y
+DCTK-C109,Crude Tank 9,TK,,39.584946,-75.624579,39.584207,-75.623699,Y
+DCTK-C110,Crude Tank 10,TK,,39.583851,-75.624579,39.583002,-75.623699,Y
+DCTK-C111,Crude Tank 11,TK,,39.582755,-75.624579,39.581961,-75.623699,Y
+DCTK-C112,Crude Tank 12,TK,,39.581687,-75.624579,39.580784,-75.623699,Y
+DCTK-G101,Gasoline Tank 1,TK,,39.591165,-75.629051,39.590672,-75.628312,Y
+DCTK-G102,Gasoline Tank 2,TK,,39.590480,-75.629051,39.589987,-75.628312,Y
+DCTK-G103,Gasoline Tank 3,TK,,39.589795,-75.629051,39.589302,-75.628312,Y
+DCTK-G104,Gasoline Tank 4,TK,,39.589110,-75.629051,39.588617,-75.628312,Y
+DCTK-G105,Gasoline Tank 5,TK,,39.588425,-75.629051,39.587932,-75.628312,Y
+DCTK-G106,Gasoline Tank 6,TK,,39.587740,-75.629051,39.587247,-75.628312,Y
+DCTK-G107,Gasoline Tank 7,TK,,39.591165,-75.627819,39.590672,-75.628312,Y
+DCTK-G108,Gasoline Tank 8,TK,,39.591165,-75.626762,39.590672,-75.626023,Y
+DCTK-G109,Gasoline Tank 9,TK,,39.591165,-75.625636,39.590672,-75.624897,Y
+DCTK-G110,Gasoline Tank 10,TK,,39.590150,-75.627819,39.589794,-75.628312,Y
+DCTK-G111,Gasoline Tank 11,TK,,39.589684,-75.627819,39.589355,-75.628312,Y
+DCTK-G112,Gasoline Tank 12,TK,,39.589246,-75.627819,39.588862,-75.628312,Y
+DCTK-G113,Gasoline Tank 13,TK,,39.588753,-75.627819,39.588397,-75.628312,Y
+DCTK-G114,Gasoline Tank 14,TK,,39.588260,-75.627819,39.587877,-75.628312,Y
+DCTK-G115,Gasoline Tank 15,TK,,39.587630,-75.627819,39.587219,-75.628312,Y
+DCTK-J101,Jet Fuel Tank 1,TK,,39.590232,-75.624931,39.589903,-75.624438,Y
+DCTK-J102,Jet Fuel Tank 2,TK,,39.589739,-75.624931,39.589410,-75.624438,Y
+DCTK-J103,Jet Fuel Tank 2,TK,,39.589246,-75.624931,39.588917,-75.624438,Y
+DCTK-J104,Jet Fuel Tank 4,TK,,39.588753,-75.624931,39.588424,-75.624438,Y
+DCTK-J105,Jet Fuel Tank 5,TK,,39.588260,-75.624931,39.587931,-75.624438,Y
+DCTK-J106,Jet Fuel Tank 6,TK,,39.587767,-75.624931,39.587438,-75.624438,Y
+DCTK-J107,Jet Fuel Tank 7,TK,,39.590232,-75.624086,39.589903,-75.623593,Y
+DCTK-J108,Jet Fuel Tank 8,TK,,39.589739,-75.624086,39.589410,-75.623593,Y
+DCTK-J109,Jet Fuel Tank 9,TK,,39.589246,-75.624086,39.588917,-75.623593,Y
+DCTK-J110,Jet Fuel Tank 10,TK,,39.588753,-75.624086,39.588424,-75.623593,Y
+DCTK-J111,Jet Fuel Tank 11,TK,,39.588260,-75.624086,39.587931,-75.623593,Y
+DCTK-J112,Jet Fuel Tank 12,TK,,39.587767,-75.624086,39.587438,-75.623593,Y
+DCTK-FO101,Fuel Oil Tank 1,TK,,39.590222,-75.626888,39.589811,-75.626360,Y
+DCTK-FO102,Fuel Oil Tank 2,TK,,39.589709,-75.626888,39.589298,-75.626360,Y
+DCTK-FO103,Fuel Oil Tank 3,TK,,39.589196,-75.626888,39.588785,-75.626360,Y
+DCTK-FO104,Fuel Oil Tank 4,TK,,39.588683,-75.626888,39.588272,-75.626360,Y
+DCTK-FO105,Fuel Oil Tank 5,TK,,39.588170,-75.626888,39.587759,-75.626360,Y
+DCTK-FO106,Fuel Oil Tank 6,TK,,39.587657,-75.626888,39.587246,-75.626360,Y
+DCTK-FO107,Fuel Oil Tank 7,TK,,39.589709,-75.625917,39.589298,-75.625389,Y
+DCTK-FO108,Fuel Oil Tank 8,TK,,39.589196,-75.625917,39.588785,-75.625389,Y
+DCTK-FO109,Fuel Oil Tank 9,TK,,39.588683,-75.625917,39.588272,-75.625389,Y
+DCTK-FO110,Fuel Oil Tank 10,TK,,39.588170,-75.625917,39.587759,-75.625389,Y
+DCTK-FO111,Fuel Oil Tank 11,TK,,39.587657,-75.625917,39.587246,-75.625389,Y
+DCTK-W101,Waxl Tank 1,TK,,39.591711,-75.622326,39.591218,-75.621727,Y
+DCTK-W102,Wax Tank 2,TK,,39.591135,-75.622291,39.590807,-75.621798,Y
+DCTK-W103,Wax Tank 3,TK,,39.591245,-75.621586,39.590807,-75.620952,Y
+DCTK-N101,Liquid Refinery Gas Tank 1,TK,,39.587712,-75.623100,39.587329,-75.622502,Y
+DCTK-N102,Liquid Refinery Gas Tank 2,TK,,39.590259,-75.623030,39.589876,-75.622572,Y
+DCTK-N103,Liquid Refinery Gas Tank 3,TK,,39.590259,-75.622291,39.589794,-75.621762,Y
+DCTK-N104,Naptha Tank 4,TK,,39.589739,-75.622185,39.589383,-75.621762,Y
+DCTK-A101,Asphalt Tank 2,TK,,39.589328,-75.622185,39.588972,-75.621762,Y
+DCTK-A102,Asphalt Tank 3,TK,,39.590204,-75.621340,39.589848,-75.620917,Y
+DCTK-A103,Asphalt Tank 4,TK,,39.589739,-75.621340,39.589383,-75.620917,Y
+DCTK-A104,Asphalt Tank 5,TK,,39.589328,-75.621340,39.588972,-75.620917,Y
+DCTK-L101,Lubricant Tank 1,TK,,39.589821,-75.623136,39.589438,-75.622502,Y
+DCTK-L102,Lubricant Tank 2,TK,,39.589246,-75.623171,39.588753,-75.622467,Y
+DCTK-L103,Lubricant Tank 3,TK,,39.588726,-75.623241,39.588178,-75.622502,Y
+DCTK-L104,Lubricant Tank 4,TK,,39.588068,-75.623065,39.587685,-75.622572,Y
+DCL-C101,Crude Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C102,Crude Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C103,Crude Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C104,Crude Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C105,Crude Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C106,Crude Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C107,Crude Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C108,Crude Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C109,Crude Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C110,Crude Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C111,Crude Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-C112,Crude Tank 12 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G101,Gasoline Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G102,Gasoline Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G103,Gasoline Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G104,Gasoline Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G105,Gasoline Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G106,Gasoline Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G107,Gasoline Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G108,Gasoline Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G109,Gasoline Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G110,Gasoline Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G111,Gasoline Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G112,Gasoline Tank 12 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G113,Gasoline Tank 13 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G114,Gasoline Tank 14 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-G115,Gasoline Tank 15 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J101,Jet Fuel Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J102,Jet Fuel Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J103,Jet Fuel Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J104,Jet Fuel Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J105,Jet Fuel Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J106,Jet Fuel Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J107,Jet Fuel Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J108,Jet Fuel Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J109,Jet Fuel Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J110,Jet Fuel Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J111,Jet Fuel Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-J112,Jet Fuel Tank 12 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO101,Fuel Oil Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO102,Fuel Oil Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO103,Fuel Oil Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO104,Fuel Oil Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO105,Fuel Oil Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO106,Fuel Oil Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO107,Fuel Oil Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO108,Fuel Oil Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO109,Fuel Oil Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO110,Fuel Oil Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-FO111,Fuel Oil Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-R101,Residual Fuel Oil Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-R102,Residual Fuel Oil Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-R103,Residual Fuel Oil Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-N101,Naptha Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-N102,Naptha Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-N103,Naptha Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-N104,Naptha Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-A102,Asphalt Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-A103,Asphalt Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-A104,Asphalt Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-A105,Asphalt Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-L101,Lubricant Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-L102,Lubricant Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-L103,Lubricant Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+DCL-L104,Lubricant Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+DCT-C101,Crude Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C102,Crude Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C103,Crude Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C104,Crude Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C105,Crude Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C106,Crude Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C107,Crude Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C108,Crude Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C109,Crude Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C110,Crude Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C111,Crude Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-C112,Crude Tank 12 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G101,Gasoline Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G102,Gasoline Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G103,Gasoline Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G104,Gasoline Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G105,Gasoline Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G106,Gasoline Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G107,Gasoline Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G108,Gasoline Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G109,Gasoline Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G110,Gasoline Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G111,Gasoline Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G112,Gasoline Tank 12 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G113,Gasoline Tank 13 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G114,Gasoline Tank 14 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-G115,Gasoline Tank 15 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J101,Jet Fuel Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J102,Jet Fuel Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J103,Jet Fuel Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J104,Jet Fuel Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J105,Jet Fuel Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J106,Jet Fuel Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J107,Jet Fuel Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J108,Jet Fuel Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J109,Jet Fuel Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J110,Jet Fuel Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J111,Jet Fuel Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-J112,Jet Fuel Tank 12 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO101,Fuel Oil Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO102,Fuel Oil Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO103,Fuel Oil Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO104,Fuel Oil Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO105,Fuel Oil Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO106,Fuel Oil Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO107,Fuel Oil Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO108,Fuel Oil Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO109,Fuel Oil Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO110,Fuel Oil Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-FO111,Fuel Oil Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-R101,Residual Fuel Oil Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-R102,Residual Fuel Oil Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-R103,Residual Fuel Oil Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-N101,Naptha Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-N102,Naptha Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-N103,Naptha Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-N104,Naptha Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-A101,Asphalt Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-A102,Asphalt Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-A103,Asphalt Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-A104,Asphalt Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-L101,Lubricant Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-L102,Lubricant Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-L103,Lubricant Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-L104,Lubricant Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-0000,External Temperature,AI,,,-75.625879,,-75.625140,Y
+DCP-0000,Barometric Pressure,AI,,,-75.625879,,-75.625140,Y
+DCR-0000,Wind Speed,AI,,,-75.625879,,-75.625140,Y
+DCM-0000,Wind Direction,AI,,,-75.625879,,-75.625140,Y
+DCT-0001,External Temperature – Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCP-0001,Barometric Pressure – Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCR-0001,Wind Speed – Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCM-0001,Wind Direction – Tomorrow,AI,,,-75.625879,,-75.625140,Y
+RefProd,,HS,,39.592029,-75.625879,,-75.625140,Y
+CrudeHS,,HS,,39.585595,-75.625879,,-75.625140,Y
+RU1CP-DI,On/Off sensor Unit 1 Crude Pump,DI,,,-75.625879,,-75.625140,Y
+RU1GP-DI,On/Off sensor Unit 1 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
+RU1FOP-DI,On/Off sensor Unit 1 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
+RU1JP-DI,On/Off sensor Unit 1 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
+RU1RFP-DI,On/Off sensor Unit 1 RFO Pump,DI,,,-75.625879,,-75.625140,Y
+RU1LRP-DI,On/Off sensor Unit 1 LRG Pump,DI,,,-75.625879,,-75.625140,Y
+RU1AP-DI,On/Off Unit 1 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
+RU1LP-DI,On/Off sensor Unit 1 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
+RU2CP-DI,On/Off sensor Unit 2 Crude Pump,DI,,,-75.625879,,-75.625140,Y
+RU2GP-DI,On/Off sensor Unit 2 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
+RU2FOP-DI,On/Off sensor Unit 2 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
+RU2JP-DI,On/Off sensor Unit 2 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
+RU2RFP-DI,On/Off sensor Unit 2 RFO Pump,DI,,,-75.625879,,-75.625140,Y
+RU2LRP-DI,On/Off sensor Unit 2 LRG Pump,DI,,,-75.625879,,-75.625140,Y
+RU2AP-DI,On/Off sensor Unit 2 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
+RU2LP-DI,On/Off sensor Unit 2 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
+SB1P2-DI,OnOff State for Slip 1 Pump 2,DI,,,-75.625879,,-75.625140,Y
+SB1P3-DI,OnOff State for Slip 1 Pump 3,DI,,,-75.625879,,-75.625140,Y
+SB1P4-DI,OnOff State for Slip 1 Pump 4,DI,,,-75.625879,,-75.625140,Y
+SB2P1-DI,OnOff State for Slip 2 Pump 1,DI,,,-75.625879,,-75.625140,Y
+SB2P2-DI,OnOff State for Slip 2 Pump 2,DI,,,-75.625879,,-75.625140,Y
+SB2P3-DI,OnOff State for Slip 2 Pump 3,DI,,,-75.625879,,-75.625140,Y
+SB2P4-DI,OnOff State for Slip 2 Pump 4,DI,,,-75.625879,,-75.625140,Y
+RU1CP-DO,On/Off switch Unit 1 Crude Pump,DO,,,-75.625879,,-75.625140,Y
+RU1GP-DO,On/Off switch Unit 1 Gasoline Pump,DO,,,-75.625879,,-75.625140,Y
+RU1FOP-DO,On/Off switch Unit 1 Fuel Oil Pump,DO,,,-75.625879,,-75.625140,Y
+RU1JP-DO,On/Off switch Unit 1 Jet Fuel Pump,DO,,,-75.625879,,-75.625140,Y
+RU1RFP-DO,On/Off switch Unit 1 RFO Pump,DO,,,-75.625879,,-75.625140,Y
+RU1LRP-DO,On/Off switch Unit 1 LRG Pump,DO,,,-75.625879,,-75.625140,Y
+RU1AP-DO,On/Off switch Unit 1 Asphalt Pump,DO,,,-75.625879,,-75.625140,Y
+RU1LP-DO,On/Off switch Unit 1 Lubricant Pump,DO,,,-75.625879,,-75.625140,Y
+RU2CP-DO,On/Off switch Unit 2 Crude Pump,DO,,,-75.625879,,-75.625140,Y
+RU2GP-DO,On/Off switch Unit 2 Gasoline Pump,DO,,,-75.625879,,-75.625140,Y
+RU2FOP-DO,On/Off switch Unit 2 Fuel Oil Pump,DO,,,-75.625879,,-75.625140,Y
+RU2JP-DO,On/Off switch Unit 2 Jet Fuel Pump,DO,,,-75.625879,,-75.625140,Y
+RU2RFP-DO,On/Off switch Unit 2 RFO Pump,DO,,,-75.625879,,-75.625140,Y
+RU2LRP-DO,On/Off switch Unit 2 LRG Pump,DO,,,-75.625879,,-75.625140,Y
+RU2AP-DO,On/Off switch Unit 2 Asphalt Pump,DO,,,-75.625879,,-75.625140,Y
+RU2LP-DO,On/Off switch Unit 2 Lubricant Pump,DO,,,-75.625879,,-75.625140,Y
+SB1P2-DO,On/Off switch for Slip 1 Pump 2,DO,,,-75.625879,,-75.625140,Y
+SB1P3-DO,On/Off switch for Slip 1 Pump 3,DO,,,-75.625879,,-75.625140,Y
+SB1P4-DO,On/Off switch for Slip 1 Pump 4,DO,,,-75.625879,,-75.625140,Y
+SB2P1-DO,On/Off switch for Slip 2 Pump 1,DO,,,-75.625879,,-75.625140,Y
+SB2P2-DO,On/Off switch for Slip 2 Pump 2,DO,,,-75.625879,,-75.625140,Y
+SB2P3-DO,On/Off switch for Slip 2 Pump 3,DO,,,-75.625879,,-75.625140,Y
+SB2P4-DO,On/Off switch for Slip 2 Pump 4,DO,,,-75.625879,,-75.625140,Y
+RU1CP-AO,Pump speed Unit 1 Crude Pump,AO,,,-75.625879,,-75.625140,Y
+RU1GP-AO,Pump speed Unit 1 Gasoline Pump,AO,,,-75.625879,,-75.625140,Y
+RU1FOP-AO,Pump speed Unit 1 Fuel Oil Pump,AO,,,-75.625879,,-75.625140,Y
+RU1JP-AO,Pump speed Unit 1 Jet Fuel Pump,AO,,,-75.625879,,-75.625140,Y
+RU1RFP-AO,Pump speed Unit 1 RFO Pump,AO,,,-75.625879,,-75.625140,Y
+RU1LRP-AO,Pump speed Unit 1 LRG Pump,AO,,,-75.625879,,-75.625140,Y
+RU1AP-AO,Pump speed Unit 1 Asphalt Pump,AO,,,-75.625879,,-75.625140,Y
+RU1LP-AO,Pump speed Unit 1 Lubricant Pump,AO,,,-75.625879,,-75.625140,Y
+RU2CP-AO,Pump speed Unit 2 Crude Pump,AO,,,-75.625879,,-75.625140,Y
+RU2GP-AO,Pump speed Unit 2 Gasoline Pump,AO,,,-75.625879,,-75.625140,Y
+RU2FOP-AO,Pump speed Unit 2 Fuel Oil Pump,AO,,,-75.625879,,-75.625140,Y
+RU2JP-AO,Pump speed Unit 2 Jet Fuel Pump,AO,,,-75.625879,,-75.625140,Y
+RU2RFP-AO,Pump speed Unit 2 RFO Pump,AO,,,-75.625879,,-75.625140,Y
+RU2LRP-AO,Pump speed Unit 2 LRG Pump,AO,,,-75.625879,,-75.625140,Y
+RU2AP-AO,Pump speed Unit 2 Asphalt Pump,AO,,,-75.625879,,-75.625140,Y
+RU2LP-AO,Pump speed Unit 2 Lubricant Pump,AO,,,-75.625879,,-75.625140,Y
+SB1P2-AO,Pump speed for Slip 1 Pump 2,AO,,,-75.625879,,-75.625140,Y
+SB1P3-AO,Pump speed for Slip 1 Pump 3,AO,,,-75.625879,,-75.625140,Y
+SB1P4-AO,Pump speed for Slip 1 Pump 4,AO,,,-75.625879,,-75.625140,Y
+SB2P1-AO,Pump speed for Slip 2 Pump 1,AO,,,-75.625879,,-75.625140,Y
+SB2P2-AO,Pump speed for Slip 2 Pump 2,AO,,,-75.625879,,-75.625140,Y
+SB2P3-AO,Pump speed for Slip 2 Pump 3,AO,,,-75.625879,,-75.625140,Y
+SB2P4-AO,Pump speed for Slip 2 Pump 4,AO,,,-75.625879,,-75.625140,Y
+RU1C-P,Unit 1 Crude Pump,P,,,-75.625879,,-75.625140,Y
+RU1G-P,Unit 1 Gasoline Pump,P,,,-75.625879,,-75.625140,Y
+RU1FO-P,Unit 1 Fuel Oil Pump,P,,,-75.625879,,-75.625140,Y
+RU1J-P,Unit 1 Jet Fuel Pump,P,,,-75.625879,,-75.625140,Y
+RU1RF-P,Unit 1 RFO Pump,P,,,-75.625879,,-75.625140,Y
+RU1LR-P,Unit 1 LRG Pump,P,,,-75.625879,,-75.625140,Y
+RU1A-P,Unit 1 Asphalt Pump,P,,,-75.625879,,-75.625140,Y
+RU1L-P,Unit 1 Lubricant Pump,P,,,-75.625879,,-75.625140,Y
+RU2C-P,Unit 2 Crude Pump,P,,,-75.625879,,-75.625140,Y
+RU2G-P,Unit 2 Gasoline Pump,P,,,-75.625879,,-75.625140,Y
+RU2FO-P,Unit 2 Fuel Oil Pump,P,,,-75.625879,,-75.625140,Y
+RU2J-P,Unit 2 Jet Fuel Pump,P,,,-75.625879,,-75.625140,Y
+RU2RF-P,Unit 2 RFO Pump,P,,,-75.625879,,-75.625140,Y
+RU2LR-P,Unit 2 LRG Pump,P,,,-75.625879,,-75.625140,Y
+RU2A-P,Unit 2 Asphalt Pump,P,,,-75.625879,,-75.625140,Y
+RU2L-P,Unit 2 Lubricant Pump,P,,,-75.625879,,-75.625140,Y
+CrudeUnit,Crude Tank Unit,PU,,39.585138,-75.625879,39.580674,-75.625140,Y
+RefindLvls,Refined Tank Levels,PU,,39.591711,-75.625879,39.587137,-75.625140,Y
+RefUnit1,,RU,,,-75.625879,,-75.625140,Y
+RefUnit2,,RU,,,-75.625879,,-75.625140,Y
+AsfaltUnit,Asphalt tank unit,PU,,,-75.625879,,-75.625140,Y
+FOUnit,Fuel Oil Tank Unit,PU,,,-75.625879,,-75.625140,Y
+GasoUnit,Gasoline Tank Unit,PU,,,-75.625879,,-75.625140,Y
+JetFuelUni,Jet Fuel Unit,PU,,,-75.625879,,-75.625140,Y
+JetFuels,Jet Fuel Unit,FLD,,39.590286,-75.626164,39.587165,-75.622361,Y
+Local,Local Weather,PU,,,-75.625879,,-75.625140,Y
+TC314,Tank Car 1,TC,,,,,,Y
+TT315,Tank Truck 1,TT,,,,,,Y
+S316,AFRAMax Ship 1,S,,,,,,Y
+S317,SuezMax Ship 2,S,,,,,,Y
+LubeUnit,Lubrication Tank Unit,PU,,39.590259,-75.626164,39.587055,-75.620530,Y
+NapthaUnit,Naptha Tanks,PU,,39.590341,-75.626164,39.587165,-75.620354,Y
+SB1P1-DI,OnOff State for Slip 1 Pump 1,DI,,,-75.625879,,-75.625140,Y
+TT2Here,Tank Truck Present Position 2,DI,,,,,,Y
+TT1Here,Tank Truck Present Position 1,DI,,,,,,Y
+TC1Here,Tank Car Present Position 1,DI,,,,,,Y
+TC2Here,Tank Car Present Position 2,DI,,,,,,Y
+Ship2Here,Ship Present Slip 2,DI,,,,,,Y
+Ship1Here,Ship Present Slip 1,DI,,,,,,Y
+End

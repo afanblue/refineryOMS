@@ -1,0 +1,16 @@
+Table,unit,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+unit_type,id,name,unit_type_id
+Data,,,
+name,code,unit_type_id
+foot,ft,length
+meter,m,length
+deg F,°F,temperature
+deg C,°C,temperature
+gallons,gal,volume
+barrels,bbl,volume
+cubic feet,ft3,volume
+in Hg,in,pressure
+mile/hr,mph,speed
+degrees,°,direction
+End

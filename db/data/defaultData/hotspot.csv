@@ -1,0 +1,8 @@
+Table,hot_spot,,,,,,
+ConstraintTable,ConstraintField,ConstraintEquivalent,ColumnConstrained,,,,
+tag,id,name,field_id,,,,
+Data,,,,,,,
+field_id,c1Lat,c1Long,c2Lat,c2Long,page_id,active
+Crude,39.58190,-75.62850,39.57990,-75.6265,8,Y,
+End,,,,,,,
+

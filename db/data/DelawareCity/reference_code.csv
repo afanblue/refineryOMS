@@ -1,0 +1,41 @@
+Table,reference_code,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data
+category,name,code,value,description,active
+TRANSFER_STATUS,Active,A,0,Transfer currently in progress,Y
+TRANSFER_STATUS,Complete,C,1,Transfer complete,Y
+TRANSFER_STATUS,Scheduled,S,2,Transfer scheduled,Y
+TRANSFER_STATUS,Incomplete,I,3,Transfer not completely defined,Y
+TRANSFER_STATUS,Pending,P,4,Transfer waiting on activation,Y
+TRANSFER_TYPE,Executable,X,0,Executable Transfer,Y
+TRANSFER_TYPE,Template,T,1,Transfer template,Y
+MENU_TYPE,Horizontal Tab,HT,0,Item for horizontal (primary) menu,Y
+MENU_TYPE,Vertical Tab,VT,1,Item for vertical (secondary) menu,Y
+ACTIVE,Yes,Y,1,Object active,Y
+ACTIVE,No,N,0,Object not active,Y
+ON-OFF,On,Y,0,On,Y
+ON-OFF,Off,N,1,Off,Y
+OFF-ON,Off,N,0,Off,Y
+OFF-ON,On,N,1,On,Y
+TF,False,F,0,False,Y
+TF,True,T,1,True,Y
+HISTORY-TYPE,None,N,0,No history stored,Y
+HISTORY-TYPE,Boxcar,B,1,Boxcar algorithm,Y
+HISTORY-TYPE,Linear,L,2,Linear algorithm,Y
+ANALOG-TYPE,Temperature,T,0,Temperature,Y
+ANALOG-TYPE,Tank Level,L,1,Tank Level,Y
+ANALOG-TYPE,Flow Rate,F,2,Flow Rate,Y
+ANALOG-TYPE,Pressure,P,3,Pressure,Y
+ANALOG-TYPE,Miscellaneous,M,4,Miscellaneous,Y
+CONTENT-TYPE,Crude,C,1,Crude Oil,Y
+CONTENT-TYPE,Gasoline,G,2,Regular Gasoline,Y
+CONTENT-TYPE,FuelOil,FO,4,Fuel Oil,Y
+CONTENT-TYPE,JetFuel,JF,5,Jet Fuel,Y
+CONTENT-TYPE,Naptha,N,6,Naptha,Y
+CONTENT-TYPE,Lubricants,L,7,Lubricants,Y
+CONTENT-TYPE,Waxes,W,8,Waxes,Y
+CONTENT-TYPE,Coke,CK,9,Petroleum Coke,Y
+CONTENT-TYPE,Asphalt,A,10,Asphalt/Road Oil,Y
+CONTENT-TYPE,StillGas,SG,11,Still Gas,Y
+ANALOG-TYPE,Angle heading,R,5,Heading,Y
+End

@@ -1,0 +1,7 @@
+Table,role,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+role,id,name,parent_id
+Data,,,
+name,parent_id,active
+Operator,Admin,Y
+End

@@ -1,0 +1,6 @@
+Table,hot_spot,,
+Constraint,Table,Constraint Field,Column Constrained
+tag,id,name,field_id
+Data,,,
+field_id,c1Lat,c1Long,c2Lat,c2Long,page_id,active
+End

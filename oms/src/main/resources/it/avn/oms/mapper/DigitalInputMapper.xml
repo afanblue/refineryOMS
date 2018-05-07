@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.avn.oms.mapper.DigitalInputMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<DigitalInput> getAllDigitalInputs( );
+	
+	DigitalInput getDigitalInput( String key);
+	
+	Integer updateDigitalInputStatic( DigitalInput t );
+
+	Integer insertDigitalInput( DigitalInput t );
+	
+	       tag_id: 24
+        scan_int: 6
+     scan_offset: 4
+    current_scan: 0
+  hist_type_code: L
+      scan_value: NULL
+       scan_time: NULL
+     alarm_state:
+      alarm_code:
+      prev_value: NULL
+  prev_scan_time: NULL
+ last_hist_value: NULL
+  last_hist_time: NULL
+      value_view: 
+-->  
+
+  <resultMap id="digitalInputResultMap" type="DigitalInput">
+     <result property="tagId"           column="tag_id"/>
+     <result property="tag.id"          column="tag_id"/>
+     <result property="tag.name"        column="name"/>
+     <result property="tag.description" column="description"/>
+     <result property="tag.c1Lat"       column="c1_lat"/>
+     <result property="tag.c1Long"      column="c1_long"/>
+     <result property="tag.c2Lat"       column="c2_lat"/>
+     <result property="tag.c2Long"      column="c2_long"/>
+     <result property="tag.tagTypeCode" column="tag_type_code"/>
+     <result property="tag.active"      column="active"/>
+     <result property="scanInt"         column="scan_int"/>
+     <result property="scanOffset"      column="scan_offset" />
+     <result property="currentScan"     column="current_scan"/>
+     <result property="histTypeCode"    column="hist_type_code"/>
+     <result property="alarmState"      column="alarmState" />
+     <result property="alarmCode"       column="alarmCode" />
+     <result property="scanValue"       column="scan_value" />
+     <result property="scanTime"        column="scan_time" />
+     <result property="prevValue"       column="prev_value" />
+     <result property="prevScanTime"    column="prev_scan_time"/>
+     <result property="lastHistValue"   column="last_hist_value"/>
+     <result property="lastHistTime"    column="last_hist_time"/>
+     <result property="valueView"       column="value_view"/>
+     <result property="simValue"        column="integer_value"/>
+     <result property="updated"         column="updated" />
+  </resultMap>
+  
+  <resultMap id="diTagMap" type="Taglet" >
+    <result property="id"            column="id" />
+    <result property="name"          column="name" />
+    <result property="description"   column="description" />
+    <result property="tagTypeCode"   column="tag_type_code" />
+    <result property="tagTypeInfo"   column="tag_type_info" />
+    <result property="active"        column="active" />    
+  </resultMap>
+
+  <select id="getAllActiveDItags" resultMap="digitalInputResultMap">
+    select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
+         , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
+         , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
+         , di.last_hist_time, x.integer_value, x.updated
+      from digital_input di join tag t on di.tag_id = t.id
+           join xfer x on t.id = x.id
+     where t.active = 'Y'
+     order by 2
+  </select>
+
+  <select id="getAllUpdatedDItags" resultMap="digitalInputResultMap">
+    select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
+         , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
+         , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
+         , di.last_hist_time, x.integer_value, x.updated
+      from digital_input di join tag t on di.tag_id = t.id
+           join xfer x on t.id = x.id
+     where t.active = 'Y'
+       and x.updated = 1 
+     order by 2
+  </select>
+
+  <select id="getAllDigitalInputs" resultMap="digitalInputResultMap">
+    select di.tag_id, t.name, t.description, t.c1_lat, t.c1_long
+         , t.c2_lat, t.c2_long, t.tag_type_code, t.active
+         , di.scan_int, di.scan_offset, di.current_scan
+         , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
+         , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
+         , di.last_hist_time, di.value_view
+      from digital_input di join tag t on di.tag_id = t.id
+     order by 2
+  </select>
+
+  <select id="getAllDITaglets" resultMap="diTagMap">
+    select t.id, t.name, t.description, t.tag_type_code, ai.type_code tag_type_info, t.active
+      from digital_input di join tag t on di.tag_id = t.id
+  </select>
+  
+  <select id="getDigitalInput" resultMap="digitalInputResultMap">
+    select di.tag_id, t.name, t.description, t.c1_lat, t.c1_long
+         , t.c2_lat, t.c2_long, t.tag_type_code, t.active
+         , di.scan_int, di.scan_offset, di.current_scan
+         , di.hist_type_code, di.scan_value, di.scan_time, di.prev_value
+         , di.prev_scan_time, di.last_hist_value, di.last_hist_time
+         , di.value_view, di.alarm_state, di.alarm_code
+      from digital_input di join tag t on di.tag_id = t.id
+     where di.tag_id = #{parm1}
+  </select>
+  
+  <select id="getAllHistoryTypes" resultType="ReferenceCode" >
+    select id, category, name, code, value, description, active
+      from history_type_vw
+     order by code
+  </select>
+
+  <update id="updateDigitalInput" parameterType="DigitalInput">
+    update digital_input
+       set scan_int = #{scanInt}
+         , scan_offset = #{scanOffset}
+         , hist_type_code = #{histTypeCode}
+         , alarm_state = #{alarmState}
+         , alarm_code = #{alarmCode}
+         , value_view = #{valueView}
+     where tag_id = #{tagId}
+  </update>
+      
+  <update id="updateDigitalInputStatic" parameterType="DigitalInput">
+    update digital_input
+       set scan_int = #{scanInt}
+         , scan_offset = #{scanOffset}
+         , hist_type_code = #{histTypeCode}
+         , alarm_state = #{alarmState}
+         , alarm_code = #{alarmCode}
+         , value_view = #{valueView}
+     where tag_id = #{tagId}
+  </update>
+  
+  <insert id="insertDigitalInput" parameterType="DigitalInput">
+    insert digital_input
+         ( tag_id, scan_int, scan_offset, current_scan, hist_type_code
+         , scan_value, scan_time, alarm_state, alarm_code
+         , prev_value, prev_scan_time, last_hist_value, last_hist_time
+         , value_view )
+   values( #{tagId}, #{scanInt}, #{scanOffset}, 0, #{histTypeCode}
+         , null, null, #{alarmState}, #{alarmCode}
+         , null, null, null, null, #{valueView} )
+  </insert>
+  
+</mapper>

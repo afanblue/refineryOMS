@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.avn.oms.mapper.AnalogInputMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<AnalogInput> getAllAnalogInputs( );
+	
+	AnalogInput getAnalogInput( String key);
+	
+	Integer updateAnalogInputStatic( AnalogInput t );
+
+	Integer insertAnalogInput( AnalogInput t );
+	
+	       tag_id: 24
+       type_code: L
+        scan_int: 6
+     scan_offset: 4
+    current_scan: 0
+      zero_value: 0
+       max_value: 100
+  hist_type_code: L
+         percent: 2
+           slope: 0
+       raw_value: NULL
+      scan_value: NULL
+       scan_time: NULL
+      prev_value: NULL
+       prev_time: NULL
+ last_hist_value: NULL
+  last_hist_time: NULL
+              hh: 47.0000
+              hi: 42.0000
+              lo: 10.0000
+              ll: 5.0000
+-->  
+
+  <resultMap id="analogInputResultMap" type="AnalogInput">
+     <result property="tagId"           column="tag_id"/>
+     <result property="tag.id"          column="tag_id"/>
+     <result property="tag.name"        column="name" />
+     <result property="tag.description" column="description" />
+     <result property="tag.tagTypeCode" column="tag_type_code" />
+     <result property="tag.c1Lat"       column="c1_lat"/>
+     <result property="tag.c1Long"      column="c1_long"/>
+     <result property="tag.c2Lat"       column="c2_lat"/>
+     <result property="tag.c2Long"      column="c2_long"/>
+     <result property="tag.active"      column="active" />
+     <result property="tagTypeId"       column="tag_type_id" />
+     <result property="typeCode"        column="type_code"/>
+     <result property="scanInt"         column="scan_int"/>
+     <result property="scanOffset"      column="scan_offset" />
+     <result property="currentScan"     column="current_scan"/>
+     <result property="zeroValue"       column="zero_value"/>
+     <result property="maxValue"        column="max_value"/>
+     <result property="histTypeCode"    column="hist_type_code"/>
+     <result property="percent"         column="percent" />
+     <result property="slope"           column="slope" />
+     <result property="rawValue"        column="raw_value" />
+     <result property="scanValue"       column="scan_value" />
+     <result property="scanTime"        column="scan_time" />
+     <result property="prevValue"       column="prev_value" />
+     <result property="prevTime"        column="prev_time"/>
+     <result property="lastHistValue"   column="last_hist_value"/>
+     <result property="lastHistTime"    column="last_hist_time"/>
+     <result property="hh"              column="hh"/>
+     <result property="hi"              column="hi"/>
+     <result property="lo"              column="lo" />
+     <result property="ll"              column="ll" />
+     <result property="intSinceLhs"     column="int_since_lhs" />
+     <result property="intScanTime"     column="int_scan_time" />
+     <result property="simValue"        column="float_value" />
+     <result property="simScanTime"     column="pmc_scan_time" />
+     <result property="updated"         column="updated" />
+  </resultMap>
+  
+  <resultMap id="idNameMap" type="IdName" >
+    <result property="id"            column="id" />
+    <result property="name"          column="name" />
+  </resultMap>
+  
+  <resultMap id="aiValueMap" type="AIValue" >
+    <result property="tagId"       column="id" />
+    <result property="name"        column="name" />
+    <result property="value"       column="value" />
+    <result property="valueText"   column="value_text" />
+    <result property="scanTime"    column="scan_time" />
+    <result property="alarmCode"   column="code" />
+    <result property="alarmColor"  column="color" /> 
+  </resultMap>
+
+  <select id="getAllActiveAItags" resultMap="analogInputResultMap">
+    select ai.tag_id, t.name, tt.id tag_type_id, ai.type_code, ai.scan_int
+         , ai.scan_offset, ai.current_scan, ai.zero_value, ai.max_value
+         , ai.hist_type_code, ai.percent, ai.slope, ai.raw_value, ai.scan_value
+         , ai.scan_time, ai.prev_value, ai.prev_time, ai.last_hist_value
+         , ai.last_hist_time, ai.hh, ai.hi, ai.lo, ai.ll, x.float_value
+         , coalesce(UNIX_TIMESTAMP(x.scan_time)
+                  - UNIX_TIMESTAMP(ai.last_hist_time), 0) int_since_lhs
+		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,x.scan_time),0) int_scan_time
+         , x.updated, x.scan_time pmc_scan_time, x.float_value
+      from analog_input ai join tag t on ai.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+           join xfer x on t.id = x.id 
+     where t.active = 'Y'
+     order by 7, 2
+  </select>
+
+  <select id="getAllUpdatedAItags" resultMap="analogInputResultMap">
+    select ai.tag_id, t.name, tt.id tag_type_id, ai.type_code, ai.scan_int
+         , ai.scan_offset, ai.current_scan, ai.zero_value, ai.max_value
+         , ai.hist_type_code, ai.percent, ai.slope, ai.raw_value, ai.scan_value
+         , ai.scan_time, ai.prev_value, ai.prev_time, ai.last_hist_value
+         , ai.last_hist_time, ai.hh, ai.hi, ai.lo, ai.ll, x.float_value
+         , coalesce(UNIX_TIMESTAMP(x.scan_time)
+                  - UNIX_TIMESTAMP(ai.last_hist_time), 0) int_since_lhs
+		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,x.scan_time),0) int_scan_time
+         , x.updated, x.scan_time pmc_scan_time, x.float_value
+      from analog_input ai join tag t on ai.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+           join xfer x on t.id = x.id 
+     where t.active = 'Y'
+       and x.updated = 1
+     order by 7, 2
+  </select>
+
+  <select id="getAllAnalogInputs" resultMap="analogInputResultMap">
+    select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ai.type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+         , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
+         , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
+         , ai.prev_time, ai.last_hist_value, ai.last_hist_time
+         , ai.hh, ai.hi, ai.lo, ai.ll
+      from analog_input ai join tag t on ai.tag_id = t.id
+     order by 7, 2
+  </select>
+
+  <select id="getAllAIIdNameByType" resultMap="idNameMap">
+    select t.id, t.name
+      from analog_input ai join tag t on ai.tag_id = t.id
+     where ai.type_code = #{parm1}
+  </select>
+  
+  <select id="getAllAnalogInputsByType" resultMap="analogInputResultMap">
+    select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ai.type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+         , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
+         , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
+         , ai.prev_time, ai.last_hist_value, ai.last_hist_time
+         , ai.hh, ai.hi, ai.lo, ai.ll
+      from analog_input ai join tag t on ai.tag_id = t.id
+     where ai.type_code = #{parm1}
+     order by 7, 2
+  </select>
+
+  <select id="getAnalogInput" resultMap="analogInputResultMap">
+    select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ai.type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+         , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
+         , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
+         , ai.prev_time, ai.last_hist_value, ai.last_hist_time
+         , ai.hh, ai.hi, ai.lo, ai.ll
+      from analog_input ai join tag t on ai.tag_id = t.id
+     where t.id = #{parm1}
+  </select>
+  
+  <select id="getCurrentAIValues" resultMap="aiValueMap" >
+    select ai.tag_id id, scan_value/(max_value-zero_value) value
+         , coalesce(an.color,'darkgreen') color
+      from analog_input ai left outer join alarm_info an on ai.tag_id=an.tag_id 
+     order by ai.tag_id
+  </select>
+  
+  <select id="getAllAnalogInputTypes" resultType="ReferenceCode" >
+    select id, category, name, code, value, description, active
+      from analog_type_vw
+     order by code
+  </select>
+
+  <select id="getAllHistoryTypes" resultType="ReferenceCode" >
+    select id, category, name, code, value, description, active
+      from history_type_vw
+     order by code
+  </select>
+    
+  <update id="updateAnalogInput" parameterType="AnalogInput">
+    update analog_input
+       set percent = #{percent}
+         , slope = #{slope}
+         , scan_value = #{scanValue}
+         , scan_time = #{scanTime}
+         , prev_value = #{prevValue}
+         , prev_time = #{prevTime}
+         , last_hist_value = #{lastHistValue}
+         , last_hist_time = #{lastHistTime}
+     where tag_id = #{tagId}
+  </update>
+
+  <update id="updateAnalogInputStatic" parameterType="AnalogInput">
+    update analog_input
+       set type_code = #{typeCode}
+         , scan_int = #{scanInt}
+         , scan_offset = #{scanOffset}
+         , current_scan = #{currentScan}
+         , zero_value = #{zeroValue}
+         , max_value = #{maxValue}
+         , hist_type_code = #{histTypeCode}
+         , percent = #{percent}
+         , hh = #{hh}
+         , hi = #{hi}
+         , lo = #{lo}
+         , ll = #{ll}
+     where tag_id = #{tagId}
+  </update>
+  
+  <insert id="insertAnalogInput" parameterType="AnalogInput">
+    insert analog_input
+         ( tag_id, type_code, scan_int, scan_offset, zero_value, max_value
+         , hist_type_code, percent, slope, raw_value, scan_value, scan_time
+         , prev_value, prev_time, last_hist_value, last_hist_time
+         , hh, hi, lo, ll )
+   values( #{tagId}, #{typeCode}, #{scanInt}, #{scanOffset}, #{zeroValue}, #{maxValue}
+         , #{histTypeCode}, #{percent}, null, null, null, null
+         , null, null, null, null, #{hh}, #{hi}, #{lo}, #{ll} )
+  </insert>
+  
+  <select id="getProcUnitValues" resultMap="aiValueMap">
+    select tc.id, tc.name, ai.scan_value value
+         , concat(format(ai.scan_value,2)," ", u.code) value_text
+         , ai.scan_time
+         , coalesce(alm.code,'NORM') code, ac.item_value color
+      from rel_tag_tag rtt 
+      join tag tp on rtt.parent_tag_id = tp.id 
+      join tag tc on rtt.child_tag_id = tc.id
+      join analog_input ai on ai.tag_id = tc.id
+      join unit u on ai.unit_id = u.id
+      left outer join alarm_info alm on ai.tag_id = alm.tag_id
+      left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name          
+     where tp.name = #{parm1}
+    union
+    select tc.id, tc.name, ai.scan_value value
+         , concat(format(ai.scan_value,2)," ",u.code) value
+         , ai.scan_time
+         , coalesce(alm.code,'NORM') code, ac.item_value color
+      from rel_tag_tag rtt1
+      join rel_tag_tag rtt2 on rtt1.child_tag_id = rtt2.parent_tag_id
+      join tag tp on rtt1.parent_tag_id = tp.id
+      join tag tc on rtt2.child_tag_id = tc.id
+      join analog_input ai on ai.tag_id = tc.id
+      join unit u on ai.unit_id = u.id
+      left outer join alarm_info alm on ai.tag_id = alm.tag_id
+      left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name
+     where tp.name = #{parm1}      
+     order by 2
+  </select>
+  
+</mapper>

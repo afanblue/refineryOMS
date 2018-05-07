@@ -1,0 +1,214 @@
+c@charset "utf-8";
+/* CSS Document */
+
+/* site colors:
+
+#1a446c - blue grey
+
+#689dc1 - light blue
+
+#d4e6f4 - very light blue
+
+#eee4b9 - light tan
+
+#8d0d19 - burgandy
+
+#000000 - black
+
+#ffffff - white
+
+*/
+
+
+body { width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; }
+
+#header { 
+	height: 70px; 
+	margin: 0px; 
+	padding: 0px;
+	text-align: left; 
+/*	background: #1A446c; color: #d4e6f4;  removed AVN 2017/11/29 */
+}
+
+#header h1 { padding: .25em; font-size: 2em; margin: 0px; }
+
+#main { 
+	margin: 0px; padding: 0px; 
+	height: 680px; width: 100%; 
+	background: black; color: white;
+}
+
+.content { 
+	height:480px; width: 80%; 
+	background: black; color:#d4e6f4;
+	font-size: .875rem; 
+}
+
+.vtab { 
+	width: 20%; 
+	background: black; color:#d4e6f4; 
+	font-size: .875rem;
+	padding: 5px 5px 0px 5px;
+}
+
+.fldtab { 
+	background: black; color:#d4e6f4; 
+	font-size: .875rem;
+	padding: 5px 5px 0px 5px;
+}
+
+
+#footer { 
+	height: 2em; 
+	margin: 0px; 
+	padding: 1em; 
+	text-align: center; 
+/*	background: #1a446c; color: #d4e6f4;  Removed AVN 2017/11/29 */
+}
+
+table.w100 { width:100% }
+table.w400p { width:400px }
+table.w600p { width:600px }
+
+td { color: white; }
+th { color: white; }
+input { color: black; }
+textarea { color: black; }
+button { color: black; background:white; }
+
+td.w50 { width:50% }
+td.w33 { width:33% }
+td.w25 { width:25% }
+td.w20 { width:20% }
+
+a:link              { color:white; text-decoration:underline; }
+a:visited           { color:white; text-decoration:underline; }
+a:hover             { color:white; text-decoration:underline; }
+a:active            { color:white; text-decoration:underline; }
+
+a.otherLink:link    { color:white; text-decoration:none; }
+a.otherLink:visited { color:white; text-decoration:none; }
+a.otherLink:hover   { color:white; text-decoration:none; }
+a.otherLink:active  { color:white; text-decoration:none; }
+
+/* The following is from:                            */
+/* Terence Ordona, portal[AT]imaputz[DOT]com         */
+/* http://creativecommons.org/licenses/by-sa/2.0/    */
+
+/* define height and width of scrollable area. Add 16px to width for scrollbar          */
+div.tableContainer {
+	clear: both;
+	border: 1px solid #000000;
+	height: 400px;
+	overflow: auto;
+	width: 100%
+}
+
+/* Reset overflow value to hidden for all non-IE browsers. */
+html>body div.tableContainer {
+	overflow: hidden;
+	width: 1000px
+}
+
+/* define width of table. IE browsers only                 */
+div.tableContainer table {
+	float: left;
+	width: 1000px
+}
+
+/* define width of table. Add 16px to width for scrollbar.           */
+/* All other non-IE browsers.                                        */
+html>body div.tableContainer table {
+	width: 980px 
+}
+
+/* set table header to a fixed position. WinIE 6.x only                                       */
+/* In WinIE 6.x, any element with a position property set to relative and is a child of       */
+/* an element that has an overflow property set, the relative value translates into fixed.    */
+/* Ex: parent element DIV with a class of tableContainer has an overflow property set to auto */
+thead.fixedHeader tr {
+	position: relative
+}
+
+/* set THEAD element to have block level attributes. All other non-IE browsers            */
+/* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+html>body thead.fixedHeader tr {
+	display: block
+}
+
+/* make the TH elements pretty */
+thead.fixedHeader th {
+	background: #000000;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	font-weight: normal;
+	padding: 1px 1px 1px 1px;
+	text-align: left
+}
+
+/* make the A elements pretty. makes for nice clickable headers                */
+thead.fixedHeader a, thead.fixedHeader a:link, thead.fixedHeader a:visited {
+	color: #FFF;
+	display: block;
+	text-decoration: none;
+	width: 950px
+}
+
+/* make the A elements pretty. makes for nice clickable headers                */
+/* WARNING: swapping the background on hover may cause problems in WinIE 6.x   */
+thead.fixedHeader a:hover {
+	color: #FFF;
+	display: block;
+	text-decoration: underline;
+	width: 950px
+}
+
+/* define the table content to be scrollable                                              */
+/* set TBODY element to have block level attributes. All other non-IE browsers            */
+/* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+/* induced side effect is that child TDs no longer accept width: auto                     */
+html>body tbody.scrollContent {
+	display: block;
+	height: 360px;
+	overflow: auto;
+	width: 810px
+}
+
+/* make TD elements pretty. Provide alternating classes for striping the table */
+/* http://www.alistapart.com/articles/zebratables/                             */
+tbody.scrollContent td, tbody.scrollContent tr.normalRow td {
+	background: #000000;
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+	border-top: none
+	padding: 1px 1px 1px 1px
+}
+
+tbody.scrollContent tr.alternateRow td {
+	background: #EEE;
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	padding: 1px 1px 1px 1px
+}
+
+/* define width of TH elements: 1st, 2nd, and 3rd respectively.          */
+/* Add 16px to last TH for scrollbar padding. All other non-IE browsers. */
+/* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+html>body thead.fixedHeader th {  }
+
+html>body thead.fixedHeader th + th {  }
+
+html>body thead.fixedHeader th + th + th {  }
+
+/* define width of TD elements: 1st, 2nd, and 3rd respectively.          */
+/* All other non-IE browsers.                                            */
+/* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+html>body tbody.scrollContent td { }
+
+html>body tbody.scrollContent td + td { }
+
+html>body tbody.scrollContent td + td + td { }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration    PUBLIC 
+            "-//mybatis.org//DTD Config 3.0//EN"    
+            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+            
+<configuration>
+
+     <typeAliases>
+        <typeAlias alias="AIValue"        type="it.avn.oms.domain.AIValue" />
+     	<typeAlias alias="Alarm"          type="it.avn.oms.domain.Alarm"/>
+     	<typeAlias alias="AlarmType"      type="it.avn.oms.domain.AlarmType"/>
+     	<typeAlias alias="AlarmMessage"   type="it.avn.oms.domain.AlarmMessage"/>
+     	<typeAlias alias="AnalogInput"    type="it.avn.oms.domain.AnalogInput"/>
+     	<typeAlias alias="Category"       type="it.avn.oms.domain.Category" />
+        <typeAlias alias="Config"         type="it.avn.oms.domain.Config"/>
+        <typeAlias alias="Customer"       type="it.avn.oms.domain.Customer"/>
+     	<typeAlias alias="DigitalInput"   type="it.avn.oms.domain.DigitalInput"/>
+     	<typeAlias alias="Field"          type="it.avn.oms.domain.Field" />
+     	<typeAlias alias="History"        type="it.avn.oms.domain.History" />
+     	<typeAlias alias="HistoryData"    type="it.avn.oms.domain.HistoryData" />
+     	<typeAlias alias="HistoryRequest" type="it.avn.oms.domain.HistoryRequest" />
+     	<typeAlias alias="IdName"         type="it.avn.oms.domain.IdName" />
+     	<typeAlias alias="Menu"           type="it.avn.oms.domain.Menu" />
+     	<typeAlias alias="PlotGroup"      type="it.avn.oms.domain.PlotGroup" />
+     	<typeAlias alias="ProcessUnit"    type="it.avn.oms.domain.ProcessUnit" />
+        <typeAlias alias="ReferenceCode"  type="it.avn.oms.domain.ReferenceCode" />
+        <typeAlias alias="RelTagTag"      type="it.avn.oms.domain.RelTagTag" />
+        <typeAlias alias="Role"           type="it.avn.oms.domain.Role" />
+        <typeAlias alias="RolePriv"       type="it.avn.oms.domain.RolePriv" />
+        <typeAlias alias="Tag"            type="it.avn.oms.domain.Tag"/>
+        <typeAlias alias="Taglet"         type="it.avn.oms.domain.Taglet"/>
+        <typeAlias alias="Tank"           type="it.avn.oms.domain.Tank"/>
+        <typeAlias alias="TankData"       type="it.avn.oms.domain.TankData"/>
+        <typeAlias alias="Transfer"       type="it.avn.oms.domain.Transfer"/>
+        <typeAlias alias="User"           type="it.avn.oms.domain.User"/>
+        <typeAlias alias="UserPriv"       type="it.avn.oms.domain.UserPriv"/>
+        <typeAlias alias="Validation"     type="it.avn.oms.domain.Validation"/>
+        <typeAlias alias="Volume"         type="it.avn.oms.domain.Volume" />
+        <typeAlias alias="Vessel"         type="it.avn.oms.domain.Vessel"/>
+        <typeAlias alias="Watchdog"       type="it.avn.oms.domain.Watchdog" />
+        <typeAlias alias="Xfer"           type="it.avn.oms.domain.Xfer" />
+     </typeAliases>
+
+<!--      
+     <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver"   value="com.mysql.jdbc.Driver"/>
+                <property name="url"      value="jdbc:mysql://localhost:3306/oms"/> 
+                <property name="username" value="oms"/> 
+                <property name="password" value="omsx"/>
+            </dataSource>
+        </environment>
+    </environments>
+-->
+    <mappers> 
+        <package name="it.avn.oms.mapper" /> 
+    </mappers> 
+    
+</configuration>

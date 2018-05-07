@@ -1,0 +1,11 @@
+Table,menu,,
+ConstraintTable,ConstraintField,ConstraintEquivalent,ColumnConstrained
+menu_type_vw,id,code,menu_type_id
+Data,,,
+menu_type_id,text,page_id,order_no,active
+HT,Admin,1,5,Y
+HT,Alarms,2,4,Y
+HT,Field Displays,3,1,Y
+HT,Transfers,4,3,Y
+HT,Process Units,5,2,Y
+End

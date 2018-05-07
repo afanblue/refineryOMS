@@ -1,0 +1,5 @@
+Table,vertices,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+tag,id,name,obj_id
+Data,,,
+End

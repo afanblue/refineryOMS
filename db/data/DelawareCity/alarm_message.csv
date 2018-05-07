@@ -1,0 +1,13 @@
+Table,alarm_message,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data
+abbr,message
+TKHH,Tank is nearing overflow limit
+TKHI,Tank has more than is allowed
+TKLL,Tank is almost empty
+TKLO,Tank is getting lower than desirable
+HH,High High Alarm
+HI,High Alarm
+LO,Low Alarm
+LL,Low Low Alarm
+End

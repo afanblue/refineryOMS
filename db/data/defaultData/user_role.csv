@@ -1,0 +1,9 @@
+Table,user_role,,
+ConstraintTable,ConstraintField,ConstraintEquivalent,ColumnConstrained
+user,id,alias,user_id
+role,id,name,role_id
+Data,,,
+user_id,role_id
+admin,Admin
+operator,Operator
+End

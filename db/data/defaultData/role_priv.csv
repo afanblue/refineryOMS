@@ -1,0 +1,35 @@
+Table,role_priv,,
+Constraint,Table,Constraint Field,Column Constrained
+role,id,name,parent_id
+Data,,,
+role_id,priv_id
+Admin,View Admin Tab
+Admin,View Transfer Tab
+Admin,User Admin
+Admin,Configuration
+Admin,Tank Admin
+Admin,Field Admin
+Admin,Role Admin
+Admin,Alarm Message Admin
+Admin,Alarm Type Admin
+Admin,Transfer Admin
+Admin,View Site
+Admin,Admin Links
+Admin,View Links
+Admin,View Process Units
+Admin,Admin Process Units
+Operator,View Alarms Tab
+Operator,View Field Displays Tab
+Operator,View Fields
+Operator,View Users
+Operator,View Tanks
+Operator,View Crude Field
+Operator,Execute Crude Field
+Operator,View Refined Field
+Operator,Execute Refined Field
+Operator,View Transfer
+Operator,Execute Transfer
+Operator,View Alarms
+Operator,Acknowledge Alarms
+Operator,View Process Units
+End

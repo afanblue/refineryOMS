@@ -1,0 +1,24 @@
+Table,page
+ConstraintTable,ConstraintField,ConstraintEquivalent,ColumnConstrained
+privilege,id,name,exec_priv_id
+privilege,id,name,view_priv_id
+Data
+name,uri,view_priv_id,exec_priv_id,active
+User admin,admin_user_list.php,View Users,User Admin,Y
+Configuration,configuration.php,Configuration,Configuration,Y
+Tank Admin,admin_tank_list.php,View Tanks,Tank Admin,Y
+Role Admin,admin_role_list.php,Role Admin,Role Admin,Y
+Alarm Message Admin,admin_alarm_message.php,Alarm Message Admin,Alarm Message Admin,Y
+Alarm Type Admin,admin_alarm_type.php,Alarm Type Admin,Alarm Type Admin,Y
+Site Overview,display_site.php,View Site,View Site,Y
+Crude,display_field.php?field=Crude,View Crude Field,Execute Crude Field,Y
+Refined,display_field.php?field=Refined,View Refined Field,Execute Refined Field,Y
+Active Transfers (list),active_transfers_list.php,View Transfer,Execute Transfer,Y
+Active Transfers (crude),active_transfers.php?field=crude,View Transfer,Execute Transfer,Y
+Alarms,alarms.php,View Alarms,Acknowledge Alarms,Y
+Field Admin,admin_field_list.php,View Fields,Field Admin,Y
+Page Links,admin_link_list.php,View Links,Admin Links,Y
+Admin Process Units,admin_process_unit_list.php,Admin Process Units,Admin Process Units,Y
+Process Unit,admin_process_unit.php,Admin Process Units,Admin Process Units,Y
+Process Units,process_units.php,View Process Units,View Process Units,Y
+End

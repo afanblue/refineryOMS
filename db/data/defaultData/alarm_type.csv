@@ -1,0 +1,10 @@
+Table,alarm_type,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+alarm_message,id,abbr,alarm_msg_id
+Data,,,
+priority,alarm_msg_id,code
+4,TKHH,HH
+3,TKHI,HI
+2,TKLL,LL
+1,TKLO,LO
+End

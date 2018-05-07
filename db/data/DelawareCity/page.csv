@@ -1,0 +1,32 @@
+Table,page
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+privilege,id,name,exec_priv_id
+privilege,id,name,view_priv_id
+Data
+name,uri,view_priv_id,exec_priv_id,active
+Configuration,configuration.php,Configuration,Configuration,Y
+Alarm Message Admin,admin_alarm_message_list.php,Alarm Message Admin,Alarm Message Admin,Y
+Alarm Type Admin,admin_alarm_type_list.php,Alarm Type Admin,Alarm Type Admin,Y
+AI Admin,admin_ai_list.php,AI Admin,AI Admin,Y
+AO Admin,admin_di_list.php,AO Admin,AO Admin,Y
+Field Admin,admin_field_list.php,View Fields,Field Admin,Y
+Page Link Admin,admin_link_list.php,View Links,Admin Links,Y
+Process Unit Admin,admin_process_unit_list.php,Admin Process Units,Admin Process Units,Y
+Tank Admin,admin_tank_list.php,View Tanks,Tank Admin,Y
+Role Admin,admin_role_list.php,Role Admin,Role Admin,Y
+User admin,admin_user_list.php,View Users,User Admin,Y
+Alarms,alarms.php,View Alarms,Acknowledge Alarms,Y
+Site Overview,display_site.php,View Site,View Site,Y
+Crude,display_field.php?field=Crude,View Crude Field,Execute Crude Field,Y
+Refined,display_field.php?field=Refined,View Refined Field,Execute Refined Field,Y
+Active Transfers (list),active_transfers_list.php,View Transfer,Execute Transfer,Y
+Active Transfers (crude),active_transfers.php?field=crude,View Transfer,Execute Transfer,Y
+Process Unit,admin_process_unit.php,Admin Process Units,Admin Process Units,Y
+Process Unit List,process_units.php,View Process Units,View Process Units,Y
+Transfer Admin,admin_transfers.php,View Transfer,View Transfer,Y
+Vessel Admin,admin_vessel.php,View Vessels,Admin Vessels,Y
+Site Star Plot,,View Plot Groups,View Plot Groups,Y
+Plots,,View Plot Groups,View Plot Groups,Y
+Manage Plots,,Admin Plot Groups,Admin Plot Groups,Y
+Ad Hoc Plot,,View Plot Groups,View Plot Groups,Y
+End

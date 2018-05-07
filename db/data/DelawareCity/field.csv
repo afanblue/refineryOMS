@@ -1,0 +1,14 @@
+Table,field,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+tag,id,name,id
+Data,,,
+id,road_image,satellite_image
+DeCity,images/site.png,images/delcity.png
+StCroix,images/stcroixroad.png,images/stcroix.png
+Crude,,
+Refined,,
+Gasoline,,
+FuelOils,,
+Asphalts,,
+JetFuels,,
+End

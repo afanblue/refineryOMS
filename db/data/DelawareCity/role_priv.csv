@@ -1,0 +1,59 @@
+Table,role_priv,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+role,id,name,role_id
+privilege,id,name,priv_id
+Data,,,
+role_id,priv_id
+Admin,Acknowledge Alarms
+Admin,Admin Links
+Admin,Admin Process Units
+Admin,Admin Vessels
+Admin,AI Admin
+Admin,Alarm Message Admin
+Admin,Alarm Type Admin
+Admin,AO Admin
+Admin,Configuration
+Admin,Execute Crude Field
+Admin,Execute Refined Field
+Admin,Execute Transfer
+Admin,Field Admin
+Admin,Role Admin
+Admin,Tank Admin
+Admin,Transfer Admin
+Admin,User Admin
+Admin,View Admin Tab
+Admin,View Alarms
+Admin,View Alarms Tab
+Admin,View Crude Field
+Admin,View Field Displays Tab
+Admin,View Fields
+Admin,View Links
+Admin,View Process Units
+Admin,View Refined Field
+Admin,View Site
+Admin,View Tanks
+Admin,View Transfer
+Admin,View Transfer Tab
+Admin,View Users
+Admin,View Vessels
+Admin,Admin Plot Groups
+Admin,View Plot Groups
+Operator,Acknowledge Alarms
+Operator,Execute Crude Field
+Operator,Execute Refined Field
+Operator,Execute Transfer
+Operator,View Alarms
+Operator,View Alarms Tab
+Operator,View Crude Field
+Operator,View Field Displays Tab
+Operator,View Fields
+Operator,View Process Units
+Operator,View Refined Field
+Operator,View Tanks
+Operator,View Transfer
+Operator,View Users
+Operator,View Vessels
+Operator,View Transfer Tab
+Operator,View Links
+Operator,View Admin Tab
+End

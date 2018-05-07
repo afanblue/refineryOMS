@@ -1,0 +1,24 @@
+Table,menu,,
+ConstraintTable,ConstraintField,ConstraintEquivalent,ColumnConstrained
+page,id,name,page_id
+menu_type_vw,id,code,menu_type_id
+menu,id,text,category_id
+Data,,,
+menu_type_id,category_id,text,page_id,order_no,active
+VT,Admin,Users,User admin,3,Y
+VT,Admin,System Configuration,Configuration,1,Y
+VT,Admin,Tanks,Tank Admin,5,Y
+VT,Admin,Roles,Role Admin,4,Y
+VT,Alarms,Alarm Messages,Alarm Message Admin,2,Y
+VT,Admin,Alarm Types,Alarm Type Admin,2,Y
+VT,Field Displays,Site Overview,Site Overview,2,Y
+VT,Field Displays,Crude Field,Crude,3,Y
+VT,Field Displays,Refined Field,Refined,4,Y
+VT,Transfers,Active Transfers,Active Transfers (list),1,Y
+VT,Transfers,Crude Transfers,Active Transfers (crude),2,Y
+VT,Alarms,Alarm List,Alarms,1,Y
+VT,Admin,Fields,Field Admin,7,Y
+VT,Admin,Links,Page Links,9,Y
+VT,Admin,Process Units,Admin Process Units,8,Y
+VT,Process Units,Process Units,Process Units,8,Y
+End

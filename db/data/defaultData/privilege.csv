@@ -1,0 +1,33 @@
+Table,privilege,,
+ConstraintTable,ConstraintField,ConstraintEquivalent,ColumnConstrained
+Data
+name
+Acknowledge Alarms
+Admin Links
+Admin Process Units
+Alarm Message Admin
+Alarm Type Admin
+Configuration
+Execute Crude Field
+Execute Refined Field
+Execute Transfer
+Field Admin
+Role Admin
+Tank Admin
+Transfer Admin
+User Admin
+View Admin Tab
+View Alarms
+View Alarms Tab
+View Crude Field
+View Field Displays Tab
+View Fields
+View Links
+View Process Units
+View Refined Field
+View Site
+View Tanks
+View Transfer
+View Transfer Tab
+View Users
+End

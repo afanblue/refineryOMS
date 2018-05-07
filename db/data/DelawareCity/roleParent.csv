@@ -1,0 +1,6 @@
+Table,role,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data,,,
+name,active
+Admin,Y
+End

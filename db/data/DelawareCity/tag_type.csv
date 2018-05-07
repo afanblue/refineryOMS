@@ -1,0 +1,22 @@
+Table,tag_type,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data,,,
+code,name,description,js_draw_file,active
+AI,AnalogInput,Field sensor analog,,Y
+AO,AnalogOutput,Analog Output value,,Y
+CB,ControlBlock,Field control device,,Y
+DI,DigitalInput,Field sensor digital,,Y
+DO,DigitalOutput,Digital output,,Y
+FLD,Field,Refinery field,,Y
+P,Pipe,Field pipe,,Y
+TK,Tank,Liquid container,,Y
+V,Valve,Valve,,Y
+XFR,Transfer,Defines the exchange of material,,Y
+TC,TankCar,Railroad tank car,,Y
+PU,ProcessUnit,Refinery Process Unit,,Y
+S,Ship,Ship,,Y
+TT,TankTruck,Tank truck,,Y
+HS,Hot Spot,Hot spot (link to another page),,Y
+DK,Dock,DockNumber,,Y
+RU,RefineryUnit,Refinery Unit,,Y
+End

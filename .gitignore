@@ -1,0 +1,12 @@
+# npm packages
+node_modules
+
+# WinMerge backup files
+*.bak
+
+# Bluefish backup files
+*.*~
+
+# log and backup files
+*.log
+*.log.gz

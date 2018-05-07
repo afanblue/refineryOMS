@@ -1,0 +1,15 @@
+it\avn\oms\rest\controller\FieldRestController.class
+it\avn\oms\rest\controller\ProcessUnitRestController.class
+it\avn\oms\rest\controller\ConfigRestController.class
+it\avn\oms\rest\controller\AlarmRestController.class
+it\avn\oms\rest\controller\DigitalInputRestController.class
+it\avn\oms\rest\controller\TransferRestController.class
+it\avn\oms\rest\controller\MenuRestController.class
+it\avn\oms\rest\controller\CustomerRestController.class
+it\avn\oms\rest\controller\PlotGroupRestController.class
+it\avn\oms\rest\controller\VesselRestController.class
+it\avn\oms\rest\controller\RoleRestController.class
+it\avn\oms\rest\controller\UserRestController.class
+it\avn\oms\rest\controller\AnalogInputRestController.class
+it\avn\oms\rest\controller\TagRestController.class
+it\avn\oms\rest\controller\TankRestController.class

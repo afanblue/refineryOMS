@@ -1,0 +1,12 @@
+Table,watchdog,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data,,,
+name
+AnalogInput
+DigitalInput
+Transfer
+DataCollectionAI
+DataCollectionDI
+AnalogOutput
+DigitalOutput
+End

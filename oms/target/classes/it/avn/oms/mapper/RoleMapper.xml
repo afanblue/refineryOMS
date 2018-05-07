@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.avn.oms.mapper.RoleMapper">
+
+  <!-- cache / -->
+<!-- 
+                id: 1
+                name: Admin
+                parent_id: NULL
+                parent: Operator
+                active: Y
+--> 
+   <resultMap id="roleResultMap" type="Role">
+      <id property="id"           column="id"/>
+      <result property="name"     column="name"/>
+      <result property="parentId" column="parent_id" />
+      <result property="parent"   column="parent" />
+      <result property="active"   column="active" />
+   </resultMap>
+   
+   <resultMap id="rolePrivResults" type="RolePriv">
+     <result property="roleId"      column="role_id"/>
+     <result property="role"        column="role"/>
+     <result property="privId"      column="priv_id"/>
+     <result property="priv"        column="priv"/>
+   </resultMap>
+   
+  <select id="getRoleById" resultMap="roleResultMap">
+    select r.id, r.name, r.active
+      from role r 
+     where r.id = #{parm1}
+  </select>
+
+  <select id="getAllRoles" resultMap="roleResultMap">
+    select r.id, r.name, r.active 
+      from role r 
+     order by r.name
+  </select>
+  
+  <update id="updateRole" parameterType="Role" >
+    update role set name=#{name}, active=#{active}
+     where id = #{id}
+  </update>
+
+  <insert id="insertRole" parameterType="Role" >
+    insert into role 
+          ( name, active )
+    values( #{name}, #{active} )
+  </insert>
+  
+  <delete id="deleteRolePrivs" >
+    delete from role_priv
+     where role_id = #{parm1}
+  </delete>
+  
+  <insert id="insertRolePriv" parameterType="RolePriv">
+    insert into role_priv( role_id, priv_id )
+    values( #{roleId}, #{privId} )
+  </insert>
+
+</mapper>

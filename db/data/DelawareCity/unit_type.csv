@@ -1,0 +1,11 @@
+Table,unit_type,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data,,,
+name,code
+length,L
+temperature,T
+volume,V
+pressure,P
+speed,S
+direction,D
+End

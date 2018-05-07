@@ -1,0 +1,11 @@
+Table,tag,,
+Constraint,Table,Constraint Field,Column Constrained
+Data,,,
+name,description,tag_type_code,js_draw_file,nw_lat,nw_long,active
+DeCity,Delaware City Refinery,FLD,,,,Y
+StCroix,St. Croix, USVI Refinery,FLD,,,,Y
+DCT-0000,External Temperature,AI,,,,Y
+DCP-0000,Barometric Pressure,AI,,,,Y
+DCR-0000,Wind Speed,AI,,,,Y
+DCM-0000,Wind Direction,AI,,,,Y
+End

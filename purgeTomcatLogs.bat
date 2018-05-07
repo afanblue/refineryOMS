@@ -1,0 +1,1 @@
+powershell -command {oms}\purgeLogs.ps1 {TomcatLogs}

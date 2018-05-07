@@ -1,0 +1,107 @@
+So you've unpacked the zip file into {oms}.
+
+The following are assumed to be installed:
+    * mysql
+    * Java (Version 8 or greater)
+    * Tomcat
+    * npm
+    * react-konva, rechart, moment
+    * Developers: Eclipse/your favorite IDE
+    * php (used to load DB and extract DB configuration)
+
+There is also an assumption that whoever's doing this is conversant
+w/the above products and the languages used for this.  The languages
+used are:
+    * Java - for the webapp, which is only used as a set of REST services
+             for the React app to consume.  Java is also used for the transfer
+             scada (pmc) and simulate programs.
+             
+    * JavaScript - for the React-based UI.
+    
+    * SQL  - Shouldn't need to know this unless you're updating the
+             services or 
+
+There is a PHP based version of the UI which has not been updated since the UI
+ was converted to React.  To use it, you will also need to install the Apache 
+ web server and configure it appropriately.  Its use is not recommended.  OTOH,
+if you're a PHP afficianado and want to muck around in the code...
+
+Things to do/know:
+
+    *  The user has set up a mySQL DB instance and knows the user name and
+       password.
+            create user omssys identified by '{systempwd}';
+            create user oms identified by 'omsx';
+            create schema oms;
+            grant all privileges on oms.* to omssys;
+            grant select, update, insert on oms.* to oms;
+            grant delete on oms.rel_tag_tag to oms;
+            grant delete on oms.user_role to oms;
+            grant delete on oms.role_priv to oms;
+            
+    *  The DB instance is "oms".  If you don't create a user/schema of oms
+       then you'll probably need to make lots of changes.
+
+    *  The DB, username, and password are in www/includes/constants.php.  They're
+       also in the various application context XML files for the java-based stuff.
+       
+    *  Tomcat has the CORS filters set up.
+
+    *  To install the database, from the command line.  FWIW, the only {site name}
+       that is available is 'DelawareCity'.  Setting up a site is non-trivial, 
+       though it can be done via csv-based files.
+
+       Linux: 
+	       cd {oms}/includes/db
+           oms.bash  {oms password} {site name} 
+       Windows:
+           cd {oms}\includes\db
+           oms.bat {omspwd} {site name}
+	   To redirect all output to a file db.log
+	       oms.bat {omspwd} {site name} >db.log 2>&1
+	       
+	   The log file can be checked to verify that all tables and views have 
+	   been created and all the records have been inserted.  Look for 
+	   occurrences of
+	   
+	       'mysql' which isn't a warning that the password shouldn't be 
+	               entered on the command line.  There should be 2 of these.
+	       'false' (not case sensitive) There should be two entries found on 
+	               one line for an insert
+	       '0 row' the DB insert will sometimes indicate success, but 0 rows
+	               inserted.  This is an error, usually indicating that either
+	               a lookup or the select used for the insert has failed.
+	      
+    *  The webapp must be deployed to Tomcat.
+    
+    *  The simulator, scada, and transfer apps have batch files that can be
+       scheduled to run using the appropriate service (i.e., cron or TaskScheduler)
+    
+    *  The simulator actually retrieves the current weather conditions from the
+       US weather service, i.e., http://w1.weather.gov/xml/current_obs/KILG.xml.
+       The "KILG" is the code for the Wilmington/New Castle County, DE airport.
+       This is defined in the config table w/item_name='WEATHER_LOCATION' and can
+       be changed in the System Configuration Admin.
+       
+    *  If you don't like my colors, the background and text color are defined
+       in the oms.css file.  The alarm colors can be changed in the System 
+       Configuration Admin page, as NORMCOLOR, HHCOLOR, HICOLOR, LOCOLOR, LLCOLOR
+           
+
+At this point, you should be able to bring up a browser, enter the appropriate URL
+(typically, http://localhost:3000), and go.
+
+*****************************************************************
+PHP-based UI:
+
+To create a link for Apache in Linux, for Windows you'll need to copy the source
+
+    Linux:
+	    cd /var/www/html
+    	sudo ln -s {oms}/ui/www oms
+	
+    Windows (a folder copy is probably easiest):
+    	copy {oms}  {apache-htdocs}
+	      or
+	    mklink /D oms {oms}\ui\www
+
