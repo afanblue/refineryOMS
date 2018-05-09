@@ -10,3 +10,6 @@ node_modules
 # log and backup files
 *.log
 *.log.gz
+
+# DB archive files
+*.arch

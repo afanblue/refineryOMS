@@ -2,15 +2,16 @@
 
 This project provides a simulation of an oil refinery w/a UI for watching/controlling the action.  Controlling is a bit of a misnomer, since the only real control currently is in the management of transfers.  The "action" occurs in "real" time, that is, there is no compression of time to make the action happen faster.
 
-**DISCLAIMER 1:**  The provided picture and DB is of the Delaware City, Delaware refinery.  There has been no communication between me and the past or present owners of this site about the nature of their refinery.  If there is any correlation between this implementation and the actual site, it is strictly co-incidental due to the 
+**DISCLAIMER 1:**  The provided picture and DB is of the Delaware City, Delaware refinery.  There has been no communication between me and the past or present owners of this site about the nature of their refinery.  If there is any correlation between this implementation and the actual site, it is strictly co-incidental.
 
-**DISCLAIMER 2:**  This is my re-interpretation of a system I worked on early in my career.  There is no relationship between this system and the original OMS produced by that employer, even though I have borrowed the name.  Any mistakes in this re-interpretation are, of course, mine.
+**DISCLAIMER 2:**  This is my re-interpretation of a system I worked on early in my career.  There is no relationship between this system and the original OMS produced by that employer, even though I have borrowed the name.  Any mistakes in this re-interpretation are, of course, mine.  The original system had a single page menu whose items were activated by a light pen and location of the pen.  There was a hidden location from which Star Trek could be run.  That particular feature has not been carried over.
 
 **DISCLAIMER 3:**  The historical compression algorithms are my implementations of some algorithms originally developed at another employer.  That employer bears no responsibility for any errors in my implementations. 
 
 There are a number of features which have not (yet) been implemented.  These include, but are not limited to 
 - [x] Linux installation procedures.
-- [ ] digital input processing
+- [ ] On the field displays, selecting a tank, will generate a more detailed display of the tank selected.
+- [ ] digital input processing (the full implementation of this would be associated w/inputs indicating the presence of tank cars, tank trucks and ships (set by the simulator based on either a schedule defined somewhere) and on cute animations of transfers)
 - [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to response "realistically", we need to define the input(s) which reflects the actions of the setpoint)
 - [ ] digital output processing (like the analog outputs, the effect digital outputs is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position)
 - [ ] implementation of digital inputs to more realistically handle tank car, tank truck, and ship presence
@@ -138,7 +139,7 @@ There is also an assumption that whoever's doing this is conversant w/the above 
 	       
 	   The log file can be checked to verify that all tables and views have been created and all the records have been inserted.  Look for occurrences of
 	   
-	       'mysql' which is **not** an error, but a warning that the password shouldn't be entered on the command line.  There should be 3 of these.
+	       'mysql' which is **not** an error, but a warning that the password shouldn't be entered on the command line.
 	       'false' (not case sensitive) There should be two entries found on one line for an insert
 	       '0 row' the DB insert will sometimes indicate success, but 0 rows inserted.  This is an error, usually indicating that either a lookup or the select used for the insert has failed.
 	      
@@ -156,6 +157,9 @@ There is also an assumption that whoever's doing this is conversant w/the above 
    
 At this point, you should be able to bring up a browser, enter the appropriate URL (typically, http://localhost:3000), and go.
 
+## Known bugs
+   1.  Under transfers, "Admin Executable" and "Admin Template" can be selected consecutively, e.g., after selecting "Admin Executable", you need to select something else before "Admin Template".  If you select it next, there will be no response
+   2.  
 ## Further Information:
 
-   1. You should be able to import the 5 eclipse projects (oms, rest, pmc (scada), sim, transfer) for additional development.  The
+   1. You should be able to import the 5 eclipse projects (oms, rest, pmc (scada), sim, transfer) for additional development.  If it's not clear, the "oms" project is shared among the other 4, where "rest" is the Java webapp and the other 3 are (I hope) obvious.

@@ -155,7 +155,7 @@ class PlotGroupAdmin extends Component {
       let tNew = [];
       let tLength = (pgnew.aiList===null?0:pgnew.aiList.length);
       for( var i=0; i<tLength; i++) {
-        let v = pgnew.aiList.shift();
+        let v = parseInt(pgnew.aiList.shift(),10);
         if( v === parseInt(value,10) ) { 
           f = i;
         } else {
@@ -168,8 +168,8 @@ class PlotGroupAdmin extends Component {
         } else {
           tNew.push(value);
         }
-        pgnew.aiList = tNew;
       }
+      pgnew.aiList = tNew;
     } else {
       pgnew[fname] = value;
     }

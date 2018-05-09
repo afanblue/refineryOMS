@@ -105,7 +105,7 @@
            join tag_type tt on tt.code = t.tag_type_code
            join xfer x on t.id = x.id 
      where t.active = 'Y'
-     order by 7, 2
+     order by 2
   </select>
 
   <select id="getAllUpdatedAItags" resultMap="analogInputResultMap">
@@ -123,7 +123,7 @@
            join xfer x on t.id = x.id 
      where t.active = 'Y'
        and x.updated = 1
-     order by 7, 2
+     order by 2
   </select>
 
   <select id="getAllAnalogInputs" resultMap="analogInputResultMap">
@@ -134,13 +134,14 @@
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
          , ai.hh, ai.hi, ai.lo, ai.ll
       from analog_input ai join tag t on ai.tag_id = t.id
-     order by 7, 2
+     order by 3
   </select>
 
   <select id="getAllAIIdNameByType" resultMap="idNameMap">
     select t.id, t.name
       from analog_input ai join tag t on ai.tag_id = t.id
      where ai.type_code = #{parm1}
+     order by 2
   </select>
   
   <select id="getAllAnalogInputsByType" resultMap="analogInputResultMap">
@@ -152,7 +153,7 @@
          , ai.hh, ai.hi, ai.lo, ai.ll
       from analog_input ai join tag t on ai.tag_id = t.id
      where ai.type_code = #{parm1}
-     order by 7, 2
+     order by 2
   </select>
 
   <select id="getAnalogInput" resultMap="analogInputResultMap">
