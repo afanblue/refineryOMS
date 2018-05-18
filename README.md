@@ -13,13 +13,13 @@ There are a number of features which have not (yet) been implemented.  These inc
 - [ ] On the field displays, selecting a tank, will generate a more detailed display of the tank selected.
 - [ ] digital input processing (the full implementation of this would be associated w/inputs indicating the presence of tank cars, tank trucks and ships (set by the simulator based on either a schedule defined somewhere) and on cute animations of transfers)
 - [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to response "realistically", we need to define the input(s) which reflects the actions of the setpoint)
-- [ ] digital output processing (like the analog outputs, the effect digital outputs is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position)
+- [ ] digital output processing (like the analog outputs, the effect of a digital output is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position)
 - [ ] implementation of digital inputs to more realistically handle tank car, tank truck, and ship presence
 - [ ] temperature correction of the volumes
 - [ ] simulated arrival of additional crude for processing
 - [ ] automated transfers for refined products to tank cars (railroads), tank trucks, and ships.  There is a first pass implementation of this, but it needs additional testing.  For this to work properly, it should be possible to set up transfers to the tank cars and or tank trucks for multiple products and the transfers end up being multiply defined.  In addition, the presence of a given tank car/truck would ideally have a product associated with it.
 - [ ] graphical display of transfers (cute animations!)
-- [ ] an archival mechanism for the historical data 
+- [x] an archival mechanism for the historical data (db/archive.bat; db/archive.sh)
 - [ ] automated payment
 
 
@@ -34,7 +34,7 @@ There are additional files provided to enable creation of the services for Windo
 -  purge log files for Tomcat and the services.  Note that the purgeOMSLogs.bat and purgeOMSLogs.bat need to be modified to correctly set the directory in which they are located.
 -  save the database every night.
 
-## Installation - So you've unpacked the zip file into {oms}.
+## Installation - So you've pulled the repo into {oms}.
 
 
 ### Required products:
@@ -159,7 +159,7 @@ At this point, you should be able to bring up a browser, enter the appropriate U
 
 ## Known bugs
    1.  Under transfers, "Admin Executable" and "Admin Template" can be selected consecutively, e.g., after selecting "Admin Executable", you need to select something else before "Admin Template".  If you select it next, there will be no response
-   2.  
+   1.  
 ## Further Information:
 
    1. You should be able to import the 5 eclipse projects (oms, rest, pmc (scada), sim, transfer) for additional development.  If it's not clear, the "oms" project is shared among the other 4, where "rest" is the Java webapp and the other 3 are (I hope) obvious.
