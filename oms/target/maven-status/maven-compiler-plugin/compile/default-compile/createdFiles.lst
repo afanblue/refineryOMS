@@ -23,6 +23,7 @@ it\avn\oms\domain\Transfer.class
 it\avn\oms\service\FieldService.class
 it\avn\oms\domain\AlarmMessage.class
 it\avn\oms\service\impl\UserServiceImpl.class
+it\avn\oms\domain\ControlBlock.class
 it\avn\oms\domain\IdName.class
 it\avn\oms\mapper\WatchdogMapper.class
 it\avn\oms\domain\PlotGroup.class
@@ -61,6 +62,7 @@ it\avn\oms\service\ConfigService.class
 it\avn\oms\service\impl\HistoryServiceImpl.class
 it\avn\oms\mapper\PrivilegeMapper.class
 it\avn\oms\mapper\CustomerMapper.class
+it\avn\oms\mapper\ControlBlockMapper.class
 it\avn\oms\service\impl\TransferServiceImpl.class
 it\avn\oms\domain\Customer.class
 it\avn\oms\domain\HistoryRequest.class
@@ -82,9 +84,11 @@ it\avn\oms\mapper\VesselMapper.class
 it\avn\oms\domain\History.class
 it\avn\oms\service\AnalogInputService.class
 it\avn\oms\domain\Category.class
+it\avn\oms\service\ControlBlockService.class
 it\avn\oms\service\TransferService.class
 it\avn\oms\mapper\PlotGroupMapper.class
 it\avn\oms\mapper\AnalogInputMapper.class
 it\avn\oms\mapper\DigitalInputMapper.class
 it\avn\oms\mapper\TankMapper.class
+it\avn\oms\service\impl\ControlBlockServiceImpl.class
 it\avn\oms\domain\AlarmType.class

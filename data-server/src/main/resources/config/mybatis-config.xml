@@ -13,6 +13,7 @@
      	<typeAlias alias="AnalogInput"    type="it.avn.oms.domain.AnalogInput"/>
      	<typeAlias alias="Category"       type="it.avn.oms.domain.Category" />
         <typeAlias alias="Config"         type="it.avn.oms.domain.Config"/>
+        <typeAlias alias="ControlBlock"   type="it.avn.oms.domain.ControlBlock"/>
         <typeAlias alias="Customer"       type="it.avn.oms.domain.Customer"/>
      	<typeAlias alias="DigitalInput"   type="it.avn.oms.domain.DigitalInput"/>
      	<typeAlias alias="Field"          type="it.avn.oms.domain.Field" />

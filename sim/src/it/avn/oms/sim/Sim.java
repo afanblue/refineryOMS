@@ -19,8 +19,8 @@ public class Sim {
 	}
 	
 	public void execute(String[]args) {
-        TimerTask aitt = new SimulateAIData();
-        TimerTask ditt = new SimulateDIData();
+        TimerTask aitt = new SimulateAnalogData();
+        TimerTask ditt = new SimulateDigitalData();
         Timer aiTimer = new Timer(true);
         Timer diTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
@@ -29,9 +29,9 @@ public class Sim {
         if( cal.get(Calendar.SECOND) > 40 ) { start = 60 + 45; }
         int delay = start * 1000 - 1000 * cal.get(Calendar.SECOND) - cal.get(Calendar.MILLISECOND);
         aiTimer.scheduleAtFixedRate(aitt, delay, 60*1000);
-        log.debug("AI scan started");
+        log.debug("Analog scan started");
         diTimer.scheduleAtFixedRate(ditt, delay, 60*1000);
-        log.debug("DI scan started");
+        log.debug("Digital scan started");
         while( 1 == 1 ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);

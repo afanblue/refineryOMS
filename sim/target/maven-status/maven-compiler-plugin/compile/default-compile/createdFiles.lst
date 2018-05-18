@@ -1,4 +1,8 @@
 it\avn\oms\sim\TestSimulateAIData.class
+it\avn\oms\sim\SimulateAOData.class
 it\avn\oms\sim\SimulateDIData.class
+it\avn\oms\sim\SimulateDigitalData.class
 it\avn\oms\sim\Sim.class
 it\avn\oms\sim\SimulateAIData.class
+it\avn\oms\sim\SimulateDOData.class
+it\avn\oms\sim\SimulateAnalogData.class

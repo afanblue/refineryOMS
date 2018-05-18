@@ -4,6 +4,8 @@ F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\HistoryService.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\WatchdogService.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\mapper\MenuMapper.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\impl\VesselServiceImpl.java
+F:\projects\oms\v2\oms\src\main\java\it\avn\oms\mapper\ControlBlockMapper.java
+F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\impl\ControlBlockServiceImpl.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\mapper\TankMapper.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\mapper\ConfigMapper.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\mapper\AlarmMapper.java
@@ -25,10 +27,12 @@ F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\RolePriv.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\Tag.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\TransferService.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\Xfer.java
+F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\ControlBlockService.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\impl\UserServiceImpl.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\TagService.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\impl\FieldServiceImpl.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\service\impl\MenuServiceImpl.java
+F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\ControlBlock.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\History.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\AnalogInput.java
 F:\projects\oms\v2\oms\src\main\java\it\avn\oms\domain\ReferenceCode.java

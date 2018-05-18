@@ -24,7 +24,9 @@ public class Watchdog implements Serializable {
 	public static final String AI = "AnalogInput";
 	public static final String AO = "AnalogOutput";
 	public static final String DCAI = "DataCollectionAI";
+	public static final String DCAO = "DataCollectionAO";
 	public static final String DCDI = "DataCollectionDI";
+	public static final String DCDO = "DataCollectionDO";
 	public static final String DI = "DigitalInput";
 	public static final String DO = "DigitalOutput";
 	public static final String TRANSFER = "Transfer";

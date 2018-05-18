@@ -12,7 +12,7 @@ There are a number of features which have not (yet) been implemented.  These inc
 - [x] Linux installation procedures.
 - [ ] On the field displays, selecting a tank, will generate a more detailed display of the tank selected.
 - [ ] digital input processing (the full implementation of this would be associated w/inputs indicating the presence of tank cars, tank trucks and ships (set by the simulator based on either a schedule defined somewhere) and on cute animations of transfers)
-- [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to response "realistically", we need to define the input(s) which reflects the actions of the setpoint)
+- [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to response "realistically", we need to define the input(s) which reflects the actions of the setpoint which would imply needing to understand the reaction time to the set point. Sorry, TMI required)
 - [ ] digital output processing (like the analog outputs, the effect of a digital output is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position)
 - [ ] implementation of digital inputs to more realistically handle tank car, tank truck, and ship presence
 - [ ] temperature correction of the volumes
@@ -21,7 +21,7 @@ There are a number of features which have not (yet) been implemented.  These inc
 - [ ] graphical display of transfers (cute animations!)
 - [x] an archival mechanism for the historical data (db/archive.bat; db/archive.sh)
 - [ ] automated payment
-
+- [ ] user manual
 
 The application is built using a Java-based REST data source (Tomcat/Spring) which references a MySQL database.  The UI is implemented in react.  Underlying the UI and the database are some ancillary programs, all implemented in Java.  
 
@@ -44,10 +44,10 @@ The following are assumed to be installed:
     -  mysql
     -  Java (Version 8 or greater)
     -  Tomcat 8
-    -  npm
+    -  node/npm
     -  react-konva, rechart, moment, victory
-    -  Developers: Eclipse/your favorite IDE
     -  php (used to load DB and extract DB configuration)
+    -  Developers: Eclipse/your favorite IDE
 
 ### Assumptions:
 
@@ -153,7 +153,7 @@ There is also an assumption that whoever's doing this is conversant w/the above 
  
    1.  The node_modules were deliberately excluded, so you'll need to do an "npm install"
     
-   1.  The UI still runs under npm, so you'll need to start that up ... (**Windows**: cd /d %OMS%; npm start oms.js; **Linux**: cd $OMS; npm start oms.js)
+   1.  The UI still runs under npm, so you'll need to start that up ... (**Windows**: cd /d %OMS_HOME%\ui; npm start oms.js; **Linux**: cd $OMS_HOME/ui; npm start oms.js)
    
 At this point, you should be able to bring up a browser, enter the appropriate URL (typically, http://localhost:3000), and go.
 

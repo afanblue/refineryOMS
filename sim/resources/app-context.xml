@@ -42,6 +42,11 @@
       <property name="mapperInterface" value="it.avn.oms.mapper.ConfigMapper" />
    </bean>
 
+   <bean id="controlBlockMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface" value="it.avn.oms.mapper.ControlBlockMapper" />
+   </bean>
+
    <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface" value="it.avn.oms.mapper.CustomerMapper" />
@@ -96,6 +101,10 @@
    
    <bean id="configService" class="it.avn.oms.service.impl.ConfigServiceImpl">
       <property name="configMapper" ref="configMapper" />
+   </bean>
+   
+   <bean id="controlBlockService" class="it.avn.oms.service.impl.ControlBlockServiceImpl">
+      <property name="controlBlockMapper" ref="controlBlockMapper" />
    </bean>
    
    <bean id="customerService" class="it.avn.oms.service.impl.CustomerServiceImpl">

@@ -41,43 +41,38 @@ import it.avn.oms.domain.Xfer;
 import it.avn.oms.service.AlarmService;
 import it.avn.oms.service.AnalogInputService;
 import it.avn.oms.service.ConfigService;
+import it.avn.oms.service.ControlBlockService;
 import it.avn.oms.service.TagService;
 import it.avn.oms.service.TankService;
 import it.avn.oms.service.TransferService;
 import it.avn.oms.service.WatchdogService;
 import it.avn.oms.service.XferService;
 
-public class SimulateAIData extends TimerTask {
+public class SimulateAIData {
 	
     /* Get actual class name to be printed on */
-    private Logger log = LogManager.getLogger(this.getClass());
+    private static Logger log = LogManager.getLogger("it.avn.oms.sim.SimulateAIData");
 
-    private ApplicationContext context = null;
-    private AnalogInputService ais = null;
-    private ConfigService cs = null;
-    private TagService tgs = null;
-    private TankService tks = null;
-    private TransferService tfs = null;
-    private WatchdogService wds = null;
-    private XferService xs = null;
-    private String weatherUrl = "http://w1.weather.gov/xml/current_obs/";
-    private HashMap<String,String> configuration;
+    private static String weatherUrl = "http://w1.weather.gov/xml/current_obs/";
+    private static HashMap<String,String> configuration;
     private static String[] conditionNames= {"temp_f","pressure_in","wind_mph","wind_degrees"};
      
-	public void run( ) {
-		log.debug("Start "
-				+ "AI processing");
+	public static void execute( AnalogInputService ais, ConfigService cs
+			                  , TagService tgs, TankService tks, TransferService tfs
+			                  , WatchdogService wds, XferService xs ) {
+		log.debug("Start AI processing");
 		Calendar cal = Calendar.getInstance();
-/*  */
+/*  
 		if( context == null) { context = new ClassPathXmlApplicationContext("app-context.xml"); }
 		if( ais == null ) { ais = (AnalogInputService) context.getBean("analogInputService"); }
+		if( cbs == null ) { cbs = (ControlBlockService) context.getBean("controlBlockService"); }
 		if( cs  == null ) { cs = (ConfigService) context.getBean("configService"); }
 		if( tgs == null ) { tgs = (TagService) context.getBean("tagService"); }
 		if( tks == null ) { tks = (TankService) context.getBean("tankService"); }
 		if( tfs == null ) { tfs = (TransferService) context.getBean("transferService"); }
 		if( xs  == null ) { xs = (XferService) context.getBean("xferService"); }
 		if( wds == null ) { wds = (WatchdogService) context.getBean("watchdogService"); }
-		
+*/	
 		wds.updateWatchdog(Watchdog.DCAI);
 		
 		configuration = getSystemConfiguration(cs);
@@ -90,6 +85,7 @@ public class SimulateAIData extends TimerTask {
 			String wUrl = weatherUrl + wl + ".xml";
 			c = getCurrentConditions(wUrl);
 		}
+
 		Collection<AnalogInput> cai = ais.getAllActiveAItags();
 		Iterator<AnalogInput> iai = cai.iterator();
 		while( iai.hasNext() ) {
@@ -140,14 +136,14 @@ public class SimulateAIData extends TimerTask {
 			}
 		}
 //		check transfers	
-		checkTransfers();
+		checkTransfers(ais, tks, tfs, xs);
 
 		log.debug("End AI processing");
 
 	}
 	
 
-	private HashMap<String,String> getSystemConfiguration( ConfigService cs ) {
+	private static HashMap<String,String> getSystemConfiguration( ConfigService cs ) {
 		HashMap<String,String> cfg = new HashMap<String,String>();
 		Iterator<Config> iat = cs.getAllConfigurationItems().iterator();
 		while( iat.hasNext() ) {
@@ -157,7 +153,7 @@ public class SimulateAIData extends TimerTask {
 		return cfg;
 	}
 	
-	private HashMap<String,Double> getCurrentConditions( String url ) {
+	private static HashMap<String,Double> getCurrentConditions( String url ) {
 		log.debug("WeatherURL: " + url);
 		HashMap<String, Double> cc = new HashMap<String,Double>();
 		HttpClient client = HttpClientBuilder.create().build();
@@ -203,21 +199,22 @@ public class SimulateAIData extends TimerTask {
 		return cc;
 	}
 	
-	private void checkTransfers() {
+	private static void checkTransfers( AnalogInputService ais, TankService tks
+			                          , TransferService tfs, XferService xs) {
 		Iterator<Transfer> ix = tfs.getActiveTransfers().iterator();
 		while( ix.hasNext() ) {
 			Transfer x = ix.next();
-			Double delta = computeChange( x );
+			Double delta = computeChange( x, tks );
 			log.debug("Transfer "+x.getName()+"/"+x.getId()+" - Change: "+delta);
-			decrementSource( x.getSourceId(), delta );
-			incrementDestination( x.getDestinationId(), delta );
+			decrementSource( ais, tks, xs, x.getSourceId(), delta );
+			incrementDestination( ais, tks, xs, x.getDestinationId(), delta );
 			x.setActVolume(x.getActVolume()+delta);
 			tfs.updateTransfer(x);
 		}
 	}
 
-	private Double FAST = 40D;
-	private Double SLOW = 20D;
+	private static Double FAST = 40D;
+	private static Double SLOW = 20D;
 
 	/**
 	 * Method: computeChange
@@ -256,7 +253,7 @@ public class SimulateAIData extends TimerTask {
 	 * @param x
 	 * @return
 	 */
-	private Double computeChange( Transfer x ) {
+	private static Double computeChange( Transfer x, TankService tks ) {
 		Double delta;
 		log.debug(x.toString());
 		Tank src = tks.getBaseTank(x.getSourceId());
@@ -337,15 +334,16 @@ public class SimulateAIData extends TimerTask {
 	 * @param srcId
 	 * @param vol
 	 */
-	private void decrementSource( Long srcId, Double vol ) {
+	private static void decrementSource( AnalogInputService ais, TankService tks
+			                           , XferService xs, Long srcId, Double vol ) {
 		log.debug("Decrement source: "+srcId+" by "+vol);
 		if( vol > 0D ) { 
 			Tank tk = tks.getBaseTank(srcId);
 			if( Tag.TANK.equals(tk.getTag().getTagTypeCode()) ) {
 				AnalogInput l = ais.getAnalogInput(tk.getLevelId());
-				Double volume = computeVolume(tk.getId(), l.getScanValue());
+				Double volume = computeVolume(tks, tk.getId(), l.getScanValue());
 				volume = (volume-vol>0)?(volume-vol):0D;
-				Double lvl = computeLevel(tk.getId(), volume );
+				Double lvl = computeLevel(tks, tk.getId(), volume );
 				Xfer x = new Xfer();
 				x.setId(tk.getLevelId());
 				x.setFloatValue(lvl);
@@ -375,15 +373,16 @@ public class SimulateAIData extends TimerTask {
 	 * @param tks	tank service
 	 * @param ais	analog input service
 	 */
-	private void incrementDestination( Long destId, Double vol ) {
+	private static void incrementDestination( AnalogInputService ais, TankService tks
+			                                , XferService xs, Long destId, Double vol ) {
 		log.debug("Increment destination: "+destId+" by "+vol);
 		if( vol > 0D ) {
 			Tank tk = tks.getBaseTank(destId);
 			if( Tag.TANK.equals(tk.getTag().getTagTypeCode()) ) {
 				AnalogInput l = ais.getAnalogInput(tk.getLevelId());
-				Double volume = computeVolume(tk.getId(), l.getScanValue());
+				Double volume = computeVolume(tks, tk.getId(), l.getScanValue());
 				volume += vol;
-				Double lvl = computeLevel(tk.getId(), volume );
+				Double lvl = computeLevel(tks, tk.getId(), volume );
 				Xfer x = new Xfer();
 				x.setId(tk.getLevelId());
 				x.setFloatValue(lvl);
@@ -394,7 +393,7 @@ public class SimulateAIData extends TimerTask {
 
 	}
 	
-	private Double computeLevel( Long tankId, Double vol ) {
+	private static Double computeLevel( TankService tks, Long tankId, Double vol ) {
 		Double level = 0D;
 		Volume vb = null;
 		Volume ve = null;
@@ -421,7 +420,7 @@ public class SimulateAIData extends TimerTask {
 		return level;
 	}
 
-	private Double computeVolume( Long tankId, Double level ) {
+	private static Double computeVolume( TankService tks, Long tankId, Double level ) {
 		Double vol = 0D;
 		Volume vb = null;
 		Volume ve = null;
