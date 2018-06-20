@@ -1,6 +1,6 @@
 This is obvously not a completely realistic simulation.  For example,
 the temperature of the tank contents is based on the current outside 
-temperature using a simple formula (Tank temperature = Current Outside 
+temperature using a simple formula (Tank temperature = Current Tank 
 Temperature - (72 - Current outside temperature)/5).  In reality this 
 would be a much more complex formula based on the outside temperature, 
 the insulating properties of the tank walls, and the current temperature 
@@ -24,7 +24,7 @@ Other simplifications include
 	Other Refined Products	ORP-PERCENT
 	Lubricants		LUBRICANT-PERCENT
 - FWIW, I assume that the Still Gas is used to power the refinery and 
-  so we don't have do dispose of it.
+  so we don't have to dispose of it.
 - Other products of the distillation process, like the coke, are just 
   ignored.
 - Pumping is done by the initiator and nothing is lost to the destination
@@ -45,30 +45,44 @@ From the perspective of the system:
 - a analog output which allows the system to set the speed of the pump.
 
 Each tank has 2 variables.  In reality, a tank would probably have more; what
-they are is beyond the scope of this (and my knowledge).  Besides, this is 
-monitoring Oil Movement, not a complete refinery simulation.
+they are is beyond the scope of this (and my explicit knowledge).  Besides, this 
+is monitoring Oil Movement, not a complete refinery simulation.
 - a level, from which the volume is computed
 - a temperature, with which the adjustments are made for 72 degrees and 
   creating a standard volume
+Other potential items:
+- a mixer to stir the oil
+- a heater to heat the oil when it's cold outside
+- 
 
 Explanation of tag types
 AnalogInput
 	Code: AI
 	Description: Field sensor analog
-	Explanation: Used to define the input for an analog field sensor.  The 			input values are always doubles.
+	Explanation: Used to define the input for an analog field sensor.  The
+	   input values are always doubles.
 AnalogOutput
 	Code: AO
 	Description: Analog Output value
 	Explanation: Used to define the intermediate value for setting an analog
-		value on a device.  This would typically be the setpoint for
-		a control block or just the value for the device to be set at
+		value on a device.  This would typically be the setpoint for a control 
+		block or just the value for the device to be set at.
 		Think 11 on the amplifier.
+CalculatedVariables
+    Code: C
+    Description: Computed Variables
+    Explanation: Analog and Digital Inputs that are defined by a combination of
+        values, i.e., sum, product, logical and, etc.  These variables are 
+        defined by a list of tags in the REL_TAG_TAG table.  The first child tag
+        in the list is the output tag; the remaining child tags are the input
+        tags whose values are used in the computation.  
 ControlBlock
 	Code: CB
 	Description: Field control device
-	Explanation: Used to define an analog output device for which the 
-		process runs some algorithm to determine how to control a
-		device.  NOT IMPLEMENTED.
+	Explanation: Used to define the input tag related to the output, both analog
+	    and digital.  If this were to actually implement control blocks, this 
+	    would have to specify the algorithm (feed-back, feed-forward) to \
+	    determine how to control the device.  
 DigitalInput
 	Code: DI
 	Description: Field sensor digital
@@ -95,7 +109,8 @@ Hot Spot
 		only need to add a couple of "size" tags to the tag table to
 		eliminate the hot_spot table.
 		Pumps usually have associated with them an on/off switch
-		(digital output), an on/off sensor (digital input), 			and optionally, a speed setting (analog output).
+		(digital output), an on/off sensor (digital input),
+		and optionally, a speed setting (analog output).
 Pipe
 	Code: P
 	Description: Field pipe
@@ -117,12 +132,20 @@ ProcessUnit
 RefineryUnit
 	Code:	RU
 	Description: Refinery Unit
-	Explanation: Used to define the unit that actually does the work. It
-		is used as a convenient end point for the transfers to and from
-		the process equipment (crackers, towers, etc) that actually
-		do the refining of the oil.  There are typically a few pumps
-		for sending the the products of the refining to the storage 
-		tanks prior to shipment.
+	Explanation: Used to define the unit that actually does the work. It is
+		used as a convenient end point for the transfers to and from the
+		process equipment (crackers, towers, etc) that actually do the 
+		refining of the oil.  In reality, there are typically a few pumps for 
+		sending the products of the refining to the storage tanks prior to 
+		shipment.
+Schematic
+    Code: SCHM
+    Description: Schematic
+    Explanation: Used to display in "real-time" (as envisioned: refreshed every 
+        minute) the status of various elements in the fields.  This is different
+        than the Field displays which provide "just" the displays of the tanks
+        in a given field.  Schematics show the status of pumps (on/off/speed),
+        valves (open/shut), and pipes (in use/not in use) as well as tanks. 
 Ship
 	Code: S
 	Description: Ship
@@ -162,7 +185,8 @@ Valve
 	Explanation: Used to either turn flow on/off for a pipe or to divert 
 		material from the source pipe to two different pipes.
 		Valves usually have associated with them an on/off (1/2) switch
-		(digital output), an on/off (1/2) sensor (digital input), 			and optionally, a "aperture-sizing" setting (analog output)
+		(digital output), an on/off (1/2) sensor (digital input),
+		and optionally, a "aperture-sizing" setting (analog output)
 		used to set how open the valve is.
 Transfer
 	Code: XFR

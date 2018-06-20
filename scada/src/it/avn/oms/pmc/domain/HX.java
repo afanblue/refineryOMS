@@ -1,12 +1,12 @@
-package it.avn.oms.pmc.domain;
+package us.avn.oms.pmc.domain;
 
 import java.io.Serializable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import it.avn.oms.domain.History;
-import it.avn.oms.service.HistoryService;
+import us.avn.oms.domain.History;
+import us.avn.oms.service.HistoryService;
 
 public class HX extends History implements Serializable {
 	
@@ -33,8 +33,9 @@ public class HX extends History implements Serializable {
 		log.debug("("+ai.getTagId()+") - scanValue: "+ai.getScanValue()
 		         +", lastHistValue: "+ai.getLastHistValue()
 		         +", intSinceLhs: "+ai.getIntSinceLhs());
-		if( ai.getIntScanTime() == 0 ) {
-				slope = 0.0;
+		Integer intScanTime = (ai.getIntScanTime()==null?0:ai.getIntScanTime());
+		if( intScanTime == 0 ) {
+			slope = 0.0;
 		} else {
 			try {
 				slope = (ai.getScanValue() - ai.getLastHistValue())

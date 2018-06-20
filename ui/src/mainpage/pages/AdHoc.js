@@ -234,7 +234,6 @@ class AdHocAdmin extends Component {
   handleChange(event) {
     const target = event.target;
     const value = target.value;
-    const fname = target.name;
     let pgnew = Object.assign({},this.state.plotGroup);
 
     if( target.value !== "" ) {

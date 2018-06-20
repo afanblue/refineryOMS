@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.CustomerMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Customer> getAllCustomers( );
+	
+	Customer getCustomer( String key);
+	
+	Integer updateCustomer( Customer c );
+
+	Integer insertCustomer( Customer c );
+-->  
+
+  <resultMap id="customerResultMap" type="Customer">
+     <result property="id"       column="id" />
+     <result property="name"     column="name"/>
+     <result property="active"   column="active"/>
+     <result property="etherkey" column="etherkey" />
+  </resultMap>
+  
+  <resultMap id="customerIdNameMap" type="IdName">
+    <result property="id"        column="id"/>
+    <result property="name"      column="name"/>
+  </resultMap>
+  
+
+  <select id="getAllCustomers" resultMap="customerResultMap">
+    select id, name, active, etherkey from customer order by 2
+  </select>
+
+  <select id="getAllCustomersAsIdNames" resultMap="customerIdNameMap">
+    select id, name from customer order by 2
+  </select>
+
+  <select id="getCustomer" resultMap="customerResultMap">
+    select id, name, active, etherkey from customer
+	 where id = #{parm1}
+  </select>
+  
+  <select id="getCustomerByName" resultMap="customerResultMap">
+    select id, name, active, etherkey from customer
+	 where name = #{parm1}
+  </select>
+  
+  <update id="updateCustomer" parameterType="Customer">
+    update customer
+       set name = #{name}
+         , active = #{active}
+         , etherkey = #{etherkey}
+     where id= #{id}
+  </update>
+  
+  <insert id="insertCustomerurationItem">
+    insert customer( name, active, etherkey ) 
+    values (#{name}, #{active}, #{etherkey})
+  </insert>
+  
+</mapper>

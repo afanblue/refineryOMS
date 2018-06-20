@@ -13,7 +13,7 @@ while($x = $refColSet->fetch_assoc()) {
 	$delim = ", ";
 }
 $vwQueryTemplate = "create view vwx(colList) as select colList from reference_code"
-		 . " where category = \"catx\"";
+		 . " where category = \"catx\" order by name";
 $catQuery = "select distinct category from reference_code";
 $catSet = $connection->query($catQuery);
 while( $cats = $catSet->fetch_assoc()) {

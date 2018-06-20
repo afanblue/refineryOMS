@@ -86,7 +86,13 @@ class AnalogInputAdmin extends Component {
                        ,aid.currentScan, aid.zeroValue, aid.maxValue, aid.histTypeCode
                        ,aid.percent, aid.slope, aid.rawValue, aid.scanValue, aid.scanTime
                        ,aid.prevValue, aid.prevTime, aid.lastHistValue, aid.lastHistTime
-                       ,aid.hh, aid.hi, aid.lo, aid.ll);
+                       ,aid.hh, aid.hi, aid.lo, aid.ll, aid.unitId);
+       ai.aiTypes = aid.aiTypes;
+       ai.histTypes = aid.histTypes;
+       ai.almTypes = aid.almTypes;
+       ai.calm = aid.calm;
+       ai.unitList = aid.unitList;
+       ai.siteLocation = aid.siteLocation;
        this.setState({stage: "itemRetrieved",
                       updateDisplay: true,
                       updateData: false,
@@ -97,6 +103,35 @@ class AnalogInputAdmin extends Component {
        alert("Problem selecting analog input id "+id+"\n"+error);
        console.log("AnalogInputAdmin.aiSelect: Error - " + error);  
     });
+  }
+  
+  /** 
+   * validateForm - x is an AI object
+   */
+  validateForm( x ) {
+    let doSubmit = true;
+    let delim = "";
+    let msg = "The following field(s) ";
+    if( x.unitId === null || (x.unitId === undefined) ) {
+        doSubmit = false;
+        msg += "units ";
+        delim = ", ";
+    }
+    if(x.histTypeCode === null) {
+        doSubmit = false;
+        msg += delim + "history type";
+        delim = ", ";
+    }
+    if(x.typeCode === null) {
+        doSubmit = false;
+        msg += delim + "analog type";
+        delim = ", ";
+    }
+    if( ! doSubmit ) {
+      msg += " must be selected!";
+      alert(msg);
+    }
+    return doSubmit;
   }
 
   handleUpdate(event) {
@@ -110,18 +145,19 @@ class AnalogInputAdmin extends Component {
       method = "POST";
       url = SERVERROOT + "/ai/insert";
     }
-    var b = JSON.stringify( this.state.ai );
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" analog input "
-              +"id "+id+"\n"+error);
-        console.log("AnalogInputAdmin.aiUpdate: Error - " + error);  
-    });
-;
+    if( this.validateForm( this.state.ai ) ) {
+      var b = JSON.stringify( this.state.ai );
+      fetch(url, {
+        method: method,
+        headers: {'Content-Type':'application/json'},
+        body: b
+      }).then(this.handleErrors)
+        .catch(function(error) { 
+          alert("Problem "+(id===0?"inserting":"updating")+" analog input "
+                +"id "+id+"\n"+error);
+          console.log("AnalogInputAdmin.aiUpdate: Error - " + error);  
+      });
+    }
   }
   
   componentDidMount() {
@@ -145,7 +181,15 @@ class AnalogInputAdmin extends Component {
     let ainew = Object.assign({},this.state.ai);
     if( np.length === 1 ) {
         const field = np[0];
-        ainew[field] = value;
+        switch ( field ) {
+            case "unitId":
+            case "maxValue":
+            case "zeroValue":
+                ainew[field] = parseInt(value,10);
+                break;
+            default:
+                ainew[field] = value;
+        }
     } else {
         const field = np[1];
         ainew.tag[field] = value;

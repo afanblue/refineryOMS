@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.PrivilegeMapper">
+
+  <!-- cache / -->
+<!-- 
+                id: 1
+                name: Admin
+                parent_id: NULL
+                parent: Operator
+                active: Y
+--> 
+   <resultMap id="privResultMap" type="IdName">
+      <id property="id" column="id"/>
+      <result property="name" column="name"/>
+   </resultMap>
+
+  <select id="getPrivilegeById" resultMap="privResultMap">
+    select p.id, p.name from privilege p
+     where p.id = #{parm1}
+  </select>
+
+  <select id="getAllPrivileges" resultMap="privResultMap">
+    select p.id, p.name from privilege p order by p.name
+  </select>
+  
+  <select id="getPrivilegesForRole" resultMap="privResultMap">
+    select r.id role_id, r.name role, p.id id, p.name name 
+      from privilege p 
+      join role_priv rp on p.id = rp.priv_id 
+      join role r on r.id = rp.role_id 
+     where r.id = #{parm1}
+     order by 4;
+  </select>
+  
+  <update id="updatePrivilege" parameterType="IdName" >
+    update role set name=#{name}
+     where id = #{id}
+  </update>
+
+  <insert id="insertPrivilege" parameterType="IdName" >
+    insert into role( name ) values( #{name} )
+  </insert>
+
+</mapper>

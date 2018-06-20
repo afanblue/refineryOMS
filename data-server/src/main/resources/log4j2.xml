@@ -7,17 +7,30 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
-        <File name="logFile" fileName="${filename}" append="true">
-            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
+        <RollingFile name="RollingFile">
+            <FileName>${filename}</FileName>
+            <FilePattern>${sys:catalina.base}/logs/oms-%d{yyyy-MM-dd-hh-mm}.log.zip</FilePattern>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <CronTriggeringPolicy schedule="0 0 0 * * ?" evaluateOnStartup="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+
     </Appenders>
     <Loggers>
         <Root level="ERROR">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="logFile"/>
+            <AppenderRef ref="RollingFile"/>
         </Root>
-        <Logger name="it.avn.oms" level="DEBUG" additivity="false">
-      		<AppenderRef ref="logFile"/>
+        <Logger name="us.avn.oms" level="DEBUG" additivity="false">
+      		<AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">
+      		<AppenderRef ref="RollingFile"/>
+      		<AppenderRef ref="Console"/>
         </Logger>
     </Loggers>
 </Configuration>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.CalcVariableMapper">
+
+  <!-- cache / -->
+    
+  <resultMap id="cvMap" type="CalcVariable">
+    <result property="id"              column="id" />
+    <result property="tag.id"          column="id" />
+    <result property="tag.name"        column="name" />
+    <result property="tag.description" column="description" />
+    <result property="tag.tagTypeCode" column="tag_type_code" />
+    <result property="tag.active"      column="active" />
+    <result property="definition"      column="definition" />
+    <result property="outputTagId"     column="output_tag_id" />
+  </resultMap>
+  
+  <resultMap id="coMap" type="CalcOperand">
+    <result property="id"              column="id" />
+	<result property="name"            column="name" />
+	<result property="scanValue"       column="scan_value" />
+  </resultMap>  
+  
+  <select id="getAllCalcVariables" resultMap="cvMap">
+    select cv.id, cv.definition, cv.output_tag_id
+         , t.name, t.description, t.tag_type_code, t.active
+      from calculated cv join tag t on cv.id=t.id
+     order by t.name
+  </select>
+
+  <select id="getCalcVariable" resultMap="cvMap">
+    select cv.id, cv.definition, cv.output_tag_id
+         , t.name, t.description, t.tag_type_code, t.active
+      from calculated cv join tag t on cv.id=t.id
+	 where cv.id = #{parm1} 
+  </select>
+  
+  <select id="getCalcVariableByName" resultMap="cvMap">
+    select cv.id, cv.definition, cv.output_tag_id
+         , t.name, t.description, t.tag_type_code, t.active
+      from calculated cv join tag t on cv.id=t.id
+	 where t.name = #{parm1} 
+  </select>
+  
+  <select id="getInputTags" resultType="Long">
+    select rtt.child_tag_id
+      from rel_tag_tag rtt
+     where rtt.parent_tag_id = #{parm1}
+  </select>
+  
+  <select id="getAIValuesForCalculation" resultMap="coMap">
+    select t.id, t.name, ai.scan_value
+      from rel_tag_tag rtt 
+           join tag t on rtt.child_tag_id = t.id
+           join analog_input ai on ai.tag_id = rtt.child_tag_id
+     where rtt.parent_tag_id = #{parm1}
+  </select>
+  
+  <select id="getDIValuesForCalculation" resultMap="coMap">
+    select t.id, t.name, di.scan_value
+      from rel_tag_tag rtt 
+           join tag t on rtt.child_tag_id = t.id
+           join digital_input di on di.tag_id = rtt.child_tag_id
+     where rtt.parent_tag_id = #{parm1}
+  </select>
+  
+  
+  <update id="updateCalcVariable" parameterType="CalcVariable">
+    update calculated
+       set definition = #{definition}
+         , output_tag_id = #{outputTagId}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertCalcVariable" parameterType="CalcVariable">
+    insert calculated
+         ( id, definition, output_tag_id )
+   values( #{id}, #{definition}, #{outputTagId} )
+  </insert>
+  
+</mapper>

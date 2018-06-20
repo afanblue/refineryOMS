@@ -17,6 +17,7 @@ class AIForm extends Component {
     const aiData = this.props.aiData;
     const aitypes = aiData.aiTypes;
     const histTypes = aiData.histTypes;
+    const unitList = aiData.unitList;
     const aiUpdate = this.props.aiUpdate;
     const fieldChange = this.props.fieldChange;
     const handleQuit = this.props.handleQuit;
@@ -56,7 +57,7 @@ class AIForm extends Component {
               <tr>
                 <td className="oms-spacing-90">Active:</td>
                 <td className="oms-spacing-180">
-                  <select id="active" name="active" value={ai.tag.active} 
+                  <select id="tag.active" name="tag.active" value={ai.tag.active} 
                           className={["oms-spacing-180","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange} >
                     <option value="N">N</option>
@@ -65,7 +66,7 @@ class AIForm extends Component {
                 </td>
               </tr>
               <tr>
-                <td className="oms-spacing-90">Contents:</td>
+                <td className="oms-spacing-90">Analog Type:</td>
                 <td className="oms-spacing-180">
                   <select id="typeCode" name="typeCode" value={ai.typeCode}
                           className={["oms-spacing-180","oms-fontsize-12"].join(' ')}
@@ -80,20 +81,6 @@ class AIForm extends Component {
               </tr>
  
           <tr>
-            <td className="oms-spacing-90">ScanInterval:</td>
-            <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
-              <input type="text" id="scanInt" name="scanInt" value={ai.scanInt}
-                      onChange={fieldChange} maxLength="2" size="5"/>
-              </td>
-          </tr>
-          <tr>            
-            <td className="oms-spacing-90">ScanOffset:</td>
-            <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
-              <input type="text" id="scanOffset" name="scanOffset" value={ai.scanOffset}
-                      onChange={fieldChange} maxLength="2" size="5"/>
-            </td>
-          </tr>
-          <tr>
             <td className="oms-spacing-90">Zero Value:</td>
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
               <input type="text" id="zeroValue" name="zeroValue" value={ai.zeroValue}
@@ -105,6 +92,19 @@ class AIForm extends Component {
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
             <input type="text" id="maxValue" name="maxValue" value={ai.maxValue}
                     onChange={fieldChange} maxLength="9" size="10"/>
+            </td>
+          </tr>
+          <tr>
+            <td className="oms-spacing-90">Unit:</td>
+            <td >
+              <select id="unitId" name="unitId" value={ai.unitId}
+                      onChange={fieldChange}>
+                { unitList.map( 
+                  function(n,x){
+                    return <option key={x} value={n.id}>{n.code} ({n.name})</option>
+                  } )
+                }                
+              </select>
             </td>
           </tr>
           <tr>
@@ -129,6 +129,38 @@ class AIForm extends Component {
           </tr>
   
               <tr>
+                <td className="oms-spacing-90">Alarm Limits:</td>
+                <td className="oms-spacing-180">
+                  HH: <input type="text" id="hh" name="hh" value={ai.hh} size="8"
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         onChange={fieldChange} />
+                </td>
+              </tr>
+              <tr>
+                <td className="oms-spacing-90">&nbsp;</td>
+                <td className="oms-spacing-180">
+                  HI: <input type="text" id="hi" name="hi" value={ai.hi} size="8"
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         onChange={fieldChange} />
+                </td>
+              </tr>
+              <tr>
+                <td className="oms-spacing-90"></td>
+                <td className="oms-spacing-180">
+                  LO: <input type="text" id="lo" name="lo" value={ai.lo} size="8"
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         onChange={fieldChange} />
+                </td>
+              </tr>
+              <tr>
+                <td className="oms-spacing-90"></td>
+                <td className="oms-spacing-180">
+                  LL: <input type="text" id="ll" name="ll" value={ai.ll} size="8"
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         onChange={fieldChange} />
+  	  		  </td>
+              </tr>
+              <tr>
                 <th className="oms-spacing-90" >Corners (NW)</th>
                 <td className="oms-spacing-180">
                   <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={ai.tag.c1Lat} 
@@ -151,38 +183,6 @@ class AIForm extends Component {
                          className={["oms-spacing","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange}  maxLength="11" size="10" />
                 </td>
-              </tr>
-              <tr>
-                <td className="oms-spacing-90">&nbsp;</td>
-                <td className="oms-spacing-180">
-                  HH: <input type="text" id="hh" name="hh" value={ai.hh} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
-                         onChange={fieldChange} />
-                </td>
-              </tr>
-              <tr>
-                <td className="oms-spacing-90">Alarm Limits:</td>
-                <td className="oms-spacing-180">
-                  HI: <input type="text" id="hi" name="hi" value={ai.hi} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
-                         onChange={fieldChange} />
-                </td>
-              </tr>
-              <tr>
-                <td className="oms-spacing-90"></td>
-                <td className="oms-spacing-180">
-                  LO: <input type="text" id="lo" name="lo" value={ai.lo} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
-                         onChange={fieldChange} />
-                </td>
-              </tr>
-              <tr>
-                <td className="oms-spacing-90"></td>
-                <td className="oms-spacing-180">
-                  LL: <input type="text" id="ll_id" name="ll_id" value={ai.ll} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
-                         onChange={fieldChange} />
-  	  		  </td>
               </tr>
             
             </tbody>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.ConfigMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Config> getAllConfigurationItems( );
+	
+	Config getConfigurationItem( String key);
+	
+	Integer updateConfigurationItem( Config cfg );
+
+	Integer insertConfigurationItem( Config cfg );
+-->  
+
+  <resultMap id="configResultMap" type="Config">
+     <result property="id"    column="id" />
+     <result property="key"   column="item_name"/>
+     <result property="value" column="item_value"/>
+  </resultMap>
+  
+  <resultMap id="locationMap" type="Tag">
+    <result property="id"      column="id" />
+    <result property="name"    column="name" />
+    <result property="c1Lat"   column="c1_lat" />
+    <result property="c1Long"  column="c1_long" />
+    <result property="c2Lat"   column="c2_lat" />
+    <result property="c2Long"  column="c2_long" />
+  </resultMap>
+
+  <select id="getAllConfigurationItems" resultMap="configResultMap">
+    select id, item_name, item_value from config order by 2
+  </select>
+
+  <select id="getConfigurationItem" resultMap="configResultMap">
+    select id, item_name, item_value from config
+	 where item_name = #{parm1}
+  </select>
+  
+  <select id="getSiteLocation" resultMap="locationMap">
+    select t.id, t.name, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+      from field f join tag t on t.id=f.id 
+           join config c on t.name=c.item_value
+     where c.item_name = 'SITE'
+  </select> 
+  
+  <select id="getOmsViews" resultMap="configResultMap">
+    select 1 id, table_name item_name, table_name item_value 
+      from information_schema.views 
+     where table_schema='oms'
+     order by 2;
+  </select>
+  
+  <update id="updateConfigurationItem" parameterType="Config">
+    update config
+       set item_value = #{value}
+         , item_name = #{key}
+     where id= #{id}
+  </update>
+  
+  <insert id="insertConfigurationItem">
+    insert config( item_name, item_value) 
+    values (#{key}, #{value})
+  </insert>
+  
+</mapper>

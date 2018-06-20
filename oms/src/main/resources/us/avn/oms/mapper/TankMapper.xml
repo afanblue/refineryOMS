@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.TankMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Tank> getAllTanks( );
+	
+	Tank getTank( String key);
+	
+	Integer updateTankm( Tank t );
+
+	Integer insertTank( Tank t );
+-->  
+
+  <resultMap id="tankResultMap" type="Tank">
+     <result property="id"              column="id"/>
+     <result property="tag.id"          column="id"/>
+     <result property="tag.name"        column="name"/>
+     <result property="tag.description" column="description" />
+     <result property="tag.tagTypeCode" column="tag_type_code" />
+     <result property="tag.active"      column="active" />
+     <result property="api"             column="api"/>
+     <result property="density"         column="density"/>
+     <result property="height"          column="height"/>
+     <result property="diameter"        column="diameter"/>
+     <result property="units"           column="units"/>
+     <result property="tag.c1Lat"       column="c1_lat"/>
+     <result property="tag.c1Long"      column="c1_long"/>
+     <result property="tag.c2Lat"       column="c2_lat"/>
+     <result property="tag.c2Long"      column="c2_long"/>
+     <result property="contentType"     column="content_type"/>
+     <result property="contentTypeCode" column="content_type_code"/>
+     <result property="tempTag"         column="temp_tag"/>
+     <result property="levelTag"        column="level_tag"/>
+     <result property="tempId"          column="temp_tag_id" />
+     <result property="levelId"         column="level_tag_id" />
+  </resultMap>
+  
+  <resultMap id="idNameMap" type="IdName">
+    <result property="id"          column="id" />
+    <result property="name"        column="code" />
+  </resultMap>
+
+  <resultMap id="aiValueMap" type="AIValue" >
+    <result property="tagId"       column="id" />
+    <result property="name"        column="name" />
+    <result property="value"       column="value" />
+    <result property="valueText"   column="valueText" />
+    <result property="scanTime"    column="scan_time" />
+    <result property="alarmCode"   column="code" />
+    <result property="alarmColor"  column="color" /> 
+  </resultMap>
+
+  <resultMap id="volumeMap" type="Volume">
+    <result property="tankId"     column="tank_id" />
+    <result property="level"      column="level" />
+    <result property="volume"     column="volume" />
+  </resultMap>
+
+
+  <select id="getAllTanks" resultMap="tankResultMap">
+    select tk.id, t.name, tk.api, tk.density, tk.height, tk.diameter, tk.units
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.description, t.tag_type_code, t.active
+         , ct.name content_type, tk.content_type_code
+         , trt.temp_tag, trt.level_tag
+      from tank tk join tag t on tk.id = t.id
+           join content_type_vw ct on ct.code = tk.content_type_code
+           left outer join tank_ref_tag_vw trt on t.id = trt.id
+     order by 15,2
+  </select>
+
+  <select id="getTank" resultMap="tankResultMap">
+    select tk.id, t.name, tk.api, tk.density, tk.height, tk.diameter, tk.units
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.description, t.tag_type_code, t.active
+         , ct.name content_type, tk.content_type_code
+         , trt.temp_tag, trt.temp_tag_id, trt.level_tag, trt.level_tag_id 
+      from tank tk join tag t on tk.id = t.id
+           join content_type_vw ct on ct.code = tk.content_type_code
+           left outer join tank_ref_tag_vw trt on t.id = trt.id
+     where tk.id = #{parm1}
+  </select>
+
+  <select id="getAllContentTypes" resultMap="idNameMap">
+    select id, category, name, code, value, description, active
+      from content_type_vw
+     order by code
+  </select>
+  
+  <select id="getTankVolumesForUnit" resultMap="aiValueMap">
+    select tk.id
+         , pi() * ai.scan_value * tk.height * tk.diameter * tk.diameter /4 value
+      from rel_tag_tag rtt 
+           join tag t on rtt.parent_tag_id = t.id
+           join tank_ref_tag_vw trt on rtt.child_tag_id = trt.id
+           join tank tk on tk.id = rtt.child_tag_id
+           join analog_input ai on ai.tag_id = trt.level_tag_id
+     where t.name = #{parm1}
+       and tk.id not in (select source_id from transfer where status_id=3)
+       and tk.id not in (select destination_id from transfer where status_id=3)
+  </select>
+  
+  <select id="getLevelVolumesForTank" resultMap="volumeMap" >
+    select tank_id, level, volume
+      from volume
+     where tank_id = #{parm1}
+     order by level asc
+  </select>
+  
+  <update id="updateTank" parameterType="Tank">
+    update tank
+       set api = #{api}
+         , density = #{density}
+         , height = #{height}
+         , diameter = #{diameter}
+         , units = #{units}
+         , content_type_code = #{contentTypeCode}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertTank" parameterType="Tank">
+    insert tank
+         ( id, api, density, height, diameter
+         , units, content_type_code )
+   values( #{id}, #{api}, #{density}, #{height}, #{diameter}
+         , #{units}, #{contentTypeCode} )
+  </insert>
+  
+</mapper>

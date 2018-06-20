@@ -1,4 +1,4 @@
-package it.avn.oms.pmc.domain;
+package us.avn.oms.pmc.domain;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -12,10 +12,10 @@ import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import it.avn.oms.domain.Alarm;
-import it.avn.oms.domain.AnalogInput;
-import it.avn.oms.service.AlarmService;
-import it.avn.oms.service.HistoryService;
+import us.avn.oms.domain.Alarm;
+import us.avn.oms.domain.AnalogInput;
+import us.avn.oms.service.AlarmService;
+import us.avn.oms.service.HistoryService;
 
 /*
  *           tag_id: 24
@@ -168,7 +168,7 @@ public class AIX extends AnalogInput implements Serializable {
 			h.setTagId(tagId);
 			h.setX(scanTime.getTime()/1000L);
 			if( (lastHistValue == null) 
-					|| (intSinceLhs >= 3600)  ) {
+					|| ((intSinceLhs==null?0:intSinceLhs) >= 3600)  ) {
 				log.debug("Hourly update ("+tagId+")");
 				h.setY(scanValue);
 				hs.insertHistoryRecord(h);

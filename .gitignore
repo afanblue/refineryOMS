@@ -8,8 +8,16 @@ node_modules
 *.*~
 
 # log and backup files
+logs/**
 *.log
 *.log.gz
 
 # DB archive files
 *.arch
+
+# target directories
+data-server/target/**
+oms/target/**
+scada/target/**
+sim/target/**
+transfer/target/**

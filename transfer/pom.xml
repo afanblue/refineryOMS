@@ -95,7 +95,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>it.avn</groupId>
+    	<groupId>us.avn</groupId>
     	<artifactId>oms</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
@@ -140,7 +140,7 @@
             <manifest>
               <classpathPrefix>libs/</classpathPrefix>
               <mainClass>
-                it.avn.oms.transfer.Sim
+                us.avn.oms.transfer.Sim
               </mainClass>
             </manifest>
           </archive>

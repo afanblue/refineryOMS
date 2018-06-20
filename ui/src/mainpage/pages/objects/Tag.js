@@ -16,3 +16,7 @@ export function RelTagTag(i,cid,c,pid,p) {
   this.id = i; this.childTagId=cid; this.child=(c===null)?'':c; 
   this.parentTagId=pid; this.parent=(p===null)?'':p;
 }
+
+export function IdName( i, n) {
+  this.id = i; this.name=n;
+}

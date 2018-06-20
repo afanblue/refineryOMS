@@ -88,7 +88,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>it.avn</groupId>
+    	<groupId>us.avn</groupId>
     	<artifactId>oms</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
@@ -138,7 +138,7 @@
             <manifest>
               <classpathPrefix>libs/</classpathPrefix>
               <mainClass>
-                it.avn.oms.sim.Sim
+                us.avn.oms.sim.Sim
               </mainClass>
             </manifest>
           </archive>
@@ -147,5 +147,5 @@
     </plugins>
   </build>
 
-  <groupId>it.avn.oms</groupId>
+  <groupId>us.avn.oms</groupId>
 </project>

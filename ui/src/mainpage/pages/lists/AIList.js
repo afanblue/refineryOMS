@@ -14,13 +14,18 @@ class AIList extends Component {
     var json = this.props.aiData;
     var aiSelect = this.props.aiSelect;
     var aiList = [];
+    var t0 = new Tag(0,'Create new tag',null,'AI',null,null,null,null,'Y');
+    var ai0 = new AnalogInput(0,t0,null,null,null,null, null,null,null,null,null
+                             ,null,null,null,null,null
+                             ,null,null,null,null,null,null,null);
+    aiList.push(ai0);
     json.map(function(n,x){
         var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode
                        ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long,n.tag.active);
-        var ai = new AnalogInput(
-            n.tagId,t,n.typeCode,n.scanInt,n.scanOffset,n.currentScan,n.zeroValue
-           ,n.maxValue,n.histTypeCode,n.percent,n.slope,n.rawValue,n.scanValue,n.scanTime
-           ,n.prevValue,n.prevTime,n.lastHistValue,n.lastHistTime,n.hh,n.hi,n.lo,n.ll);
+        var ai = new AnalogInput(n.tagId,t,n.typeCode,n.scanInt,n.scanOffset,n.currentScan
+                                ,n.zeroValue,n.maxValue,n.histTypeCode,n.percent,n.slope
+                                ,n.rawValue,n.scanValue,n.scanTime,n.prevValue,n.prevTime
+                                ,n.lastHistValue,n.lastHistTime,n.hh,n.hi,n.lo,n.ll,n.unitId);
         return aiList.push( ai ); } );
     return ( 
       <div className="oms-tabs">
@@ -38,14 +43,6 @@ class AIList extends Component {
             </tr>
           </thead>
           <tbody className="scrollContent">
-            <tr key="0">
-              <td className={["oms-spacing-90","oms-cursor-pointer"].join(' ')} colSpan="2">
-                <a id="0" onClick={() => {aiSelect(0)}} >
-                   Create New Analog Input
-                </a>
-              </td>
-              <td className="oms-spacing-120" colSpan="5"></td>
-            </tr>
           {aiList.map(
             function(n,x){
               let z = n.tagId;

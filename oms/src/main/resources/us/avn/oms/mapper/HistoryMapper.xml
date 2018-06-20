@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.HistoryMapper">
+
+  <!-- cache / -->
+<!-- 
+	Integer insertHistory( History h );
+-->  
+
+  <resultMap id="historyResultMap" type="History">
+     <result property="id"         column="id" />
+     <result property="tagId"      column="tag_id"/>
+     <result property="y"          column="scan_value"/>
+     <result property="x"          column="scan_time" />
+  </resultMap>
+  
+  <select id="getTagHistory" parameterType="HistoryRequest" resultMap="historyResultMap" >
+    select id, tag_id, scan_value, scan_time 
+      from history
+     where tag_id = #{tagId}
+     <choose>
+       <when test="startInterval != null and endInterval != null">
+         and scan_time 
+             between unix_timestamp(sysdate() - Interval #{startInterval} #{units})
+                 and unix_timestamp(sysdate() - Interval #{endInterval} #{units})
+       </when>
+       <when test="startInterval != null">
+         and scan_time
+             > unix_timestamp(sysdate() - Interval #{startInterval} day )
+       </when>
+     </choose>
+     order by id
+  </select>
+  
+  <insert id="insertHistoryRecord" parameterType="History">
+    insert history( tag_id, scan_value, scan_time ) 
+    values (#{tagId}, #{y}, #{x})
+  </insert>
+  
+</mapper>

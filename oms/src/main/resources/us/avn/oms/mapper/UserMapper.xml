@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.UserMapper">
+
+  <!-- cache / -->
+<!-- 
+              id: 1
+           alias: admin
+      first_name: System
+     middle_name: NULL
+       last_name: Admin
+           email: system.admin@nowhere.net
+        password: admin
+           state: A
+          status: Y
+--> 
+   <resultMap id="userResultMap" type="User">
+      <id property="id" column="id"/>
+      <result property="alias" column="alias"/>
+      <result property="firstName" column="first_name" />
+      <result property="middleName" column="middle_name" />
+      <result property="lastName" column="last_name" />
+      <result property="email" column="email" />
+      <result property="password" column="password" />
+      <result property="state" column="state" />
+      <result property="status" column="status" />
+      <result property="roleId" column="role_id" />
+   </resultMap>
+
+  <select id="getUserById" resultMap="userResultMap">
+    select id, alias, first_name, middle_name, last_name, email
+         , password, state, status, role_id
+      from user u join user_role ur on u.id = ur.user_id
+     where id = #{parm1}
+  </select>
+
+  <select id="getAllUsers" resultMap="userResultMap">
+    select id, alias, first_name, middle_name, last_name, email
+         , password, state, status
+      from user
+  </select>
+  
+  <update id="updateUser" parameterType="User">
+    update user 
+       set alias = #{alias}
+         , first_name = #{firstName}
+         , middle_name = #{middleName}
+         , last_name = #{lastName}
+         , email = #{email}
+         , password = #{password}
+         , state = #{state}
+         , status = #{status}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertUser" useGeneratedKeys="true">
+    insert user( alias, first_name, middle_name, last_name
+         , email, password, state, status ) 
+    values (#{alias}, #{firstName}, #{middleName}, #{lastName}
+         , #{email}, #{password}, #{state}, #{status})
+  </insert>
+  
+  <select id="getUserRole" resultType="UserPriv">
+    select u.alias username, concat('ROLE_',upper(r.name)) role
+      from role r join user_role ur on r.id=ur.role_id join user u on ur.user_id = u.id
+     where u.alias = #{param1}
+  </select>
+  
+  <select id="validateUser" resultType="Integer">
+    select count(*) valid
+      from user
+     where alias = #{param1}
+       and password = #{param2}
+  </select>
+  
+  
+</mapper>

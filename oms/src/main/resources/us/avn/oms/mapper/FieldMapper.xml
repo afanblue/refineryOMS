@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.FieldMapper">
+
+  <!-- cache / -->
+    
+  <resultMap id="frm" type="Field">
+    <result property="id"              column="id" />
+    <result property="roadImage"       column="road_image" />
+    <result property="satelliteImage"  column="satellite_image" />
+    <result property="tag.id"          column="id" />
+    <result property="parentId"        column="parent_id" />
+    <result property="parent"          column="parent" />
+    <result property="tag.name"        column="name" />
+    <result property="tag.description" column="description" />
+    <result property="tag.tagTypeCode" column="tag_type_code" />
+    <result property="tag.active"      column="active" />
+    <result property="tag.c1Lat"       column="c1_lat" />
+    <result property="tag.c1Long"      column="c1_long" />
+    <result property="tag.c2Lat"       column="c2_lat" />
+    <result property="tag.c2Long"      column="c2_long" />
+  </resultMap>
+  
+  <resultMap id="tankDataMap" type="TankData">
+    <result property="tagId"           column="tag_id" />
+    <result property="name"            column="name" />
+    <result property="zeroLevel"       column="zero_value" />
+    <result property="maxLevel"        column="max_value" />
+    <result property="level"           column="level" />
+    <result property="levelText"       column="level_text" />
+    <result property="levelAlarm"      column="level_alarm" />
+    <result property="levelColor"      column="level_color" /> 
+    <result property="tempText"        column="temp_text" />
+    <result property="temp"            column="temp" />
+    <result property="tempAlarm"       column="temp_alarm" />
+    <result property="tempColor"       column="temp_color" /> 
+    <result property="location.c1Lat"  column="c1_lat" />
+    <result property="location.c1Long" column="c1_long" />
+    <result property="location.c2Lat"  column="c2_lat" />
+    <result property="location.c2Long" column="c2_long" />
+  </resultMap>
+  
+  <select id="getAllFields" resultMap="frm">
+    select af.id, af.name, af.parent_id, af.parent
+      from all_fields af
+     order by af.parent, af.name
+  </select>
+
+  <select id="getFieldDefinition" resultMap="frm">
+    select f.id, t.name, f.road_image, f.satellite_image
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.description, t.tag_type_code, t.active
+         , af.parent_id, af.parent
+	  from field f join tag t on f.id = t.id
+	       join all_fields af on f.id = af.id
+	 where f.id = #{parm1} 
+  </select>
+  
+  <select id="getFieldByName" resultMap="frm">
+    select f.id, t.name, f.road_image, f.satellite_image
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.description, t.tag_type_code, t.active
+	  from field f join tag t on f.id = t.id
+	 where t.name = #{parm1} 
+  </select>
+  
+  <select id="getFieldObjects" resultMap="tankDataMap">
+    select tk.id tag_id, ttk.name, ail.zero_value, ail.max_value
+         , trt.level, trt.level_text, coalesce(anl.code,"NORM") level_alarm
+         , coalesce(anl.color,"darkgreen") level_color
+         , trt.temp, trt.temp_text, coalesce(ant.code,"NORM") temp_alarm
+         , coalesce(ant.color,"darkgreen") temp_color
+         , ttk.c1_lat, ttk.c1_long, ttk.c2_lat, ttk.c2_long
+      from field_tag_deep_vw ftv
+      join tank tk on ftv.child_tag_id = tk.id
+      join tag ttk on ftv.child_tag_id = ttk.id
+      join tag tf on ftv.field_tag_id = tf.id 
+      join tank_ref_tag_vw trt on ftv.child_tag_id = trt.id 
+      join analog_input ail on trt.level_tag_id = ail.tag_id
+      left outer join alarm_info anl on trt.level_tag_id = anl.tag_id
+      left outer join alarm_info ant on trt.temp_tag_id = ant.tag_id
+     where tf.name = #{parm1}
+  </select>
+  
+  <update id="updateField" parameterType="Field">
+    update field
+       set road_image = #{roadImage}
+         , satellite_image = #{satelliteImage}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertField" parameterType="Field">
+    insert Field
+         ( id, satellite_image, road_image )
+   values( #{id}, #{satelliteImage}, #{roadImage})
+  </insert>
+  
+</mapper>

@@ -19,6 +19,7 @@ There are a number of features which have not (yet) been implemented.  These inc
 - [ ] simulated arrival of additional crude for processing
 - [ ] automated transfers for refined products to tank cars (railroads), tank trucks, and ships.  There is a first pass implementation of this, but it needs additional testing.  For this to work properly, it should be possible to set up transfers to the tank cars and or tank trucks for multiple products and the transfers end up being multiply defined.  In addition, the presence of a given tank car/truck would ideally have a product associated with it.
 - [ ] graphical display of transfers (cute animations!)
+- [ ] computed variables
 - [x] an archival mechanism for the historical data (db/archive.bat; db/archive.sh)
 - [ ] automated payment
 - [ ] user manual
@@ -146,20 +147,27 @@ There is also an assumption that whoever's doing this is conversant w/the above 
    1.  The webapp must be deployed to Tomcat.  NB, logging is done to {catalina.base}/logs, so if you deploy to Jetty or some other server, you'll need to update the log4j2.xml to correct the location
    
    1.  To schedule the services, 
--  **Windows**: execute the createScheduledJobs.bat (createScheduledJobs.bat <user> <pwd> <OMShome>)
+-  **Windows (cmd)**: execute the createScheduledJobs.bat (createScheduledJobs.bat <user> <pwd> <OMShome>)
 -  **Linux**  : move the files (sim.init; transfer.init; pmc.init) to the init.d directory, rename them, make them executable, and set up symlinks in the rc3.d directory.  The jobs to purge the logs (purgeOMSLogs.sh; purgeTomcatLogs.sh) and save the DB (extractDB.sh) will need to be added to cron by hand ("45 0 * * * {OMS_HOME}/purgeOMSLogs.sh"; "30 0 * * * {OMS_HOME}/purgeTomcatLogs.sh"; "45 0 * * * {OMS_HOME}/extractDB.sh") 
 
-   1.  To start the services, you can reboot (ugh!) or run the services (Windows) or start the services (/etc/init.d/xxxx start, where xxxx are the files you moved to init.c)
+   1.  To start the services, you can reboot (ugh!) or 
+-  **Windows**: run the services
+-  **Linux**: start the services (/etc/init.d/xxxx start, where xxxx are the files you moved to init.c)
  
    1.  The node_modules were deliberately excluded, so you'll need to do an "npm install"
     
-   1.  The UI still runs under npm, so you'll need to start that up ... (**Windows**: cd /d %OMS_HOME%\ui; npm start oms.js; **Linux**: cd $OMS_HOME/ui; npm start oms.js)
+   1.  The UI still runs under npm, so you'll need to start that up ... 
+-  **Windows (cmd)** : cd /d %OMS_HOME%\ui && npm start oms.js
+-  **Windows (powershell)**: cd $Env:OMS_HOME\ui; npm start oms.js 
+-  **Linux**: cd $OMS_HOME/ui; npm start oms.js).  And who knows, this might even start up a browser session for you!
    
-At this point, you should be able to bring up a browser, enter the appropriate URL (typically, http://localhost:3000), and go.
+At this point (see above), you should be able to bring up a browser, enter the appropriate URL (typically, http://localhost:3000), and go.
 
-## Known bugs
+## Known defects
    1.  Under transfers, "Admin Executable" and "Admin Template" can be selected consecutively, e.g., after selecting "Admin Executable", you need to select something else before "Admin Template".  If you select it next, there will be no response
-   1.  
+
+   1.  ...
+   
 ## Further Information:
 
-   1. You should be able to import the 5 eclipse projects (oms, rest, pmc (scada), sim, transfer) for additional development.  If it's not clear, the "oms" project is shared among the other 4, where "rest" is the Java webapp and the other 3 are (I hope) obvious.
+   1. You should be able to import the 5 eclipse projects (oms-shared, oms, pmc (scada), sim, transfer) for additional development.  If it's not clear, the "oms-shared" project is shared among the other 4, where "oms" is the Java webapp (using REST data services) and the other 3 are (I hope) obvious.

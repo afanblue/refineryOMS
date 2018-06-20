@@ -6,6 +6,7 @@ import AdHoc              from './pages/AdHoc.js';
 import AlarmMsgAdmin      from './pages/AlarmMsgAdmin.js';
 import AlarmTypeAdmin     from './pages/AlarmTypeAdmin.js';
 import AnalogInputAdmin   from './pages/AnalogInputAdmin.js';
+import CalcVarAdmin       from './pages/CalcVarAdmin.js';
 import ConfigAdmin        from './pages/ConfigAdmin.js';
 import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
@@ -13,6 +14,7 @@ import FieldAdmin         from './pages/FieldAdmin.js';
 import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
 import Last7DaysTransfers from './pages/Last7DaysTransfers.js';
+import ListSchematics     from './pages/ListSchematics.js';
 import PlotGroup          from './pages/PlotGroup.js';
 import PlotGroupAdmin     from './pages/PlotGroupAdmin.js';
 import ProcessUnit        from './pages/ProcessUnit.js';
@@ -20,6 +22,7 @@ import ProcessUnitAdmin   from './pages/ProcessUnitAdmin.js';
 import ProcessUnitList    from './pages/ProcessUnitList.js';
 import RoleAdmin          from './pages/RoleAdmin.js';
 import ScheduledTransfers from './pages/ScheduledTransfers.js';
+import SchematicAdmin     from './pages/SchematicAdmin.js';
 import SiteOverview       from './pages/SiteOverview.js';
 import SiteStar           from './pages/SiteStar.js';
 import TankAdmin          from './pages/TankAdmin.js';
@@ -42,6 +45,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <AlarmTypeAdmin stage={stage} />
         case "AnalogInputs":
           return <AnalogInputAdmin stage={stage} />
+        case "CalcVariables":
+          return <CalcVarAdmin stage={stage} />
         case "DigitalInputs":
           return <DigitalInputAdmin stage={stage} />
         case "Fields":
@@ -111,6 +116,16 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
         default:
           return <ProcessUnit stage={stage}
                               option={option} />    
+      }
+    case "Schematics" :
+      option = (((option==="")||(option===null))?"ListSchematics":option);
+      switch ( option ) {
+        case "ManageSchematics":
+          return <SchematicAdmin stage={stage} />
+        case "ListSchematics":
+          return <ListSchematics stage={stage} />        
+        default:
+          return <DefaultContents />
       }
     case "Transfers" :
       option = (((option==="")||(option===null))?"ActiveTransfers":option);

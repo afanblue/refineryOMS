@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.TagMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Tag> getAllTags( );
+	
+	Tag getTag( Long id);
+	
+	Integer updateTag( Tag t );
+
+	Integer insertTag( Tag t );
+-->  
+
+  <resultMap id="tagResultMap" type="Tag">
+     <result property="id"              column="id"/>
+     <result property="name"            column="name"/>
+     <result property="description"     column="description"/>
+     <result property="tagTypeCode"     column="tag_type_code"/>
+     <result property="c1Lat"           column="c1_lat"/>
+     <result property="c1Long"          column="c1_long"/>
+     <result property="c2Lat"           column="c2_lat"/>
+     <result property="c2Long"          column="c2_long"/>
+     <result property="active"          column="active"/>
+  </resultMap>
+
+  <resultMap id="tagletResultMap" type="Taglet">
+     <result property="id"              column="id"/>
+     <result property="name"            column="name"/>
+     <result property="description"     column="description"/>
+     <result property="tagTypeCode"     column="tag_type_code"/>
+     <result property="active"          column="active"/>
+  </resultMap>
+    
+  <resultMap id="idNameResultMap" type="IdName">
+     <result property="id"              column="id"/>
+     <result property="name"            column="name"/>
+  </resultMap>
+    
+  <resultMap id="tagRelationMap" type="RelTagTag">
+    <result property="id" column="id" />
+    <result property="parentTagId" column="parent_tag_id" />
+    <result property="parent" column="parent" />
+    <result property="childTagId" column="child_tag_id" />
+    <result property="child" column="child" />
+  </resultMap>
+
+  <select id="getTag" resultMap="tagResultMap">
+    select t.id, t.name, t.description, t.tag_type_code
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
+      from tag t
+     where t.id = #{parm1}
+  </select>
+  
+  <select id="getTagByName" resultMap="tagResultMap">
+    select t.id, t.name, t.description, t.tag_type_code
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
+      from tag t
+     where t.name = #{parm1}
+  </select>
+
+  <select id="getAllTagsByType" resultMap="tagResultMap">
+    select t.id, t.name, t.description, t.tag_type_code
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
+      from tag t
+     where t.tag_type_code = #{parm1}
+  </select>
+  
+  <select id="getAllTagletsByType" resultMap="tagletResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, t.active
+      from tag t
+     where t.tag_type_code = #{parm1}
+     order by 2
+  </select>  
+  
+  <select id="getAllIdNamesByType" resultMap="idNameResultMap">
+    select t.id, t.name
+      from tag t
+     where t.tag_type_code = #{parm1}
+     order by 2
+  </select>  
+  
+  <select id="getAllIdNamesByTypeList" resultMap="idNameResultMap">
+    select t.id, t.name
+      from tag t
+     where t.tag_type_code in
+        <foreach item="parm" index="index" collection="list"
+             open="(" separator="," close=")">
+        #{parm}
+    </foreach>
+     order by 2
+  </select>
+  
+  <select id="getParentTags" resultMap="tagRelationMap" >
+    select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+      from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
+           join tag tc on rtt.child_tag_id = tc.id
+     where rtt.child_tag_id = #{parm1}
+  </select>
+  
+  <select id="getChildTags" resultMap="tagRelationMap" >
+    select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+      from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
+           join tag tc on rtt.child_tag_id = tc.id 
+     where rtt.parent_tag_id = #{parm1}
+  </select>
+  
+  <select id="getChildren" resultMap="tagletResultMap" >
+    select tc.id, tc.name, tc.description, tc.tag_type_code, tc.active
+      from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
+           join tag tc on rtt.child_tag_id = tc.id 
+     where rtt.parent_tag_id = #{parm1}
+  </select>
+  
+  <delete id="deleteChildTags">
+    delete from rel_tag_tag where parent_tag_id = #{parm1}
+  </delete>
+  
+  <update id="updateTag" parameterType="Tag">
+    update tag
+       set name = #{name}
+         , description = #{description}
+         , tag_type_code = #{tagTypeCode}
+         , c1_lat = #{c1Lat}
+         , c1_long = #{c1Long}
+         , c2_lat = #{c2Lat}
+         , c2_long = #{c2Long}
+         , active = #{active}
+     where id = #{id}
+  </update>
+
+  <update id="updateRelationship" parameterType="RelTagTag" >
+    update rel_tag_tag
+       set parent_tag_id = #{parentTagId}
+         , child_tag_id = #{childTagId}
+     where id = #{id}
+ </update>
+  
+  <insert id="insertTag" parameterType="Tag">
+    insert tag
+         ( name, description, tag_type_code
+         , c1_lat, c1_long, c2_lat, c2_long, active )
+   values( #{name}, #{description}, #{tagTypeCode}
+         , #{c1Lat}, #{c1Long}, #{c2Lat}, #{c2Long}, #{active})
+  </insert>
+  
+  <insert id="insertRelationship" parameterType="RelTagTag">
+    insert rel_tag_tag( parent_tag_id, child_tag_id )
+    values( #{parentTagId}, #{childTagId} )
+  </insert>
+  
+</mapper>

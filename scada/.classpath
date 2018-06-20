@@ -21,6 +21,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="src" path="/oms"/>
+	<classpathentry exported="true" kind="src" path="/oms-shared"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

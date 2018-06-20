@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.VesselMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Vessel> getAllVessels( );
+	
+	Vessel getVessel( String key);
+	
+	Integer updateVessel( Vessel cfg );
+
+	Integer insertVessel( Vessel cfg );
+-->  
+
+  <resultMap id="vesselResultMap" type="Vessel">
+     <result property="id"              column="id" />
+     <result property="tag.id"          column="id" />
+     <result property="tag.name"        column="name" />
+     <result property="tag.description" column="description" />
+     <result property="tag.tagTypeCode" column="tag_type_code" />
+     <result property="tag.active"      column="active" />
+     <result property="customerId"      column="customer_id"/>
+     <result property="quantity"        column="quantity"/>
+     <result property="vesselName"      column="vessel_name" />
+  </resultMap>
+  
+
+  <select id="getAllVessels" resultMap="vesselResultMap">
+    select v.id, v.name vessel_name, v.quantity, v.customer_id
+         , t.name, t.description, t.tag_type_code, t.active
+      from vessel v join tag t on v.id=t.id
+     order by 2
+  </select>
+
+  <select id="getVessel" resultMap="vesselResultMap">
+    select id, name vessel_name, quantity, customer_id from vessel
+	 where id = #{parm1}
+  </select>
+    
+  <select id="getVesselByName" resultMap="vesselResultMap">
+    select id, name vessel_name, quantity, customer_id from vessel
+	 where name = #{parm1}
+  </select>
+    
+  <update id="updateVessel" parameterType="Vessel">
+    update vessel
+       set name = #{name}
+         , quantity = #{quantity}
+         , customer_id = #{customerId}
+     where id= #{id}
+  </update>
+  
+  <insert id="insertVessel">
+    insert vessel( id, name, quantity, customer_id) 
+    values (#{id}, #{name}, #{quantity}, #{customerId})
+  </insert>
+  
+</mapper>

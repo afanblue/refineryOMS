@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.UnitMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<UnitType> getAllUnitTypes( );
+	UnitType getUnitType( Long id );
+	insertUnitType( UnitType ut );
+	updateUnitType( UnitType ut );
+	
+	Collection<Unit> getAllUnits( );
+	Unit getUnit( Long id );
+	insertUnit( Unit u );
+	updateUnit( Unit ut );
+
+    Collection<UnitConversion> getAllUnitConversions();
+	UnitConversion getUnitConversion( Long id );
+	insertUnitConversion( UnitConversion uc );
+	updateUnitConversion( UnitConversion uc );
+	
+-->  
+
+  <resultMap id="UnitMap" type="Unit">
+     <result property="id"           column="id"/>
+     <result property="name"         column="name"/>
+     <result property="code"         column="code" />
+     <result property="unitTypeId"   column="unit_type_id"/>
+     <result property="unitType"     column="unit_type"/>
+  </resultMap>
+    
+  <resultMap id="UnitConversionMap" type="UnitConversion">
+     <result property="id"        column="id" />
+     <result property="fromId"    column="from_id" />
+     <result property="from"      column="fromName" />
+     <result property="toId"      column="to_id" />
+     <result property="to"        column="toName" />
+     <result property="offset"    column="offset" />
+     <result property="factor"        column="factor" />
+  </resultMap>
+
+  <resultMap id="UnitTypeMap" type="UnitType">
+     <result property="id"         column="id" />
+     <result property="name"       column="name" />
+     <result property="code"       column="code" />
+  </resultMap>
+  
+  <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+<!-- -->
+  <select id="getAllUnitTypes" resultMap="UnitTypeMap">
+    select ut.id, ut.name, ut.code
+      from unit_type ut
+      order by ut.code
+  </select>
+
+  <select id="getUnitType" resultMap="UnitTypeMap">
+    select ut.id, ut.name, ut.code
+      from unit_type ut
+	 where ut.id = #{parm1}
+  </select>
+  
+  <insert id="insertUnitType" parameterType="UnitType">
+    insert unit_type( name, code ) 
+    values (#{name}, #{code} )
+  </insert>
+
+  <update id="updateUnitType" parameterType="UnitType">
+    update unit_type
+       set name = #{name}
+         , code = #{code}
+     where id = #{id}
+  </update>
+  
+<!--  -->
+
+  <select id="getAllUnits" resultMap="UnitMap">
+    select u.id, u.name, u.code, unit_type_id, ut.name unit_type
+      from unit u join unit_type ut on u.unit_type_id = ut.id
+     order by u.code
+  </select>
+
+  <select id="getUnit" resultMap="UnitMap">
+    select u.id, u.name, u.code, unit_type_id, ut.name unit_type
+      from unit u join unit_type ut on u.unit_type_id = ut.id
+     where id = {#parm1}
+  </select>
+
+  <update id="updateUnit" parameterType="Unit">
+    update Unit
+       set name = #{name}
+         , code = #{code}
+         , unit_type_id = #{unitTypeId}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertUnit" parameterType="Unit">
+    insert unit( name, code, unit_type_id ) 
+    values ( #{name}, #{code}, #{unitTypeId} )
+  </insert>
+
+ 
+<!-- -->
+  <select id="getUnitConversion" resultMap="UnitConversionMap">
+    select uc.id, from_id, uf.name fromName, to_id, ut.name toName, offset, factor 
+      from unit_conversion uc join unit uf on uc.from_id = uf.id
+      join unit ut on uc.to_id = ut.id
+	 where id = #{parm1}
+  </select>
+  
+  <select id="getAllUnitConversions" resultMap="UnitConversionMap">
+    select uc.id, from_id, uf.name fromName, to_id, ut.name toName, offset, factor 
+      from unit_conversion uc join unit uf on uc.from_id = uf.id
+      join unit ut on uc.to_id = ut.id
+     order by uc.id
+  </select>
+
+  <insert id="insertUnitConversion">
+    insert unit_conversion( from_id, to_id, offset, factor ) 
+    values (#{fromId}, #{toId}, #{offset}, #{factor} )
+  </insert>
+
+  <update id="updateUnitConversion" parameterType="UnitConversion">
+    update unit_conversion
+       set from_id = #{fromId}
+         , to_id = #{toId}
+         , offset = #{offset}
+         , factor = #{factor}
+     where id = #{id}
+  </update>
+  
+<!--  -->
+
+</mapper>
