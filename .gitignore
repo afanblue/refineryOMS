@@ -22,14 +22,21 @@ data-server/target/m2e-wtp
 data-server/target/maven-archiver
 data-server/target/maven-status
 
+# oms (shared) target directories
 oms/target/generated-sources
 oms/target/maven-*
+
+# scada target directories
 scada/target/generated-sources
 scada/target/maven-archiver
 scada/target/maven-status
+
+# simulator target directories
 sim/target/generated-sources
 sim/target/maven-archiver
 sim/target/maven-status
+
+# transfer target directories
 transfer/target/generated-sources
 transfer/target/maven-archiver
 transfer/target/maven-status
