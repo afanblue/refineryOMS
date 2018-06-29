@@ -4,7 +4,7 @@
 
 cd $OMS_HOME/scada
 
-export CLASSPATH=.:target/classes:libs/*
+export CLASSPATH=target/xfer.jar:libs/*
 export LOG=logs/pmcError.txt
 date >> $LOG
 echo "cp=$CLASSPATH" >> $LOG

@@ -46,3 +46,5 @@ transfer/target/maven-status
 /transfer/target/maven-archiver
 /transfer/target/maven-status
 /sim/target/classes
+/oms/target/maven-archiver
+/oms/target/maven-status

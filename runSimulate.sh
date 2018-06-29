@@ -5,7 +5,7 @@
 
 cd  $OMS_HOME/sim
 
-export CLASSPATH=.:target/classes:libs/*
+export CLASSPATH=target/sim.jar:libs/*
 export LOG=logs/simError.txt
 date >> $LOG
 echo "cp=$CLASSPATH" >> $LOG

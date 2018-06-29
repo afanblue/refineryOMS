@@ -6,7 +6,7 @@
 
 cd $OMS_HOME/transfer
 
-export CLASSPATH=.:target/classes:libs/*
+export CLASSPATH=target/transfer.jar:libs/*
 export LOG=logs/transferError.txt
 date >> $LOG
 echo "cp=$CLASSPATH" >> $LOG
