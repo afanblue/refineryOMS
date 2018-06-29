@@ -15,7 +15,7 @@ public interface CalcVariableMapper {
   
 	CalcVariable getCalcVariableByName( String name );
 	
-	Collection<Long> getInputTags( Long id );
+	Collection<IdName> getInputTagList( Long id );
 	
 	Collection<CalcOperand> getAIValuesForCalculation( Long id );
 	

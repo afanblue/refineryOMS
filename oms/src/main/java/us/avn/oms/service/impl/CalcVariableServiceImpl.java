@@ -50,7 +50,6 @@ public class CalcVariableServiceImpl implements CalcVariableService {
 		log.debug("getting calc variable record for "+id);
 		if( id != 0 ) {
 			cv = cvMapper.getCalcVariable(id);
-			cv.setInputTags(cvMapper.getInputTags(id));
 		} else {
 			cv = new CalcVariable(0L,"Enter new field ...");
 		}
@@ -63,8 +62,8 @@ public class CalcVariableServiceImpl implements CalcVariableService {
 	}
 	
 	@Override
-	public Collection<Long> getInputTags( Long id ) {
-		return cvMapper.getInputTags( id );
+	public Collection<IdName> getInputTagList( Long id ) {
+		return cvMapper.getInputTagList( id );
 	}
 
 	@Override

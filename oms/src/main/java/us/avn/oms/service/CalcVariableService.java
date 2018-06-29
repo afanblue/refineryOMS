@@ -16,7 +16,7 @@ public interface CalcVariableService {
   
 	public CalcVariable getCalcVariableByName( String name );
   
-	public Collection<Long> getInputTags( Long id );
+	public Collection<IdName> getInputTagList( Long id );
 	
 	public Collection<CalcOperand> getAIValuesForCalculation( Long id );
 	

@@ -5,7 +5,7 @@ import CalcVarForm from './forms/CalcVarForm.js';
 import CalcVarList from './lists/CalcVarList.js';
 import Waiting from './Waiting.js';
 import {CalcVar} from './objects/CalcVar.js';
-import {Tag, IdName} from './objects/Tag.js';
+import {Tag} from './objects/Tag.js';
 
 
 
@@ -20,10 +20,11 @@ class CalcVarAdmin extends Component {
       returnedText: null,
       calcVar: null
     }
-    this.handleChange   = this.handleChange.bind(this);
-    this.handleSelect   = this.handleSelect.bind(this);
-    this.handleUpdate   = this.handleUpdate.bind(this);
-    this.handleQuit     = this.handleQuit.bind(this);
+    this.handleChange  = this.handleChange.bind(this);
+    this.handleSelect  = this.handleSelect.bind(this);
+    this.handleUpdate  = this.handleUpdate.bind(this);
+    this.handleQuit    = this.handleQuit.bind(this);
+    this.requestRender = this.requestRender.bind(this);
   }
   
   handleErrors(response) {
@@ -67,13 +68,21 @@ class CalcVarAdmin extends Component {
        let fd = json;
        const t = new Tag(fd.id,fd.tag.name,fd.tag.description,fd.tag.tagTypeCode
                         ,fd.tag.c1Lat,fd.tag.c1Long,fd.tag.c2Lat,fd.tag.c2Long,fd.tag.active);
-       let blankItem = new IdName(null,'---');       
+       let blankItem = {};
+       blankItem.id = null;
+       blankItem.name = '---';       
        let otl = fd.outputTagList;
        otl.unshift(blankItem);
-       let itl = fd.tagList;
-       itl.unshift(blankItem);
+       let itl = fd.inputTagList;
        const cv = new CalcVar(fd.id,t,fd.definition,fd.outputTagId,fd.inputTags,otl,itl);
-       
+       var its = fd.inputTags;
+       var itids = [];
+       if( its !== null ) {
+         its.map(function(n,x) {
+                  return itids.push(n.id);
+                } )
+       }
+       cv.inputTagIds = itids;
        this.setState( {stage: "itemRetrieved",
                       updateDisplay: true,
                       updateData: false,
@@ -132,6 +141,7 @@ class CalcVarAdmin extends Component {
       url = SERVERROOT + "/calcVariable/insert";
     }
     var cv = Object.assign({},this.state.calcVar);
+    delete cv.inputTagIds;
     if( this.validateForm( cv ) ) {
       const b = JSON.stringify(cv);
       console.log("CalcVarAdmin.update "+method)
@@ -164,18 +174,23 @@ class CalcVarAdmin extends Component {
     }
   }
   
+  requestRender() {
+    let cvnew = Object.assign({},this.state.calcVar);
+    this.setState({calcVar: cvnew } );
+  }
+  
   handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
     let np = name.split(".");
     let cvnew = Object.assign({},this.state.calcVar);
-    if( target.name === "inputTags" ) {
+    if( target.name === "inputTagIds" ) {
         let f = -1;
         let tNew = [];
-        let tLength = (cvnew.inputTags===null?0:cvnew.inputTags.length);
+        let tLength = (cvnew.inputTagIds===null?0:cvnew.inputTagIds.length);
         for( var i=0; i<tLength; i++) {
-            let v = cvnew.inputTags.shift();
+            let v = cvnew.inputTagIds.shift();
             if( v === parseInt(value,10) ) { 
                 f = i;
             } else {
@@ -185,7 +200,7 @@ class CalcVarAdmin extends Component {
         if( f === -1 ) {
             tNew.push(value);
         }
-        cvnew.inputTags = tNew;
+        cvnew.inputTagIds = tNew;
     } else if( np.length === 1 ) {
         const fld = np[0];
         cvnew[fld] = value;
@@ -244,11 +259,12 @@ class CalcVarAdmin extends Component {
         return <CalcVarList returnedText = {this.state.returnedText}
                             handleSelect = {this.handleSelect} />
       case "itemRetrieved":
-        return <CalcVarForm returnedText = {this.state.returnedText}
-                            calcVar = {this.state.calcVar}
-                            handleUpdate = {this.handleUpdate}
-                            handleChange = {this.handleChange}
-                            handleQuit = {this.handleCalcVarQuit}
+        return <CalcVarForm returnedText  = {this.state.returnedText}
+                            calcVar       = {this.state.calcVar}
+                            handleUpdate  = {this.handleUpdate}
+                            handleChange  = {this.handleChange}
+                            handleQuit    = {this.handleQuit}
+                            requestRender = {this.requestRender}
                />
       default:
         return <DefaultContents />

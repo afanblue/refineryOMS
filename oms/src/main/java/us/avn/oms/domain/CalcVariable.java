@@ -14,8 +14,8 @@ public class CalcVariable implements Serializable {
     private Long outputTagId;
 	private Double scanValue;
 	private Tag  tag;
-    private Collection<Long> inputTags;
-    private Collection<IdName> tagList;
+    private Collection<IdName> inputTags;	   	// list of input tag IDs
+    private Collection<IdName> inputTagList;	// list of possible input tags
     private Collection<IdName> outputTagList;
 
 
@@ -77,21 +77,21 @@ public class CalcVariable implements Serializable {
 	}
 	
 	
-	public Collection<Long> getInputTags() {
+	public Collection<IdName> getInputTags() {
 		return inputTags;
 	}
 
-	public void setInputTags(Collection<Long> inputTags) {
+	public void setInputTags(Collection<IdName> inputTags) {
 		this.inputTags = inputTags;
 	}
 	
 
-	public Collection<IdName> getTagList() {
-		return tagList;
+	public Collection<IdName> getInputTagList() {
+		return inputTagList;
 	}
 
-	public void setTagList(Collection<IdName> tagList) {
-		this.tagList = tagList;
+	public void setInputTagList(Collection<IdName> tagList) {
+		this.inputTagList = tagList;
 	}
 
 	
@@ -111,11 +111,13 @@ public class CalcVariable implements Serializable {
 		sb.append(", \"definition\"=\"").append(this.definition).append("\"");
 		sb.append(", \"outputTagId\"=").append(this.outputTagId);
 		if( this.inputTags != null ) {
-			Iterator<Long> cti = this.inputTags.iterator();
+			Iterator<IdName> cti = this.inputTags.iterator();
 			sb.append(", \"inputTags\"={");
 			String delim = "";
 			while( cti.hasNext() ) {
-				sb.append(delim).append(cti.next());
+				IdName ct = cti.next();
+				sb.append(delim).append("[").append(ct.getId());
+				sb.append(", \"").append(ct.getName()).append("\"]");
 				delim = ", ";
 			}
 			sb.append("}");

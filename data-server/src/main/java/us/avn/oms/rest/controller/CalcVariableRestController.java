@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 //import us.avn.oms.domain.CalcOperand;
 import us.avn.oms.domain.CalcVariable;
+import us.avn.oms.domain.IdName;
 //import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.service.AnalogInputService;
@@ -56,7 +57,18 @@ public class CalcVariableRestController {
 	public CalcVariable getCalcVariable( @PathVariable Long id  ) {
 		CalcVariable cv = cvs.getCalcVariable(id);
 		ArrayList<String> tl = new ArrayList<>(Arrays.asList("AI", "DI", "C"));
-		cv.setTagList(ts.getAllIdNamesByTypeList(tl));
+		Collection<IdName> itl = cvs.getInputTagList(id);
+		cv.setInputTags(itl);
+		Collection<IdName> pitl = ts.getAllIdNamesByTypeList(tl);
+		if( itl != null ) {
+			Iterator<IdName> itli = itl.iterator();
+			while( itli.hasNext() ) {
+				IdName it = itli.next();
+				boolean rq = pitl.remove(it);
+				log.debug("Remove: "+it+(rq?" true":" false"));
+			}
+		}
+		cv.setInputTagList(pitl);
 		cv.setOutputTagList(ais.getAllAIIdNameByType("C"));
 		return cv;
 	}
@@ -87,15 +99,15 @@ public class CalcVariableRestController {
 		insertInputTags(id, cv.getInputTags());
 	}
 	
-	private void insertInputTags( Long id, Collection<Long> ct ) {
+	private void insertInputTags( Long id, Collection<IdName> ct ) {
 		// insert tags
-		Iterator<Long> ict = ct.iterator();
+		Iterator<IdName> ict = ct.iterator();
 		while( ict.hasNext() ) {
-			Long cid = ict.next();
+			IdName cidn = ict.next();
 			RelTagTag rtt = new RelTagTag();
 			rtt.setId(0L);
 			rtt.setParentTagId(id);
-			rtt.setChildTagId(cid);
+			rtt.setChildTagId(cidn.getId());
 			ts.insertRelationship(rtt);
 		}		
 	}

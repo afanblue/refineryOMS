@@ -1,13 +1,70 @@
 import React, {Component} from 'react';
 //import {Stage, Layer, Group, Rect} from 'react-konva';
 //import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
+//import {IdName} from '../objects/Tag.js';
 
 
 class CalcVarForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "CalcVarForm: " + props.stage );
-    this.state = {  };
+    console.log( "CalcVarForm: constructor " );
+    this.state = { 
+      imgLeft: null,
+      imgRight: null
+    };
+    this.moveLeft  = this.moveLeft.bind(this);
+    this.moveRight = this.moveRight.bind(this);
+  }
+
+  componentDidMount() {
+    let imgLeft  = new window.Image();
+    let imgRight = new window.Image();
+    imgLeft.src = "images/leftArrow.png";
+    imgLeft.onload = ()  => { this.setState( {imgLeft:imgLeft} ); }
+    imgRight.src = "images/rightArrow.png";
+    imgRight.onload = () => { this.setState( {imgRight:imgRight} ); }
+  }
+  
+  moveLeft(event) {
+    event.preventDefault();
+    let now = new Date();
+    console.log( "CalcVarAdmin.moveLeft " + now.toISOString() );
+    let cv = this.props.calcVar;
+//    let lft = this.refs.inputTags;
+    let rit = this.refs.inputTagList;
+    var ndx = rit.selectedIndex;
+    if( ndx !== undefined ) {
+      var id = parseInt(rit[ndx].value,10);
+      var name = rit[ndx].text;
+      var option = {};
+      option.id = id;
+      option.name = name;
+      cv.inputTagIds.push(id);
+      cv.inputTags.push(option);
+      cv.inputTagList = cv.inputTagList.filter(n => n.id !== id);
+      this.props.requestRender();
+    }    
+  }
+
+  moveRight(event) {
+    event.preventDefault();
+    let now = new Date();
+    console.log( "CalcVarAdmin.moveRight " + now.toISOString() );
+    let cv = this.props.calcVar;
+    let lft = this.refs.inputTags;
+//    let rit = this.refs.inputTagList;
+    var ndx = lft.selectedIndex;
+    if( ndx !== undefined ) {
+      var id = parseInt(lft[ndx].value,10);
+      var name = lft[ndx].text;
+      var option = {};
+      option.id = id;
+      option.name = name;
+      cv.inputTags = cv.inputTags.filter(n => n.id !== id );
+      cv.inputTagIds = cv.inputTagIds.filter(n => n !== id);
+      cv.inputTagList.unshift(option);
+      this.props.requestRender();
+    }
   }
 
 
@@ -15,13 +72,23 @@ class CalcVarForm extends Component {
     const ud = this.props.returnedText;
     const cv = this.props.calcVar;
     const otl = ud.outputTagList;
-    const tagList = ud.tagList;
+    var inputTags = cv.inputTags;
+    const tagList = cv.inputTagList;
     const handleUpdate = this.props.handleUpdate;
     const handleQuit = this.props.handleQuit;
     const handleChange = this.props.handleChange;
+    const moveLeft = this.moveLeft;
+    const moveRight = this.moveRight;
+    const imgLeft = "images/leftArrow.png";
+    const imgRight = "images/rightArrow.png";
+    
+    var midStyle   = { verticalAlign: 'middle'};
+    var leftStyle  = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
+    var rightStyle = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
     
 //    const tag  = ud.tag;
     
+
     return(
       <div className="oms-tabs">
       <table>
@@ -32,7 +99,7 @@ class CalcVarForm extends Component {
       <form id="CalcVarForm" >
         Please enter your Calculated Variable information 
         <table>
-          <tbody className="scrollContent-narrow">
+          <tbody className="scrollContent-medium">
           <tr>
             <th className="oms-spacing-120">&nbsp;</th>
             <td className="oms-spacing"><img src="images/spacer.png" 
@@ -67,7 +134,7 @@ class CalcVarForm extends Component {
             </td>
           </tr>
           <tr>
-            <th className="oms-spacing-120">Definition:</th>
+            <th className="oms-spacing-120">Definition (RPN):</th>
             <td className="oms-spacing">
               <input type="text" id="definition" name="definition" value={cv.definition}
                      className={["oms-spacing-240","oms-fontsize-12"].join(' ')}  size="120" maxLength="80"
@@ -89,17 +156,39 @@ class CalcVarForm extends Component {
           </tr>
           <tr><th>&nbsp;</th><td>&nbsp;</td></tr>
           <tr>
-            <th className="oms-spacing-120">Input Tags:</th>
+            <th className="oms-spacing-120" style={midStyle}>Input Tags:</th>
             <td>
-              <select multiple={true} name="inputTags" id="inputTags" value={cv.inputTags} size={10}
-                     className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
-                     onChange={handleChange}>
-                {tagList.map(function(n,x) {
-                            return <option key={x} value={n.id}>{n.name}</option>
-                          } )
-                }
-              </select>
-            </td>
+              <table>
+                <tbody>
+                <tr>
+                  <td>
+                    <select name="inputTagIds" id="inputTagIds" ref="inputTags" size={10}
+                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                           onChange={handleChange}>
+                      {inputTags.map(function(n,x) {
+                          return <option key={x} value={n.id}>{n.name}</option>
+                        } )
+                      }
+                    </select>
+                  </td>
+                  <td style={midStyle}>
+                    <a onClick={moveLeft}><img src={imgLeft} alt="leftArrow" style={leftStyle} /></a>
+                    <p/>
+                    <a onClick={moveRight}><img src={imgRight} alt="rightArrow" style={rightStyle} /></a>
+                  </td>
+                  <td>
+                    <select name="inputTags" id="inputTags"  ref="inputTagList" size={10}
+                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} >
+                      {tagList.map(function(n,x) {
+                          return <option key={x} value={n.id}>{n.name}</option>
+                        } )
+                      }
+                    </select>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </td>            
           </tr>
           </tbody>
         </table>

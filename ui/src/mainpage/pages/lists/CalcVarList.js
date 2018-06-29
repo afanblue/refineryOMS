@@ -30,7 +30,7 @@ class CalcVarList extends Component {
           <thead className="fixedHeader">
             <tr>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> CalcVar Name </th>
-              <th className={["oms-spacing-120","oms-underline"].join(' ')}> Definition </th>
+              <th className={["oms-spacing-120","oms-underline"].join(' ')}> Definition (RPN) </th>
             </tr>
           </thead>
           <tbody className="scrollContent">

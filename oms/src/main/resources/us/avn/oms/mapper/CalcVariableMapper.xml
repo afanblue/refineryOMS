@@ -44,9 +44,9 @@
 	 where t.name = #{parm1} 
   </select>
   
-  <select id="getInputTags" resultType="Long">
-    select rtt.child_tag_id
-      from rel_tag_tag rtt
+  <select id="getInputTagList" resultType="IdName">
+    select rtt.child_tag_id id, t.name
+      from rel_tag_tag rtt join tag t on rtt.child_tag_id = t.id
      where rtt.parent_tag_id = #{parm1}
   </select>
   

@@ -16,8 +16,19 @@ logs/**
 *.arch
 
 # target directories
-data-server/target/**
-oms/target/**
-scada/target/**
-sim/target/**
-transfer/target/**
+data-server/target/classes
+data-server/target/generated-sources
+data-server/target/m2e-wtp
+data-server/target/maven-archiver
+data-server/target/maven-status
+oms/target/generated-sources
+oms/target/maven-*
+scada/target/generated-sources
+scada/target/maven-archiver
+scada/target/maven-status
+sim/target/generated-sources
+sim/target/maven-archiver
+sim/target/maven-status
+transfer/target/generated-sources
+transfer/target/maven-archiver
+transfer/target/maven-status

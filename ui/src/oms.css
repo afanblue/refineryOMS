@@ -504,6 +504,14 @@ html>body tbody.scrollContent {
 	vertical-align: top;
 }
 
+html>body tbody.scrollContent-medium {
+	display: block;
+	height: 360px;
+	overflow: auto;
+	width: 480px;
+	vertical-align:top;
+}
+
 html>body tbody.scrollContent-narrow {
 	display: block;
 	height: 360px;
