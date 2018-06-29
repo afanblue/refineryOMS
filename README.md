@@ -19,7 +19,7 @@ There are a number of features which have not (yet) been implemented.  These inc
 - [ ] simulated arrival of additional crude for processing
 - [ ] automated transfers for refined products to tank cars (railroads), tank trucks, and ships.  There is a first pass implementation of this, but it needs additional testing.  For this to work properly, it should be possible to set up transfers to the tank cars and or tank trucks for multiple products and the transfers end up being multiply defined.  In addition, the presence of a given tank car/truck would ideally have a product associated with it.
 - [ ] graphical display of transfers (cute animations!)
-- [ ] computed variables
+- [x] computed variables
 - [x] an archival mechanism for the historical data (db/archive.bat; db/archive.sh)
 - [ ] automated payment
 - [ ] user manual

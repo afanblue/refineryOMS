@@ -15,12 +15,13 @@ logs/**
 # DB archive files
 *.arch
 
-# target directories
+# data-server target directories
 data-server/target/classes
 data-server/target/generated-sources
 data-server/target/m2e-wtp
 data-server/target/maven-archiver
 data-server/target/maven-status
+
 oms/target/generated-sources
 oms/target/maven-*
 scada/target/generated-sources
