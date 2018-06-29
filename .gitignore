@@ -40,3 +40,9 @@ sim/target/maven-status
 transfer/target/generated-sources
 transfer/target/maven-archiver
 transfer/target/maven-status
+/scada/target/maven-status
+/scada/target/maven-archiver
+/scada/target/classes
+/transfer/target/maven-archiver
+/transfer/target/maven-status
+/sim/target/classes

@@ -3,7 +3,7 @@ pushd .
 
 cd /d %OMS%\scada
 
-set CLASSPATH=.;target/classes;libs/*
+set CLASSPATH=.;target/xfer.jar;libs/*
 
 java -cp %CLASSPATH% us.avn.oms.pmc.Pmc
 

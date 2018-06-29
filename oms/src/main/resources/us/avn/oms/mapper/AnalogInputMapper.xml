@@ -163,8 +163,9 @@
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
-         , ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id
+         , ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id, tt.id tag_type_id
       from analog_input ai join tag t on ai.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
      where t.id = #{parm1}
   </select>
   
