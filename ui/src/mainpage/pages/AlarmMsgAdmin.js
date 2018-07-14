@@ -99,6 +99,7 @@ class AlarmMsgAdmin extends Component {
       body: b
     })
     .then(this.handleErrors)
+    .then(alert("Alarm message updated") )
     .catch(function(error) { 
        alert("Problem "+(method==="PUT"?"updating":"inserting")
              +" alarm message\n"+error);

@@ -6,13 +6,13 @@
 
   <!-- cache / -->
 <!-- 
-	Collection<Config> getAllConfigurationItems( );
+	Collection<ControlBlock> getAllControlBlocks( );
 	
-	Config getConfigurationItem( String key);
+	ControlBlock getControlBlock( Long id);
 	
-	Integer updateConfigurationItem( Config cfg );
+	Integer updateControlBlcok( ControlBlock cb );
 
-	Integer insertConfigurationItem( Config cfg );
+	Integer insertControlBlock( ControlBlock cb );
 -->  
 
   <resultMap id="cbResultMap" type="ControlBlock">
@@ -24,22 +24,68 @@
      <result property="scanValue" column="scan_value" />
   </resultMap>
   
-  <select id="getAllDOs" resultMap="cbResultMap">
-    select cb.id, cb.tag_id, cb.block_type, t.name output, ti.name input, do.scan_value
+  <select id="getAllCBs" resultMap="cbResultMap">
+    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name output, ti.name input, do.scan_value
       from oms.control_block cb 
       join digital_output do on cb.id=do.tag_id
       join tag t on cb.id=t.id
       join tag ti on cb.tag_id = ti.id
-     order by 4
-  </select>
-
-  <select id="getAllAOs" resultMap="cbResultMap">
-    select cb.id, cb.tag_id, cb.block_type, t.name output, ti.name input, ao.scan_value
+    union
+    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, ao.scan_value
       from oms.control_block cb 
       join analog_output ao on cb.id=ao.tag_id
       join tag t on cb.id=t.id
       join tag ti on cb.tag_id = ti.id
      order by 4
   </select>
+  
+  <select id="getAllAOs" resultMap="cbResultMap">
+    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, ao.scan_value
+      from oms.control_block cb 
+      join analog_output ao on cb.id=ao.tag_id
+      join tag t on cb.id=t.id
+      join tag ti on cb.tag_id = ti.id
+     order by 4
+  </select>
+  
+  <select id="getAllDOs" resultMap="cbResultMap">
+    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name output, ti.name input, do.scan_value
+      from oms.control_block cb 
+      join digital_output do on cb.id=do.tag_id
+      join tag t on cb.id=t.id
+      join tag ti on cb.tag_id = ti.id
+     order by 4
+  </select>
+  
+  <!--  should only return one row!  -->
+  <select id="getControlBlock" resultMap="cbResultMap">
+    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, do.scan_value
+      from oms.control_block cb 
+      join digital_output do on cb.id=do.tag_id
+      join tag t on cb.id=t.id
+      join tag ti on cb.tag_id = ti.id
+     where cb.id = #{parm1}
+    union
+    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, ao.scan_value
+      from oms.control_block cb 
+      join analog_output ao on cb.id=ao.tag_id
+      join tag t on cb.id=t.id
+      join tag ti on cb.tag_id = ti.id
+     where cb.id = #{parm1}    
+  </select>
+  
+  <update id="updateControlBlock" parameterType="ControlBlock">
+    update control_block
+       set tag_id = #{tagId}
+         , block_type = #{blockType}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertControlBlock" parameterType="ControlBlock">
+    insert control_block( id, tag_id, block_type )
+    values( #{id}, #{tagId}, #{blockType} )
+  </insert>
   
 </mapper>

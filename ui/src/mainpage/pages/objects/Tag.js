@@ -1,9 +1,10 @@
 
 
-export function Tag(i,n,d,ttc,c1t,c1l,c2t,c2l,a) {
+export function Tag(i,n,d,ttc,ttid,c1t,c1l,c2t,c2l,a) {
    this.id = i; this.name = (n===null)?'':n; this.description = (d===null)?'':d; 
-   this.tagTypeCode = (ttc===null)?'':ttc; this.c1Lat = c1t; this.c1Long=c1l; 
-   this.c2Lat=c2t; this.c2Long=c2l; this.active=(a===null)?'N':a;
+   this.tagTypeCode = (ttc===null)?'':ttc; this.tagTypeId = (ttid===null)?'':ttid;  
+   this.c1Lat = c1t; this.c1Long=c1l;  this.c2Lat=c2t; this.c2Long=c2l; 
+   this.active=(a===null)?'N':a;
 }
 
 export function Taglet(i,n,d,ttc,tti,a) {

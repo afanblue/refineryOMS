@@ -14,12 +14,13 @@ class TankList extends Component {
     var json = this.props.tankData;
     var tankSelect = this.props.tankSelect;
     var tankList = [];
-    var tg0 = new Tag(0,'New Tank','','','','','','','Y');
+    var tg0 = new Tag(0,'New Tank','','TK',null
+                     ,null,null,null,null,'Y');
     var tk0 = new Tank(0,tg0,'','','','','','','','','','','');
     tankList.push(tk0);
     json.map(function(n,x){var tg = new Tag(n.id,n.tag.name,n.tag.description
-                                           ,n.tag.tagTypeCode,n.tag.c1Lat
-                                           ,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long
+                                           ,n.tag.tagTypeCode,n.tag.tagTypeId
+                                           ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long
                                            ,n.tag.active);
                            var tk = new Tank(n.id,tg,n.api,n.density,n.height
                                            ,n.diameter,n.units,n.contentType

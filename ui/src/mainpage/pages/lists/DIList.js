@@ -13,12 +13,12 @@ class DIList extends Component {
   render() {
     var json = this.props.diData;
     var diSelect = this.props.diSelect;
-    var t0 = new Tag(0,'Create New DI','','DI',null,null,null,null,'');
+    var t0 = new Tag(0,'Create New DI','','DI',null,null,null,null,null,'');
     var di0 = new DigitalInput(0,t0,0,0,0,'B',null,null,null,null,null,null,null,null,null);
     var diList = [];
     diList.push(di0);
     json.map(function(n,x){
-        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode
+        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,n.tag.tagTypeId
                        ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long,n.tag.active);
         var di = new DigitalInput(
             n.tagId,t,n.scanInt,n.scanOffset,n.currentScan,n.histTypeCode
@@ -27,7 +27,7 @@ class DIList extends Component {
         return diList.push( di ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Site Fields</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Digital Inputs</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>

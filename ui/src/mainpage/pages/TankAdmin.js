@@ -76,6 +76,7 @@ class TankAdmin extends Component {
     }).then(json => {
        let ud = json;
        var tg = new Tag(ud.id,ud.tag.name,ud.tag.description,ud.tag.tagTypeCode
+                       ,ud.tag.tagTypeId
                        ,ud.tag.c1Lat,ud.tag.c1Long,ud.tag.c2Lat,ud.tag.c2Long
                        ,ud.tag.active);
        var tk = new Tank(ud.id,tg,ud.api,ud.density,ud.height

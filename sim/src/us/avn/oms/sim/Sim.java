@@ -1,5 +1,7 @@
 package us.avn.oms.sim;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -12,10 +14,20 @@ import org.apache.logging.log4j.Logger;
 public class Sim {
 
     private Logger log = LogManager.getLogger(this.getClass());
+    private static Logger slog = LogManager.getLogger("us.avn.oms.sim.Sim");
 
 	public static void main(String[] args) {
 		Sim sim = new Sim();
-		sim.execute(args);
+		try {
+			sim.execute(args);
+		} catch( Exception e) {
+//			Date now = new Date();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+//			System.out.println(sdf.format(now) + eas.toString());	
+			slog.error(eas);
+		}
 	}
 	
 	public void execute(String[]args) {
@@ -35,8 +47,13 @@ public class Sim {
         while( 1 == 1 ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);
-        	} catch (InterruptedException e) {
-        		log.debug(e.getStackTrace().toString());
+        	} catch (Exception e) {
+//    			Date now = new Date();
+    			StringWriter sw = new StringWriter();
+    			e.printStackTrace(new PrintWriter(sw));
+    			String eas = sw.toString();
+//        		System.out.println(sdf.format(now) + eas.toString());	
+    			log.error(eas);
         	}
         }
 

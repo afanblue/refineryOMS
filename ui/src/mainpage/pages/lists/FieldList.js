@@ -14,11 +14,11 @@ class FieldList extends Component {
     var json = this.props.returnedText;
     var fieldSelect = this.props.fieldSelect;
     var fieldList = [];
-    var nt = new Tag(0,'Create new Field','','FLD',null,null,null,null,'N');
+    var nt = new Tag(0,'Create new Field','','FLD',null,null,null,null,null,'N');
     var nf = new Field(0,nt,null,null,null,null);
     fieldList.push(nf);
     json.map(function(n,x){
-        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode
+        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,n.tag.tagTypeId
                        ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long,n.tag.active);
         var f = new Field(n.id,t,n.parentId,n.parent
                          ,n.roadImage,n.satelliteImage); 

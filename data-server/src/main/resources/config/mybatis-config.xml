@@ -11,6 +11,7 @@
      	<typeAlias alias="AlarmType"      type="us.avn.oms.domain.AlarmType"/>
      	<typeAlias alias="AlarmMessage"   type="us.avn.oms.domain.AlarmMessage"/>
      	<typeAlias alias="AnalogInput"    type="us.avn.oms.domain.AnalogInput"/>
+        <typeAlias alias="AnalogOutput"   type="us.avn.oms.domain.AnalogOutput"/>
      	<typeAlias alias="CalcOperand"    type="us.avn.oms.domain.CalcOperand"/>
      	<typeAlias alias="CalcVariable"   type="us.avn.oms.domain.CalcVariable"/>
      	<typeAlias alias="Category"       type="us.avn.oms.domain.Category" />

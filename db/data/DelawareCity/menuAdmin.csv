@@ -5,9 +5,10 @@ menu_type_vw,id,code,menu_type_id
 Data,,,
 menu_type_id,text,order_no,active
 HT,Admin,20,Y
-HT,Alarms,4,Y
+HT,Alarms,8,Y
 HT,Field Displays,1,Y
 HT,Transfers,15,Y
 HT,Process Units,2,Y
 HT,Plot Groups,10,Y
+HT,Schematics,12,Y
 End

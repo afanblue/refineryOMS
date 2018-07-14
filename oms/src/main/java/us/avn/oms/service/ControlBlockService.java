@@ -9,6 +9,14 @@ public interface ControlBlockService {
 	
 	public Collection<ControlBlock> getAllAOs( );
 	
+	public Collection<ControlBlock> getAllCBs( );
+
 	public Collection<ControlBlock> getAllDOs( );
+
+	public ControlBlock getControlBlock( Long id );
+	
+	public void insertControlBlock( ControlBlock cb );
+	
+	public void updateControlBlock( ControlBlock cb );
 
 }

@@ -13,7 +13,7 @@ echo "cp=$CLASSPATH" >> $LOG
 pwd >> $LOG
 whoami >> $LOG
 
-java -cp $CLASSPATH it.avn.oms.transfer.TransferMgr >>$LOG 2>&1 &
+java -cp $CLASSPATH us.avn.oms.transfer.TransferMgr >>$LOG 2>&1 &
 
 echo "pidfile=$TRANSFER_PID" >> $LOG 2>&1
 if [ ! -z "$TRANSFER_PID" ]; then

@@ -43,12 +43,12 @@
      <result property="tag.name"        column="name" />
      <result property="tag.description" column="description" />
      <result property="tag.tagTypeCode" column="tag_type_code" />
+     <result property="tag.tagTypeId"   column="tag_type_id" />
      <result property="tag.c1Lat"       column="c1_lat"/>
      <result property="tag.c1Long"      column="c1_long"/>
      <result property="tag.c2Lat"       column="c2_lat"/>
      <result property="tag.c2Long"      column="c2_long"/>
      <result property="tag.active"      column="active" />
-     <result property="tagTypeId"       column="tag_type_id" />
      <result property="unitId"          column="unit_id" />
      <result property="typeCode"        column="type_code"/>
      <result property="scanInt"         column="scan_int"/>

@@ -2,38 +2,41 @@
 
 This project provides a simulation of an oil refinery w/a UI for watching/controlling the action.  Controlling is a bit of a misnomer, since the only real control currently is in the management of transfers.  The "action" occurs in "real" time, that is, there is no compression of time to make the action happen faster.
 
-**DISCLAIMER 1:**  The provided picture and DB is of the Delaware City, Delaware refinery.  There has been no communication between me and the past or present owners of this site about the nature of their refinery.  If there is any correlation between this implementation and the actual site, it is strictly co-incidental.
+**DISCLAIMER 1:**  The provided picture and DB is of the Delaware City, Delaware refinery.  There has been no communication between me and the past or present owners of this site about the nature of their refinery.  If there is any correlation between this implementation and the actual site, it is strictly co-incidental.  I have made some use of my (meager) knowledge to distinguish (correctly, I hope) between crude tanks and refined product tanks. 
 
 **DISCLAIMER 2:**  This is my re-interpretation of a system I worked on early in my career.  There is no relationship between this system and the original OMS produced by that employer, even though I have borrowed the name.  Any mistakes in this re-interpretation are, of course, mine.  The original system had a single page menu whose items were activated by a light pen and location of the pen.  There was a hidden location from which Star Trek could be run.  That particular feature has not been carried over.
 
-**DISCLAIMER 3:**  The historical compression algorithms are my implementations of some algorithms originally developed at another employer.  That employer bears no responsibility for any errors in my implementations. 
+**DISCLAIMER 3:**  The historical compression algorithms are my implementations of some algorithms originally developed at another employer.  FWIW, while I had access to the code that implemented these, I do not currently have access nor do I remember the details. (It was a long time ago.) That employer bears no responsibility for any errors in my implementations. 
 
 There are a number of features which have not (yet) been implemented.  These include, but are not limited to 
 - [x] Linux installation procedures.
-- [ ] On the field displays, selecting a tank, will generate a more detailed display of the tank selected.
-- [ ] digital input processing (the full implementation of this would be associated w/inputs indicating the presence of tank cars, tank trucks and ships (set by the simulator based on either a schedule defined somewhere) and on cute animations of transfers)
-- [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to response "realistically", we need to define the input(s) which reflects the actions of the setpoint which would imply needing to understand the reaction time to the set point. Sorry, TMI required)
+- [ ] On the field displays, selecting a tank, will generate a more detailed display of the tank selected.  While cute, I'm not sure of the value of this.  The information the system has on a tank is the volume, temperature corrected volume (future), level, temperature, and some configuration values.  Is this worth a special page to display?
+- [ ] digital input processing [the full implementation of this would be associated w/inputs indicating the presence of tank cars, tank trucks and ships (set by the simulator based on a schedule defined somewhere or a random number ) and on cute animations of transfers]
+- [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to respond "realistically", we need to define the input(s) which reflects the actions of the setpoint which would imply needing to understand the reaction time (IIRC, dead time) to the set point. Sorry, TMI required)
 - [ ] digital output processing (like the analog outputs, the effect of a digital output is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position)
 - [ ] implementation of digital inputs to more realistically handle tank car, tank truck, and ship presence
-- [ ] temperature correction of the volumes
+- [ ] temperature correction of the volumes (http://www.oilconsultancy.com/pdf/warm-fuel.pdf; http://www.emerson.com/documents/automation/-engineer%E2%80%99s-guide-to-tank-gauging-en-175314.pdf).  Standard temperature 15 deg C. It turns out this is a non-trivial problem, despite all the talk in the second article about it being computerized.
 - [ ] simulated arrival of additional crude for processing
 - [ ] automated transfers for refined products to tank cars (railroads), tank trucks, and ships.  There is a first pass implementation of this, but it needs additional testing.  For this to work properly, it should be possible to set up transfers to the tank cars and or tank trucks for multiple products and the transfers end up being multiply defined.  In addition, the presence of a given tank car/truck would ideally have a product associated with it.
 - [ ] graphical display of transfers (cute animations!)
-- [x] computed variables
+- [x] computed variables (implemented w/an RPN, e.g., post-fix, but only allows analog inputs.)
 - [x] an archival mechanism for the historical data (db/archive.bat; db/archive.sh)
 - [ ] automated payment
+- [x] watchdog to notification that applications are down
 - [ ] user manual
 
 The application is built using a Java-based REST data source (Tomcat/Spring) which references a MySQL database.  The UI is implemented in react.  Underlying the UI and the database are some ancillary programs, all implemented in Java.  
 
 -  The transfer service automatically creates transfers based on transfer templates
 -  The SCADA/PMC service transfers values between the XFER table to the appropriate type table (analog/digital input/output) and saves the data
--  The simulator generates semi-realistic values for the values based on the temperature (fetched from the USWS), the transfer definitions, and the refinery output fractions.  Both the temperature location and the refinery output fractions are defined in the CONFIG table and are accessible via the admin UI.
+-  The simulator generates semi-realistic values for the values based on the temperature (fetched from the USWS), the transfer definitions, and the refinery output fractions.  Both the temperature location and the refinery output fractions are defined in the CONFIG table and are accessible via the admin UI.  Note that "real" data could be provided from actual devices if the simulator was replaced with a scanner to read those devices.
+-  The watchdog checks the watchdog table to verify that the update count is changing on the active records.  If not, it sends an email to the contents of the CONFIG WATCHDOG_EMAIL.  There are additional parameters used to configure the watchdog email:   EMAIL_FROM, EMAIL_PWD, EMAIL_USER, SMTP_HOST, and SMTP_PORT.  In the utility to extract the data from the CONFIG table (ExtractDB.php), these values are all set to lower case versions of their item name.
+
 
 There are additional files provided to enable creation of the services for Windows users.
--  start the simulator, transfer, and scada/pmc services
+-  start the simulator, transfer, scada/pmc and watchdog services (createScheduledJobs.bat)
 -  purge log files for Tomcat and the services.  Note that the purgeOMSLogs.bat and purgeOMSLogs.bat need to be modified to correctly set the directory in which they are located.
--  save the database every night.
+-  save the database every night. (db/extractDB.bat)
 
 ## Installation - So you've pulled the repo into {oms}.
 
@@ -48,7 +51,7 @@ The following are assumed to be installed:
     -  node/npm
     -  react-konva, rechart, moment, victory
     -  php (used to load DB and extract DB configuration)
-    -  Developers: Eclipse/your favorite IDE
+    -  Developers: Eclipse/your favorite IDE (the projects use Maven dependencies)
 
 ### Assumptions:
 
@@ -56,7 +59,7 @@ For the startup procedures, the Linux installation is assumed to be in /usr/shar
 
 There is also an assumption that whoever's doing this is conversant w/the above products and the languages used for this.  The languages used are:
 
-   -  Java - for the webapp, which is only used as a set of REST services for the React app to consume.  Java is also used for the transfer, scada (pmc), and simulate programs.
+   -  Java - for the webapp, which is only used as a set of REST services for the React app to consume.  Java is also used for the transfer, scada (pmc), simulate, and watchdog programs.
              
    -  ECMAscript (JavaScript) - for the React-based UI.
     
@@ -148,7 +151,7 @@ There is also an assumption that whoever's doing this is conversant w/the above 
    
    1.  To schedule the services, 
 -  **Windows (cmd)**: execute the createScheduledJobs.bat (createScheduledJobs.bat <user> <pwd> <OMShome>)
--  **Linux**  : move the files (sim.init; transfer.init; pmc.init) to the init.d directory, rename them, make them executable, and set up symlinks in the rc3.d directory.  The jobs to purge the logs (purgeOMSLogs.sh; purgeTomcatLogs.sh) and save the DB (extractDB.sh) will need to be added to cron by hand ("45 0 * * * {OMS_HOME}/purgeOMSLogs.sh"; "30 0 * * * {OMS_HOME}/purgeTomcatLogs.sh"; "45 0 * * * {OMS_HOME}/extractDB.sh") 
+-  **Linux**  : move the files (sim.init; transfer.init; pmc.init; watchdog.init) to the init.d directory, rename them, make them executable, and set up symlinks in the rc3.d directory.  The jobs to purge the logs (purgeOMSLogs.sh; purgeTomcatLogs.sh) and save the DB (extractDB.sh) will need to be added to cron by hand ("45 0 * * * {OMS_HOME}/purgeOMSLogs.sh"; "30 0 * * * {OMS_HOME}/purgeTomcatLogs.sh"; "45 0 * * * {OMS_HOME}/extractDB.sh") 
 
    1.  To start the services, you can reboot (ugh!) or 
 -  **Windows**: run the services
@@ -170,4 +173,5 @@ At this point (see above), you should be able to bring up a browser, enter the a
    
 ## Further Information:
 
-   1. You should be able to import the 5 eclipse projects (oms-shared, oms, pmc (scada), sim, transfer) for additional development.  If it's not clear, the "oms-shared" project is shared among the other 4, where "oms" is the Java webapp (using REST data services) and the other 3 are (I hope) obvious.
+   1. You should be able to import the Eclipse projects (oms-shared, oms, pmc (scada), sim, transfer, watchdog) for additional development.  If it's not clear, the "oms-shared" project is shared among the others, where "oms" is the Java webapp (using REST data services) and the others are (I hope) obvious.
+   

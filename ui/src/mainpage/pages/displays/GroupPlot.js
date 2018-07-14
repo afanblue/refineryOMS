@@ -79,8 +79,8 @@ class GroupPlot extends Component {
         }
       },
 
-      // DATA SET ONE
-      axisOne: {
+      // DATA SET ZERO
+      axisZero: {
         grid: {
           stroke: (tick) =>
             tick === -10 ? "transparent" : "#ffffff",
@@ -94,24 +94,24 @@ class GroupPlot extends Component {
           fontSize: 10
         }
       },
-      labelOne: {
+      labelZero: {
         fill: WHITE_COLOR,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic"
       },
-      lineOne: {
+      lineZero: {
         data: { stroke: WHITE_COLOR, strokeWidth: 1.5 }
       },
-      axisOneCustomLabel: {
+      axisZeroCustomLabel: {
         fill: WHITE_COLOR,
         fontFamily: "inherit",
         fontWeight: 300,
         fontSize: 10
       },
 
-      // DATA SET TWO
-      axisTwo: {
+      // DATA SET ONE
+      axisOne: {
         axis: { stroke: RED_COLOR, strokeWidth: 0 },
         tickLabels: {
           fill: RED_COLOR,
@@ -119,19 +119,19 @@ class GroupPlot extends Component {
           fontSize: 10
         }
       },
-      labelTwo: {
+      labelOne: {
         textAnchor: "start",
         fill: RED_COLOR,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic"
       },
-      lineTwo: {
+      lineOne: {
         data: { stroke: RED_COLOR, strokeWidth: 1.5 }
       },
 
-      // HORIZONTAL LINE
-      axisThree: {
+      // DATA SET TWO
+      axisTwo: {
         axis: { stroke: WHITE_COLOR, strokeWidth: 1 },
         tickLabels: {
           fill: GREEN_COLOR,
@@ -139,19 +139,19 @@ class GroupPlot extends Component {
           fontSize: 10
         }
       },
-      labelThree: {
+      labelTwo: {
         textAnchor: "start",
         fill: GREEN_COLOR,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic"
       },
-      lineThree: {
+      lineTwo: {
         data: { stroke: GREEN_COLOR, strokeWidth: 1.5 }
       },
       
-      // 
-      axisFour: {
+      // DATA SET THREE
+      axisThree: {
         axis: { stroke: YELLOW_COLOR, strokeWidth: 0 },
         tickLabels: {
           fill: YELLOW_COLOR,
@@ -159,14 +159,14 @@ class GroupPlot extends Component {
           fontSize: 10
         }
       },
-      labelFour: {
+      labelThree: {
         textAnchor: "start",
         fill: YELLOW_COLOR,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic"
       },
-      lineFour: {
+      lineThree: {
         data: { stroke: YELLOW_COLOR, strokeWidth: 1.5 }
       }
 
@@ -190,36 +190,89 @@ class GroupPlot extends Component {
     let d1 = this.state.d1;
     let d2 = this.state.d2;
     let d3 = this.state.d3;
-
-    const minTime = Math.min(d0.history[0].x, d1.history[0].x
-                            ,d2.history[0].x, d3.history[0].x);
+    
+    if( d0 == null ) {
+        return
+    }
+    const minTime = Math.min( d0.history[0].x
+                            , d1 !== null?d1.history[0].x:d0.history[0].x
+                            , d2 !== null?d2.history[0].x:d0.history[0].x
+                            , d3 !== null?d3.history[0].x:d0.history[0].x);
     const maxTime = d0.history[d0.history.length-1].x;
     
     const minY0 = d0.aiTag.zeroValue;
-    const minY1 = d1.aiTag.zeroValue;
-    const minY2 = d2.aiTag.zeroValue;
-    const minY3 = d3.aiTag.zeroValue;
     const maxY0 = d0.aiTag.maxValue;
-    const maxY1 = d1.aiTag.maxValue;
-    const maxY2 = d2.aiTag.maxValue;
-    const maxY3 = d3.aiTag.maxValue;
+    const tick0Values = this.getTickYValues(minY0,maxY0);
+    const dataSetZero = d0.history;
+    const labelZero  = d0.aiTag.tag.name + " - " + d0.aiTag.tag.description;
+
+    let LabelZero = <VictoryLabel x={25} y={15} text={labelZero} style={styles.labelZero} />
+    let AxisZero  = <VictoryAxis dependentAxis domain={ [minY0, maxY0] } offsetX={50}
+                                orientation="left" standalone={false}
+                                style={styles.axisZero} tickValues={tick0Values} />;
+    let LineZero  = <VictoryLine data={dataSetZero} domain={{x: [minTime, maxTime], y: [minY0, maxY0] }}
+                                 interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                                 standalone={false} style={styles.lineZero} />
+
+    let LabelOne = "";
+    let AxisOne  = "";
+    let LineOne  = "";
+    if( d1 !== null ) {
+      const minY1 = d1.aiTag.zeroValue;
+      const maxY1 = d1.aiTag.maxValue;
+      const tick1Values = this.getTickYValues(minY1,maxY1);
+      const dataSetOne = d1.history;
+      const labelOne   = d1.aiTag.tag.name + " - " + d1.aiTag.tag.description;
+      
+      LabelOne = <VictoryLabel x={25} y={30} text={labelOne} style={styles.labelOne} />;
+      AxisOne =  <VictoryAxis domain={[minY1, maxY1]} offsetX={30} orientation="left"
+                              standalone={false} style={styles.axisOne} tickValues={tick1Values} />;
+      LineOne  = <VictoryLine data={dataSetOne} domain={{x: [minTime, maxTime], y: [minY1,   maxY1] }}
+                              interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                              standalone={false} style={styles.lineOne} />;
+    }
+
+    let LabelTwo = "";
+    let AxisTwo  = "";
+    let LineTwo  = "";
+    if( d2 !== null ) {
+      const minY2 = d2.aiTag.zeroValue;
+      const maxY2 = d2.aiTag.maxValue;
+      const tick2Values = this.getTickYValues(minY2,maxY2);
+      const dataSetTwo = d2.history;
+      const labelTwo   = d2.aiTag.tag.name + " - " + d2.aiTag.tag.description;
+
+      LabelTwo = <VictoryLabel x={25} y={45} text={labelTwo} style={styles.labelTwo} />;
+      AxisTwo =  <VictoryAxis domain={[minY2, maxY2]} orientation="right" 
+                              standalone={false} style={styles.axisTwo} tickValues={tick2Values} />;
+      LineTwo  = <VictoryLine data={dataSetTwo} domain={{x: [minTime, maxTime], y: [minY2,   maxY2] }}
+                              interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                              standalone={false} style={styles.lineTwo} />;
+    } else {
+      AxisTwo = <VictoryAxis domain={[minY0, maxY0]} orientation="right" standalone={false}
+                              style={styles.axisZero} tickValues={tick0Values} />;
+    }
+
+    let LabelThree = "";
+    let AxisThree  = "";
+    let LineThree  = "";
+    if( d3 !== null ) {
+      const minY3 = d3.aiTag.zeroValue;
+      const maxY3 = d3.aiTag.maxValue;
+      const tick3Values = this.getTickYValues(minY3,maxY3);
+      const dataSetThree  = d3.history;
+      const labelThree = d3.aiTag.tag.name + " - " + d3.aiTag.tag.description;
+      
+      LabelThree = <VictoryLabel x={25} y={60} text={labelThree} style={styles.labelThree} />
+      AxisThree  = <VictoryAxis domain={[minY3, maxY3]} offsetX={30} orientation="right"
+                                standalone={false} style={styles.axisThree} tickValues={tick3Values} />;
+      LineThree  = <VictoryLine data={dataSetThree} domain={{x: [minTime, maxTime],y: [minY3,   maxY3] }}
+                                interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                                standalone={false} style={styles.lineThree} />;
+    }
 
     const tickValues = this.getTickValues(minTime, maxTime);
-    const tick1Values = this.getTickYValues(minY0,maxY0);
-    const tick2Values = this.getTickYValues(minY1,maxY1);
-    const tick3Values = this.getTickYValues(minY2,maxY2);
-    const tick4Values = this.getTickYValues(minY3,maxY3);
     
-    const dataSetOne = d0.history;
-    const dataSetTwo = d1.history;
-    const dataSetThree = d2.history;
-    const dataSetFour  = d3.history;
-    
-    const labelOne   = d0.aiTag.tag.name + " - " + d0.aiTag.tag.description;
-    const labelTwo   = d1.aiTag.tag.name + " - " + d1.aiTag.tag.description;
-    const labelThree = d2.aiTag.tag.name + " - " + d2.aiTag.tag.description;
-    const labelFour  = d3.aiTag.tag.name + " - " + d3.aiTag.tag.description;
-
     var n = new Date();
     var now = n.toLocaleString('en-US');
     console.log(now+" GroupPlot.render");
@@ -232,15 +285,11 @@ class GroupPlot extends Component {
         </div>
       </h2>
       <svg style={styles.parent} viewBox="0 0 640 400">
-        <VictoryLabel x={25} y={15} text={labelOne}
-            style={styles.labelOne} />
-        <VictoryLabel x={25} y={30} text={labelTwo}
-            style={styles.labelTwo} />
-        <VictoryLabel x={25} y={45} text={labelThree}
-            style={styles.labelThree} />
-        <VictoryLabel x={25} y={60} text={labelFour}
-            style={styles.labelFour} />
-        <g transform={"translate(0, 40)"}>
+        {LabelZero}
+        {LabelOne}
+        {LabelTwo}
+        {LabelThree}
+        <g transform={"translate(20, 40)"}>
             {/* Add shared independent axis */}
           <VictoryAxis
               scale="linear"
@@ -253,86 +302,18 @@ class GroupPlot extends Component {
                 }
               }
             />
-          <VictoryAxis dependentAxis
-              domain={ [minY0, maxY0] }
-              offsetX={50}
-              orientation="left"
-              standalone={false}
-              style={styles.axisOne}
-              tickValues={tick1Values}
-            />
-          <VictoryAxis 
-              domain={[minY1, maxY1]}
-              offsetX={30}
-              orientation="left"
-              standalone={false}
-              style={styles.axisTwo}
-              tickValues={tick2Values}
-            />
-          <VictoryAxis 
-              domain={[minY2, maxY2]}
-              orientation="right"
-              standalone={false}
-              style={styles.axisThree}
-              tickValues={tick3Values}
-            />
-          <VictoryAxis 
-              domain={[minY3, maxY3]}
-              offsetX={30}
-              orientation="right"
-              standalone={false}
-              style={styles.axisFour}
-              tickValues={tick4Values}
-            />
+          {AxisZero}
+          {AxisOne}
+          {AxisTwo}
+          {AxisThree}
+          {/* dataset 0 */}
+          {LineZero}
           {/* dataset 1 */}
-          <VictoryLine
-              data={dataSetOne}
-              domain={{
-                x: [minTime, maxTime],
-                y: [minY0,   maxY0]
-              }}
-              interpolation="monotoneX"
-              scale={{x: "linear", y: "linear"}}
-              standalone={false}
-              style={styles.lineOne}
-            />
+          {LineOne}
           {/* dataset 2 */}
-          <VictoryLine
-              data={dataSetTwo}
-              domain={{
-                x: [minTime, maxTime],
-                y: [minY1,   maxY1]
-              }}
-              interpolation="monotoneX"
-              scale={{x: "linear", y: "linear"}}
-              standalone={false}
-              style={styles.lineTwo}
-            />
+          {LineTwo}
           {/* dataset 3 */}
-          <VictoryLine
-              data={dataSetThree}
-              domain={{
-                x: [minTime, maxTime],
-                y: [minY2,   maxY2]
-              }}
-              interpolation="monotoneX"
-              scale={{x: "linear", y: "linear"}}
-              standalone={false}
-              style={styles.lineThree}
-            />
-          {/* dataset 4 */}
-          <VictoryLine
-              data={dataSetFour}
-              domain={{
-                x: [minTime, maxTime],
-                y: [minY3,   maxY3]
-              }}
-              interpolation="monotoneX"
-              scale={{x: "linear", y: "linear"}}
-              standalone={false}
-              style={styles.lineFour}
-            />
-
+          {LineThree}
         </g>
       </svg>
       </div>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+   <context:component-scan base-package="us.avn.oms" />
+   <context:annotation-config />
+   
+   
+   <bean id="mysqlDS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes"/>
+      <property name="username" value="oms"/>
+      <property name="password" value="omsx"/>
+   </bean>
+
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+      <property name="dataSource" ref="mysqlDS" />
+      <property name="configLocation" value="classpath:config/mybatis-config.xml" />
+   </bean>
+
+<!--  Define Mapper beans   -->
+   
+   <bean id="configMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface" value="us.avn.oms.mapper.ConfigMapper" />
+   </bean>
+
+   <bean id="wdogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface" value="us.avn.oms.mapper.WatchdogMapper" />
+   </bean>
+
+<!-- Define service beans -->
+
+   <bean id="configService" class="us.avn.oms.service.impl.ConfigServiceImpl">
+      <property name="configMapper" ref="configMapper" />
+   </bean>
+   
+   
+   <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">
+      <property name="watchdogMapper" ref="wdogMapper" />
+   </bean>
+   
+</beans>

@@ -75,6 +75,7 @@ class DigitalInputAdmin extends Component {
     }).then(json => {
        let did = json;
        var tg = new Tag(did.tag.id,did.tag.name,did.tag.description,did.tag.tagTypeCode
+                       ,did.tag.tagTypeId
                        ,did.tag.c1Lat,did.tag.c1Long,did.tag.c2Lat,did.tag.c2Long
                        ,did.tag.active);
        var di = new DigitalInput(did.tagId, tg, did.scanInt, did.scanOffset

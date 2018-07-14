@@ -66,7 +66,7 @@ class VesselAdmin extends Component {
         throw new TypeError("VesselAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
     }).then(json => {
        let vd = json;
-       const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode
+       const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode,vd.tag.tagTypeId
                         ,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
        const v = new Vessel(vd.id,t,vd.vesselName,vd.quantity,vd.customerId,vd.customer);
        const custList = vd.customers;

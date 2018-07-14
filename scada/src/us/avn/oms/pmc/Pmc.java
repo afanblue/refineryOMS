@@ -1,5 +1,7 @@
 package us.avn.oms.pmc;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -12,10 +14,20 @@ import org.apache.logging.log4j.Logger;
 public class Pmc {
 
     private Logger log = LogManager.getLogger(this.getClass());
+    private static Logger slog = LogManager.getLogger("us.avn.oms.pmc.Pmc");
 
 	public static void main(String[] args) {
 		Pmc pmc = new Pmc();
-		pmc.execute(args);
+		try {
+			pmc.execute(args);
+		} catch( Exception e) {
+//			Date now = new Date();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+//    		System.out.println(sdf.format(now) + eas.toString());	
+			slog.error(eas);
+		}
 	}
 	
 	public void execute(String[]args) {
@@ -34,8 +46,13 @@ public class Pmc {
         while( 1 == 1 ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);
-        	} catch (InterruptedException e) {
-        		e.printStackTrace();
+        	} catch (Exception e) {
+//    			Date now = new Date();
+    			StringWriter sw = new StringWriter();
+    			e.printStackTrace(new PrintWriter(sw));
+    			String eas = sw.toString();
+//        		System.out.println(sdf.format(now) + eas.toString());	
+    			log.error(eas);
         	}
         }
 

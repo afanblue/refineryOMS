@@ -6,8 +6,16 @@ import us.avn.oms.domain.ControlBlock;
 
 public interface ControlBlockMapper {
 	
+	Collection<ControlBlock> getAllAOs( );
+	
+	Collection<ControlBlock> getAllCBs( );
+	
 	Collection<ControlBlock> getAllDOs( );
 	
-	Collection<ControlBlock> getAllAOs( );
+	ControlBlock getControlBlock( Long id );
+	
+	void insertControlBlock( ControlBlock cb );
+	
+	void updateControlBlock( ControlBlock cb );
 
 }

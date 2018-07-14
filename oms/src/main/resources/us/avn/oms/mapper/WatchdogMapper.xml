@@ -8,6 +8,20 @@
 <!-- 
 	updateUpdated( Long i );
 -->  
+
+  <resultMap id="wdMap" type="Watchdog" >
+    <id property="id"                 column="id" />
+    <result property="name"           column="name" />
+    <result property="updated"        column="updated" />
+    <result property="active"         column="active" />
+    <result property="lastModifiedDt" column="lmd" />
+  </resultMap>
+  
+  <select id="getActiveWatchdogs" resultMap="wdMap">
+    select id, name, updated, active
+         , date_format(last_modified_dt,'%Y-%m-%d %H:%i:%s') lmd
+      from watchdog where active='Y'
+  </select>
   
   <update id="updateWatchdog" parameterType="String">
     update watchdog

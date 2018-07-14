@@ -14,11 +14,12 @@ class ProcessUnitList extends Component {
     var json = this.props.returnedText;
     var select = this.props.puSelect;
     var puList = [];
-    var tt = new Tag(0, "New Process Unit", "Create new process unit", null, null, null, null, null, null, null);
+    var tt = new Tag(0, "New Process Unit", "Create new process unit", "", "PU", null
+                    , null, null, null, null, "N");
     var tpu = new ProcessUnit(tt, null);
     puList.push(tpu);
     json.map(function(n,x){
-        var t = new Tag( n.tag.id, n.tag.name, n.tag.description, n.tag.tagTypeCode
+        var t = new Tag( n.tag.id, n.tag.name, n.tag.description, n.tag.tagTypeCode, n.tag.tagTypeId
                        , n.tag.c1Lat, n.tag.c1Long, n.tag.c2Lat, n.tag.c2Long, n.tag.active);
         var ts = n.tags;
         var pu = new ProcessUnit(t, ts); 

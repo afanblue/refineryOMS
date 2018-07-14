@@ -15,11 +15,12 @@ class VesselList extends Component {
     var json = this.props.returnedText;
     var vesselSelect = this.props.vesselSelect;
     var vesselList = [];
-    var nt = new Tag(0,'Create new vessel','','S',null,null,null,null,'N');
+    var nt = new Tag(0,'Create new vessel','','S',null,null,null,null,null,'N');
     var nf = new Vessel(0,nt,'New Vessel',0,null,null);
     vesselList.push(nf);
     json.map(function(n,x){
-        var t = new Tag(n.tag.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,null,null,null,null,n.tag.active);
+        var t = new Tag(n.tag.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,n.tag.tagTypeId
+                       ,null,null,null,null,n.tag.active);
         var v = new Vessel(n.id,t,n.vesselName,n.quantity,null,null); 
         return vesselList.push( v ); } );
     return ( 

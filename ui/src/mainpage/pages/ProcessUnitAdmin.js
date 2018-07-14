@@ -72,7 +72,7 @@ class ProcessUnitAdmin extends Component {
         throw new TypeError("ProcessUnitAdmin.select: response ("+contentType+") must be a JSON string");
     }).then(json => {
        let pud = json.tag;
-       const t = new Tag( pud.id, pud.name, pud.description, ((pud.tagTypeCode===null)?"PU":pud.tagTypeCode)
+       const t = new Tag( pud.id, pud.name, pud.description, pud.tagTypeCode, pud.tagTypeId
                         , pud.c1Lat, pud.c1Long, pud.c2Lat, pud.c2Long, ((pud.active===null)?"Y":pud.active));
        let tags = [];
        if( json.childTags != null ) {

@@ -1,0 +1,31 @@
+status=error
+dest = err
+name = watchdog
+ 
+property.fileName = ${env:OMS_LOGS}/watchdog-prop
+ 
+filter.threshold.type = ThresholdFilter
+filter.threshold.level = debug
+  
+appender.watchdog.type = RollingFile
+appender.watchdog.name = watchdog
+appender.watchdog.fileName = ${fileName}.log
+appender.watchdog.filePattern = ${fileName}-%d{yyyy-MM-dd}-%i.log.gz
+appender.watchdog.layout.type = PatternLayout
+appender.watchdog.layout.pattern = %d{ISO8601} %-5p %c - %m%n
+appender.watchdog.policies.type = Policies
+appender.watchdog.policies.time.type = TimeBasedTriggeringPolicy
+appender.watchdog.policies.time.interval = 1
+appender.watchdog.policies.time.modulate = true
+appender.watchdog.policies.size.type = SizeBasedTriggeringPolicy
+appender.watchdog.policies.size.size=100MB
+appender.watchdog.strategy.type = DefaultRolloverStrategy
+appender.watchdog.strategy.max = 5
+ 
+logger.watchdog.name = us.avn.oms
+logger.watchdog.level = debug
+logger.watchdog.additivity = false
+logger.watchdog.appenderRef.rolling.ref = watchdog
+ 
+rootLogger.level = error
+rootLogger.appenderRef.stdout.ref = watchdog

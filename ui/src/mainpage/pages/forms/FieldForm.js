@@ -106,32 +106,24 @@ class FieldForm extends Component {
             </td>
           </tr>
           <tr>
-            <th className="oms-spacing-120">NW Corner (latitude):</th>
-            <td className="oms-spacing">
+            <th className="oms-spacing-120">NW Corner:</th>
+            <td className="oms-spacing-180">
               <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={f.tag.c1Lat} 
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
                      onChange={fieldChange} />
-            </td>
-          </tr>
-          <tr>
-            <th className="oms-spacing-120">NW Corner (longitude):</th>
-            <td className="oms-spacing">
+              &nbsp;
               <input type="text" id="tag.c1Long" name="tag.c1Long" value={f.tag.c1Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
                      onChange={fieldChange} />
             </td>
           </tr>
           <tr>
-            <th className="oms-spacing-120">SE Corner (latitude):</th>
-            <td className="oms-spacing">
+            <th className="oms-spacing-120">SE Corner:</th>
+            <td className="oms-spacing-180">
               <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={f.tag.c2Lat} 
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
                      onChange={fieldChange} />
-            </td>
-          </tr>
-          <tr>
-            <th className="oms-spacing-120">SE Corner (longitude):</th>
-            <td className="oms-spacing">
+              &nbsp;
               <input type="text" id="tag.c2Long" name="tag.c2Long" value={f.tag.c2Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')} size="20" maxLength="12" 
                      onChange={fieldChange} />

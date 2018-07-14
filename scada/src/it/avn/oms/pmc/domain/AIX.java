@@ -86,7 +86,7 @@ public class AIX extends AnalogInput implements Serializable {
 		/*       we can implement a rate of change alarm           */
 		Alarm alm = new Alarm();
 		alm.setTagId(tagId);
-		alm.setTagTypeId(tagTypeId);
+		alm.setTagTypeId(tag.getTagTypeId());
 		String almCode = "NORM";
 		if( scanValue <= (ll==null?Long.MIN_VALUE:ll) ) {
 			almCode = "LL";

@@ -87,7 +87,7 @@ class FieldAdmin extends Component {
         throw new TypeError("FieldAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
     }).then(json => {
        let fd = json;
-       const t = new Tag(fd.id,fd.tag.name,fd.tag.description,fd.tag.tagTypeCode
+       const t = new Tag(fd.id,fd.tag.name,fd.tag.description,fd.tag.tagTypeCode,fd.tag.tagTypeId
                         ,fd.tag.c1Lat,fd.tag.c1Long,fd.tag.c2Lat,fd.tag.c2Long,fd.tag.active);
        const f = new Field(fd.id,t,fd.parentId,fd.parent,fd.roadImage,fd.satelliteImage);
        var cTanks = [];

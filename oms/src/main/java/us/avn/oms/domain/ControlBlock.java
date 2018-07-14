@@ -24,12 +24,22 @@ public class ControlBlock implements Serializable {
 	
 	private Long id;            /* id of output */
 	private Long tagId;         /* id of input  */
-	private Long blockType;
+	private String blockType;
 	private String output; 
 	private String input;
 	private Double scanValue;
+	private Collection<IdName> allOutputs;
+	private Collection<IdName> allDInputs;
+	private Collection<IdName> allAInputs;
     
     public ControlBlock() { }
+    
+    public ControlBlock( Long id, String outp ) {
+    	this.id = id;
+    	this.output = outp;
+    	this.tagId = 0L;
+    	this.blockType = "analog";
+    }
     
 	
 	public Long getId() {
@@ -50,11 +60,11 @@ public class ControlBlock implements Serializable {
 	}
 
 
-	public Long getBlockType() {
-		return (blockType==null)?1:blockType;
+	public String getBlockType() {
+		return (blockType==null)?"":blockType;
 	}
 
-	public void setBlockType(Long blockType) {
+	public void setBlockType(String blockType) {
 		this.blockType = blockType;
 	}
 
@@ -85,6 +95,33 @@ public class ControlBlock implements Serializable {
 		this.scanValue = scanValue;
 	}
 
+
+	public Collection<IdName> getAllOutputs() {
+		return allOutputs;
+	}
+
+	public void setAllOutputs(Collection<IdName> allOutputs) {
+		this.allOutputs = allOutputs;
+	}
+
+	
+	public Collection<IdName> getAllDInputs() {
+		return allDInputs;
+	}
+
+	public void setAllDInputs(Collection<IdName> allDInputs) {
+		this.allDInputs = allDInputs;
+	}
+
+	
+	public Collection<IdName> getAllAInputs() {
+		return allAInputs;
+	}
+
+	public void setAllAInputs(Collection<IdName> allAInputs) {
+		this.allAInputs = allAInputs;
+	}
+	
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer(2000);

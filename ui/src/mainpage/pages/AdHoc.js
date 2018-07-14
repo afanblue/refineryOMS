@@ -179,28 +179,30 @@ class AdHocAdmin extends Component {
   }
 
   fetchHistory(id,ndx) {
-    const myRequest = SERVERROOT + "/ai/history/" + id + "/2";
-    console.log( "AdHoc.fetchHistory - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("AdHoc.fetchHistory: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let fd = json;
-       switch( ndx ) {
-         case 1:  this.setState({d0:fd}); break;
-         case 2:  this.setState({d1:fd}); break;
-         case 3:  this.setState({d2:fd}); break;
-         default: this.setState({d3:fd}); break;
-       }
-    }).catch(function(error) { 
-       alert("Problem selecting AdHoc id "+id+"\n"+error);
-       console.log("AdHoc.fetchHistory: Error - " + error);  
-    });
+    if( id !== undefined) {
+      const myRequest = SERVERROOT + "/ai/history/" + id + "/2";
+      console.log( "AdHoc.fetchHistory - Request: " + myRequest );
+      fetch(myRequest)
+        .then(this.handleErrors)
+        .then(response => {
+          var contentType = response.headers.get("Content-Type");
+          if(contentType && contentType.includes("application/json")) {
+            return response.json();
+          }
+          throw new TypeError("AdHoc.fetchHistory: response ("+contentType+") must be a JSON string");
+      }).then(json => {
+         let fd = json;
+         switch( ndx ) {
+           case 1:  this.setState({d0:fd}); break;
+           case 2:  this.setState({d1:fd}); break;
+           case 3:  this.setState({d2:fd}); break;
+           default: this.setState({d3:fd}); break;
+         }
+      }).catch(function(error) { 
+         alert("Problem selecting AdHoc id "+id+"\n"+error);
+         console.log("AdHoc.fetchHistory: Error - " + error);  
+      });
+    }
   }
 
   handleUpdate(event) {

@@ -100,6 +100,9 @@ php loadDB.php data/%siteName%/analog_output.csv
 rem  load digital outputs
 php loadDB.php data/%siteName%/digital_output.csv
 
+rem  load calculated
+php loadDB.php data/%siteName%/calculated.csv
+
 rem  load tanks
 php loadDB.php data/%siteName%/tank.csv
 

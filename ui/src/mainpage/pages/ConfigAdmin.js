@@ -130,6 +130,7 @@ class ConfigAdmin extends Component {
       headers: {'Content-Type':'application/json'},
       body: b
     }).then(this.handleErrors)
+      .then(alert("Configuration updated") )
       .catch(function(error) { 
         alert("Problem updatig system configuration list\n"+error);
         console.log("ConfigAdmin.configUpdate: Error - " + error);  

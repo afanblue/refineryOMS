@@ -1,5 +1,7 @@
 package us.avn.oms.rest.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.ProcessUnit;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Tag;
@@ -47,11 +50,10 @@ public class ProcessUnitRestController {
 			t = ts.getTag(id);
 			pu.setChildTags(ts.getChildTags(id));
 		}
-		Collection<Taglet> tags = ts.getAllTagletsByType("TK");
-		tags.addAll(ts.getAllTagletsByType("AI"));
-		tags.addAll(ts.getAllTagletsByType("DI"));
-		pu.setTags(tags);
+		ArrayList<String> al = new ArrayList<String>(Arrays.asList("TK","AI","DI"));
+		pu.setTags(ts.getAllIdNamesByTypeList(al));
 		pu.setTag(t);
+		pu.setSiteLocation(cs.getSiteLocation());
 		return pu;
 	}
 	

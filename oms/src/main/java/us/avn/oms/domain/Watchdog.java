@@ -1,26 +1,21 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
-/*
- *  Taglet is a shortened version of an tag object, e.g., AnalogInput, Field
- *         for situations where we don't need the full object and tag info.
- *         specifically, this is originally intended for dropdown lists, but
- *         it may have further applicability
- *         
- *              id: 1
- *            name: DeCity
- *     description: Delaware City Refinery
- *   tag_type_code: FLD
- *   tag_type_info: L
- *          active: Y
- *          
+/*       
+ *       id: 2
+ *     name: DigitalInput
+ *  updated: 170700
+ *   active: Y
  */
 public class Watchdog implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
-	
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss\n");
+
 	public static final String AI = "AnalogInput";
 	public static final String AO = "AnalogOutput";
 	public static final String DCAI = "DataCollectionAI";
@@ -31,8 +26,11 @@ public class Watchdog implements Serializable {
 	public static final String DO = "DigitalOutput";
 	public static final String TRANSFER = "Transfer";
 	
-	protected Long updated;
-	protected String name;
+	private Long id;
+	private Long updated;
+	private String name;
+	private String active;
+	private String lastModifiedDt;
     
     public Watchdog() { }
     
@@ -41,6 +39,15 @@ public class Watchdog implements Serializable {
     }
 
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+
 	public Long getUpdated() {
 		return updated;
 	}
@@ -59,11 +66,34 @@ public class Watchdog implements Serializable {
 	}
 
 	
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+	
+
+	public String getLastModifiedDt() {
+		return lastModifiedDt;
+	}
+
+	public void setLastModifiedDt(String lastModifiedDt) {
+		this.lastModifiedDt = lastModifiedDt;
+	}
+
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer(2000);
 		sb.append("Watchdog{");
-		sb.append("\"name\"=\"").append(this.name).append("\"");
-		sb.append("\"updated\"=").append(this.updated);
+		sb.append(" \"id\"=").append(this.id);
+		sb.append(", \"name\"=\"").append(this.name).append("\"");
+		sb.append(", \"updated\"=").append(this.updated);
+		sb.append(", \"active\"=\"").append(this.active).append("\"");
+		sb.append(", \"lastModifiedDt\"=\"");
+		sb.append(this.lastModifiedDt==null?"null":this.lastModifiedDt);
+		sb.append("\"");
 		sb.append("}");
 		return sb.toString();
 	}

@@ -95,7 +95,8 @@ class ActiveAlarms extends Component {
            var almList = [];
            json.map( function(n,x) { 
              var t = new Tag(n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
-                            , n.alarmTag.tagTypeCode, null, null, null, null, 'Y');
+                            ,n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId
+                            ,null, null, null, null, 'Y');
              var a = new Alarm(n.id,t,n.almOccurred,n.acknowledged,n.active,n.priority
                               ,n.alarmCode,n.color,n.message,n.value); 
              return almList.push( a ); 

@@ -9,3 +9,5 @@ cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\scada\libs
 cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\sim\libs
 
 cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\transfer\libs
+
+cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\watchdog\libs

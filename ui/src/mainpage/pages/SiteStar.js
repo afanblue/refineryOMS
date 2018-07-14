@@ -95,7 +95,7 @@ class SiteStar extends Component {
                     var v = (n.value>1.0)?1.02:n.value;
                     var xp = cpx + v * r * Math.cos(theta);
                     var yp = cpy + v * r * Math.sin(theta);
-                    return <Circle radius={2} stroke={n.alarmColor} fill={n.alarmColor} x={xp} y={yp} />
+                    return <Circle key={x} radius={2} stroke={n.alarmColor} fill={n.alarmColor} x={xp} y={yp} />
                   } 
                 ) }
               </Group>

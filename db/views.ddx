@@ -21,84 +21,88 @@ view_ddl: CREATE VIEW all_fields AS select `f`.`id` AS `id`,`t`.`name` AS `name`
 *************************** 6. row ***************************
   notice: select 'analog_type_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS analog_type_vw;
-view_ddl: CREATE VIEW analog_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'ANALOG-TYPE');
+view_ddl: CREATE VIEW analog_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'ANALOG-TYPE') order by `oms`.`reference_code`.`name`;
 *************************** 7. row ***************************
+  notice: select 'calculation_type_vw' as action from dual;
+ drop_vw: DROP VIEW IF EXISTS calculation_type_vw;
+view_ddl: CREATE VIEW calculation_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'CALCULATION_TYPE') order by `oms`.`reference_code`.`name`;
+*************************** 8. row ***************************
   notice: select 'content_type_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS content_type_vw;
 view_ddl: CREATE VIEW content_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'CONTENT-TYPE');
-*************************** 8. row ***************************
+*************************** 9. row ***************************
   notice: select 'dynamic_menu_items_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS dynamic_menu_items_vw;
 view_ddl: CREATE VIEW dynamic_menu_items_vw AS select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/processunit/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from `oms`.`tag` `t` join `oms`.`privilege` `p` join `oms`.`menu` `m` where ((`t`.`tag_type_code` = 'PU') and (`t`.`active` = 'Y') and (`p`.`name` = 'View Process Units') and (`m`.`text` = 'Process Units')) union select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/field/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from `oms`.`tag` `t` join `oms`.`privilege` `p` join `oms`.`menu` `m` where ((`t`.`tag_type_code` = 'FLD') and (`t`.`active` = 'Y') and (`p`.`name` = 'View Fields') and (`m`.`text` = 'Field Displays'));
-*************************** 9. row ***************************
+*************************** 10. row ***************************
   notice: select 'field_tag_deep_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS field_tag_deep_vw;
 view_ddl: CREATE VIEW field_tag_deep_vw AS select `ft`.`field_tag_id` AS `field_tag_id`,`ft`.`child_tag_id` AS `child_tag_id` from (`oms`.`field_tag_vw` `ft` join `oms`.`tag` `t` on((`ft`.`child_tag_id` = `t`.`id`))) where (`t`.`tag_type_code` <> 'FLD') union select `ft1`.`field_tag_id` AS `field_tag_id`,`ft2`.`child_tag_id` AS `child_tag_id` from (((`oms`.`field_tag_vw` `ft1` join `oms`.`field_tag_vw` `ft2` on((`ft1`.`child_tag_id` = `ft2`.`field_tag_id`))) join `oms`.`tag` `t1` on((`ft1`.`child_tag_id` = `t1`.`id`))) join `oms`.`tag` `t2` on((`ft2`.`child_tag_id` = `t2`.`id`))) where (`t1`.`tag_type_code` = 'FLD');
-*************************** 10. row ***************************
+*************************** 11. row ***************************
   notice: select 'field_tag_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS field_tag_vw;
 view_ddl: CREATE VIEW field_tag_vw AS select `rt`.`parent_tag_id` AS `field_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from `oms`.`rel_tag_tag` `rt` join `oms`.`tag` `t` where ((`rt`.`parent_tag_id` = `t`.`id`) and (`t`.`tag_type_code` = 'FLD'));
-*************************** 11. row ***************************
+*************************** 12. row ***************************
   notice: select 'history_type_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS history_type_vw;
 view_ddl: CREATE VIEW history_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'HISTORY-TYPE');
-*************************** 12. row ***************************
+*************************** 13. row ***************************
   notice: select 'horizontal_menu_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS horizontal_menu_vw;
 view_ddl: CREATE VIEW horizontal_menu_vw AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`oms`.`menu` `m` join `oms`.`reference_code` `rc` on((`m`.`menu_type_id` = `rc`.`id`))) where ((`rc`.`category` = 'MENU_TYPE') and (`rc`.`code` = 'HT'));
-*************************** 13. row ***************************
+*************************** 14. row ***************************
   notice: select 'menu_type_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS menu_type_vw;
 view_ddl: CREATE VIEW menu_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'MENU_TYPE');
-*************************** 14. row ***************************
+*************************** 15. row ***************************
   notice: select 'off_on_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS off_on_vw;
 view_ddl: CREATE VIEW off_on_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'OFF-ON');
-*************************** 15. row ***************************
+*************************** 16. row ***************************
   notice: select 'on_off_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS on_off_vw;
 view_ddl: CREATE VIEW on_off_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'ON-OFF');
-*************************** 16. row ***************************
+*************************** 17. row ***************************
   notice: select 'tank_level_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS tank_level_vw;
 view_ddl: CREATE VIEW tank_level_vw AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `level_id` from `oms`.`tank` `t` join `oms`.`rel_tag_tag` `rtt` join `oms`.`analog_input` `ai` where ((`t`.`id` = `rtt`.`parent_tag_id`) and (`rtt`.`child_tag_id` = `ai`.`tag_id`) and (`ai`.`type_code` = 'L'));
-*************************** 17. row ***************************
+*************************** 18. row ***************************
   notice: select 'tank_ref_tag_row_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS tank_ref_tag_row_vw;
 view_ddl: CREATE VIEW tank_ref_tag_row_vw AS select `rtt`.`parent_tag_id` AS `id`,`t`.`id` AS `child_tag_id`,`t`.`name` AS `child`,`ai`.`type_code` AS `type_code`,`ai`.`scan_value` AS `value`,concat(format(`ai`.`scan_value`,2),' ',`u`.`code`) AS `value_text` from (((`oms`.`rel_tag_tag` `rtt` join `oms`.`tag` `t` on((`t`.`id` = `rtt`.`child_tag_id`))) join `oms`.`analog_input` `ai` on((`t`.`id` = `ai`.`tag_id`))) join `oms`.`unit` `u` on((`ai`.`unit_id` = `u`.`id`)));
-*************************** 18. row ***************************
+*************************** 19. row ***************************
   notice: select 'tank_ref_tag_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS tank_ref_tag_vw;
 view_ddl: CREATE VIEW tank_ref_tag_vw AS select `trtrv`.`id` AS `id`,max((case when (`trtrv`.`type_code` = 'L') then `trtrv`.`child` end)) AS `level_tag`,max((case when (`trtrv`.`type_code` = 'L') then `trtrv`.`child_tag_id` end)) AS `level_tag_id`,max((case when (`trtrv`.`type_code` = 'L') then `trtrv`.`value` end)) AS `level`,max((case when (`trtrv`.`type_code` = 'L') then `trtrv`.`value_text` end)) AS `level_text`,max((case when (`trtrv`.`type_code` = 'T') then `trtrv`.`child` end)) AS `temp_tag`,max((case when (`trtrv`.`type_code` = 'T') then `trtrv`.`child_tag_id` end)) AS `temp_tag_id`,max((case when (`trtrv`.`type_code` = 'T') then `trtrv`.`value` end)) AS `temp`,max((case when (`trtrv`.`type_code` = 'T') then `trtrv`.`value_text` end)) AS `temp_text` from `oms`.`tank_ref_tag_row_vw` `trtrv` group by `trtrv`.`id`;
-*************************** 19. row ***************************
+*************************** 20. row ***************************
   notice: select 'tank_tag_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS tank_tag_vw;
 view_ddl: CREATE VIEW tank_tag_vw AS select `rt`.`parent_tag_id` AS `parent_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from `oms`.`rel_tag_tag` `rt` join `oms`.`tag` `t` where ((`rt`.`parent_tag_id` = `t`.`id`) and (`t`.`tag_type_code` = 'TK'));
-*************************** 20. row ***************************
+*************************** 21. row ***************************
   notice: select 'tank_temperature_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS tank_temperature_vw;
 view_ddl: CREATE VIEW tank_temperature_vw AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `temperature_id` from `oms`.`tank` `t` join `oms`.`rel_tag_tag` `rtt` join `oms`.`analog_input` `ai` where ((`t`.`id` = `rtt`.`parent_tag_id`) and (`rtt`.`child_tag_id` = `ai`.`tag_id`) and (`ai`.`type_code` = 'T'));
-*************************** 21. row ***************************
+*************************** 22. row ***************************
   notice: select 'tf_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS tf_vw;
 view_ddl: CREATE VIEW tf_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'TF');
-*************************** 22. row ***************************
+*************************** 23. row ***************************
   notice: select 'transfer_status_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS transfer_status_vw;
 view_ddl: CREATE VIEW transfer_status_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'TRANSFER_STATUS');
-*************************** 23. row ***************************
+*************************** 24. row ***************************
   notice: select 'transfer_type_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS transfer_type_vw;
 view_ddl: CREATE VIEW transfer_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'TRANSFER_TYPE');
-*************************** 24. row ***************************
+*************************** 25. row ***************************
   notice: select 'transfer_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS transfer_vw;
 view_ddl: CREATE VIEW transfer_vw AS select `t`.`id` AS `id`,`t`.`name` AS `name`,`tsv`.`code` AS `status`,`ttv`.`code` AS `type`,`ts`.`name` AS `source`,`td`.`name` AS `destination`,`t`.`exp_start_time` AS `exp_start_time`,`t`.`exp_end_time` AS `exp_end_time`,`t`.`exp_volume` AS `exp_volume`,`t`.`act_start_time` AS `act_start_time`,`t`.`act_end_time` AS `act_end_time`,`t`.`act_volume` AS `act_volume` from ((((`oms`.`transfer` `t` join `oms`.`transfer_status_vw` `tsv` on((`t`.`status_id` = `tsv`.`id`))) join `oms`.`transfer_type_vw` `ttv` on((`t`.`transfer_type_id` = `ttv`.`id`))) join `oms`.`tag` `ts` on((`t`.`source_id` = `ts`.`id`))) join `oms`.`tag` `td` on((`t`.`destination_id` = `td`.`id`)));
-*************************** 25. row ***************************
+*************************** 26. row ***************************
   notice: select 'user_priv' as action from dual;
  drop_vw: DROP VIEW IF EXISTS user_priv;
 view_ddl: CREATE VIEW user_priv AS select `u`.`alias` AS `user`,`p`.`name` AS `privilege` from ((((`oms`.`user` `u` join `oms`.`role` `r`) join `oms`.`user_role` `ur`) join `oms`.`privilege` `p`) join `oms`.`role_priv` `rp`) where ((`ur`.`user_id` = `u`.`id`) and (`ur`.`role_id` = `r`.`id`) and (`rp`.`role_id` = `r`.`id`) and (`rp`.`priv_id` = `p`.`id`)) union select `u`.`alias` AS `alias`,`p`.`name` AS `privilege` from ((((`oms`.`user` `u` join `oms`.`role` `r`) join `oms`.`user_role` `ur`) join `oms`.`privilege` `p`) join `oms`.`role_priv` `rp`) where ((`ur`.`user_id` = `u`.`id`) and (`rp`.`role_id` = `r`.`id`) and (`rp`.`priv_id` = `p`.`id`) and `r`.`parent_id` in (select `r`.`id` from ((`oms`.`user` `u` join `oms`.`role` `r`) join `oms`.`user_role` `ur`) where ((`ur`.`user_id` = `u`.`id`) and (`ur`.`role_id` = `r`.`id`))));
-*************************** 26. row ***************************
+*************************** 27. row ***************************
   notice: select 'vertical_menu_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS vertical_menu_vw;
 view_ddl: CREATE VIEW vertical_menu_vw AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`oms`.`menu` `m` join `oms`.`reference_code` `rc` on((`m`.`menu_type_id` = `rc`.`id`))) where ((`rc`.`category` = 'MENU_TYPE') and (`rc`.`code` = 'VT'));

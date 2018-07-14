@@ -2,6 +2,7 @@ Table,privilege,,
 ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
 Data
 name
+Access Schematics
 Acknowledge Alarms
 Admin Links
 Admin Plot Groups
@@ -11,12 +12,17 @@ AI Admin
 Alarm Message Admin
 Alarm Type Admin
 AO Admin
+Calc Admin
 Configuration
+ControlBlock Admin
+DI Admin
+DO Admin
 Execute Crude Field
 Execute Refined Field
 Execute Transfer
 Field Admin
 Role Admin
+Schematic Admin
 Tank Admin
 Transfer Admin
 User Admin

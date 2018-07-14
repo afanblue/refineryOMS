@@ -66,7 +66,7 @@ class CalcVarAdmin extends Component {
          throw new TypeError("CalcVarAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
     }).then( json => {
        let fd = json;
-       const t = new Tag(fd.id,fd.tag.name,fd.tag.description,fd.tag.tagTypeCode
+       const t = new Tag(fd.id,fd.tag.name,fd.tag.description,fd.tag.tagTypeCode,fd.tag.tagTypeId
                         ,fd.tag.c1Lat,fd.tag.c1Long,fd.tag.c2Lat,fd.tag.c2Long,fd.tag.active);
        let blankItem = {};
        blankItem.id = null;
@@ -89,7 +89,8 @@ class CalcVarAdmin extends Component {
                       returnedText: json,
                       calcVar: cv                
                      } );
-    }).catch(function(error) { 
+    }).then(alert("Calculated variable updated") )
+      .catch(function(error) { 
        alert("Problem selecting calcVar id "+id+"\n"+error);
        console.log("CalcVarAdmin.fetchFormData: Error - " + error);  
     });

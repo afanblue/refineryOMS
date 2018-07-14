@@ -6,8 +6,10 @@ import AdHoc              from './pages/AdHoc.js';
 import AlarmMsgAdmin      from './pages/AlarmMsgAdmin.js';
 import AlarmTypeAdmin     from './pages/AlarmTypeAdmin.js';
 import AnalogInputAdmin   from './pages/AnalogInputAdmin.js';
+import AnalogOutputAdmin  from './pages/AnalogOutputAdmin.js';
 import CalcVarAdmin       from './pages/CalcVarAdmin.js';
 import ConfigAdmin        from './pages/ConfigAdmin.js';
+import ControlBlockAdmin  from './pages/ControlBlockAdmin.js';
 import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
 import FieldAdmin         from './pages/FieldAdmin.js';
@@ -45,8 +47,12 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <AlarmTypeAdmin stage={stage} />
         case "AnalogInputs":
           return <AnalogInputAdmin stage={stage} />
+        case "AnalogOutputs":
+          return <AnalogOutputAdmin stage={stage} />
         case "CalcVariables":
           return <CalcVarAdmin stage={stage} />
+        case "ControlBlocks":
+          return <ControlBlockAdmin stage={stage} />
         case "DigitalInputs":
           return <DigitalInputAdmin stage={stage} />
         case "Fields":

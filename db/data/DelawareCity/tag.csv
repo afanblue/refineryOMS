@@ -214,29 +214,29 @@ DCR-0001,Wind Speed – Tomorrow,AI,,,-75.625879,,-75.625140,Y
 DCM-0001,Wind Direction – Tomorrow,AI,,,-75.625879,,-75.625140,Y
 RefProd,,HS,,39.592029,-75.625879,,-75.625140,Y
 CrudeHS,,HS,,39.585595,-75.625879,,-75.625140,Y
-RU1CP-DI,On/Off sensor Unit 1 Crude Pump,DI,,,-75.625879,,-75.625140,Y
-RU1GP-DI,On/Off sensor Unit 1 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
-RU1FOP-DI,On/Off sensor Unit 1 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
-RU1JP-DI,On/Off sensor Unit 1 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
-RU1RFP-DI,On/Off sensor Unit 1 RFO Pump,DI,,,-75.625879,,-75.625140,Y
-RU1LRP-DI,On/Off sensor Unit 1 LRG Pump,DI,,,-75.625879,,-75.625140,Y
-RU1AP-DI,On/Off Unit 1 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
-RU1LP-DI,On/Off sensor Unit 1 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
-RU2CP-DI,On/Off sensor Unit 2 Crude Pump,DI,,,-75.625879,,-75.625140,Y
-RU2GP-DI,On/Off sensor Unit 2 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
-RU2FOP-DI,On/Off sensor Unit 2 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
-RU2JP-DI,On/Off sensor Unit 2 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
-RU2RFP-DI,On/Off sensor Unit 2 RFO Pump,DI,,,-75.625879,,-75.625140,Y
-RU2LRP-DI,On/Off sensor Unit 2 LRG Pump,DI,,,-75.625879,,-75.625140,Y
-RU2AP-DI,On/Off sensor Unit 2 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
-RU2LP-DI,On/Off sensor Unit 2 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
-SB1P2-DI,OnOff State for Slip 1 Pump 2,DI,,,-75.625879,,-75.625140,Y
-SB1P3-DI,OnOff State for Slip 1 Pump 3,DI,,,-75.625879,,-75.625140,Y
-SB1P4-DI,OnOff State for Slip 1 Pump 4,DI,,,-75.625879,,-75.625140,Y
-SB2P1-DI,OnOff State for Slip 2 Pump 1,DI,,,-75.625879,,-75.625140,Y
-SB2P2-DI,OnOff State for Slip 2 Pump 2,DI,,,-75.625879,,-75.625140,Y
-SB2P3-DI,OnOff State for Slip 2 Pump 3,DI,,,-75.625879,,-75.625140,Y
-SB2P4-DI,OnOff State for Slip 2 Pump 4,DI,,,-75.625879,,-75.625140,Y
+DI-RU1CP,On/Off sensor Unit 1 Crude Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1GP,On/Off sensor Unit 1 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1FOP,On/Off sensor Unit 1 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1JP,On/Off sensor Unit 1 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1RFP,On/Off sensor Unit 1 RFO Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1LRP,On/Off sensor Unit 1 LRG Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1AP,On/Off Unit 1 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU1LP,On/Off sensor Unit 1 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2CP,On/Off sensor Unit 2 Crude Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2GP,On/Off sensor Unit 2 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2FOP,On/Off sensor Unit 2 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2JP,On/Off sensor Unit 2 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2RFP,On/Off sensor Unit 2 RFO Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2LRP,On/Off sensor Unit 2 LRG Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2AP,On/Off sensor Unit 2 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
+DI-RU2LP,On/Off sensor Unit 2 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
+DI-SB1P2,OnOff State for Slip 1 Pump 2,DI,,,-75.625879,,-75.625140,Y
+DI-SB1P3,OnOff State for Slip 1 Pump 3,DI,,,-75.625879,,-75.625140,Y
+DI-SB1P4,OnOff State for Slip 1 Pump 4,DI,,,-75.625879,,-75.625140,Y
+DI-SB2P1,OnOff State for Slip 2 Pump 1,DI,,,-75.625879,,-75.625140,Y
+DI-SB2P2,OnOff State for Slip 2 Pump 2,DI,,,-75.625879,,-75.625140,Y
+DI-SB2P3,OnOff State for Slip 2 Pump 3,DI,,,-75.625879,,-75.625140,Y
+DI-SB2P4,OnOff State for Slip 2 Pump 4,DI,,,-75.625879,,-75.625140,Y
 RU1CP-DO,On/Off switch Unit 1 Crude Pump,DO,,,-75.625879,,-75.625140,Y
 RU1GP-DO,On/Off switch Unit 1 Gasoline Pump,DO,,,-75.625879,,-75.625140,Y
 RU1FOP-DO,On/Off switch Unit 1 Fuel Oil Pump,DO,,,-75.625879,,-75.625140,Y
@@ -299,7 +299,7 @@ RU2RF-P,Unit 2 RFO Pump,P,,,-75.625879,,-75.625140,Y
 RU2LR-P,Unit 2 LRG Pump,P,,,-75.625879,,-75.625140,Y
 RU2A-P,Unit 2 Asphalt Pump,P,,,-75.625879,,-75.625140,Y
 RU2L-P,Unit 2 Lubricant Pump,P,,,-75.625879,,-75.625140,Y
-CrudeUnit,Crude Tank Unit,PU,,39.585138,-75.625879,39.580674,-75.625140,Y
+CrudeUnit,Crude Tank Unit,PU,,39.585111,-75.628558,39.580674,-75.623206,Y
 RefindLvls,Refined Tank Levels,PU,,39.591711,-75.625879,39.587137,-75.625140,Y
 RefUnit1,,RU,,,-75.625879,,-75.625140,Y
 RefUnit2,,RU,,,-75.625879,,-75.625140,Y
@@ -315,11 +315,16 @@ S316,AFRAMax Ship 1,S,,,,,,Y
 S317,SuezMax Ship 2,S,,,,,,Y
 LubeUnit,Lubrication Tank Unit,PU,,39.590259,-75.626164,39.587055,-75.620530,Y
 NapthaUnit,Naptha Tanks,PU,,39.590341,-75.626164,39.587165,-75.620354,Y
-SB1P1-DI,OnOff State for Slip 1 Pump 1,DI,,,-75.625879,,-75.625140,Y
-TT2Here,Tank Truck Present Position 2,DI,,,,,,Y
-TT1Here,Tank Truck Present Position 1,DI,,,,,,Y
-TC1Here,Tank Car Present Position 1,DI,,,,,,Y
-TC2Here,Tank Car Present Position 2,DI,,,,,,Y
-Ship2Here,Ship Present Slip 2,DI,,,,,,Y
-Ship1Here,Ship Present Slip 1,DI,,,,,,Y
+DI-SB1P1,OnOff State for Slip 1 Pump 1,DI,,,-75.625879,,-75.625140,Y
+DI-TT2Here,Tank Truck Present Position 2,DI,,,,,,Y
+DI-TT1Here,Tank Truck Present Position 1,DI,,,,,,Y
+DI-TC1Here,Tank Car Present Position 1,DI,,,,,,Y
+DI-TC2Here,Tank Car Present Position 2,DI,,,,,,Y
+DI-Ship2,Ship Present Slip 2,DI,,,,,,Y
+DI-Ship1,Ship Present Slip 1,DI,,,,,,Y
+SB1P1-DO,On/Off switch for Slip 1 Pump 1,DO,,,,,,Y
+C-101,calculation test tag,AI,,,,,,Y
+CT-101,Calculation test 1,AI,,,,,,Y
+CTA-101,External Temperature - deg C,AI,,,,,,Y
+CV-0001,Current Temp degrees C,C,,,,,,Y
 End

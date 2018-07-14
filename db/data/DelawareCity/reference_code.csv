@@ -38,4 +38,13 @@ CONTENT-TYPE,Coke,CK,9,Petroleum Coke,Y
 CONTENT-TYPE,Asphalt,A,10,Asphalt/Road Oil,Y
 CONTENT-TYPE,StillGas,SG,11,Still Gas,Y
 ANALOG-TYPE,Angle heading,R,5,Heading,Y
+CALCULATION_TYPE,Addition,A,0,Addition of input values,Y
+CALCULATION_TYPE,Subtraction,S,1,Subtraction of two input values,Y
+CALCULATION_TYPE,Multiplication,M,2,Multiplication of two input values,Y
+CALCULATION_TYPE,Division,D,3,Division of two input values,Y
+CALCULATION_TYPE,LogicalAnd,N,4,Logical And of multiple inputs,Y
+CALCULATION_TYPE,LogicalOr,O,5,Logical OR of multiple inputs,Y
+CALCULATION_TYPE,LogicalXOr,X,6,Logical XOR of multiple inputs,Y
+CALCULATION_TYPE,LogicalNot,Z,7,Logical NOT of multiple inputs,Y
+ANALOG-TYPE,Calculated,C,6,Calculation output,Y
 End

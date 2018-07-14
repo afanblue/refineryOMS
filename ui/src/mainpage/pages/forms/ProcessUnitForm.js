@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Stage, Layer} from 'react-konva';
+import {Stage, Layer, Group, Rect} from 'react-konva';
 
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 import SiteImage from '../SiteImage.js';
@@ -12,6 +12,15 @@ class ProcessUnitForm extends Component {
     this.state = {  };
   }
 
+  scaleX( tkLong, tLong, xScale ) {
+    return Math.round(xScale * (tkLong - tLong));
+  }
+
+  scaleY( tkLat, tLat, yScale ) {
+    return Math.round(yScale * (tkLat - tLat));
+  }
+
+
   render() {
     const pu = this.props.processUnit;
     const tags = pu.tags;
@@ -20,7 +29,21 @@ class ProcessUnitForm extends Component {
     const handleQuit = this.props.handleQuit;
     const handleMouseUp = this.props.handleMouseUp;
     const fieldChange = this.props.fieldChange;
-    
+
+    const site = this.props.returnedText.siteLocation;
+    const tag  = pu.tag;
+
+    var xDivisor = site.c2Long-site.c1Long;
+    var xScale = IMAGEWIDTH / xDivisor;
+    var yDivisor = site.c2Lat-site.c1Lat;
+    var yScale = IMAGEHEIGHT / yDivisor;
+
+    var xp = this.scaleX( tag.c1Long, site.c1Long, xScale);
+    var w  = this.scaleX( tag.c2Long, site.c1Long, xScale) - xp;
+    var yp = this.scaleY( tag.c1Lat,  site.c1Lat,  yScale);
+    var h  = this.scaleY( tag.c2Lat,  site.c1Lat,  yScale) - yp;
+    var color = "red";
+  
     return(
       <div className="oms-tabs">
       <table>
@@ -122,7 +145,10 @@ class ProcessUnitForm extends Component {
             <td>
               <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
                 <Layer>
-                  <SiteImage handleMouseUp={handleMouseUp} />
+                  <Group>
+                    <SiteImage handleMouseUp={handleMouseUp} />
+                    <Rect x={xp} y={yp} width={w} height={h} stroke={color} strokeWidth={1} />
+                  </Group>
                 </Layer>
               </Stage>
             </td>

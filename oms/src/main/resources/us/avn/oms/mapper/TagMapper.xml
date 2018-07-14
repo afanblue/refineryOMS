@@ -20,6 +20,7 @@
      <result property="name"            column="name"/>
      <result property="description"     column="description"/>
      <result property="tagTypeCode"     column="tag_type_code"/>
+     <result property="tagTypeId"       column="tag_type_id"/>
      <result property="c1Lat"           column="c1_lat"/>
      <result property="c1Long"          column="c1_long"/>
      <result property="c2Lat"           column="c2_lat"/>
@@ -49,16 +50,16 @@
   </resultMap>
 
   <select id="getTag" resultMap="tagResultMap">
-    select t.id, t.name, t.description, t.tag_type_code
+    select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
-      from tag t
+      from tag t join tag_type tt on t.tag_type_code = tt.code
      where t.id = #{parm1}
   </select>
   
   <select id="getTagByName" resultMap="tagResultMap">
-    select t.id, t.name, t.description, t.tag_type_code
+    select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
-      from tag t
+      from tag t join tag_type tt on t.tag_type_code = tt.code
      where t.name = #{parm1}
   </select>
 

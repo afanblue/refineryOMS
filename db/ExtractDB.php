@@ -43,7 +43,17 @@ echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"Data");
-$q = "select item_name, item_value from config";
+$q = "select item_name, " 
+   . "CASE "
+   . "WHEN item_name = 'EMAIL_FROM'  THEN 'email_from' "
+   . "WHEN item_name = 'EMAIL_PWD'  THEN 'email_pwd' "
+   . "WHEN item_name = 'EMAIL_USER' THEN 'email_user' "
+   . "WHEN item_name = 'SMTP_HOST' THEN 'smtp_host' "
+   . "WHEN item_name = 'SMTP_PORT' THEN 'smtp_port' "
+   . "WHEN item_name = 'WATCHDOG_EMAIL' then 'wd_email' "
+   . "ELSE item_value "
+   . "END item_value "
+   . "from config";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
@@ -54,7 +64,7 @@ echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"Data,,,");
-$q = "select name from watchdog";
+$q = "select name, active from watchdog";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
@@ -415,6 +425,36 @@ $a = array( "Table,$t,,",
 		"Data,,,");
 $q	= "select t.name tag_id, value_view "
 	. "from digital_output od join tag t on od.tag_id = t.id";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "$t.csv", $a );
+
+/* calculated */
+$t = "calculated";
+echo "Extracting $t \n";
+$a = array( "Table,$t,,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"tag,id,name,id",
+		"tag,id,name,output_tag_id",
+		"Data,,,");
+$q	= "select tc.name id, c.definition, tx.name output_tag_id "
+    . "from calculated c join tag tc on c.id = tc.id "
+    . "join tag tx on c.output_tag_id = tx.id";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "$t.csv", $a );
+
+/* control block */
+$t = "control_block";
+echo "Extracting $t \n";
+$a = array( "Table,$t,,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"tag,id,name,id",
+		"tag,id,name,tag_id",
+		"Data,,,");
+$q	= "select tc.name id, tx.name tag_id "
+    . "from control_block cb join tag tc on cb.id = tc.id "
+    . "join tag tx on cb.tag_id = tx.id";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );

@@ -1,0 +1,8 @@
+Table,calculated,,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+tag,id,name,id
+tag,id,name,output_tag_id
+Data,,,
+id,definition,output_tag_id
+CV-0001,x0 40 + 5 * 9 / 40 -,CTA-101
+End

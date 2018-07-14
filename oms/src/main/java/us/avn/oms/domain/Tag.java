@@ -43,6 +43,7 @@ public class Tag implements Serializable {
 	protected String name;
 	protected String description;
 	protected String tagTypeCode;
+	protected Long   tagTypeId;
 	protected Double c1Lat;
 	protected Double c1Long;
 	protected Double c2Lat;
@@ -90,6 +91,15 @@ public class Tag implements Serializable {
 
 	public void setTagTypeCode(String tagTypeCode) {
 		this.tagTypeCode = tagTypeCode;
+	}
+
+	
+	public Long getTagTypeId() {
+		return tagTypeId;
+	}
+
+	public void setTagTypeId(Long tagTypeId) {
+		this.tagTypeId = tagTypeId;
 	}
 
 	

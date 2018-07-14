@@ -14,13 +14,13 @@ class AIList extends Component {
     var json = this.props.aiData;
     var aiSelect = this.props.aiSelect;
     var aiList = [];
-    var t0 = new Tag(0,'Create new tag',null,'AI',null,null,null,null,'Y');
+    var t0 = new Tag(0,'Create new tag',null,'AI',null,null,null,null,null,'Y');
     var ai0 = new AnalogInput(0,t0,null,null,null,null, null,null,null,null,null
                              ,null,null,null,null,null
                              ,null,null,null,null,null,null,null);
     aiList.push(ai0);
     json.map(function(n,x){
-        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode
+        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,n.tag.tagTypeId
                        ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long,n.tag.active);
         var ai = new AnalogInput(n.tagId,t,n.typeCode,n.scanInt,n.scanOffset,n.currentScan
                                 ,n.zeroValue,n.maxValue,n.histTypeCode,n.percent,n.slope
@@ -29,7 +29,7 @@ class AIList extends Component {
         return aiList.push( ai ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Site Fields</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Analog Inputs</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>

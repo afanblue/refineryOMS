@@ -1,8 +1,8 @@
 ## System Manual
 
-This manual describes how users can implement the functionality provided.
+This document describes how the functionality provided was implemented (more or less)
 
-## System Manual
+## DB ERD
 
 A (poorly organized) ERD for the DB is saved in the OMSV1.mwb (from MySQL Workbench) and OMSv1.pdf
 
@@ -12,7 +12,7 @@ Under the ui/src directory,
 
 ---
 -  ```frames``` - defines main page "frames" contents (header, classification (horizontal), and menu list (vertical) menus)
--  ```images``` - contains images used in pages (hint: there aren't many)
+-  ```images``` - contains images used in pages (hint: there aren't many, not sure they're used, either.  The images displayed seem to be coming from ui/public/images)
 -  ```js``` - (not used, though it has jquery.min.js)
 -  ```mainpage``` - contains contents and login display
     - ```pages``` - contains (mostly) menu page handlers
@@ -28,9 +28,9 @@ Under the ui/src directory,
 This is all done w/Spring REST and myBatis.  That should be enough information.
 
 ---
--  the controllers are implemented in the ```rest``` project, ```it.avn.oms.rest.controller```
--  the myBatis sql Mappers are defined in the ```oms``` project, ```src/main/resources/it.avn.oms.mapper```
--  the services are defined in the ```oms``` project, ```src/main/java/it.avn.oms.service``` and implemented in the ```impl``` subdirectory of the services
+-  the controllers are implemented in the ```oms``` project, ```it.avn.oms.rest.controller```
+-  the myBatis sql Mappers are defined in the ```oms-shared``` project, ```src/main/resources/it.avn.oms.mapper```
+-  the services are defined in the ```oms-shared``` project, ```src/main/java/it.avn.oms.service``` and implemented in the ```impl``` subdirectory of the services
 ---
 
 ### Adding a new page
@@ -80,17 +80,19 @@ Category is specified by the Horizontal Item ID
    
 ### Calculated Variables
 
-Calculated variables are defined using multiple (up to 10) input variables and one output variable.  The output is an analog variable of analog type "calculated".  The input variables are analog variables and digital variables.
+Calculated variables are defined using multiple (up to 10) input variables (x0, x1 ... x9 ) and one output variable.  The output is an analog variable of analog type "calculated".  The input variables are analog variables and digital variables.
 
-The calculation is defined using Reverse Polish (Post-fix) notation.  If you understand that these calculations are done with a stack, it's easier to understand.  Some examples are:
+The calculation is defined using Reverse Polish (Post-fix) notation.  If you understand that these calculations are done with the arguments on a stack, it's easier to understand.  The value returned is the last value left on the stack.  So, if you do "4 3 dup +", then the value returned is 6, even though the 4 is still left on the stack.
+
+Some examples are:
 
    ---
    | Example | Description |
    | :--- | :--- |
-   | ```x0 32 - 5 * 9 /``` | Converts from Fahrenheit to Centigrade for value x0 |
-   | ```x0 40 + 5 * 9 / 40 -``` | Also converts from Fahrenheit to Centigrade |
-   | ```x0 9 * 5 / 32 +```   | Converts from Centigrade to Fahrenheit |
-   | ```x0 40 + 9 * 5 / 40 -``` | Also converts from Centigrade to Fahrenheit |
+   | ```x0 32 - 5 * 9 /``` | Converts from Fahrenheit to Centigrade for value x0 [degC = (degF-32)*5/9] |
+   | ```x0 40 + 5 * 9 / 40 -``` | Also converts from Fahrenheit to Centigrade [degC = (degF_40)*5/9 - 40] |
+   | ```x0 9 * 5 / 32 +```   | Converts from Centigrade to Fahrenheit [degF = 9*degC/5 + 32]|
+   | ```x0 40 + 9 * 5 / 40 -``` | Also converts from Centigrade to Fahrenheit [degF = (degC+40)*9/5 - 40]|
    ---
    
 If the calculation fails, the value inserted in the output tag is -1001.
@@ -107,13 +109,26 @@ The operations supported are
    | % | modulus | ```10 3 %``` = 1 |
    | ** | raised to the power | ```4 3 **``` = 64 |
    | pi | PI | ```pi``` = 3.14159... |
-   | dup | duplicate value | ```4 dup +``` = 4 4 + |
+   | dup | duplicate value | ```4 dup +``` = 4 4 + = 8 |
    | swap | swap values on stack | ```4 3 swap **``` = 81 |
-   | sin | sine | ```45 pi * 180 / sin``` = 0.707... |
-   | cos | cosine | ```30 pi * 180 / cos``` = 0.866... |
-   | tan | tangent | ```37 pi * 180 / tan``` = 0.753... |
+   | sin | sine (radians) | ```45 pi * 180 / sin``` = 0.707... |
+   | cos | cosine (radians) | ```30 pi * 180 / cos``` = 0.866... |
+   | tan | tangent (radians) | ```37 pi * 180 / tan``` = 0.753... |
    | log | log base 10 | ```2 log``` = 0.301... |
    | ln  | natural log | ```10 ln``` = 2.302... |
    | sqrt | square root | ```9 4 * sqrt``` = 6 |
    ---
+   
+### Outputs
+
+The CONTROL_BLOCK is used as the mechanism for implementing outputs.  The fields as used by the simulator are
+
+---
+-   ```ID``` - ID for the input to the control block, i.e., the value to be "output".  This is either an analog input or a digital input
+-   ```TAG_ID``` - the ID for the tag to be output.
+-   ```BLOCK_TYPE``` - the type of algorithm to use to compute the output.  This field is currently ignored.  The null value will cause a direct write from the value of the input to the output.
+---
+
+
+
    

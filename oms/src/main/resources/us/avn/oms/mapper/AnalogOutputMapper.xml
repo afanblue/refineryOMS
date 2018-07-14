@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.AnalogOutputMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<AnalogOutput> getAllAnalogOutputs( );
+	
+	AnalogInput getAnalogOutput( String key);
+	
+	Integer updateAnalogOutputStatic( AnalogOutput t );
+
+	Integer insertAnalogOutput( AnalogOutput t );
+	
+          tag_id: 281
+  hist_type_code: 'H'
+      scan_value: NULL
+       scan_time: NULL
+      zero_value: 0
+       max_value: 440
+      prev_value: NULL
+       prev_time: NULL
+ last_hist_value: NULL
+  last_hist_time: NULL
+  
+-->  
+
+  <resultMap id="analogOutputResultMap" type="AnalogOutput">
+     <result property="tagId"           column="tag_id"/>
+     <result property="tag.id"          column="tag_id"/>
+     <result property="tag.name"        column="name" />
+     <result property="tag.description" column="description" />
+     <result property="tag.tagTypeCode" column="tag_type_code" />
+     <result property="tag.tagTypeId"   column="tag_type_id" />
+     <result property="tag.c1Lat"       column="c1_lat"/>
+     <result property="tag.c1Long"      column="c1_long"/>
+     <result property="tag.c2Lat"       column="c2_lat"/>
+     <result property="tag.c2Long"      column="c2_long"/>
+     <result property="tag.active"      column="active" />
+     <result property="unitId"          column="unit_id" />
+     <result property="unit"            column="code" />
+     <result property="zeroValue"       column="zero_value"/>
+     <result property="maxValue"        column="max_value"/>
+     <result property="histTypeCode"    column="hist_type_code"/>
+     <result property="prevValue"       column="prev_value" />
+     <result property="prevTime"        column="prev_time"/>
+     <result property="lastHistValue"   column="last_hist_value"/>
+     <result property="lastHistTime"    column="last_hist_time"/>
+  </resultMap>
+  
+  <resultMap id="idNameMap" type="IdName" >
+    <result property="id"            column="id" />
+    <result property="name"          column="name" />
+  </resultMap>
+  
+  <resultMap id="aoValueMap" type="AIValue" >
+    <result property="tagId"       column="id" />
+    <result property="name"        column="name" />
+    <result property="value"       column="value" />
+    <result property="valueText"   column="value_text" />
+    <result property="scanTime"    column="scan_time" />
+    <result property="alarmCode"   column="code" />
+    <result property="alarmColor"  column="color" /> 
+  </resultMap>
+
+  <select id="getAllActiveAOtags" resultMap="analogOutputResultMap">
+    select ao.tag_id, t.name, ao.zero_value, ao.max_value
+         , ao.hist_type_code, ao.percent, ao.slope, ao.scan_value
+         , ao.scan_time, ao.prev_value, ao.prev_time, ao.last_hist_value
+         , ao.last_hist_time, ao.unit_id, x.float_value
+         , coalesce(UNIX_TIMESTAMP(x.scan_time)
+                  - UNIX_TIMESTAMP(ao.last_hist_time), 0) int_since_lhs
+		 , coalesce(TIMESTAMPDIFF(MINUTE,ao.last_hist_time,x.scan_time),0) int_scan_time
+         , x.updated, x.scan_time pmc_scan_time, x.float_value
+      from analog_output ao join tag t on ao.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+           join xfer x on t.id = x.id 
+     where t.active = 'Y'
+     order by 2
+  </select>
+
+  <select id="getAllAnalogOutputs" resultMap="analogOutputResultMap">
+    select ao.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ao.zero_value, ao.max_value, ao.hist_type_code
+         , ao.scan_value, ao.scan_time, ao.prev_value, ao.unit_id
+         , ao.prev_time, ao.last_hist_value, ao.last_hist_time
+         , tt.id tag_type_id, u.code
+      from analog_output ao join tag t on ao.tag_id = t.id
+      join tag_type tt on tt.code = t.tag_type_code
+      join unit u on ao.unit_id = u.id  
+     order by 3
+  </select>
+
+  <select id="getAnalogOutput" resultMap="analogOutputResultMap">
+    select ao.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ao.zero_value, ao.max_value, ao.hist_type_code
+         , ao.scan_value, ao.scan_time, ao.prev_value, ao.unit_id
+         , ao.prev_time, ao.last_hist_value, ao.last_hist_time
+         , tt.id tag_type_id, u.code
+      from analog_output ao join tag t on ao.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+           join unit u on ao.unit_id = u.id
+     where t.id = #{parm1}
+  </select>
+  
+  <select id="getAllHistoryTypes" resultType="ReferenceCode" >
+    select id, category, name, code, value, description, active
+      from history_type_vw
+     order by code
+  </select>
+    
+  <update id="updateAnalogOutput" parameterType="AnalogOutput">
+    update analog_output
+       set percent = #{percent}
+         , slope = #{slope}
+         , scan_value = #{scanValue}
+         , scan_time = coalesce(#{scanTime},now())
+         , prev_value = #{prevValue}
+         , prev_time = #{prevTime}
+         , last_hist_value = #{lastHistValue}
+         , last_hist_time = #{lastHistTime}
+     where tag_id = #{tagId}
+  </update>
+
+  <update id="updateAnalogOutputStatic" parameterType="AnalogOutput">
+    update analog_output
+       set zero_value = #{zeroValue}
+         , max_value = #{maxValue}
+         , hist_type_code = #{histTypeCode}
+         , percent = #{percent}
+         , unit_id = #{unitId}
+     where tag_id = #{tagId}
+  </update>
+  
+  <insert id="insertAnalogOutput" parameterType="AnalogOutput">
+    insert analog_output
+         ( tag_id, zero_value, max_value
+         , hist_type_code, percent, slope, scan_value, scan_time
+         , prev_value, prev_time, last_hist_value, last_hist_time
+         , unit_id )
+   values( #{tagId}, #{zeroValue}, #{maxValue}
+         , #{histTypeCode}, #{percent}, null, null, null
+         , null, null, null, null, #{unitId} )
+  </insert>
+  
+</mapper>

@@ -9,7 +9,7 @@ public class ProcessUnit implements Serializable {
 	
 	private Tag tag;
     private Collection<RelTagTag> childTags;
-    private Collection<Taglet> tags;			/* list of tags available for unit */
+    private Collection<IdName> tags;			/* list of tags available for unit */
 	private Tag siteLocation;
     
     public ProcessUnit() {}
@@ -39,11 +39,11 @@ public class ProcessUnit implements Serializable {
 	}
 
 	
-	public Collection<Taglet> getTags() {
+	public Collection<IdName> getTags() {
 		return tags;
 	}
 
-	public void setTags(Collection<Taglet> t) {
+	public void setTags(Collection<IdName> t) {
 		this.tags = t;
 	}
 

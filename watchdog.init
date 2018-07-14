@@ -1,0 +1,205 @@
+#!/bin/sh
+#
+# /etc/init.d/watchdog -- -- startup script for the OMS watchdog
+# modified from /etc/init.d/tomcat7 (see that for credits)
+#
+#
+### BEGIN INIT INFO
+# Provides:          oms/watchdog
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start OMS watchdog
+# Description:       Start the OMS watchdog service.
+### END INIT INFO
+
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=watchdog
+DESC="OMS watchdog engine"
+DEFAULT=/etc/default/oms
+JVM_TMP=/tmp/watchdog-$NAME-tmp
+
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script"
+	exit 1
+fi
+
+if [ -r /etc/default/rcS ]; then
+	. /etc/default/rcS
+fi
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+# Run watchdog as this user ID and group ID
+OMS_USER=oms
+OMS_GROUP=oms
+
+# this is a work-around until there is a suitable runtime replacement 
+# for dpkg-architecture for arch:all packages
+# this function sets the variable OPENJDKS
+find_openjdks()
+{
+        for jvmdir in /usr/lib/jvm/java-8-openjdk-*
+        do
+                if [ -d "${jvmdir}" -a "${jvmdir}" != "/usr/lib/jvm/java-8-openjdk-common" ]
+                then
+                        OPENJDKS=$jvmdir
+                fi
+        done
+}
+
+OPENJDKS=""
+find_openjdks
+# The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
+# defined in $DEFAULT)
+JDK_DIRS="/usr/lib/jvm/default-java ${OPENJDKS} /usr/lib/jvm/java-6-openjdk /usr/lib/jvm/java-8-oracle"
+
+# Look for the right JVM to use
+for jdir in $JDK_DIRS; do
+    if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
+	JAVA_HOME="$jdir"
+    fi
+done
+export JAVA_HOME
+
+# Directory where the watchdog binary distribution resides
+OMS_HOME=/usr/share/oms
+WD_HOME=$OMS_HOME/$NAME
+
+# overwrite settings from default file
+if [ -f "$DEFAULT" ]; then
+	. "$DEFAULT"
+fi
+
+# Define other required variables
+WD_PID="/var/run/$NAME.pid"
+WD_SH="$OMS_HOME/runSimulate.sh"
+
+
+watchdog_sh() {
+	# Escape any double quotes in the value of JAVA_OPTS
+	JAVA_OPTS="$(echo $JAVA_OPTS | sed 's/\"/\\\"/g')"
+
+	# Define the command to run the runPmc.sh as a daemon
+	# set -a tells sh to export assigned variables to spawned shells.
+	WD_SH="set -a; \
+		WD_HOME=\"$WD_HOME\"; \
+		WD_PID=\"$WD_PID\"; \
+		cd \"$WD_HOME\"; \
+		$WD_SH $@"
+
+	# Run the runSimulate.sh script as a daemon
+	set +e
+	install -o $OMS_USER -g adm -m 644 /dev/null "$WD_PID"
+	log_daemon_msg "sh=$WD_SH    ; pid=$WD_PID"
+	start-stop-daemon --start --background --verbose \
+		--chuid "$OMS_USER"  --chdir $WD_HOME --pidfile "$WD_PID" \
+		--exec /bin/bash -- -c "$WD_SH"
+	status="$?"
+	set +a -e
+	return $status
+}
+
+case "$1" in
+  start)
+	if [ -z "$JAVA_HOME" ]; then
+		log_failure_msg "no JDK or JRE found - please set JAVA_HOME"
+		exit 1
+	fi
+
+	log_daemon_msg "Starting $DESC" "$NAME"
+	if start-stop-daemon --test --start --pidfile "$WD_PID" \
+		--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
+		>/dev/null; then
+
+		watchdog_sh start 
+		sleep 5
+        	if start-stop-daemon --test --start --pidfile "$WD_PID" \
+			--user $OMS_USER  \
+			--exec "$JAVA_HOME/bin/java" \
+			>/dev/null; then
+			log_daemon_msg "Tested OK"
+			if [ -f "$WD_PID" ]; then
+				log_daemon_msg "No pid file"
+				rm -f "$WD_PID"
+			fi
+			log_end_msg 1
+		else
+			log_daemon_msg "Test failed"
+			log_end_msg 0
+		fi
+	else
+	        log_progress_msg "(already running)"
+		log_end_msg 0
+	fi
+	;;
+  stop)
+	log_daemon_msg "Stopping $DESC" "$NAME"
+
+	set +e
+	if [ -f "$WD_PID" ]; then 
+		start-stop-daemon --stop --pidfile "$WD_PID" \
+			--user "$OMS_USER" \
+			--retry=TERM/20/KILL/5 >/dev/null
+		if [ $? -eq 1 ]; then
+			log_progress_msg "$DESC is not running but pid file exists, cleaning up"
+		elif [ $? -eq 3 ]; then
+			PID="`cat $WD_PID`"
+			log_failure_msg "Failed to stop $NAME (pid $PID)"
+			exit 1
+		fi
+		rm -f "$WD_PID"
+	else
+		log_progress_msg "(not running)"
+	fi
+	log_end_msg 0
+	set -e
+	;;
+   status)
+	set +e
+	start-stop-daemon --test --start --pidfile "$WD_PID" \
+		--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
+		>/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+
+		if [ -f "$WD_PID" ]; then
+		    log_success_msg "$DESC is not running, but pid file exists."
+			exit 1
+		else
+		    log_success_msg "$DESC is not running."
+			exit 3
+		fi
+	else
+		log_success_msg "$DESC is running with pid `cat $WD_PID`"
+	fi
+	set -e
+        ;;
+  restart)
+	if [ -f "$WD_PID" ]; then
+		$0 stop
+		sleep 1
+	fi
+	$0 start
+	;;
+  try-restart)
+        if start-stop-daemon --test --start --pidfile "$WD_PID" \
+		--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
+		>/dev/null; then
+		$0 start
+	fi
+        ;;
+  *)
+	log_success_msg "Usage: $0 {start|stop|restart|status}"
+	exit 1
+	;;
+esac
+
+exit 0

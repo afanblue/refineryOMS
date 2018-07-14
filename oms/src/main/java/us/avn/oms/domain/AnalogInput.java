@@ -42,7 +42,6 @@ public class AnalogInput implements Serializable {
 	
 	protected Long    tagId;
 	protected Tag     tag;
-	protected Long    tagTypeId;
 	protected String  typeCode;
 	protected Long    unitId;
 	protected Integer scanInt;
@@ -89,7 +88,6 @@ public class AnalogInput implements Serializable {
  	public AnalogInput( AnalogInput ai ) {
  		tagId = ai.tagId;
  		tag = ai.tag;
- 		tagTypeId = ai.tagTypeId;
  		typeCode = ai.typeCode;
  		unitId = ai.unitId;
  		zeroValue = ai.zeroValue;
@@ -129,15 +127,6 @@ public class AnalogInput implements Serializable {
 
 	public void setTag(Tag t) {
 		this.tag = t;
-	}
-
-	
-	public Long getTagTypeId() {
-		return tagTypeId;
-	}
-	
-	public void setTagTypeId( Long tti ) {
-		this.tagTypeId = tti;
 	}
 
 	

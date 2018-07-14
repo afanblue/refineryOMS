@@ -75,6 +75,7 @@ class AlarmTypeAdmin extends Component {
       headers: {'Content-Type':'application/json'},
       body: b
     }).then(this.handleErrors)
+      .then(alert("Alarm Type updated") )
       .catch(function(error) { 
         alert("Problem updating alarm type id "+id+"\n"+error);
         console.log("AlarmMsgAdmin.msgUpdate: Error - " + error);  

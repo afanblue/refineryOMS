@@ -8,4 +8,5 @@ volume,V
 pressure,P
 speed,S
 direction,D
+rate,R
 End

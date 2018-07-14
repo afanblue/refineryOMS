@@ -80,6 +80,7 @@ class AnalogInputAdmin extends Component {
     }).then(json => {
        let aid = json;
        var tg = new Tag(aid.tag.id,aid.tag.name,aid.tag.description,aid.tag.tagTypeCode
+                       ,aid.tag.tagTypeId
                        ,aid.tag.c1Lat,aid.tag.c1Long,aid.tag.c2Lat,aid.tag.c2Long
                        ,aid.tag.active);
        var ai = new AnalogInput(aid.tagId,tg,aid.typeCode, aid.scanInt, aid.scanOffset

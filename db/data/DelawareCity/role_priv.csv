@@ -11,7 +11,7 @@ Admin,Admin Vessels
 Admin,AI Admin
 Admin,Alarm Message Admin
 Admin,Alarm Type Admin
-Admin,AO Admin
+Admin,DI Admin
 Admin,Configuration
 Admin,Execute Crude Field
 Admin,Execute Refined Field
@@ -38,6 +38,12 @@ Admin,View Users
 Admin,View Vessels
 Admin,Admin Plot Groups
 Admin,View Plot Groups
+Admin,Access Schematics
+Admin,Schematic Admin
+Admin,Calc Admin
+Admin,AO Admin
+Admin,DO Admin
+Admin,ControlBlock Admin
 Operator,Acknowledge Alarms
 Operator,Execute Crude Field
 Operator,Execute Refined Field
@@ -56,4 +62,6 @@ Operator,View Vessels
 Operator,View Transfer Tab
 Operator,View Links
 Operator,View Admin Tab
+Operator,Access Schematics
+Operator,Schematic Admin
 End

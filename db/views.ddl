@@ -21,7 +21,11 @@ CREATE VIEW all_fields AS select `f`.`id` AS `id`,`t`.`name` AS `name`,`f`.`id` 
 -- ---
 select 'analog_type_vw' as action from dual;
 DROP VIEW IF EXISTS analog_type_vw;
-CREATE VIEW analog_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'ANALOG-TYPE');
+CREATE VIEW analog_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'ANALOG-TYPE') order by `oms`.`reference_code`.`name`;
+-- ---
+select 'calculation_type_vw' as action from dual;
+DROP VIEW IF EXISTS calculation_type_vw;
+CREATE VIEW calculation_type_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`reference_code`.`category` AS `category`,`oms`.`reference_code`.`name` AS `name`,`oms`.`reference_code`.`code` AS `code`,`oms`.`reference_code`.`value` AS `value`,`oms`.`reference_code`.`description` AS `description`,`oms`.`reference_code`.`active` AS `active`,`oms`.`reference_code`.`create_dt` AS `create_dt`,`oms`.`reference_code`.`last_modified_dt` AS `last_modified_dt` from `oms`.`reference_code` where (`oms`.`reference_code`.`category` = 'CALCULATION_TYPE') order by `oms`.`reference_code`.`name`;
 -- ---
 select 'content_type_vw' as action from dual;
 DROP VIEW IF EXISTS content_type_vw;
