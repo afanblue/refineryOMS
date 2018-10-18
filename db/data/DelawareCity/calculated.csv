@@ -4,5 +4,11 @@ tag,id,name,id
 tag,id,name,output_tag_id
 Data,,,
 id,definition,output_tag_id
-CV-0001,x0 40 + 5 * 9 / 40 -,CTA-101
+CV-0001,x0 40 + 9 * 5 / 40 -,CTA-101
+Com011-CV,x0 x1 | x2 | x3 |,Com011-DI
+Com012-CV,x0 x1 | x2 | x3 |,Com012-DI
+Com013-CV,x0 x1 | x2 | x3 |,Com013-DI
+Com021-CV,x0 x1 | x2 | x3 |,Com021-DI
+Com023-CV,x0 x1 | x2 | x3 |,Com022-DI
+Com022-CV,x0 x1 | x2 | x3 |,Com023-DI
 End

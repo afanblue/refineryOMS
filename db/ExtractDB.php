@@ -306,14 +306,86 @@ $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
 
-/* tag */
+/* AI tags */
 $t = "tag";
-echo "Extracting $t \n";
+echo "Extracting AI $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"Data,,,");
-$q	= "select name, description, tag_type_code, js_draw_file, c1_lat, c1_long, c2_lat, c2_long, active "
-	. "from tag";
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code = 'AI'";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "AI-$t.csv", $a );
+
+/* AO tags */
+$t = "tag";
+echo "Extracting AO $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"Data,,,");
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code = 'AO'";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "AO-$t.csv", $a );
+
+/* DI tags */
+$t = "tag";
+echo "Extracting DI $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"Data,,,");
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code = 'DI'";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "DI-$t.csv", $a );
+
+/* DO tags */
+$t = "tag";
+echo "Extracting DO $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"Data,,,");
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code = 'DO'";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "DO-$t.csv", $a );
+
+/* Calc tags */
+$t = "tag";
+echo "Extracting Calc $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"Data,,,");
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code = 'C'";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "Calc-$t.csv", $a );
+
+/* CB tags */
+$t = "tag";
+echo "Extracting CB $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"Data,,,");
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code = 'CB'";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "CB-$t.csv", $a );
+
+/* Everything else tags */
+$t = "tag";
+echo "Extracting everything else $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"Data,,,");
+$q	= "select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
+	. "from tag where tag_type_code not in ('AI','AO','DI','DO','C','CB')";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
@@ -380,7 +452,7 @@ $a = array( "Table,$t,,,",
 		"tag,id,name,tag_id",
 		"unit,id,name,unit_id",
 		"Data,,,");
-$q	= "select t.name tag_id, u.name unit_id, type_code, scan_int, scan_offset"
+$q	= "select t.name tag_id, u.name unit_id, analog_type_code, scan_int, scan_offset"
     . ", zero_value, max_value, hist_type_code, percent, hh, hi, ll, lo "
     . "from analog_input ai join tag t on ai.tag_id = t.id "
     . "join unit u on ai.unit_id = u.id";
@@ -394,11 +466,9 @@ echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"tag,id,name,tag_id",
-		"history_type_vw,id,code,history_type_id",
 		"Data,,,");
-$q	= "select t.name tag_id, zero_value, max_value, htv.code history_type_id "
-    . "from (analog_output ao join tag t on ao.tag_id = t.id) "
-    . "join history_type_vw htv on htv.id = ao.history_type_id";
+$q	= "select t.name tag_id, zero_value, max_value, hist_type_code "
+    . "from analog_output ao join tag t on ao.tag_id = t.id";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
@@ -549,5 +619,20 @@ $q	= "select pg.id, pg.name, t1.name id1, t2.name id2, t3.name id3, t4.name id4,
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
+
+/* sim_IO */
+$t = "sim_io";
+echo "Extracting $t \n";
+$a = array( "Table,$t,,",
+		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
+		"tag,id,name,id",
+		"tag,id,name,in_id",
+		"Data,,,");
+$q	= "select t1.name id, t2.name in_id from sim_io sio "
+    . "join tag t1 on sio.id=t1.id join tag t2 on sio.in_id=t2.id";
+$b = addData( $q, $a );
+$a[] = "End";
+createFile( "$t.csv", $a );
+
 
 ?>

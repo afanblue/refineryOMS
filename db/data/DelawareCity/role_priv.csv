@@ -44,24 +44,24 @@ Admin,Calc Admin
 Admin,AO Admin
 Admin,DO Admin
 Admin,ControlBlock Admin
+Operator,Access Schematics
 Operator,Acknowledge Alarms
 Operator,Execute Crude Field
 Operator,Execute Refined Field
 Operator,Execute Transfer
+Operator,Schematic Admin
+Operator,View Admin Tab
 Operator,View Alarms
 Operator,View Alarms Tab
 Operator,View Crude Field
 Operator,View Field Displays Tab
 Operator,View Fields
+Operator,View Links
 Operator,View Process Units
 Operator,View Refined Field
 Operator,View Tanks
 Operator,View Transfer
+Operator,View Transfer Tab
 Operator,View Users
 Operator,View Vessels
-Operator,View Transfer Tab
-Operator,View Links
-Operator,View Admin Tab
-Operator,Access Schematics
-Operator,Schematic Admin
 End

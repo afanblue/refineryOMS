@@ -1,10 +1,11 @@
+import Log from './mainpage/requests/Log.js';
 
 
 export function Request(u,a) { this.uri = u; this.action=a; }
 
 
 export function getListRequest( cat, page, stage ) {
-  console.log( "getRequest: "+ cat + ":" + ((page===null)?"(null)":page) + "/" + stage );
+  Log.info( "getRequest: "+ cat + ":" + ((page===null)?"(null)":page) + "/" + stage );
   let myRequest="http://localhost:8080/oms";
   let action = "GET";
   switch ( page ) {

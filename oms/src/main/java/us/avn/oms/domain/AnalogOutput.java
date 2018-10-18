@@ -1,11 +1,32 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  *           tag_id: 24
@@ -21,7 +42,7 @@ import java.util.HashMap;
  *  last_hist_value: NULL
  *   last_hist_time: NULL
  */
-public class AnalogOutput implements Serializable {
+public class AnalogOutput extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -34,6 +55,7 @@ public class AnalogOutput implements Serializable {
 	protected String  histTypeCode;
 	protected Double  percent;
 	protected Double  slope;
+	protected Long    isNew;
 	protected Double  scanValue;
 	protected Date    scanTime;
  	protected Double  prevValue;
@@ -42,9 +64,6 @@ public class AnalogOutput implements Serializable {
  	protected Date    lastHistTime;
  	protected Integer intSinceLhs;
     protected Integer intScanTime;
- 	protected Collection<ReferenceCode> histTypes;
-	protected Collection<Unit> unitList;
- 	protected Tag siteLocation;
 
  	public AnalogOutput() { }
  	
@@ -65,6 +84,7 @@ public class AnalogOutput implements Serializable {
  		histTypeCode = ao.histTypeCode;
  		percent = ao.percent;
  		slope = ao.slope;
+ 		isNew = 0L;
  		scanValue = ao.scanValue;
  		scanTime = ao.scanTime;
  	 	prevValue = ao.prevValue;
@@ -133,7 +153,7 @@ public class AnalogOutput implements Serializable {
 		return histTypeCode;
 	}
 
-	public void setHistoryTypeId(String htcd) {
+	public void setHistTypeCode(String htcd) {
 		this.histTypeCode = htcd;
 	}
 
@@ -156,6 +176,15 @@ public class AnalogOutput implements Serializable {
 	}
 
 
+	public Long getIsNew() {
+		return isNew;
+	}
+
+	public void setIsNew(Long isNew) {
+		this.isNew = isNew;
+	}
+
+	
 	public Double getScanValue() {
 		return scanValue;
 	}
@@ -228,52 +257,4 @@ public class AnalogOutput implements Serializable {
 	}
 
 	
-	public Collection<ReferenceCode> getHistTypes() {
-		return histTypes;
-	}
-
-	public void setHistTypes(Collection<ReferenceCode> histTypes) {
-		this.histTypes = histTypes;
-	}
-
-	
-	public Tag getSiteLocation() {
-		return siteLocation;
-	}
-
-	public void setSiteLocation(Tag siteLocation) {
-		this.siteLocation = siteLocation;
-	}
-
-	
-	public Collection<Unit> getUnitList() {
-		return unitList;
-	}
-
-	public void setUnitList(Collection<Unit> unitList) {
-		this.unitList = unitList;
-	}
-
-	
-	public String toString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("AnalogOutput{ \"id\"=").append(this.tagId);
-		sb.append(", \"tag\"=[").append(this.tag.toString()).append("]");
-		sb.append(", \"unit\"=\"").append(this.unit).append(" (").append(this.unitId).append(")");
-		sb.append(", \"zeroValue\"=").append(this.zeroValue);
-		sb.append(", \"maxValue\"=").append(this.maxValue);
-		sb.append(", \"histTypeCode\"=").append(this.histTypeCode);
-		sb.append(", \"percent\"=").append(this.percent);
-		sb.append(", \"slope\"=").append(this.slope);
-		sb.append(", \"scanValue\"=").append(this.scanValue);
-		sb.append(", \"scanTime\"=\"").append(this.scanTime!=null?sdf.format(this.scanTime):"null").append("\"");
-		sb.append(", \"prevValue\"=").append(this.prevValue);
-		sb.append(", \"prevTime\"=\"").append(this.prevTime!=null?sdf.format(this.prevTime):"null").append("\"");
-		sb.append(", \"lastHistValue\"=").append(this.lastHistValue);
-		sb.append(", \"lastHistTime\"=\"").append(this.lastHistTime!=null?sdf.format(this.lastHistTime):"null").append("\"");
-        sb.append("}");
-		return sb.toString();
-	}
-
 }

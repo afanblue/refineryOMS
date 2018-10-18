@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.rest.controller;
 
 import java.util.Collection;
@@ -66,9 +82,10 @@ public class VesselRestController {
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
 	public void updateVessel(@RequestBody Vessel v ) {
 		log.debug("Update " + v.toString()); 
+		Long id = v.getId();
 		if( v.getId() == 0L ) {
-			tagService.insertTag(v.getTag());
-			Tag t = tagService.getTagByName(v.getTag().getName());
+			id = tagService.insertTag(v.getTag());
+			v.setId(id);
 			vesselService.insertVessel(v);
 		} else {
 			tagService.updateTag(v.getTag());
@@ -77,16 +94,18 @@ public class VesselRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
-	public void insertVessel(@RequestBody Vessel v ) {
-		log.debug("Insert " + v.toString()); 
+	public Long insertVessel(@RequestBody Vessel v ) {
+		log.debug("Insert " + v.toString());
+		Long id = v.getTag().getId();
 		if( v.getId() == 0L ) {
-			tagService.insertTag(v.getTag());
-			Tag t = tagService.getTagByName(v.getTag().getName());
+			id = tagService.insertTag(v.getTag());
+			v.setId(id);
 			vesselService.insertVessel(v);
 		} else {
 			tagService.updateTag(v.getTag());
 			vesselService.updateVessel(v);
 		}
+		return id;
 	}
 
 }

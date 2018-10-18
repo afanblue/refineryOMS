@@ -1,6 +1,23 @@
 import React, {Component} from 'react';
 
 
+/*************************************************************************
+ * UserForm.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class UserForm extends Component {
@@ -10,11 +27,11 @@ class UserForm extends Component {
   }  
   
   render() {
-    let ud = this.props.returnedText;
-    let userUpdate = this.props.userUpdate;
-    let fieldChange = this.props.FieldChange;
-    let handleQuit = this.props.handleQuit;
     let u = this.props.user;
+    let roles = this.props.roles;
+    let userUpdate = this.props.userUpdate;
+    let fieldChange = this.props.fieldChange;
+    let handleQuit = this.props.handleQuit;
     return(
       <div className="oms-tabs">
       <form id="userForm" onSubmit={(e) => {userUpdate(e)}} >
@@ -31,7 +48,7 @@ class UserForm extends Component {
             <td className="oms-spacing">
               <input type="hidden" name="id" value={u.id} />
               <input type="text" id="alias" name="alias" value={u.alias} 
-                     className="oms-spacing-50" size="10" maxLength="10"
+                     className="oms-spacing-80" size="10" maxLength="10"
                      onChange={fieldChange} />
             </td>
           </tr>
@@ -96,7 +113,7 @@ class UserForm extends Component {
             <th className="oms-spacing-180">Role:</th>
             <td className="oms-spacing">
               <select id="role_id" name="role_id" onChange={fieldChange} >
-                {ud.roles.map(
+                {roles.map(
                    function(n,x){
                      return <option key={x} value={n.id}>{n.name}</option>
                    } 

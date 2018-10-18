@@ -50,7 +50,7 @@
      <result property="tag.c2Long"      column="c2_long"/>
      <result property="tag.active"      column="active" />
      <result property="unitId"          column="unit_id" />
-     <result property="typeCode"        column="type_code"/>
+     <result property="analogTypeCode"  column="analog_type_code"/>
      <result property="scanInt"         column="scan_int"/>
      <result property="scanOffset"      column="scan_offset" />
      <result property="currentScan"     column="current_scan"/>
@@ -93,12 +93,12 @@
   </resultMap>
 
   <select id="getAllActiveAItags" resultMap="analogInputResultMap">
-    select ai.tag_id, t.name, tt.id tag_type_id, ai.type_code, ai.scan_int
+    select ai.tag_id, t.name, tt.id tag_type_id, ai.analog_type_code, ai.scan_int
          , ai.scan_offset, ai.current_scan, ai.zero_value, ai.max_value
          , ai.hist_type_code, ai.percent, ai.slope, ai.raw_value, ai.scan_value
          , ai.scan_time, ai.prev_value, ai.prev_time, ai.last_hist_value
          , ai.last_hist_time, ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id, x.float_value
-         , coalesce(UNIX_TIMESTAMP(x.scan_time)
+         , coalesce(UNIX_TIMESTAMP(ai.scan_time)
                   - UNIX_TIMESTAMP(ai.last_hist_time), 0) int_since_lhs
 		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,x.scan_time),0) int_scan_time
          , x.updated, x.scan_time pmc_scan_time, x.float_value
@@ -110,14 +110,14 @@
   </select>
 
   <select id="getAllUpdatedAItags" resultMap="analogInputResultMap">
-    select ai.tag_id, t.name, tt.id tag_type_id, ai.type_code, ai.scan_int
+    select ai.tag_id, t.name, tt.id tag_type_id, ai.analog_type_code, ai.scan_int
          , ai.scan_offset, ai.current_scan, ai.zero_value, ai.max_value
          , ai.hist_type_code, ai.percent, ai.slope, ai.raw_value, ai.scan_value
          , ai.scan_time, ai.prev_value, ai.prev_time, ai.last_hist_value
          , ai.last_hist_time, ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id, x.float_value
-         , coalesce(UNIX_TIMESTAMP(x.scan_time)
+         , coalesce(UNIX_TIMESTAMP(ai.scan_time)
                   - UNIX_TIMESTAMP(ai.last_hist_time), 0) int_since_lhs
-		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,x.scan_time),0) int_scan_time
+		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,ai.scan_time),0) int_scan_time
          , x.updated, x.scan_time pmc_scan_time, x.float_value
       from analog_input ai join tag t on ai.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
@@ -129,7 +129,7 @@
 
   <select id="getAllAnalogInputs" resultMap="analogInputResultMap">
     select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , t.tag_type_code, t.active, ai.type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+         , t.tag_type_code, t.active, ai.analog_type_code, ai.scan_int, ai.scan_offset, ai.current_scan
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
@@ -141,29 +141,32 @@
   <select id="getAllAIIdNameByType" resultMap="idNameMap">
     select t.id, t.name
       from analog_input ai join tag t on ai.tag_id = t.id
-     where ai.type_code = #{parm1}
+     where ai.analog_type_code = #{parm1}
      order by 2
   </select>
   
   <select id="getAllAnalogInputsByType" resultMap="analogInputResultMap">
     select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , t.tag_type_code, t.active, ai.type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+         , t.tag_type_code, t.active, ai.analog_type_code, ai.scan_int, ai.scan_offset, ai.current_scan
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
          , ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id
       from analog_input ai join tag t on ai.tag_id = t.id
-     where ai.type_code = #{parm1}
+     where ai.analog_type_code = #{parm1}
      order by 2
   </select>
 
   <select id="getAnalogInput" resultMap="analogInputResultMap">
     select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , t.tag_type_code, t.active, ai.type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+         , t.tag_type_code, t.active, ai.analog_type_code, ai.scan_int, ai.scan_offset, ai.current_scan
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
          , ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id, tt.id tag_type_id
+         , coalesce(UNIX_TIMESTAMP(ai.scan_time)
+                  - UNIX_TIMESTAMP(ai.last_hist_time), 0) int_since_lhs
+		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,ai.scan_time),0) int_scan_time
       from analog_input ai join tag t on ai.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
      where t.id = #{parm1}
@@ -192,6 +195,7 @@
     update analog_input
        set percent = #{percent}
          , slope = #{slope}
+         , raw_value = #{rawValue}
          , scan_value = #{scanValue}
          , scan_time = coalesce(#{scanTime},now())
          , prev_value = #{prevValue}
@@ -203,7 +207,7 @@
 
   <update id="updateAnalogInputStatic" parameterType="AnalogInput">
     update analog_input
-       set type_code = #{typeCode}
+       set analog_type_code = #{analogTypeCode}
          , scan_int = #{scanInt}
          , scan_offset = #{scanOffset}
          , current_scan = #{currentScan}
@@ -221,11 +225,11 @@
   
   <insert id="insertAnalogInput" parameterType="AnalogInput">
     insert analog_input
-         ( tag_id, type_code, scan_int, scan_offset, zero_value, max_value
+         ( tag_id, analog_type_code, scan_int, scan_offset, zero_value, max_value
          , hist_type_code, percent, slope, raw_value, scan_value, scan_time
          , prev_value, prev_time, last_hist_value, last_hist_time
          , hh, hi, lo, ll, unit_id )
-   values( #{tagId}, #{typeCode}, #{scanInt}, #{scanOffset}, #{zeroValue}, #{maxValue}
+   values( #{tagId}, #{analogTypeCode}, #{scanInt}, #{scanOffset}, #{zeroValue}, #{maxValue}
          , #{histTypeCode}, #{percent}, null, null, null, null
          , null, null, null, null, #{hh}, #{hi}, #{lo}, #{ll}, #{unitId} )
   </insert>

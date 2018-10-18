@@ -1,7 +1,28 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Collection;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  *  select cb.id, cb.tag_id, cb.block_type, t.name output, ti.name input
@@ -18,26 +39,35 @@ import java.util.Collection;
  *        input: RU1CP-DI
  *          
  */
-public class ControlBlock implements Serializable {
+public class ControlBlock extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
-	private Long id;            /* id of output */
-	private Long tagId;         /* id of input  */
+	private Long id;            /* id of CO (ignored, pretty much) */
+	private Long pvId;          /* id of PV */
+	private Long spId;          /* id of SP */
 	private String blockType;
-	private String output; 
-	private String input;
-	private Double scanValue;
-	private Collection<IdName> allOutputs;
-	private Collection<IdName> allDInputs;
-	private Collection<IdName> allAInputs;
+	private String sp; 
+	private String pv;
+	private String co;
+	private Double output;
+	private Double setpoint;
+	private Double procValue;
+//	private Collection<IdName> allOutputs;
+//	private Collection<IdName> allDInputs;
+//	private Collection<IdName> allAInputs;
     
     public ControlBlock() { }
     
-    public ControlBlock( Long id, String outp ) {
+    public ControlBlock( Long id, String nm ) {
     	this.id = id;
-    	this.output = outp;
-    	this.tagId = 0L;
+    	this.co = nm;
+    }
+    
+    public ControlBlock( Long id, Long pvId, Long spId ) {
+    	this.id = id;
+    	this.pvId = pvId;
+    	this.spId = spId;
     	this.blockType = "analog";
     }
     
@@ -51,12 +81,21 @@ public class ControlBlock implements Serializable {
 	}
 	
 	
-	public Long getTagId() {
-		return tagId;
+	public Long getPvId() {
+		return pvId;
 	}
 
-	public void setTagId(Long tagId) {
-		this.tagId = tagId;
+	public void setPvId(Long pvId) {
+		this.pvId = pvId;
+	}
+
+
+	public Long getSpId() {
+		return spId;
+	}
+
+	public void setSpId(Long spId) {
+		this.spId = spId;
 	}
 
 
@@ -69,69 +108,58 @@ public class ControlBlock implements Serializable {
 	}
 
 
-	public String getOutput() {
+	public String getCo() {
+		return co;
+	}
+
+	public void setCo(String out ) {
+		this.co = out;
+	}
+
+
+	public String getPv() {
+		return pv;
+	}
+
+	public void setPv(String inp) {
+		this.pv = inp;
+	}
+
+
+	public String getSp() {
+		return sp;
+	}
+
+	public void setSp(String inp) {
+		this.sp = inp;
+	}
+
+
+	public Double getOutput() {
 		return output;
 	}
 
-	public void setOutput(String output) {
+	public void setOutput(Double output) {
 		this.output = output;
 	}
 
 
-	public String getInput() {
-		return input;
+	public Double getSetpoint() {
+		return setpoint;
 	}
 
-	public void setInput(String input) {
-		this.input = input;
-	}
-
-
-	public Double getScanValue() {
-		return scanValue;
-	}
-
-	public void setScanValue(Double scanValue) {
-		this.scanValue = scanValue;
-	}
-
-
-	public Collection<IdName> getAllOutputs() {
-		return allOutputs;
-	}
-
-	public void setAllOutputs(Collection<IdName> allOutputs) {
-		this.allOutputs = allOutputs;
+	public void setSetpoint(Double setpoint) {
+		this.setpoint = setpoint;
 	}
 
 	
-	public Collection<IdName> getAllDInputs() {
-		return allDInputs;
+	public Double getProcValue() {
+		return procValue;
 	}
 
-	public void setAllDInputs(Collection<IdName> allDInputs) {
-		this.allDInputs = allDInputs;
+	public void setProcValue(Double procValue) {
+		this.procValue = procValue;
 	}
 
 	
-	public Collection<IdName> getAllAInputs() {
-		return allAInputs;
-	}
-
-	public void setAllAInputs(Collection<IdName> allAInputs) {
-		this.allAInputs = allAInputs;
-	}
-	
-
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("ControlBlock{\"id\"=").append(this.id);
-		sb.append("\"tag_id\"=").append(this.tagId);
-		sb.append("\"block_type\"=").append(this.blockType);
-		sb.append(", \"output\"=\"").append(this.output).append("\"");
-		sb.append(", \"input\"=\"").append(this.input).append("\"");
-		sb.append("}");
-		return sb.toString();
-	}
-
 }

@@ -1,24 +1,47 @@
 import React, {Component} from 'react';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
-import DIForm from './forms/DIForm.js';
-import DIList from './lists/DIList.js';
-import Waiting from './Waiting.js';
-import {Tag} from './objects/Tag.js';
-import {DigitalInput} from './objects/DI.js';
+import DIForm          from './forms/DIForm.js';
+import DIList          from './lists/DIList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {DigitalInput}  from './objects/DI.js';
+
+/*************************************************************************
+ * DigitalInputAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
 class DigitalInputAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "DigitalInputAdmin: " + props.stage );
+    Log.info( "DigitalInputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
       di: null,
+      histTypes: null,
+      siteLoc: null,
+      valueViews: null,
       color: "green",
       nextCorner: 1
     };
@@ -29,6 +52,10 @@ class DigitalInputAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
+    this.finishDIFetch     = this.finishDIFetch.bind(this);
+    this.finishHistTypesFetch = this.finishHistTypesFetch.bind(this);
+    this.finishViewsFetch  = this.finishViewsFetch.bind(this);
+    this.finishSiteFetch   = this.finishSiteFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -39,7 +66,7 @@ class DigitalInputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "DigitalInputAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "DigitalInputAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -53,17 +80,66 @@ class DigitalInputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "DigitalInputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "DigitalInputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
+
+  finishDIFetch(req) {
+    let did = req;
+    var tg = new Tag(did.tag.id,did.tag.name,did.tag.description,did.tag.tagTypeCode
+                    ,did.tag.tagTypeId, did.tag.misc
+                    ,did.tag.c1Lat,did.tag.c1Long,did.tag.c2Lat,did.tag.c2Long
+                    ,did.tag.active);
+    var di = new DigitalInput(did.tagId, tg, did.scanInt, did.scanOffset
+                    , did.currentScan, did.histTypeCode, did.alarmState, did.alarmCode
+                    , did.scanValue, did.scanTime, did.prevValue, did.prevScanTime
+                    , did.lastHistValue, did.lastHistTime, did.valueView);
+    this.setState({stage: "itemRetrieved",
+                   updateDisplay: true,
+                   updateData: false,
+                   di: di
+                  });
+  }
+    
+  finishHistTypesFetch(req) {
+    let ht = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, histTypes: ht });
+  }
+  
+  finishViewsFetch(req) {
+    let vv = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, valueViews: vv });
+  }
+  
+  finishSiteFetch(req) {
+    let sl = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, siteLoc: sl });
+  }
+  
   handleSelect(event) {
+    const id = event.z;
+    const loc = "DigitalInputAdmin.diSelect";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/di/" + id,
+                            "Problem selecting digital input id "+id, this.finishDIFetch);
+    req0.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/referencecode/historytypes",
+                            "Problem retrieving history types", this.finishHistTypesFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/config/views",
+                            "Problem retrieving unit list", this.finishViewsFetch);
+    req3.fetchData();    
+    let req4 = new OMSRequest(loc, SERVERROOT + "/config/site",
+                            "Problem retrieving site location", this.finishSiteFetch);
+    req4.fetchData();    
+  }
+/*
     let now = new Date();
-    console.log( "DigitalInputAdmin.diSelect " + now.toISOString() );
+    Log.info( "DigitalInputAdmin.diSelect " + now.toISOString() );
     const id = event.z;
     const myRequest=SERVERROOT + "/di/" + id;
     now = new Date();
-    console.log( "DigitalInputAdmin.diSelect - Request: " + myRequest );
+    Log.info( "DigitalInputAdmin.diSelect - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -75,7 +151,7 @@ class DigitalInputAdmin extends Component {
     }).then(json => {
        let did = json;
        var tg = new Tag(did.tag.id,did.tag.name,did.tag.description,did.tag.tagTypeCode
-                       ,did.tag.tagTypeId
+                       ,did.tag.tagTypeId, did.tag.misc
                        ,did.tag.c1Lat,did.tag.c1Long,did.tag.c2Lat,did.tag.c2Long
                        ,did.tag.active);
        var di = new DigitalInput(did.tagId, tg, did.scanInt, did.scanOffset
@@ -90,12 +166,13 @@ class DigitalInputAdmin extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem retrieving digital input id "+id+"\n"+error);
-       console.log("DigitalInputAdmin.diSelect: Error - " + error);  
+       Log.error("DigitalInputAdmin.diSelect: Error - " + error);  
     });
   }
+*/
 
   handleUpdate(id) {
-    console.log("DigitalInputAdmin.diUpdate: (data) tagId="+id
+    Log.info("DigitalInputAdmin.diUpdate: (data) tagId="+id
                +", name:"+this.state.di.tag.name);
     let method = "PUT";
     let url = SERVERROOT + "/di/update";
@@ -121,7 +198,7 @@ class DigitalInputAdmin extends Component {
       .catch(function(error) { 
         alert("Problem "+(id===0?"inserting":"updating")+" digital input "
              +" id "+id+"\n"+error);
-        console.log("DigitalInputAdmin.diUpdate: Error - " + error);  
+        Log.error("DigitalInputAdmin.diUpdate: Error - " + error);  
     });
   }
 
@@ -138,12 +215,12 @@ class DigitalInputAdmin extends Component {
   }
   
   componentDidMount() {
-    console.log( "DigitalInputAdmin.didMount: " + this.state.stage );
+    Log.info( "DigitalInputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "DigitalInputAdmin.didUpdate: " + this.state.stage );
+    Log.info( "DigitalInputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -174,8 +251,8 @@ class DigitalInputAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      console.log( "DigitalInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      console.log( "DigitalInputAdmin.mouseUp: "+lat+","+long);
+      Log.info( "DigitalInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+      Log.info( "DigitalInputAdmin.mouseUp: "+lat+","+long);
       let dinew = Object.assign({},this.state.di);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -191,10 +268,10 @@ class DigitalInputAdmin extends Component {
   }
  
   fetchList() {
-    console.log( "DigitalInputAdmin.fetchList : " + this.state.stage );
+    Log.info( "DigitalInputAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/di/all";
     const now = new Date();
-    console.log( "DigitalInputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "DigitalInputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -205,7 +282,7 @@ class DigitalInputAdmin extends Component {
             }
             throw new TypeError("DigitalInputAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("DigitalInputAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("DigitalInputAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -213,7 +290,7 @@ class DigitalInputAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving digital input list\n"+e);
            const emsg = "DigitalInputAdmin.fetchList: Fetching di list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -229,7 +306,7 @@ class DigitalInputAdmin extends Component {
   }
 
   render() {
-    console.log("DigitalInputAdmin (render) - stage: "+this.state.stage);
+    Log.info("DigitalInputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -239,8 +316,15 @@ class DigitalInputAdmin extends Component {
                        handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <DIForm diData = {this.state.returnedText}
+        if( (this.state.di === null) || (this.state.histTypes === null) ||
+            (this.state.valueViews === null) || (this.state.siteLoc === null) ) {
+          return <Waiting />
+        } else {
+          return <DIForm diData = {this.state.returnedText}
                        di     = {this.state.di}
+                       histTypes = {this.state.histTypes}
+                       valueViews = {this.state.valueViews}
+                       siteLoc  = {this.state.siteLoc}
                        diUpdate = {this.handleDIUpdate}
                        diCopy   = {this.handleDICopy}
                        fieldChange = {this.handleFieldChange}
@@ -248,6 +332,7 @@ class DigitalInputAdmin extends Component {
                        handleClick = {this.handleClick}
                        handleQuit = {this.handleQuit}
                />
+        }
       default:
         return <DefaultContents />
     }

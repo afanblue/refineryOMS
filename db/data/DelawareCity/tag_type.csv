@@ -20,5 +20,7 @@ HS,Hot Spot,Hot spot (link to another page),,Y
 DK,Dock,DockNumber,,Y
 RU,RefineryUnit,Refinery Unit,,Y
 SCM,Schematic,Refinery Schematic,,Y
-C,CalculatedVariables,Calculated Variables,,Y
+C,CalculatedVariable,Calculated Variable,,Y
+SCO,SchematicObject,Objects for Refinery Schematics,,Y
+PG,PlotGroup,Group of tags for pre-defined plots,,Y
 End

@@ -19,7 +19,6 @@
     update xfer
        set updated = 1
          , float_value = #{floatValue}
-         , integer_value = #{integerValue}
          , scan_time = current_timestamp
      where id = #{id}
   </update>

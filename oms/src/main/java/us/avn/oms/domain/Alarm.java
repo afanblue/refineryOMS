@@ -1,15 +1,36 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * AlarmType: id, priority, alarm_msg_id, code
  * AlarmMessage: id, obj_id, abbr, message
  * Alarm: id, alarm_type_id, tag_type_id, obj_id, alm_occurred, acknowledged, active, alarm_msg_id
  */
-public class Alarm implements Serializable {
+public class Alarm extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -157,21 +178,5 @@ public class Alarm implements Serializable {
 		this.value = value;
 	}
 	
-
-	public String toString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-DD hh:MM:ss");
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("Alarm{\"id\"=").append(this.id);
-		sb.append(", \"alarmTypeId\"=").append(this.alarmTypeId);
-		sb.append(", \"tagId\"=").append(this.tagId);
-		sb.append(", \"alarmCode\"=\"").append(this.alarmCode).append("\"");
-		sb.append(", \"almOccurred\"=").append(this.almOccurred!=null?sdf.format(this.almOccurred):"(null)").append("\"");
-		sb.append(", \"acknowledged\"=").append(this.acknowledged).append("\"");
-		sb.append(", \"active\"=").append(this.active).append("\"");
-		sb.append(", \"alarmMsgId\"=").append(this.alarmMsgId);
-		sb.append(", \"value\"=").append(this.value);
-		sb.append("}");
-		return sb.toString();
-	}
 
 }

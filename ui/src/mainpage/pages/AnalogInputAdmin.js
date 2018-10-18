@@ -1,11 +1,31 @@
 import React, {Component} from 'react';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
-import AIForm from './forms/AIForm.js';
-import AIList from './lists/AIList.js';
-import Waiting from './Waiting.js';
-import {Tag} from './objects/Tag.js';
-import {AnalogInput} from './objects/AI.js';
+import AIForm          from './forms/AIForm.js';
+import AIList          from './lists/AIList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {AnalogInput}   from './objects/AI.js';
+
+/*************************************************************************
+ * AlarmTypeAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 /*
@@ -18,22 +38,31 @@ import {AnalogInput} from './objects/AI.js';
 class AnalogInputAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "AnalogInputAdmin: " + props.stage );
+    Log.info( "AnalogInputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
       ai: null,
+      aiTypes:null,
+      histTypes:null,
+      unitList: null,
+      siteLoc: null,
       color: "green",
       nextCorner: 1
     };
-    this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.handleSelect      = this.handleSelect.bind(this);
-    this.handleUpdate      = this.handleUpdate.bind(this);
-    this.handleMouseUp     = this.handleMouseUp.bind(this);
-    this.handleQuit        = this.handleQuit.bind(this);
-    this.handleClick       = this.handleClick.bind(this);
+    this.handleFieldChange  = this.handleFieldChange.bind(this);
+    this.handleSelect       = this.handleSelect.bind(this);
+    this.handleUpdate       = this.handleUpdate.bind(this);
+    this.handleMouseUp      = this.handleMouseUp.bind(this);
+    this.handleQuit         = this.handleQuit.bind(this);
+    this.handleClick        = this.handleClick.bind(this);
+    this.finishAIFetch      = this.finishAIFetch.bind(this);
+    this.finishAITypesFetch = this.finishAITypesFetch.bind(this);
+    this.finishHistTypesFetch = this.finishHistTypesFetch.bind(this);
+    this.finishUnitsFetch   = this.finishUnitsFetch.bind(this);
+    this.finishSiteLocFetch = this.finishSiteLocFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -44,7 +73,7 @@ class AnalogInputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "AnalogInputAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "AnalogInputAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -58,54 +87,76 @@ class AnalogInputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "AnalogInputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "AnalogInputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
+  }
+
+  finishAIFetch( req ) {
+    let aid = req;
+    var tg = new Tag(aid.tag.id, aid.tag.name, aid.tag.description, aid.tag.tagTypeCode
+                    ,aid.tag.tagTypeId, aid.misc
+                    ,aid.tag.c1Lat, aid.tag.c1Long, aid.tag.c2Lat, aid.tag.c2Long
+                    ,aid.tag.active);
+    var ai = new AnalogInput(aid.tagId, tg, aid.analogTypeCode, aid.scanInt, aid.scanOffset
+                    ,aid.currentScan, aid.zeroValue, aid.maxValue, aid.histTypeCode
+                    ,aid.percent, aid.slope, aid.rawValue, aid.scanValue, aid.scanTime
+                    ,aid.prevValue, aid.prevTime, aid.lastHistValue, aid.lastHistTime
+                    ,aid.hh, aid.hi, aid.lo, aid.ll, aid.unitId);
+    this.setState({stage: "itemRetrieved", updateDisplay: true, ai: ai });
+  }
+  
+  finishAITypesFetch(req) {
+    let aiTypes = req;
+    let blankItem = {};
+    blankItem.id = null;
+    blankItem.name = '---';       
+    aiTypes.unshift(blankItem);
+    this.setState({stage: "itemRetrieved", updateDisplay: true, aiTypes: aiTypes });
+  }
+  
+  finishHistTypesFetch(req) {
+    let histTypes = req;
+    let blankItem = {};
+    blankItem.id = null;
+    blankItem.name = '---';       
+    histTypes.unshift(blankItem);
+    this.setState({stage: "itemRetrieved", updateDisplay: true, histTypes: histTypes });
+  }
+  
+  finishUnitsFetch(req) {
+    let unitList = req;
+    let blankItem = {};
+    blankItem.id = null;
+    blankItem.name = '---';       
+    unitList.unshift(blankItem);
+    this.setState({stage: "itemRetrieved", updateDisplay: true, unitList: unitList });
+  }
+  
+  finishSiteLocFetch(req) {
+    let siteLoc = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, siteLoc: siteLoc });
   }
   
   handleSelect(event) {
-    let now = new Date();
-    console.log( "AnalogInputAdmin.aiSelect " + now.toISOString() );
     const id = event.z;
-    const myRequest=SERVERROOT + "/ai/" + id;
-    now = new Date();
-    console.log( "AnalogInputAdmin.aiSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("AnalogInputAdmin.aiSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let aid = json;
-       var tg = new Tag(aid.tag.id,aid.tag.name,aid.tag.description,aid.tag.tagTypeCode
-                       ,aid.tag.tagTypeId
-                       ,aid.tag.c1Lat,aid.tag.c1Long,aid.tag.c2Lat,aid.tag.c2Long
-                       ,aid.tag.active);
-       var ai = new AnalogInput(aid.tagId,tg,aid.typeCode, aid.scanInt, aid.scanOffset
-                       ,aid.currentScan, aid.zeroValue, aid.maxValue, aid.histTypeCode
-                       ,aid.percent, aid.slope, aid.rawValue, aid.scanValue, aid.scanTime
-                       ,aid.prevValue, aid.prevTime, aid.lastHistValue, aid.lastHistTime
-                       ,aid.hh, aid.hi, aid.lo, aid.ll, aid.unitId);
-       ai.aiTypes = aid.aiTypes;
-       ai.histTypes = aid.histTypes;
-       ai.almTypes = aid.almTypes;
-       ai.calm = aid.calm;
-       ai.unitList = aid.unitList;
-       ai.siteLocation = aid.siteLocation;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      ai: ai
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting analog input id "+id+"\n"+error);
-       console.log("AnalogInputAdmin.aiSelect: Error - " + error);  
-    });
+    const loc = "AnalogInputAdmin.aiSelect";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/ai/" + id,
+                            "Problem selecting analog input id "+id, this.finishAIFetch);
+    req0.fetchData();
+    let req1 = new OMSRequest(loc, SERVERROOT + "/referencecode/aitypes",
+                            "Problem retrieving AI types", this.finishAITypesFetch);
+    req1.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/referencecode/historytypes",
+                            "Problem retrieving history types", this.finishHistTypesFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/unit/all",
+                            "Problem retrieving unit list", this.finishUnitsFetch);
+    req3.fetchData();    
+    let req4 = new OMSRequest(loc, SERVERROOT + "/config/site",
+                            "Problem retrieving site location", this.finishSiteLocFetch);
+    req4.fetchData();    
   }
-  
+
   /** 
    * validateForm - x is an AI object
    */
@@ -123,7 +174,7 @@ class AnalogInputAdmin extends Component {
         msg += delim + "history type";
         delim = ", ";
     }
-    if(x.typeCode === null) {
+    if(x.analogTypeCode === null) {
         doSubmit = false;
         msg += delim + "analog type";
         delim = ", ";
@@ -138,7 +189,7 @@ class AnalogInputAdmin extends Component {
   handleUpdate(event) {
     event.preventDefault();
     const id = this.state.ai.tagId;
-    console.log("AnalogInputAdmin.aiUpdate: (data) tagId="+id
+    Log.info("AnalogInputAdmin.aiUpdate: (data) tagId="+id
                +", name:"+this.state.ai.tag.name);
     let method = "PUT";
     let url = SERVERROOT + "/ai/update";
@@ -156,18 +207,18 @@ class AnalogInputAdmin extends Component {
         .catch(function(error) { 
           alert("Problem "+(id===0?"inserting":"updating")+" analog input "
                 +"id "+id+"\n"+error);
-          console.log("AnalogInputAdmin.aiUpdate: Error - " + error);  
+          Log.error("Error - " + error,"AnalogInputAdmin.aiUpdate");  
       });
     }
   }
   
   componentDidMount() {
-    console.log( "AnalogInputAdmin.didMount: " + this.state.stage );
+    Log.info( "AnalogInputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "AnalogInputAdmin.didUpdate: " + this.state.stage );
+    Log.info( "AnalogInputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -203,11 +254,11 @@ class AnalogInputAdmin extends Component {
       const t = e.evt;
       var x = t.offsetX;
       var y = t.offsetY;
-      var l = this.state.returnedText.siteLocation;
+      var l = this.state.siteLoc;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      console.log( "AnalogInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      console.log( "AnalogInputAdmin.mouseUp: "+lat+","+long);
+      Log.info( "AnalogInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+      Log.info( "AnalogInputAdmin.mouseUp: "+lat+","+long);
       let ainew = Object.assign({},this.state.ai);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -223,10 +274,10 @@ class AnalogInputAdmin extends Component {
   }
  
   fetchList() {
-    console.log( "AnalogInputAdmin.fetchList : " + this.state.stage );
+    Log.info( "AnalogInputAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/ai/all";
     const now = new Date();
-    console.log( "AnalogInputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "AnalogInputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -237,7 +288,7 @@ class AnalogInputAdmin extends Component {
             }
             throw new TypeError("AnalogInputAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("AnalogInputAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("AnalogInputAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -245,7 +296,7 @@ class AnalogInputAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving analog input list\n"+e);
            const emsg = "AnalogInputAdmin.fetchList: Fetching ai list " + e;
-           console.log(emsg);
+           Log.error(emsg,"AnalogInputAdmin.aiUpdate");
       });
     }
   }
@@ -261,7 +312,7 @@ class AnalogInputAdmin extends Component {
   }
 
   render() {
-    console.log("AnalogInputAdmin (render) - stage: "+this.state.stage);
+    Log.info("AnalogInputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -271,14 +322,23 @@ class AnalogInputAdmin extends Component {
                        handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <AIForm aiData = {this.state.returnedText}
-                       ai     = {this.state.ai}
-                       aiUpdate = {this.handleUpdate}
-                       fieldChange = {this.handleFieldChange}
-                       handleQuit = {this.handleQuit}
-                       handleMouseUp = {this.handleMouseUp}
-                       handleClick = {this.handleClick}
-               />
+        if( (this.state.ai        === null) || (this.state.aiTypes  === null) ||
+            (this.state.histTypes === null) || (this.state.unitList === null) ||
+            (this.state.siteLoc   === null) ) {
+          return <Waiting />
+        } else {
+          return <AIForm aiData   = {this.state.returnedText}
+                         ai       = {this.state.ai}
+                         aiTypes  = {this.state.aiTypes}
+                         histTypes= {this.state.histTypes}
+                         unitList = {this.state.unitList}
+                         siteLoc  = {this.state.siteLoc}
+                         aiUpdate = {this.handleUpdate}
+                         fieldChange = {this.handleFieldChange}
+                         handleQuit = {this.handleQuit}
+                         handleMouseUp = {this.handleMouseUp}
+                         handleClick = {this.handleClick} />
+        }
       default:
         return <DefaultContents />
     }

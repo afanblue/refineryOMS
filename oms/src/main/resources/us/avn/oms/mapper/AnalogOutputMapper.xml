@@ -93,6 +93,20 @@
      order by 3
   </select>
 
+  <select id="getAnalogOutputsToUpdate" resultMap="analogOutputResultMap">
+    select ao.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ao.zero_value, ao.max_value, ao.hist_type_code
+         , ao.scan_value, ao.scan_time, ao.prev_value, ao.unit_id
+         , ao.prev_time, ao.last_hist_value, ao.last_hist_time
+         , tt.id tag_type_id, u.code
+      from analog_output ao join tag t on ao.tag_id = t.id
+      join tag_type tt on tt.code = t.tag_type_code
+      join unit u on ao.unit_id = u.id
+     where coalesce(ao.is_new,0) != 0 
+     order by 3
+  </select>
+
+
   <select id="getAnalogOutput" resultMap="analogOutputResultMap">
     select ao.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
          , t.tag_type_code, t.active, ao.zero_value, ao.max_value, ao.hist_type_code
@@ -105,16 +119,25 @@
      where t.id = #{parm1}
   </select>
   
-  <select id="getAllHistoryTypes" resultType="ReferenceCode" >
-    select id, category, name, code, value, description, active
-      from history_type_vw
-     order by code
-  </select>
-    
+  <update id="updateAOvalue" parameterType="AnalogOutput">
+    update analog_output
+       set is_new = 1
+         , scan_value = #{scanValue}
+         , scan_time = now()
+     where tag_id = #{tagId}
+  </update>
+
+  <update id="clearAOupdate" parameterType="Long" >
+    update analog_output
+       set is_new = 0
+     where tag_id = #{tagId}
+  </update>
+
   <update id="updateAnalogOutput" parameterType="AnalogOutput">
     update analog_output
        set percent = #{percent}
          , slope = #{slope}
+         , is_new = 1
          , scan_value = #{scanValue}
          , scan_time = coalesce(#{scanTime},now())
          , prev_value = #{prevValue}
@@ -128,6 +151,7 @@
     update analog_output
        set zero_value = #{zeroValue}
          , max_value = #{maxValue}
+         , is_new = 0
          , hist_type_code = #{histTypeCode}
          , percent = #{percent}
          , unit_id = #{unitId}
@@ -136,11 +160,11 @@
   
   <insert id="insertAnalogOutput" parameterType="AnalogOutput">
     insert analog_output
-         ( tag_id, zero_value, max_value
+         ( tag_id, zero_value, max_value, is_new
          , hist_type_code, percent, slope, scan_value, scan_time
          , prev_value, prev_time, last_hist_value, last_hist_time
          , unit_id )
-   values( #{tagId}, #{zeroValue}, #{maxValue}
+   values( #{tagId}, #{zeroValue}, #{maxValue}, 0
          , #{histTypeCode}, #{percent}, null, null, null
          , null, null, null, null, #{unitId} )
   </insert>

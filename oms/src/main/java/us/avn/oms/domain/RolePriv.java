@@ -1,6 +1,27 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * 
@@ -58,13 +79,17 @@ public class RolePriv implements Serializable {
 
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("RolePriv{\"roleId\"=").append(this.roleId);
-		sb.append(", \"role\"=").append(this.role).append("\"");
-		sb.append("\"privId\"=").append(this.privId);
-		sb.append(", \"priv\"=").append(this.priv).append("\"");
-		sb.append("}");
-		return sb.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        
+        String json;
+		try {
+			json = mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			json = "{\"error\":\""+sw.toString()+"\"}";
+		}
+		return json;
 	}
 
 }

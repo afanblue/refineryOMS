@@ -1,13 +1,31 @@
 import React, {Component} from 'react';
+import Log      from '../../requests/Log.js';
 //import {Stage, Layer, Group, Rect} from 'react-konva';
 //import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 //import {IdName} from '../objects/Tag.js';
 
+/*************************************************************************
+ * CalcVarForm.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 class CalcVarForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "CalcVarForm: constructor " );
+    Log.info( "CalcVarForm: constructor " );
     this.state = { 
       imgLeft: null,
       imgRight: null
@@ -28,8 +46,9 @@ class CalcVarForm extends Component {
   moveLeft(event) {
     event.preventDefault();
     let now = new Date();
-    console.log( "CalcVarAdmin.moveLeft " + now.toISOString() );
+    Log.info( "CalcVarAdmin.moveLeft " + now.toISOString() );
     let cv = this.props.calcVar;
+    let inpTagList = this.props.calcInpList;
 //    let lft = this.refs.inputTags;
     let rit = this.refs.inputTagList;
     var ndx = rit.selectedIndex;
@@ -41,7 +60,7 @@ class CalcVarForm extends Component {
       option.name = name;
       cv.inputTagIds.push(id);
       cv.inputTags.push(option);
-      cv.inputTagList = cv.inputTagList.filter(n => n.id !== id);
+      inpTagList = inpTagList.filter(n => n.id !== id);
       this.props.requestRender();
     }    
   }
@@ -49,8 +68,9 @@ class CalcVarForm extends Component {
   moveRight(event) {
     event.preventDefault();
     let now = new Date();
-    console.log( "CalcVarAdmin.moveRight " + now.toISOString() );
+    Log.info( "CalcVarAdmin.moveRight " + now.toISOString() );
     let cv = this.props.calcVar;
+    let inpTagList = this.props.calcInpList;
     let lft = this.refs.inputTags;
 //    let rit = this.refs.inputTagList;
     var ndx = lft.selectedIndex;
@@ -62,18 +82,17 @@ class CalcVarForm extends Component {
       option.name = name;
       cv.inputTags = cv.inputTags.filter(n => n.id !== id );
       cv.inputTagIds = cv.inputTagIds.filter(n => n !== id);
-      cv.inputTagList.unshift(option);
+      inpTagList.unshift(option);
       this.props.requestRender();
     }
   }
 
 
   render() {
-    const ud = this.props.returnedText;
     const cv = this.props.calcVar;
-    const otl = ud.outputTagList;
+    const otl = this.props.calcOutList;
     var inputTags = cv.inputTags;
-    const tagList = cv.inputTagList;
+    const tagList = this.props.calcInpList;
     const handleUpdate = this.props.handleUpdate;
     const handleQuit = this.props.handleQuit;
     const handleChange = this.props.handleChange;

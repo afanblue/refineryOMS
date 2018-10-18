@@ -11,11 +11,11 @@ sl $path
 # SCADA/PMC logs
 
 if( $error -eq "N" ) {
-  ls $name-*.log* | where-object {!$_.PSIsContainer -and ((new-timespan $_.LastWriteTime).days -ge $int)} >purged$name.txt
-  ls $name-*.log* | where-object {!$_.PSIsContainer -and ((new-timespan $_.LastWriteTime).days -ge $int)} | rm -Force -ErrorAction SilentlyContinue
+  ls $name*.* | where-object {!$_.PSIsContainer -and ((new-timespan $_.LastWriteTime).days -ge $int)} >purged$name.txt
+  ls $name*.* | where-object {!$_.PSIsContainer -and ((new-timespan $_.LastWriteTime).days -ge $int)} | rm -Force -ErrorAction SilentlyContinue
 } else {
-  gci $name*.log* -Recurse | where{-not $_.PsIsContainer} | sort CreationTime -desc | select -Skip $int >purged$name.txt
-  gci $name*.log* -Recurse | where{-not $_.PsIsContainer} | sort CreationTime -desc | select -Skip $int | Remove-Item -Force
+  gci $name*.* -Recurse | where{-not $_.PsIsContainer} | sort CreationTime -desc | select -Skip $int >purged$name.txt
+  gci $name*.* -Recurse | where{-not $_.PsIsContainer} | sort CreationTime -desc | select -Skip $int | Remove-Item -Force
 }
 
 # return to the beginning

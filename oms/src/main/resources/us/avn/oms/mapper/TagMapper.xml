@@ -15,12 +15,44 @@
 	Integer insertTag( Tag t );
 -->  
 
+  <resultMap id="cvMap" type="ChildValue">
+    <result property="id"               column="id" />
+    <result property="name"             column="name" />
+    <result property="description"      column="description" />
+    <result property="tagTypeCode"      column="tag_type_code" />
+    <result property="misc"             column="misc" />
+    <result property="c1Lat"            column="c1_lat" />
+    <result property="c1Long"           column="c1_long" />
+    <result property="c2Lat"            column="c2_lat" />
+    <result property="c2Long"           column="c2_long" />
+    <result property="active"           column="active" />
+    <result property="relTagId"         column="rel_tag_id" />
+    <result property="parentId"         column="parent_id" />
+    <result property="inpTagId"         column="inp_id" />
+    <result property="inpTagName"       column="inp_tag" />
+    <result property="inpType"          column="inp_type" />
+    <result property="inpRelTagId"      column="inp_rel_tag_id" />
+    <result property="inpValue"         column="inp_value" />
+    <result property="inpMax"           column="inp_max" />
+    <result property="inpZero"          column="inp_zero" />
+    <result property="inpAlmColor"      column="inp_alm_color" />
+    <result property="outTagId"         column="out_id" />
+    <result property="outTagName"       column="out_tag" />
+    <result property="outType"          column="out_type" />
+    <result property="outRelTagId"      column="out_rel_tag_id" />
+    <result property="outValue"         column="out_value" />
+    <result property="outMax"           column="out_max" />
+    <result property="outZero"          column="out_zero" />
+    <result property="outAlmColor"      column="out_alm_color" />
+  </resultMap>
+  
   <resultMap id="tagResultMap" type="Tag">
      <result property="id"              column="id"/>
      <result property="name"            column="name"/>
      <result property="description"     column="description"/>
      <result property="tagTypeCode"     column="tag_type_code"/>
      <result property="tagTypeId"       column="tag_type_id"/>
+     <result property="misc"            column="misc" />
      <result property="c1Lat"           column="c1_lat"/>
      <result property="c1Long"          column="c1_long"/>
      <result property="c2Lat"           column="c2_lat"/>
@@ -28,6 +60,12 @@
      <result property="active"          column="active"/>
   </resultMap>
 
+  <resultMap id="tagTypeMap" type="TagType">
+     <result property="id"              column="id"/>
+     <result property="name"            column="name"/>
+     <result property="code"            column="code"/>
+  </resultMap>
+  
   <resultMap id="tagletResultMap" type="Taglet">
      <result property="id"              column="id"/>
      <result property="name"            column="name"/>
@@ -60,7 +98,7 @@
     select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
       from tag t join tag_type tt on t.tag_type_code = tt.code
-     where t.name = #{parm1}
+     where t.name = #{param1} and t.tag_type_code = #{param2}
   </select>
 
   <select id="getAllTagsByType" resultMap="tagResultMap">
@@ -116,6 +154,30 @@
      where rtt.parent_tag_id = #{parm1}
   </select>
   
+  <select id="getSchematicObjectTypes" resultMap="tagTypeMap" >
+    select id, code, name from scm_object_vw
+  </select>
+  
+  <!-- This query retrieves the children of schematics                      -->
+  <!--                                                                      -->
+  <!-- Note that we've limited the type of CHILDREN allowed to the parent   -->
+  <!-- parent (tag of type SCM)                                             --> 
+  <!-- -> {child} (tag of type SCO, related via the rel_tag_tag table)      -->
+  <!--    -> {grandchild} (tag of type AI,DI,AO,DO                          -->
+  <!--                     related via the rel_tag_tag table)               -->
+  <select id="getSCMChildValues" resultMap="cvMap" >
+    select tp.id parent_id, rtt.id rel_tag_id, tc.id, tc.name, tc.description, tc.misc
+         , tc.tag_type_code, tc.active, tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long
+         , inp_rel_tag_id, inp_id, inp_tag, inp_type, inp_value, inp_max, inp_zero, inp_alm_color
+         , out_rel_tag_id, out_id, out_tag, out_type, out_value, out_max, out_zero, out_alm_color
+      from tag tp join rel_tag_tag rtt on tp.id=rtt.parent_tag_id 
+      join tag tc on rtt.child_tag_id=tc.id 
+      join sco_ref_tag_vw srtv on tc.id = srtv.id 
+     where tp.id = #{parm1} 
+       and tc.tag_type_code = 'SCO' 
+     order by tc.name;
+  </select>
+  
   <delete id="deleteChildTags">
     delete from rel_tag_tag where parent_tag_id = #{parm1}
   </delete>
@@ -125,6 +187,7 @@
        set name = #{name}
          , description = #{description}
          , tag_type_code = #{tagTypeCode}
+         , misc = #{misc}
          , c1_lat = #{c1Lat}
          , c1_long = #{c1Long}
          , c2_lat = #{c2Lat}
@@ -137,20 +200,25 @@
     update rel_tag_tag
        set parent_tag_id = #{parentTagId}
          , child_tag_id = #{childTagId}
+         , code = #{code}
      where id = #{id}
  </update>
   
-  <insert id="insertTag" parameterType="Tag">
+  <insert id="insertTag" parameterType="Tag" useGeneratedKeys="true"
+          keyProperty="id" keyColumn="ID">
     insert tag
-         ( name, description, tag_type_code
-         , c1_lat, c1_long, c2_lat, c2_long, active )
-   values( #{name}, #{description}, #{tagTypeCode}
-         , #{c1Lat}, #{c1Long}, #{c2Lat}, #{c2Long}, #{active})
+           ( name, description, tag_type_code, misc
+           , c1_lat, c1_long, c2_lat, c2_long, active )
+    values( #{name}, #{description}, #{tagTypeCode}, #{misc}
+          , #{c1Lat}, #{c1Long}, #{c2Lat}, #{c2Long}, #{active})
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
   </insert>
   
   <insert id="insertRelationship" parameterType="RelTagTag">
-    insert rel_tag_tag( parent_tag_id, child_tag_id )
-    values( #{parentTagId}, #{childTagId} )
+    insert rel_tag_tag( parent_tag_id, child_tag_id, code )
+    values( #{parentTagId}, #{childTagId}, #{code} )
   </insert>
   
 </mapper>

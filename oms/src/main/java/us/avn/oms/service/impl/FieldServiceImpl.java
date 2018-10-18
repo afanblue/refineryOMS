@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
@@ -76,16 +92,17 @@ public class FieldServiceImpl implements FieldService {
 	@Override
 	public void updateField( Field f ) {
 		log.debug("Updating field - "+f.toString());
-		tagMapper.updateTag(f.getTag());
+		tagMapper.updateTag(f);
 		fieldMapper.updateField(f);
 	}
 
 	@Override
     public Long insertField( Field f ) {
-		Long id = tagMapper.insertTag(f.getTag());
-		Tag t = tagMapper.getTagByName(f.getTag().getName());
-		f.setId(t.getId());
-    	return fieldMapper.insertField(f);
+		log.debug("Inserting field - "+f);
+		Long id = tagMapper.insertTag(f);
+		f.setId(id);
+    	fieldMapper.insertField(f);
+    	return id;
     }
 
 }

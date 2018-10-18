@@ -40,10 +40,15 @@ import java.util.Stack;
 public class RPN2 {
 
     private Stack<Double> stack;
+    private HashMap<String,Integer> controlList;
     private HashMap<String,Integer> operatorList;
 
     public RPN2() {
         stack = new Stack<Double>();  //creates stack
+        controlList = new HashMap<String,Integer>();
+        controlList.put("if", 1);
+        controlList.put("else",0);
+        controlList.put("then",0);
         operatorList = new HashMap<String,Integer>();
         operatorList.put("+",2);      // op1 op2 --> op1+op2
         operatorList.put("-",2);      // op1 op2 --> op1-op2 
@@ -51,7 +56,14 @@ public class RPN2 {
         operatorList.put("/",2);      // op1 op2 --> op1/op2
         operatorList.put("%",2);      // op1 op2 --> op1%op2
         operatorList.put("**",2);     // op1 op2 --> op1 raised to the op2 power
+        operatorList.put(">",2);      // op1 op2 --> op1>op2  ? 1 : 0 (1=GT, 0=LE)
+        operatorList.put(">=",2);     // op1 op2 --> op1>=op2 ? 1 : 0 (1=GE, 0=LT)
+        operatorList.put("<",2);      // op1 op2 --> op1<op2  ? 1 : 0 (1=LT, 0=GE)
+        operatorList.put("<=",2);     // op1 op2 --> op1<=op2 ? 1 : 0 (1=LE, 0=GT)
+        operatorList.put("=",2);      // op1 op2 --> op1=op2  ? 1 : 0 (1=EQ, 0=NE)
+        operatorList.put("!=",2);     // op1 op2 --> op1!=op2 ? 1 : 0 (1=NE, 0=EQ)
         operatorList.put("pi",0);     //         --> PI (3.14159...)
+        operatorList.put(".",1);      // returns entry on stack as result 
         operatorList.put("dup",1);    // op1     --> op1 op1 (i.e., duplicated)
         operatorList.put("swap",2);   // op1 op2 --> op2 op1
         operatorList.put("sin",1);    // op1     --> sin(op1)
@@ -60,6 +72,14 @@ public class RPN2 {
         operatorList.put("log",1);    // op1     --> log10(op1)
         operatorList.put("ln",1);     // op1     --> log(op1)  natural log
         operatorList.put("sqrt",1);   // op1     --> sqrt(op1)
+        operatorList.put("abs",1);    // op1     --> abs(op1)
+                                      // NB, for logical purposes 0 => false, !=0 => true
+        operatorList.put("0>",1);     // op1     --> 0>op1 ? 1 : 0 (1=GT, 0=LE)
+        operatorList.put("0=",1);     // op1     --> 0=op1 ? 1 : 0 (1=EQ, 0=NE)
+        operatorList.put("0<",1);     // op1     --> 0<op1 ? 1 : 0 (1=LT, 0=GE)
+        operatorList.put("&", 2);     // op1 op2 --> (op1!=0)&&(op2!=0)  (logical and)
+        operatorList.put("|",2);      // op1 op2 --> (op1!=0)||(op2!=0)  (logical or)
+        operatorList.put("!",1);      // op1     --> (op1==0?1:0)        (logical not)
     }
     
     void clearStack() {
@@ -140,16 +160,23 @@ public class RPN2 {
     public double evaluate(String expr, Double[] values ) 
             throws NumberFormatException {
 
-        double result = 0D;
+        double result = Double.NaN;
+        String control = "B";
         String token;
         Scanner parser = new Scanner(expr);     
         Integer nops = null;
         
         while (parser.hasNext()) {
             token = parser.next();          
-
-            if ( null != (nops = isOperator(token)) ) {
+//            System.out.println("In  "+token+" - Stack size: "+stack.size()+", result: "+result+", control: "+control);
+            if( "e".equals(control) || "T".equals(control) ) {
+            	if( null != (nops = isControl(token)) ) {
+                	control = execControl( token, nops, control );
+            	}
+            } else if ( null != (nops = isOperator(token))  ) {
                 result = execOperation( token, nops );
+            } else if( null != (nops = isControl(token)) ) {
+            	control = execControl( token, nops, control );
             } else {
                 if( token.charAt(0) == 'x' ) {
                     int ndx = Character.getNumericValue(token.charAt(1));
@@ -158,8 +185,44 @@ public class RPN2 {
                     stack.push(new Double(Double.parseDouble(token)));
                 }
             }
+ //           System.out.println("Out "+token+" - Stack size: "+stack.size()+", result: "+result+", control: "+control);
         }
-        return result;
+        return (stack.pop()).doubleValue();
+    }
+    
+    /**
+     * Method: execControl
+     * Parameters: token (if, else, then)
+     *             nops  - number of operators to consume
+     *             c     - current state (starts as "B")
+     * Returns: B => "then" found => control block complete (restore to starting condition)
+     *          e => "if" found, result was false, 
+     *               => look for "else" (i.e., skip everything until "else" found)
+     *          E => "else" found, state was "e" => can compute now until "then" found 
+     *          I => "if" found, result was true
+     *               process stuff until else found, then skip to end
+     *          T => "else" found, state was "c" => skip everything until "then" found
+     */
+    public String execControl( String token, Integer nops, String c ) {
+    	Double op1 = 0D;
+    	String control = "X";
+    	if( "if".equals(token) && "B".equals(c) ) {
+        	op1 = (stack.pop()).doubleValue();
+    		if( op1 != 0D ) {
+    			control = "I";
+    		} else {
+    			control = "e";
+    		}
+    	} else if( "else".equals(token) ) {
+    		if( "e".equals(c) ) {
+    			control = "E";
+    		} else if( "I".equals(c) ) {
+    			control = "T";
+    		}
+    	} else if( "then".equals(token) ) {
+    		control = "B";
+    	}
+    	return control;
     }
 
     /**
@@ -186,6 +249,15 @@ public class RPN2 {
     }
 
     /**
+     * Method: isControl
+     * Description: validates that this is an control token and returns the number
+     *              of arguments used.  Returns null if this is not a control
+     */
+    private Integer isControl(String token) {
+        return ( controlList.get(token) );
+    }
+
+    /**
      * Method: evaluateSingleOperator
      * Description: actually executes the operation requested
      */
@@ -193,6 +265,14 @@ public class RPN2 {
         double result = 0;
 
         switch (operation) {
+        	case ".":
+        		result = op1;
+        	case "&":
+        		result = ((op1!=0) && (op2!=0))?1D:0D;
+        	case "|":
+        		result = ((op1!=0) || (op2!=0))?1D:0D;
+        	case "!":
+        		result = (op1!=0)?0:1;
             case "+":
                 result = op1 + op2;
                 break;
@@ -208,6 +288,33 @@ public class RPN2 {
             case "%":
                 result = op1 % op2;
                 break;
+            case "0>":
+            	result = op1 > 0D?1D:0D;
+            	break;
+            case "0=":
+            	result = op1 == 0D?1D:0D;
+            	break;
+            case "0<":
+            	result = op1 < 0D?1D:0D;
+            	break;
+            case ">":
+            	result = op1 > op2?1D:0D;
+            	break;
+            case ">=":
+            	result = op1 >= op2?1D:0D;
+            	break;
+            case "<":
+            	result = op1 < op2?1D:0D;
+            	break;
+            case "<=":
+            	result = op1 <= op2?1D:0D;
+            	break;
+            case "=":
+            	result = (op1 == op2)?1D:0D;
+            	break;
+            case "!=":
+            	result = op1 != op2?1D:0D;
+            	break;
             case "pi":
                 result = Math.PI;
                 break;
@@ -232,7 +339,9 @@ public class RPN2 {
             case "ln":
                 result = Math.log(op1);
                 break;
-            
+            case "abs":
+            	result = Math.abs(op1);
+            	break;
         }
         return result;
     }

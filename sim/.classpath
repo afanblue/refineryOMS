@@ -22,5 +22,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/oms-shared"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WeatherStation"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

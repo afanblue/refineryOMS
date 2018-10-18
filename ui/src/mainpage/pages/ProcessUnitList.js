@@ -1,13 +1,30 @@
 import React, {Component} from 'react';
 import {SERVERROOT}  from '../../Parameters.js';
+import {CE, IL3}     from './objects/ListObjects.js';
+import Log           from '../requests/Log.js';
 //import {ProcessUnit} from './objects/ProcessUnit.js';
 //import {Tag}         from './objects/Tag.js';
 import SiteOverview  from './SiteOverview.js';
 import Waiting       from './Waiting.js';
 
-function CE(i,n) {this.id=i; this.name=n; }
-function IL3(i1,i2,i3) {this.i1=i1; this.i2=i2; this.i3=i3;}
-  
+/*************************************************************************
+ * ProcessUnitList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 class ProcessUnitList extends Component {
   constructor( props ) {
@@ -29,10 +46,10 @@ class ProcessUnitList extends Component {
   }
 
   fetchList() {
-    console.log( "ProcessUnitList.fetchList : " + this.state.stage );
+    Log.info( "ProcessUnitList.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/processunit/all";
     const now = new Date();
-    console.log( "ProcessUnitList.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ProcessUnitList.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -43,7 +60,7 @@ class ProcessUnitList extends Component {
             }
             throw new TypeError("ProcessUnitList(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ProcessUnitList.fetchList: JSON retrieved - " + json);
+           Log.info("ProcessUnitList.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -51,13 +68,13 @@ class ProcessUnitList extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving process unit list\n"+e);
            const emsg = "ProcessUnitList.fetchList: Fetching process unit list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
 
   componentDidMount() {
-    console.log( "ProcessUnitList.didMount: " + this.state.stage );
+    Log.info( "ProcessUnitList.didMount: " + this.state.stage );
     this.fetchList();
   }
   
@@ -65,16 +82,16 @@ class ProcessUnitList extends Component {
     let menuSelect = this.state.menuSelect;
     let data = this.state.returnedText;
     let puColumns = [];
-    if( data[0].tag.id === 0) {
+    if( data[0].id === 0) {
       data.shift(1);
     }
     data.forEach((i,x) => {
-//      console.log("forEach loop: x="+x);
+//      Log.info("forEach loop: x="+x);
       if( !((x+1) % 3) ) {
-//        console.log("forEachLoop inner: x="+x);
-        let CE0 = new CE(data[x-2].tag.id,data[x-2].tag.name);
-        let CE1 = new CE(data[x-1].tag.id,data[x-1].tag.name);
-        let CE2 = new CE(data[x].tag.id,data[x].tag.name);
+//        Log.info("forEachLoop inner: x="+x);
+        let CE0 = new CE(data[x-2].id,data[x-2].name);
+        let CE1 = new CE(data[x-1].id,data[x-1].name);
+        let CE2 = new CE(data[x].id,data[x].name);
         let il = new IL3(CE0,CE1,CE2);
         puColumns.push(il);
       }
@@ -84,16 +101,16 @@ class ProcessUnitList extends Component {
     if( rem > 1 ) {
       let x = dl-rem;
       let CE2 = new CE(0,"");
-      let CE0 = new CE(data[x].tag.id,data[x].tag.name);
+      let CE0 = new CE(data[x].id,data[x].name);
       let CE1 = new CE(0,"");
       if( rem > 0 ) {
-        CE1 = new CE(data[x+1].tag.id,data[x+1].tag.name);
+        CE1 = new CE(data[x+1].id,data[x+1].name);
       }
       let il = new IL3(CE0,CE1,CE2);
       puColumns.push(il);
     }
     
-    console.log("ProcessUnitList.generateList");
+    Log.info("ProcessUnitList.generateList");
     return(
       <div>
       <h2>

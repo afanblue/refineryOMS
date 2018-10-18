@@ -91,7 +91,9 @@ There is also an assumption that whoever's doing this is conversant w/the above 
         </init-param>
    ```
 
-   1.  The simulator actually retrieves the current weather conditions from the US weather service, i.e., http://w1.weather.gov/xml/current_obs/KILG.xml.  The "KILG" is the code for the Wilmington/New Castle County, DE airport.  This is defined in the config table w/item_name='WEATHER_LOCATION' and can be changed in the System Configuration Admin.  See http://w1.weather.gov/xml/current_obs/seek.php to locate XML weather observation feeds available.
+   1.  The simulator actually retrieves the current weather conditions from the US weather service, i.e., https://w1.weather.gov/xml/current_obs/KILG.xml.  The "KILG" is the code for the Wilmington/New Castle County, DE airport.  This is defined in the config table w/item_name='WEATHER_LOCATION' and can be changed in the System Configuration Admin.  See http://w1.weather.gov/xml/current_obs/seek.php to locate XML weather observation feeds available.  Eh, might be KTME, the Katy, TX executive airport.  NOAA has a new API, https://api.weather.gov/stations/XXXX/observations/current which has been configured here to use the JSON data return.  See https://www.weather.gov/documentation/services-web-api for additional information.
+   
+To configure this 
        
    1.  If you don't like my colors, the background and text color are defined in the oms.css file and in various js and html files.  The alarm colors can be changed in the System  Configuration Admin page, as NORMCOLOR, HHCOLOR, HICOLOR, LOCOLOR, LLCOLOR.  The background color is "midnightblue"
 

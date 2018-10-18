@@ -1,10 +1,29 @@
 import React, {Component} from 'react';
 import {SERVERROOT} from '../../Parameters.js';
+import Log          from '../requests/Log.js';
 import Last7DaysTransferList from './lists/Last7TransferList.js';
 import DefaultContents from './DefaultContents.js';
 import TransferForm from './forms/TransferForm.js';
 import Waiting from './Waiting.js';
 import {Transfer} from './objects/Transfer.js';
+
+/*************************************************************************
+ * Last7DaysTransfers.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 /*
@@ -17,7 +36,7 @@ import {Transfer} from './objects/Transfer.js';
 class Last7DaysTransfers extends Component {
   constructor(props) {
     super(props);
-    console.log( "Last7DaysTransfers: " + props.stage );
+    Log.info( "Last7DaysTransfers: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -42,7 +61,7 @@ class Last7DaysTransfers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "Last7DaysTransfers.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "Last7DaysTransfers.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -56,17 +75,17 @@ class Last7DaysTransfers extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "Last7DaysTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "Last7DaysTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   handleTransferSelect(event) {
     let now = new Date();
-    console.log( "Last7DaysTransfers.transferSelect " + now.toISOString() );
+    Log.info( "Last7DaysTransfers.transferSelect " + now.toISOString() );
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     now = new Date();
-    console.log( "Last7DaysTransfers.transferSelect - Request: " + myRequest );
+    Log.info( "Last7DaysTransfers.transferSelect - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -90,7 +109,7 @@ class Last7DaysTransfers extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting transfer id "+id+"\n"+error);
-       console.log("Last7DaysTransfers.transferSelect: Error - " + error);  
+       Log.error("Last7DaysTransfers.transferSelect: Error - " + error);  
     });
   }
 
@@ -126,7 +145,7 @@ class Last7DaysTransfers extends Component {
     let doSubmit = this.validateForm(x);
     if( doSubmit ) {
       const id = this.state.transfer.id;
-      console.log("Last7DaysTransfers.transferUpdate: (data) id="+id
+      Log.info("Last7DaysTransfers.transferUpdate: (data) id="+id
                  +", name:"+this.state.transfer.name);
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
@@ -147,18 +166,18 @@ class Last7DaysTransfers extends Component {
         .catch(function(error) { 
           alert("Problm "+(id===0?"inserting":"updating")+" transfer "
                +"id "+id+"\n"+error);
-          console.log("Last7DaysTransfers.transferUpdate: Error - " + error);  
+          Log.error("Last7DaysTransfers.transferUpdate: Error - " + error);  
       });
     }
   }
   
   componentDidMount() {
-    console.log( "Last7DaysTransfers.didMount: " + this.state.stage );
+    Log.info( "Last7DaysTransfers.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "Last7DaysTransfers.didUpdate: " + this.state.stage );
+    Log.info( "Last7DaysTransfers.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -183,10 +202,10 @@ class Last7DaysTransfers extends Component {
   
  
   fetchList() {
-    console.log( "Last7DaysTransfers.fetchList : " + this.state.stage );
+    Log.info( "Last7DaysTransfers.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/transfer/last/7";
     const now = new Date();
-    console.log( "Last7DaysTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "Last7DaysTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -197,7 +216,7 @@ class Last7DaysTransfers extends Component {
             }
             throw new TypeError("Last7DaysTransfers(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("Last7DaysTransfers.fetchList: JSON retrieved - " + json);
+           Log.info("Last7DaysTransfers.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -205,7 +224,7 @@ class Last7DaysTransfers extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving transfer list\n"+e);
            const emsg = "Last7DaysTransfers.fetchList: Fetching transfer list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -221,7 +240,7 @@ class Last7DaysTransfers extends Component {
   }
 
   render() {
-    console.log("Last7DaysTransfers (render) - stage: "+this.state.stage);
+    Log.info("Last7DaysTransfers (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

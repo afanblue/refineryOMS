@@ -1,35 +1,64 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Collection;
 
-public class ProcessUnit implements Serializable {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ProcessUnit extends Tag implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
-	private Tag tag;
     private Collection<RelTagTag> childTags;
     private Collection<IdName> tags;			/* list of tags available for unit */
 	private Tag siteLocation;
     
-    public ProcessUnit() {}
+    public ProcessUnit() { super(); }
     
     public ProcessUnit( Long i, String n ) {
-    	Tag t = new Tag(i,n);
-    	t.setTagTypeCode("PU");
-    	t.setActive("Y");
-    	this.tag = t;
+    	super(i,n);
+    	this.tagTypeCode = "PU";
+    	this.active = "Y";
+    }
+    
+    public ProcessUnit( Tag t ) {
+    	super (t);
     }
     	
-	public Tag getTag() {
-		return tag;
-	}
 
-	public void setTag(Tag tag) {
-		this.tag = tag;
-	}
-	
-
+    public void setTag( Tag t ) {
+    	this.id = t.getId();
+    	this.name = t.getName();
+    	this.description = t.getDescription();
+    	this.tagTypeCode = t.getTagTypeCode();
+    	this.tagTypeId = t.getTagTypeId();
+    	this.misc = t.getMisc();
+    	this.c1Lat = t.getC1Lat();
+    	this.c1Long = t.getC1Long();
+    	this.c2Lat = t.getC2Lat();
+    	this.c2Long = t.getC2Long();
+    	this.active = t.getActive();    	
+    }
+    
 	public Collection<RelTagTag> getChildTags() {
 		return childTags;
 	}
@@ -58,25 +87,17 @@ public class ProcessUnit implements Serializable {
 	
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("ProcessUnit{");
-		sb.append("\"tag\"=[").append(this.tag.toString()).append("]");
-		sb.append(", \"childTags:[\"");
-		String delim = "";
-		if( this.childTags != null ) {
-			for( RelTagTag t: childTags ) {
-				sb.append(delim).append("[");
-				sb.append(", \"childTagId\"=").append(t.getChildTagId());
-				sb.append(", \"child\"=\"").append(t.getChild()).append("\"");
-				sb.append("]");
-				delim = ", ";
-			}
-		} else {
-			sb.append(", \"childTags\"={empty}");
+        ObjectMapper mapper = new ObjectMapper();
+        
+        String json;
+		try {
+			json = mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			json = "{\"error\":\""+sw.toString()+"\"}";
 		}
-		sb.append("] ");
-	    sb.append("}");
-		return sb.toString();
+		return json;
 	}
 
 }

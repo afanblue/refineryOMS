@@ -12,7 +12,10 @@ gallons,gal,volume
 barrels,bbl,volume
 cubic feet,ft3,volume
 in Hg,in,pressure
+Pascals,PA,pressure
+mm HG,mm,pressure
 mile/hr,mph,speed
+m/sec,m/s,speed
 degrees,°,direction
 bbl/min,bpm,rate
 End

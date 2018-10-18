@@ -1,12 +1,31 @@
 import React, {Component} from 'react';
-import {Tag} from '../objects/Tag.js';
+import Log    from '../../requests/Log.js';
+import {Tag}  from '../objects/Tag.js';
 import {Tank} from '../objects/Tank.js';
+
+/*************************************************************************
+ * TankList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class TankList extends Component {
   constructor(props) {
     super(props);
-    console.log( "TankList: " + props.stage );
+    Log.info( "TankList: " + props.stage );
     this.state = {  };
   }
 
@@ -14,19 +33,20 @@ class TankList extends Component {
     var json = this.props.tankData;
     var tankSelect = this.props.tankSelect;
     var tankList = [];
-    var tg0 = new Tag(0,'New Tank','','TK',null
-                     ,null,null,null,null,'Y');
-    var tk0 = new Tank(0,tg0,'','','','','','','','','','','');
+    var tg0 = new Tag( 0, 'New Tank', '', 'TK', null, null
+                     , null, null, null, null, 'Y');
+    var tk0 = new Tank(0,tg0,'','','','','','','','','','','',0,0,null);
     tankList.push(tk0);
-    json.map(function(n,x){var tg = new Tag(n.id,n.tag.name,n.tag.description
-                                           ,n.tag.tagTypeCode,n.tag.tagTypeId
-                                           ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long
+    json.map(function(n,x){var tg = new Tag(n.id, n.tag.name, n.tag.description
+                                           ,n.tag.tagTypeCode, n.tag.tagTypeId, n.tag.misc
+                                           ,n.tag.c1Lat, n.tag.c1Long, n.tag.c2Lat, n.tag.c2Long
                                            ,n.tag.active);
                            var tk = new Tank(n.id,tg,n.api,n.density,n.height
                                            ,n.diameter,n.units,n.contentType
                                            ,n.contentTypeCode
                                            ,n.tempTag,n.levelTag
-                                           ,n.tempId,n.levelId); 
+                                           ,n.tempId,n.levelId
+                                           ,n.tempRttId,n.levelRttId,n.volume); 
                            return tankList.push( tk ); } );
     return ( 
       <div className="oms-tabs">

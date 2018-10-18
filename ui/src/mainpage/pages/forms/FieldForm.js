@@ -2,13 +2,32 @@ import React, {Component} from 'react';
 import {Stage, Layer, Group, Rect} from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 
+import Log       from '../../requests/Log.js';
 import SiteImage from '../SiteImage.js';
+
+/*************************************************************************
+ * FieldForm.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class FieldForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "FieldForm: " + props.stage );
+    Log.info( "FieldForm: " + props.stage );
     this.state = {  };
   }
 
@@ -32,17 +51,16 @@ class FieldForm extends Component {
     const tankList = this.props.returnedText.tanks;
     
     const site = ud.siteLocation;
-    const tag  = ud.tag;
     
     var xDivisor = site.c2Long-site.c1Long;
     var xScale = IMAGEWIDTH / xDivisor;
     var yDivisor = site.c2Lat-site.c1Lat;
     var yScale = IMAGEHEIGHT / yDivisor;
 
-    var xp = this.scaleX( tag.c1Long, site.c1Long, xScale);
-    var w  = this.scaleX( tag.c2Long, site.c1Long, xScale) - xp;
-    var yp = this.scaleY( tag.c1Lat,  site.c1Lat,  yScale);
-    var h  = this.scaleY( tag.c2Lat,  site.c1Lat,  yScale) - yp;
+    var xp = this.scaleX( f.c1Long, site.c1Long, xScale);
+    var w  = this.scaleX( f.c2Long, site.c1Long, xScale) - xp;
+    var yp = this.scaleY( f.c1Lat,  site.c1Lat,  yScale);
+    var h  = this.scaleY( f.c2Lat,  site.c1Lat,  yScale) - yp;
     var color = "red";
 
     return(
@@ -66,7 +84,7 @@ class FieldForm extends Component {
             <th className="oms-spacing-120">Field name (10 chars):</th>
             <td className="oms-spacing">
               <input type="hidden" name="id" value={f.id} />            
-              <input type="text" id="tag.name" name="tag.name" value={f.tag.name} 
+              <input type="text" id="name" name="name" value={f.name} 
                      className={["oms-spacing-50","oms-fontsize-12"].join(' ')}  size="10" maxLength="10"
                      onChange={fieldChange} />
             </td>
@@ -74,7 +92,7 @@ class FieldForm extends Component {
           <tr>
             <td className="oms-spacing-120">Active:</td>
             <td className="oms-spacing">
-              <select id="tag.active" name="tag.active" value={f.tag.active} 
+              <select id="active" name="active" value={f.active} 
                       onChange={fieldChange} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -84,7 +102,7 @@ class FieldForm extends Component {
           <tr>
             <th className="oms-spacing-120">Description:</th>
             <td className="oms-spacing">
-              <input type="text" id="tag.description" name="tag.description" value={f.tag.description}
+              <input type="text" id="description" name="description" value={f.description}
                      className={["oms-spacing-120","oms-fontsize-12"].join(' ')}  size="120" maxLength="120"
                      onChange={fieldChange} />
             </td>
@@ -108,11 +126,11 @@ class FieldForm extends Component {
           <tr>
             <th className="oms-spacing-120">NW Corner:</th>
             <td className="oms-spacing-180">
-              <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={f.tag.c1Lat} 
+              <input type="text" id="c1Lat" name="c1Lat" value={f.c1Lat} 
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
                      onChange={fieldChange} />
               &nbsp;
-              <input type="text" id="tag.c1Long" name="tag.c1Long" value={f.tag.c1Long}
+              <input type="text" id="c1Long" name="c1Long" value={f.c1Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
                      onChange={fieldChange} />
             </td>
@@ -120,11 +138,11 @@ class FieldForm extends Component {
           <tr>
             <th className="oms-spacing-120">SE Corner:</th>
             <td className="oms-spacing-180">
-              <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={f.tag.c2Lat} 
+              <input type="text" id="c2Lat" name="c2Lat" value={f.c2Lat} 
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
                      onChange={fieldChange} />
               &nbsp;
-              <input type="text" id="tag.c2Long" name="tag.c2Long" value={f.tag.c2Long}
+              <input type="text" id="c2Long" name="c2Long" value={f.c2Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')} size="20" maxLength="12" 
                      onChange={fieldChange} />
             </td>
@@ -136,7 +154,7 @@ class FieldForm extends Component {
                       onChange={fieldChange} >
                 {p.map( 
                   function(n,x){
-                    return <option key={x} value={n.id}>{n.tag.name}</option>
+                    return <option key={x} value={n.id}>{n.name}</option>
                   } )
                 }
               </select>

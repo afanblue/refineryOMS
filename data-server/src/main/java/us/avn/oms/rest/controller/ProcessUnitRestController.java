@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.rest.controller;
 
 import java.util.ArrayList;
@@ -15,13 +31,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.ProcessUnit;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Tag;
 import us.avn.oms.domain.Taglet;
 import us.avn.oms.domain.User;
+import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.ConfigService;
+import us.avn.oms.service.DigitalInputService;
 import us.avn.oms.service.TagService;
 
 @RestController
@@ -36,23 +55,39 @@ public class ProcessUnitRestController {
 	
 	@Autowired
 	ConfigService cs;
+	
+	@Autowired
+	AnalogInputService ais;
+	
+	@Autowired
+	DigitalInputService dis;
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
 	public ProcessUnit getProcessUnit( @PathVariable Long id  ) {
 		log.debug("getting process unit " + id);
-		ProcessUnit pu = new ProcessUnit();
+		ProcessUnit pu = new ProcessUnit(id, "New process unit ...");
 		pu.setSiteLocation(cs.getSiteLocation());
-		Tag t = null;
-		if( id == 0 ) {
-			t = new Tag(0L, "new" );
-		} else {
-			t = ts.getTag(id);
+		if( id != 0 ) {
+			Tag t = ts.getTag(id);
+			pu.setTag(t);
 			pu.setChildTags(ts.getChildTags(id));
 		}
-		ArrayList<String> al = new ArrayList<String>(Arrays.asList("TK","AI","DI"));
-		pu.setTags(ts.getAllIdNamesByTypeList(al));
-		pu.setTag(t);
+		pu.setSiteLocation(cs.getSiteLocation());
+		return pu;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/name/{nm}")
+	@ResponseBody
+	public ProcessUnit getProcessUnitByName( @PathVariable String nm  ) {
+		log.debug("getting process unit " + nm);
+		ProcessUnit pu = new ProcessUnit(0L, "New process unit ...");
+		pu.setSiteLocation(cs.getSiteLocation());
+		Tag t = ts.getTagByName(nm,"PU");
+		if( (t==null?false:(t.getId()!= 0)) ) {
+			pu.setTag(t);
+			pu.setChildTags(ts.getChildTags(t.getId()));
+		}
 		pu.setSiteLocation(cs.getSiteLocation());
 		return pu;
 	}
@@ -64,8 +99,7 @@ public class ProcessUnitRestController {
 		Collection<Tag> cts = ts.getAllTagsByType("PU");
 		Collection<ProcessUnit> cpu = new Vector<ProcessUnit>();
 		for( Tag t: cts ) {
-			ProcessUnit pu = new ProcessUnit();
-			pu.setTag(t);
+			ProcessUnit pu = new ProcessUnit(t);
 			cpu.add(pu);
 		}
 		return cpu;
@@ -74,10 +108,9 @@ public class ProcessUnitRestController {
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
 	public Long insertProcessUnit(@RequestBody ProcessUnit pu) {
 		log.debug("Inserting process unit " + pu.toString());
-		ts.insertTag(pu.getTag());
-		Tag t = ts.getTagByName(pu.getTag().getName());
+		Long id = ts.insertTag(pu);
 		for( RelTagTag rtt: pu.getChildTags()) {
-			rtt.setParentTagId(t.getId());
+			rtt.setParentTagId(id);
 			ts.insertRelationship(rtt);
 		}
 		return 1L;
@@ -86,13 +119,22 @@ public class ProcessUnitRestController {
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
 	public void updateProcessUnit(@RequestBody ProcessUnit pu ) {
 		log.debug("Updating process unit - "+pu.toString());
-		Long id = pu.getTag().getId();
+		Long id = pu.getId();
 		ts.deleteChildTags(id);
-		ts.updateTag(pu.getTag());
+		ts.updateTag(pu);
 		for( RelTagTag rtt: pu.getChildTags()) {
 			rtt.setParentTagId(id);
 			ts.insertRelationship(rtt);
 		}
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/values/{un}" )
+	public Collection<AIValue> getProcUnitValues(@PathVariable String un ) {
+	   log.debug("retrieve tag values for ProcessUnit "+un);
+	   Collection<AIValue> puv = ais.getProcUnitValues(un);
+	   puv.addAll(dis.getProcUnitValues(un));
+	   return puv;
+	}
+
 
 }

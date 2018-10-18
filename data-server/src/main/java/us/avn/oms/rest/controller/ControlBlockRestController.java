@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.rest.controller;
 
 import java.util.ArrayList;
@@ -50,28 +66,34 @@ public class ControlBlockRestController {
 			cb = cbService.getControlBlock(id);
 			if( null == cb ) {
 				Tag nt = tagService.getTag(id);
-				cb = new ControlBlock(nt.getId(), nt.getName());
+				cb = new ControlBlock();
+				cb.setId(nt.getId());
 				cb.setBlockType(nt.getTagTypeCode());
 			}
 		}
-		new ArrayList<>(Arrays.asList("AI", "DI", "C"));
-		ArrayList<String> al = new ArrayList<String>(Arrays.asList("AO", "DO"));
-		cb.setAllOutputs(tagService.getAllIdNamesByTypeList(al));
-		cb.setAllAInputs(tagService.getAllIdNamesByType("AI"));
-		cb.setAllDInputs(tagService.getAllIdNamesByType("DI"));
+//		new ArrayList<>(Arrays.asList("AI", "DI", "C"));
+//		ArrayList<String> al = new ArrayList<String>(Arrays.asList("AO", "DO"));
+//		cb.setAllOutputs(tagService.getAllIdNamesByTypeList(al));
+//		cb.setAllAInputs(tagService.getAllIdNamesByType("AI"));
+//		cb.setAllDInputs(tagService.getAllIdNamesByType("DI"));
 		return cb;
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT, value="/insert" )
+	@RequestMapping(method = RequestMethod.POST, value="/insert" )
 	public void insertControlBlock(@RequestBody ControlBlock cb ) {
-		log.debug("Update " + cb ); 
-		cbService.updateControlBlock(cb);
+		log.debug("Insert " + cb ); 
+		cbService.insertControlBlock(cb);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
 	public void updateControlBlock(@RequestBody ControlBlock cb ) {
-		log.debug("Update " + cb); 
-		cbService.updateControlBlock(cb);
+		log.debug("Update " + cb);
+		ControlBlock cbt = cbService.getControlBlock(cb.getId());
+		if( null == cbt ) {
+			cbService.insertControlBlock(cb);
+		} else {
+			cbService.updateControlBlock(cb);
+		}
 	}
 
 }

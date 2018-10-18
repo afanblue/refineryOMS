@@ -10,17 +10,16 @@
     <result property="id"              column="id" />
     <result property="roadImage"       column="road_image" />
     <result property="satelliteImage"  column="satellite_image" />
-    <result property="tag.id"          column="id" />
     <result property="parentId"        column="parent_id" />
     <result property="parent"          column="parent" />
-    <result property="tag.name"        column="name" />
-    <result property="tag.description" column="description" />
-    <result property="tag.tagTypeCode" column="tag_type_code" />
-    <result property="tag.active"      column="active" />
-    <result property="tag.c1Lat"       column="c1_lat" />
-    <result property="tag.c1Long"      column="c1_long" />
-    <result property="tag.c2Lat"       column="c2_lat" />
-    <result property="tag.c2Long"      column="c2_long" />
+    <result property="name"            column="name" />
+    <result property="description"     column="description" />
+    <result property="tagTypeCode"     column="tag_type_code" />
+    <result property="active"          column="active" />
+    <result property="c1Lat"           column="c1_lat" />
+    <result property="c1Long"          column="c1_long" />
+    <result property="c2Lat"           column="c2_lat" />
+    <result property="c2Long"          column="c2_long" />
   </resultMap>
   
   <resultMap id="tankDataMap" type="TankData">

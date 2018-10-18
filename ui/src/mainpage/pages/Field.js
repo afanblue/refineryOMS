@@ -1,8 +1,28 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
+import {SERVERROOT}    from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
-import Waiting from './Waiting.js';
-import FieldDisplay from './displays/FieldDisplay.js';
+import Log             from '../requests/Log.js';
+import Waiting         from './Waiting.js';
+import FieldDisplay    from './displays/FieldDisplay.js';
+
+/*************************************************************************
+ * Field.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
@@ -16,7 +36,7 @@ import FieldDisplay from './displays/FieldDisplay.js';
 class Field extends Component {
   constructor(props) {
     super(props);
-    console.log( "Field.constructor" );
+    Log.info( "Field.constructor" );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -40,7 +60,7 @@ class Field extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log( "Field.willRcvProps: " + nextProps.stage + ":"
+    Log.info( "Field.willRcvProps: " + nextProps.stage + ":"
                + ((nextProps.field===null)?"null":nextProps.field)
                + "/" + nextProps.tankType );
     this.fetchSite(nextProps.field);
@@ -53,10 +73,10 @@ class Field extends Component {
   }
   
   fetchSite(fn) {
-    console.log( "Field.fetchList : " + this.state.stage );
+    Log.info( "Field.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/field/objects/"+fn;
     const now = new Date();
-    console.log( "Field.fetchList " + now.toLocaleString() + " Request: " + myRequest );
+    Log.info( "Field.fetchList " + now.toLocaleString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -67,7 +87,7 @@ class Field extends Component {
             }
             throw new TypeError("Field.fetchList: response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("Field.fetchList: JSON retrieved - " + json);
+           Log.info("Field.fetchList: JSON retrieved - " + json);
            this.setState( {field: json.field,
                            tags: json.tags,
                            siteLoc: json.siteLocation, 
@@ -77,20 +97,20 @@ class Field extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving field list\n"+e);
            const emsg = "Field.fetchList: Fetching field list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
 
   componentDidMount() {
-    console.log( "Field.didMount: " + this.state.stage );
+    Log.info( "Field.didMount: " + this.state.stage );
     this.fetchSite(this.state.fieldName);
     var myTimerID = setInterval(() => {this.fetchSite(this.state.fieldName)}, 60000 );
     this.setState( {unitTimer: myTimerID } );    
   }
   
   componentWillUnmount() {
-    console.log( "Field.willUnmount "+this.state.unitTimer);
+    Log.info( "Field.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -100,7 +120,7 @@ class Field extends Component {
   }
 
   render() {
-    console.log("Field.render " + this.state.stage + " - " + this.state.field );
+    Log.info("Field.render " + this.state.stage + " - " + this.state.field );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

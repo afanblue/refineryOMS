@@ -1,11 +1,32 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CalcVariable implements Serializable {
+
+public class CalcVariable extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -15,8 +36,8 @@ public class CalcVariable implements Serializable {
 	private Double scanValue;
 	private Tag  tag;
     private Collection<IdName> inputTags;	   	// list of input tag IDs
-    private Collection<IdName> inputTagList;	// list of possible input tags
-    private Collection<IdName> outputTagList;
+//    private Collection<IdName> inputTagList;	// list of possible input tags
+//    private Collection<IdName> outputTagList;
 
 
 /* *************************************************** */
@@ -85,7 +106,7 @@ public class CalcVariable implements Serializable {
 		this.inputTags = inputTags;
 	}
 	
-
+/*
 	public Collection<IdName> getInputTagList() {
 		return inputTagList;
 	}
@@ -102,30 +123,6 @@ public class CalcVariable implements Serializable {
 	public void setOutputTagList(Collection<IdName> outputTagList) {
 		this.outputTagList = outputTagList;
 	}
-
+*/
 	
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("CalcVariable{ \"id\"=").append(this.id);
-		sb.append(", \"tag\"={").append(this.tag.toString()).append("}");
-		sb.append(", \"definition\"=\"").append(this.definition).append("\"");
-		sb.append(", \"outputTagId\"=").append(this.outputTagId);
-		if( this.inputTags != null ) {
-			Iterator<IdName> cti = this.inputTags.iterator();
-			sb.append(", \"inputTags\"={");
-			String delim = "";
-			while( cti.hasNext() ) {
-				IdName ct = cti.next();
-				sb.append(delim).append("[").append(ct.getId());
-				sb.append(", \"").append(ct.getName()).append("\"]");
-				delim = ", ";
-			}
-			sb.append("}");
-		} else {
-			sb.append(", \"inputTags\"={empty}");
-		}
-		sb.append(" }");
-		return sb.toString();
-	}
-
 }

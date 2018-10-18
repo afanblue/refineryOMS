@@ -1,11 +1,29 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
+import {SERVERROOT}       from '../../Parameters.js';
 import ActiveTransferList from './lists/ActiveTransferList.js';
-import DefaultContents from './DefaultContents.js';
-import TransferForm from './forms/TransferForm.js';
-import Waiting from './Waiting.js';
-import {Transfer} from './objects/Transfer.js';
+import DefaultContents    from './DefaultContents.js';
+import Log                from '../requests/Log.js';
+import TransferForm       from './forms/TransferForm.js';
+import Waiting            from './Waiting.js';
+import {Transfer}         from './objects/Transfer.js';
 
+/*************************************************************************
+ * ActiveTransfers.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -17,7 +35,7 @@ import {Transfer} from './objects/Transfer.js';
 class ActiveTransfers extends Component {
   constructor(props) {
     super(props);
-    console.log( "ActiveTransfers: " + props.stage );
+    Log.info( "ActiveTransfers: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -41,7 +59,7 @@ class ActiveTransfers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "ActiveTransfers.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "ActiveTransfers.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -55,17 +73,17 @@ class ActiveTransfers extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "ActiveTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "ActiveTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   handleTransferSelect(event) {
     let now = new Date();
-    console.log( "ActiveTransfers.transferSelect " + now.toISOString() );
+    Log.info( "ActiveTransfers.transferSelect " + now.toISOString() );
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     now = new Date();
-    console.log( "ActiveTransfers.transferSelect - Request: " + myRequest );
+    Log.info( "ActiveTransfers.transferSelect - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -93,7 +111,7 @@ class ActiveTransfers extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting transfer id "+id+"\n"+error);
-       console.log("ActiveTransfers.transferSelect: Error - " + error);  
+       Log.error("ActiveTransfers.transferSelect: Error - " + error);  
     });
   }
 
@@ -129,7 +147,7 @@ class ActiveTransfers extends Component {
     let doSubmit = this.validateForm(x);
     if( doSubmit ) {
       const id = this.state.transfer.id;
-      console.log("ActiveTransfers.transferUpdate: (data) id="+id
+      Log.info("ActiveTransfers.transferUpdate: (data) id="+id
                  +", name:"+this.state.transfer.name);
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
@@ -150,20 +168,20 @@ class ActiveTransfers extends Component {
         .catch(function(error) { 
           alert("Problm "+(id===0?"inserting":"updating")+" transfer "
                +"id "+id+"\n"+error);
-          console.log("ActiveTransfers.transferUpdate: Error - " + error);  
+          Log.error("ActiveTransfers.transferUpdate: Error - " + error);  
       });
     }
   }
   
   componentDidMount() {
-    console.log( "ActiveTransfers.didMount: " + this.state.stage );
+    Log.info( "ActiveTransfers.didMount: " + this.state.stage );
     var myTimerID = setInterval(() => {this.fetchList()}, 60000 );
     this.fetchList();
     this.setState({unitTimer:myTimerID});
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "ActiveTransfers.didUpdate: " + this.state.stage );
+    Log.info( "ActiveTransfers.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -188,10 +206,10 @@ class ActiveTransfers extends Component {
   
  
   fetchList() {
-    console.log( "ActiveTransfers.fetchList : " + this.state.stage );
+    Log.info( "ActiveTransfers.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/transfer/active";
     const now = new Date();
-    console.log( "ActiveTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ActiveTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -202,7 +220,7 @@ class ActiveTransfers extends Component {
             }
             throw new TypeError("ActiveTransfers(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ActiveTransfers.fetchList: JSON retrieved - " + json);
+           Log.info("ActiveTransfers.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -210,7 +228,7 @@ class ActiveTransfers extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving transfer list\n"+e);
            const emsg = "ActiveTransfers.fetchList: Fetching transfer list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -228,7 +246,7 @@ class ActiveTransfers extends Component {
   }
 
   componentWillUnmount() {
-    console.log( "ActiveTransfers.willUnmount "+this.state.unitTimer);
+    Log.info( "ActiveTransfers.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -236,7 +254,7 @@ class ActiveTransfers extends Component {
   
 
   render() {
-    console.log("ActiveTransfers (render) - stage: "+this.state.stage);
+    Log.info("ActiveTransfers (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -29,132 +29,160 @@
    
    <bean id="alarmMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.AlarmMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.AlarmMapper" />
    </bean>
 
    <bean id="analogInputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.AnalogInputMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.AnalogInputMapper" />
+   </bean>
+
+   <bean id="analogOutputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.AnalogOutputMapper" />
    </bean>
 
    <bean id="configMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.ConfigMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ConfigMapper" />
    </bean>
 
    <bean id="controlBlockMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.ControlBlockMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ControlBlockMapper" />
    </bean>
 
    <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.CustomerMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CustomerMapper" />
    </bean>
 
    <bean id="digitalInputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.DigitalInputMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.DigitalInputMapper" />
+   </bean>
+
+   <bean id="digitalOutputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.DigitalOutputMapper" />
+   </bean>
+
+   <bean id="simioMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.SimIOMapper" />
    </bean>
 
    <bean id="tagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.TagMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TagMapper" />
    </bean>
 
    <bean id="tankMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.TankMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TankMapper" />
    </bean>
 
    <bean id="transferMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.TransferMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TransferMapper" />
    </bean>
 
    <bean id="unitMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.UnitMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.UnitMapper" />
    </bean>
 
    <bean id="vesselMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.VesselMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.VesselMapper" />
    </bean>
 
    <bean id="wdogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.WatchdogMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.WatchdogMapper" />
    </bean>
 
    <bean id="xferMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.XferMapper" />
+      <property name="mapperInterface"   value="us.avn.oms.mapper.XferMapper" />
    </bean>
 
 <!-- Define service beans -->
 
    <bean id="alarmService" class="us.avn.oms.service.impl.AlarmServiceImpl">
-      <property name="alarmMapper" ref="alarmMapper" />
+      <property name="alarmMapper"         ref="alarmMapper" />
    </bean>
    
    <bean id="analogInputService" class="us.avn.oms.service.impl.AnalogInputServiceImpl">
-      <property name="analogInputMapper" ref="analogInputMapper" />
-      <property name="configMapper" ref="configMapper" />
-      <property name="tagMapper" ref="tagMapper" />
-      <property name="unitMapper" ref="unitMapper" />
+      <property name="analogInputMapper"   ref="analogInputMapper" />
+      <property name="configMapper"        ref="configMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
+   </bean>
+   
+   <bean id="analogOutputService" class="us.avn.oms.service.impl.AnalogOutputServiceImpl">
+      <property name="analogOutputMapper"  ref="analogOutputMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="configService" class="us.avn.oms.service.impl.ConfigServiceImpl">
-      <property name="configMapper" ref="configMapper" />
+      <property name="configMapper"        ref="configMapper" />
    </bean>
    
    <bean id="controlBlockService" class="us.avn.oms.service.impl.ControlBlockServiceImpl">
-      <property name="controlBlockMapper" ref="controlBlockMapper" />
+      <property name="controlBlockMapper"  ref="controlBlockMapper" />
    </bean>
    
    <bean id="customerService" class="us.avn.oms.service.impl.CustomerServiceImpl">
-      <property name="customerMapper" ref="customerMapper" />
+      <property name="customerMapper"      ref="customerMapper" />
    </bean>
    
    <bean id="digitalInputService" class="us.avn.oms.service.impl.DigitalInputServiceImpl">
-      <property name="digitalInputMapper" ref="digitalInputMapper" />
-      <property name="configMapper" ref="configMapper" />
-      <property name="tagMapper" ref="tagMapper" />
+      <property name="digitalInputMapper"  ref="digitalInputMapper" />
+      <property name="configMapper"        ref="configMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
+   </bean>
+   
+   <bean id="digitalOutputService" class="us.avn.oms.service.impl.DigitalOutputServiceImpl">
+      <property name="digitalOutputMapper" ref="digitalOutputMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
+   </bean>
+   
+   <bean id="simioService" class="us.avn.oms.service.impl.SimIOServiceImpl">
+      <property name="simIoMapper"         ref="simioMapper" />
    </bean>
    
    <bean id="tagService" class="us.avn.oms.service.impl.TagServiceImpl">
-      <property name="tagMapper" ref="tagMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="tankService" class="us.avn.oms.service.impl.TankServiceImpl">
-      <property name="tankMapper" ref="tankMapper" />
-      <property name="analogInputMapper" ref="analogInputMapper" />
-      <property name="configMapper" ref="configMapper" />
-      <property name="tagMapper" ref="tagMapper" />
+      <property name="tankMapper"          ref="tankMapper" />
+      <property name="analogInputMapper"   ref="analogInputMapper" />
+      <property name="configMapper"        ref="configMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="transferService" class="us.avn.oms.service.impl.TransferServiceImpl">
-      <property name="transferMapper" ref="transferMapper" />
-      <property name="tagMapper" ref="tagMapper" />
+      <property name="transferMapper"      ref="transferMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="unitService" class="us.avn.oms.service.impl.UnitServiceImpl">
-      <property name="unitMapper" ref="unitMapper" />
+      <property name="unitMapper"          ref="unitMapper" />
    </bean>
    
    <bean id="vesselService" class="us.avn.oms.service.impl.VesselServiceImpl">
-      <property name="vesselMapper" ref="vesselMapper" />
-      <property name="customerMapper" ref="customerMapper" />
-      <property name="tagMapper"      ref="tagMapper" />
+      <property name="vesselMapper"        ref="vesselMapper" />
+      <property name="customerMapper"      ref="customerMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">
-      <property name="watchdogMapper" ref="wdogMapper" />
+      <property name="watchdogMapper"      ref="wdogMapper" />
    </bean>
    
    <bean id="xferService" class="us.avn.oms.service.impl.XferServiceImpl">
-      <property name="xferMapper" ref="xferMapper" />
+      <property name="xferMapper"          ref="xferMapper" />
    </bean>
    
 </beans>

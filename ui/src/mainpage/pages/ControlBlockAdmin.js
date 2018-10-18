@@ -3,9 +3,29 @@ import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import ControlBlockForm from './forms/ControlBlockForm.js';
 import ControlBlockList from './lists/ControlBlockList.js';
+import Log              from '../requests/Log.js';
+import OMSRequest       from '../requests/OMSRequest.js';
 import Waiting from './Waiting.js';
 //import {Tag} from './objects/Tag.js';
 import {ControlBlock} from './objects/ControlBlock.js';
+
+/*************************************************************************
+ * ControlBlockAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 /*
@@ -14,19 +34,24 @@ import {ControlBlock} from './objects/ControlBlock.js';
 ,"contentType":"Asphalt","contentTypeCode":"A","state":"Y","tempTag":null,"levelTag":null},
 */
 
+const className = "ControlBlockAdmin";
+const loc = className + ".cbSelect";
+
 
 class ControlBlockAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "ControlBlockAdmin: " + props.stage );
+    Log.info( className + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
+      newCB: false,
       cb: null,
-      color: "green",
-      nextCorner: 1
+      allOutputs: null,
+      allDIInputs: null,
+      allAIInputs: null
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSelect      = this.handleSelect.bind(this);
@@ -34,6 +59,11 @@ class ControlBlockAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
+    this.handleCBFetch     = this.handleCBFetch.bind(this);
+    this.handleOutFetch    = this.handleOutFetch.bind(this);
+    this.handleAIFetch     = this.handleAIFetch.bind(this);
+    this.handleDIFetch     = this.handleDIFetch.bind(this);
+    this.handleListFetch   = this.handleListFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -44,7 +74,7 @@ class ControlBlockAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "ControlBlockAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( className + ".willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -58,62 +88,88 @@ class ControlBlockAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "ControlBlockAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( className + ".shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
-  fetchCBselection( id ) {
-    const myRequest=SERVERROOT + "/cb/" + id;
-//    var now = new Date();
-    console.log( "ControlBlockAdmin.cbSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("ControlBlockAdmin.cbSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let cbd = json;
-       var cb = new ControlBlock( cbd.id, cbd.tagId, cbd.blockType, cbd.output, cbd.input
-                                , cbd.allOutputs, cbd.allDInputs, cbd.allAInputs );
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      cb: cb
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting analog output id "+id+"\n"+error);
-       console.log("ControlBlockAdmin.cbSelect: Error - " + error);  
-    });
+  handleCBFetch( req ) {
+    let cbd = req;
+    var cb = new ControlBlock( cbd.id, cbd.pvId, cbd.spId, cbd.blockType
+                             , cbd.co, cbd.pv, cbd.sp
+                             , cbd.output, cbd.procValue, cbd.setpoint  );
+    this.setState({stage: "itemRetrieved",
+                   updateDisplay: true,
+                   updateData: false,
+                   returnedText: req,
+                   cb: cb
+                  });
   }
+  
+  handleAIFetch(req) {
+    let allAIInputs = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, allAIInputs: allAIInputs });
+  }  
 
+  handleDIFetch(req) {
+    let allDIInputs = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, allDIInputs: allDIInputs });
+  }
+  
+  handleOutFetch(req) {
+    let allOutputs = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, allOutputs: allOutputs });
+  }  
+
+
+  fetchCBselection( id ) {
+    let req0 = new OMSRequest(loc, SERVERROOT + "/cb/" + id,
+                            "Problem selecting control block - id "+id, this.handleCBFetch);
+    req0.fetchData();
+    
+    let req1 = new OMSRequest(loc, SERVERROOT + "/tag/types/AO,DO",
+                            "Problem retrieving calc types", this.handleOutFetch);
+    req1.fetchData();
+    
+    let req2 = new OMSRequest(loc, SERVERROOT + "/tag/idname/AI",
+                            "Problem retrieving AI types", this.handleAIFetch);
+    req2.fetchData();
+    
+    let req3 = new OMSRequest(loc, SERVERROOT + "/tag/idname/DI",
+                            "Problem retrieving DI types", this.handleDIFetch);
+    req3.fetchData();
+  }
   
   handleSelect(event) {
     let now = new Date();
-    console.log( "ControlBlockAdmin.cbSelect " + now.toISOString() );
+    Log.info( className + ".cbSelect " + now.toISOString() );
     const id = event.z;
+    this.setState({stage: "dataFetched", updateDisplay: false, newCB: (id===0) });
     this.fetchCBselection(id);
   }
   
   /** 
-   * validateForm - x is an AO object
+   * validateForm - x is an CB object
    */
   validateForm( x ) {
     let doSubmit = true;
     let delim = "";
     let msg = "The following field(s) ";
-    if( x.tagId === null || (x.tagId === undefined) ) {
+    if( x.pvId === null || (x.pvId === undefined) || (x.pvId === 0) ) {
         doSubmit = false;
-        msg += "input tag ";
+        msg += "PV ";
         delim = ", ";
     }
     if(x.id === null || x.id===undefined || x.id===0) {
         doSubmit = false;
         msg += delim + "output tag ";
         delim = ", ";
+    }
+    if( x.blockType === "AO" ) {
+      if( (x.spId === null) || (x.spId === undefined) || (x.spId === 0) ) {
+        doSubmit = false;
+        msg += delim + "SP ";
+        delim = ", ";
+      }
     }
     if( ! doSubmit ) {
       msg += " must be selected!";
@@ -125,10 +181,10 @@ class ControlBlockAdmin extends Component {
   handleUpdate(event) {
     event.preventDefault();
     const id = this.state.cb.tagId;
-    console.log("ControlBlockAdmin.cbUpdate: (data) id="+id);
+    Log.info(className+".cbUpdate: (data) id="+id);
     let method = "PUT";
     let url = SERVERROOT + "/cb/update";
-    if( id === 0 ) {
+    if( this.state.newCB ) {
       method = "POST";
       url = SERVERROOT + "/cb/insert";
     }
@@ -143,18 +199,18 @@ class ControlBlockAdmin extends Component {
         .catch(function(error) { 
           alert("Problem "+(id===0?"inserting":"updating")+" control block "
                 +"for id "+id+"\n"+error);
-          console.log("ControlBlockAdmin.cbUpdate: Error - " + error);  
+          Log.error(className+".cbUpdate: Error - " + error);  
       });
     }
   }
   
   componentDidMount() {
-    console.log( "ControlBlockAdmin.didMount: " + this.state.stage );
+    Log.info( className + ".didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "ControlBlockAdmin.didUpdate: " + this.state.stage );
+    Log.info( className + ".didUpdate: " + this.state.stage );
   }
 
   handleClick() {  };
@@ -165,11 +221,19 @@ class ControlBlockAdmin extends Component {
     let cbnew = Object.assign({},this.state.cb);
     let val = target.value;
     if( field === "id" ) {
-      let vp = val.split(".");
-      val = vp[0];
+//      let vp = val.split(".");
+//      val = vp[0];
       this.fetchCBselection(val);
     } else {
-      cbnew[field] = val;
+      switch ( field ) {
+        case "id":
+        case "pvId":
+        case "spId":
+          cbnew[field] = parseInt(val,10);
+          break;
+        default:
+          cbnew[field] = val;
+      }
       this.setState({cb: cbnew } );
     }
   }
@@ -182,8 +246,8 @@ class ControlBlockAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      console.log( "ControlBlockAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      console.log( "ControlBlockAdmin.mouseUp: "+lat+","+long);
+      Log.info( className+".mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+      Log.info( className+".mouseUp: "+lat+","+long);
       let cbnew = Object.assign({},this.state.cb);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -197,33 +261,19 @@ class ControlBlockAdmin extends Component {
       }
       this.setState( {cb: cbnew, nextCorner:nextCorner} );
   }
- 
+  
+  handleListFetch(resp) {
+    this.setState( {returnedText: resp, 
+                    updateData: false, 
+                    updateDisplay:true,
+                    stage: "dataFetched" } );
+  }
+   
   fetchList() {
-    console.log( "ControlBlockAdmin.fetchList : " + this.state.stage );
-    const myRequest = SERVERROOT + "/cb/all";
-    const now = new Date();
-    console.log( "ControlBlockAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
-    if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ControlBlockAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           console.log("ControlBlockAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving analog output list\n"+e);
-           const emsg = "ControlBlockAdmin.fetchList: Fetching cb list " + e;
-           console.log(emsg);
-      });
-    }
+    Log.info( className + ".fetchList : " + this.state.stage );
+    let req = new OMSRequest(loc, SERVERROOT + "/cb/all",
+                            "Problem retrieving control block list", this.handleListFetch);
+    req.fetchData();
   }
 
   handleQuit(event) {
@@ -237,7 +287,7 @@ class ControlBlockAdmin extends Component {
   }
 
   render() {
-    console.log("ControlBlockAdmin (render) - stage: "+this.state.stage);
+    Log.info(className+" (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -247,13 +297,23 @@ class ControlBlockAdmin extends Component {
                        handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <ControlBlockForm cbData = {this.state.returnedText}
-                       cb     = {this.state.cb}
+        if( (this.state.cb === null) || (this.state.allOutputs === null) ||
+            (this.state.allDIInputs === null) || (this.state.allAIInputs === null) )
+        {
+          return <Waiting />
+        } else {
+          return <ControlBlockForm cbData = {this.state.returnedText}
+                       cb       = {this.state.cb}
+                       newCB    = {this.state.newCB}
+                       allOuts  = {this.state.allOutputs}
+                       allDIins = {this.state.allDIInputs}
+                       allAIins = {this.state.allAIInputs}
                        cbUpdate = {this.handleUpdate}
-                       fieldChange = {this.handleFieldChange}
-                       handleQuit = {this.handleQuit}
+                       fieldChange   = {this.handleFieldChange}
+                       handleQuit    = {this.handleQuit}
                        handleMouseUp = {this.handleMouseUp}
                />
+        }
       default:
         return <DefaultContents />
     }

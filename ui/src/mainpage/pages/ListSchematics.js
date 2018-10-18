@@ -1,13 +1,29 @@
 import React, {Component} from 'react';
 import {SERVERROOT}  from '../../Parameters.js';
 //import {Schematic} from './objects/Schematic.js';
-//import {Tag}         from './objects/Tag.js';
+import {CE, IL3}     from './objects/ListObjects.js';
+import Log           from '../requests/Log.js';
 import SiteOverview  from './SiteOverview.js';
 import Waiting       from './Waiting.js';
 
-function CE(i,n) {this.id=i; this.name=n; }
-function IL3(i1,i2,i3) {this.i1=i1; this.i2=i2; this.i3=i3;}
-  
+/*************************************************************************
+ * ListSchematics.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 class ListSchematics extends Component {
   constructor( props ) {
@@ -29,10 +45,10 @@ class ListSchematics extends Component {
   }
 
   fetchList() {
-    console.log( "ListSchematics.fetchList : " + this.state.stage );
+    Log.info( "ListSchematics.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/schematic/all";
     const now = new Date();
-    console.log( "ListSchematics.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ListSchematics.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -43,7 +59,7 @@ class ListSchematics extends Component {
             }
             throw new TypeError("ListSchematics(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ListSchematics.fetchList: JSON retrieved - " + json);
+           Log.info("ListSchematics.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -51,80 +67,82 @@ class ListSchematics extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving schematic list\n"+e);
            const emsg = "ListSchematics.fetchList: Fetching schematic list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
 
   componentDidMount() {
-    console.log( "ListSchematics.didMount: " + this.state.stage );
+    Log.info( "ListSchematics.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   generateList() {
     let menuSelect = this.state.menuSelect;
     let data = this.state.returnedText;
-    let puColumns = [];
-    if( data[0].tag.id === 0) {
-      data.shift(1);
-    }
-    data.forEach((i,x) => {
-//      console.log("forEach loop: x="+x);
-      if( !((x+1) % 3) ) {
-//        console.log("forEachLoop inner: x="+x);
-        let CE0 = new CE(data[x-2].tag.id,data[x-2].tag.name);
-        let CE1 = new CE(data[x-1].tag.id,data[x-1].tag.name);
-        let CE2 = new CE(data[x].tag.id,data[x].tag.name);
-        let il = new IL3(CE0,CE1,CE2);
-        puColumns.push(il);
-      }
-    });
-    const dl = data.length;
-    const rem = dl%3;
-    if( rem > 1 ) {
-      let x = dl-rem;
-      let CE2 = new CE(0,"");
-      let CE0 = new CE(data[x].tag.id,data[x].tag.name);
-      let CE1 = new CE(0,"");
+    let scmColumns = [];
+    if( data.length !== 0 ) { 
+//    if( data[0].id === 0) { data.shift(1); }
+      data.forEach((i,x) => {
+//        Log.info("forEach loop: x="+x);
+        if( !((x+1) % 3) ) {
+//          Log.info("forEachLoop inner: x="+x);
+          let CE0 = new CE(data[x-2].id,data[x-2].name);
+          let CE1 = new CE(data[x-1].id,data[x-1].name);
+          let CE2 = new CE(data[x].id,data[x].name);
+          let il = new IL3(CE0,CE1,CE2);
+          scmColumns.push(il);
+        }
+      });
+      const dl = data.length;
+      const rem = dl%3;
       if( rem > 0 ) {
-        CE1 = new CE(data[x+1].tag.id,data[x+1].tag.name);
+        let x = dl-rem;
+        let CE2 = new CE(0,"");
+        let CE0 = new CE(data[x].id,data[x].name);
+        let CE1 = new CE(0,"");
+        if( rem > 1 ) {
+          CE1 = new CE(data[x+1].id,data[x+1].name);
+        }
+        let il = new IL3(CE0,CE1,CE2);
+        scmColumns.push(il);
       }
-      let il = new IL3(CE0,CE1,CE2);
-      puColumns.push(il);
     }
-    
-    console.log("ListSchematics.generateList");
+    Log.info("ListSchematics.generateList");
     return(
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>Process Units
+           <img src="./images/spacer.png" alt="space" height="1px" width="180px"/>Schematics
         </div>
       </h2>
       <table className={"scrollTable"}>
         <thead className={"fixedHeader"}>
           <tr>
-	        <td className={"oms-spacing-180"}>Unit Name</td>
-	        <td className={"oms-spacing-180"}>Unit Name</td>
-            <td className={"oms-spacing-180"}>Unit Name</td>
+	        <td className={"oms-spacing-180"}> Name </td>
+	        <td className={"oms-spacing-180"}> Name </td>
+            <td className={"oms-spacing-180"}> Name </td>
           </tr>
         </thead>
         <tbody className={"scrollContent"}>
-          {puColumns.map( 
+          {scmColumns.map( 
             function(n,x) {
-              const z1 = n.i1.name;
-              const z2 = n.i2.name;
-              const z3 = n.i3.name;
+              const z1 = n.i1.id;
+              const nm1 = n.i1.name;
+              const z2 = n.i2.id;
+              const nm2 = n.i2.name
+              const z3 = n.i3.id;
+              const nm3 = n.i3.name;
               return (
                 <tr key={x}>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{z1}</a>
+                    <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{nm1}</a>
                   </td>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z2} onClick={() => {menuSelect({z2})}} >{z2}</a>
+                    <a className={"oms-menu-text"} id={z2} onClick={() => {menuSelect({z2})}} >{nm2}</a>
                   </td>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z3} onClick={() => {menuSelect({z3})}} >{z3}</a>
+                    <a className={"oms-menu-text"} id={z3} onClick={() => {menuSelect({z3})}} >{nm3}</a>
                   </td>
                 </tr>
               )

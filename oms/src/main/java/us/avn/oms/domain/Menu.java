@@ -1,8 +1,29 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 
-public class Menu implements Serializable {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class Menu extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -77,18 +98,5 @@ public class Menu implements Serializable {
 		this.menuName = menuName;
 	}
 
-
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("Menu{\"text\":\"").append(this.text).append("\"");
-		sb.append("\", orderno\":").append(this.orderNo).append("");
-		sb.append("\", uri\":\"").append(this.uri).append("\"");
-		sb.append("\", viewpriv\":\"").append(this.viewPriv).append("\"");
-		sb.append("\", execpriv\":\"").append(this.execPriv).append("\"");
-		sb.append("\", category\":\"").append(this.category).append("\"");
-		sb.append("\", menuname\":\"").append(this.menuName).append("\"");
-		sb.append("}");
-		return sb.toString();
-	}
 
 }

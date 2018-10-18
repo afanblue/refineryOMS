@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
@@ -19,25 +35,16 @@ public class AnalogOutputServiceImpl implements AnalogOutputService {
 
 
 	private AnalogOutputMapper aoMapper;
-	private ConfigMapper cfgMapper;
 	private TagMapper tagMapper;
-	private UnitMapper unitMapper;
 	
 	public void setAnalogOutputMapper( AnalogOutputMapper aom ) {
-		this.aoMapper =aom;
+		this.aoMapper = aom;
 	}
 	
-	public void setConfigMapper(ConfigMapper cm ) {
-		this.cfgMapper= cm;
-	}
-
 	public void setTagMapper( TagMapper tm ) {
 		this.tagMapper = tm;
 	}
 	
-	public void setUnitMapper( UnitMapper tm ) {
-		this.unitMapper = tm;
-	}
 
 	@Override
 	public Collection<AnalogOutput> getAllActiveAOtags( ) {
@@ -61,19 +68,22 @@ public class AnalogOutputServiceImpl implements AnalogOutputService {
 		if( id != 0 ) {
 			ao = aoMapper.getAnalogOutput(id);
 		}
-		ao.setHistTypes(aoMapper.getAllHistoryTypes());
-		ao.setUnitList(unitMapper.getAllUnits());
 		return ao;
 	}
-/*
+
 	@Override
-	public Collection<AIValue> getCurrentAOValues() {
-		return aoMapper.getCurrentAOValues();
+	public Collection<AnalogOutput> getAnalogOutputsToUpdate() {
+		return aoMapper.getAnalogOutputsToUpdate();
 	}
-*/
+
 	@Override
-	public Collection<ReferenceCode> getAllHistoryTypes() {
-		return aoMapper.getAllHistoryTypes();
+	public void updateAOvalue( AnalogOutput ao ) {
+		aoMapper.updateAOvalue(ao);
+	}
+	
+	@Override
+	public void clearAOupdate( Long id ) {
+		aoMapper.clearAOupdate(id);
 	}
 	
 	@Override
@@ -81,6 +91,16 @@ public class AnalogOutputServiceImpl implements AnalogOutputService {
 		aoMapper.updateAnalogOutput(ao );
 	}
 
+	@Override
+	public void output( Long id ) {
+		AnalogOutput ao = aoMapper.getAnalogOutput(id);
+		Double inc = 0.20*(ao.getMaxValue() - ao.getZeroValue());
+		Double value = ao.getScanValue()+inc;
+		value = (value>ao.getMaxValue()?ao.getMaxValue():value);
+		ao.setScanValue(value);
+		aoMapper.updateAOvalue(ao);
+	}
+	
 	@Override
 	public void updateAnalogOutputStatic( AnalogOutput ao ) {
 		if( ao.getTagId() == 0L ) {
@@ -93,9 +113,10 @@ public class AnalogOutputServiceImpl implements AnalogOutputService {
 
 	@Override
 	public Long insertAnalogOutput( AnalogOutput ao ) {
-		Long id = tagMapper.insertTag(ao.getTag());
-		Tag t = tagMapper.getTagByName(ao.getTag().getName());
-		ao.setTagId(t.getId());
+		Tag t = ao.getTag();
+		tagMapper.insertTag(t);
+		Long id = t.getId();
+		ao.setTagId(id);
 		aoMapper.insertAnalogOutput(ao);
 		return id;
 	}

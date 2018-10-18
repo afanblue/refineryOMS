@@ -2,11 +2,29 @@ import React, {Component} from 'react';
 import {SERVERROOT}  from '../../Parameters.js';
 //import {ProcessUnit} from './objects/ProcessUnit.js';
 //import {Tag}         from './objects/Tag.js';
+import {CE, IL3}     from './objects/ListObjects.js';
+import Log           from '../requests/Log.js';
 import SiteOverview  from './SiteOverview.js';
 import Waiting       from './Waiting.js';
 
-function CE(i,n) {this.id=i; this.name=n; }
-function IL3(i1,i2,i3) {this.i1=i1; this.i2=i2; this.i3=i3;}
+/*************************************************************************
+ * GroupList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
   
 
 class GroupList extends Component {
@@ -29,10 +47,10 @@ class GroupList extends Component {
   }
 
   fetchList() {
-    console.log( "GroupList.fetchList : " + this.state.stage );
+    Log.info( "GroupList.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/plotGroup/all";
     const now = new Date();
-    console.log( "GroupList.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "GroupList.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -43,7 +61,7 @@ class GroupList extends Component {
             }
             throw new TypeError("GroupList(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("GroupList.fetchList: JSON retrieved - " + json);
+           Log.info("GroupList.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -51,13 +69,13 @@ class GroupList extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving process unit list\n"+e);
            const emsg = "GroupList.fetchList: Fetching process unit list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
 
   componentDidMount() {
-    console.log( "GroupList.didMount: " + this.state.stage );
+    Log.info( "GroupList.didMount: " + this.state.stage );
     this.fetchList();
   }
   
@@ -91,7 +109,7 @@ class GroupList extends Component {
       puColumns.push(il);
     }
     
-    console.log("GroupList.generateList");
+    Log.info("GroupList.generateList");
     return(
       <div>
       <h2>

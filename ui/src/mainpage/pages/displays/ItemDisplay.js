@@ -1,10 +1,26 @@
 import React, {Component} from 'react';
 //import { Stage, Layer, Text } from 'react-konva';
+import Log      from '../../requests/Log.js';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
-import moment from 'moment';
+import moment   from 'moment';
 
-//import {SERVERROOT}  from '../../Parameters.js';
-//import {AIValue}     from './objects/AIValue.js';
+/*************************************************************************
+ * ItemDisplay.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
@@ -29,7 +45,7 @@ class ItemDisplay extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log( "ItemDisplay.willRcvProps: "
+    Log.info( "ItemDisplay.willRcvProps: "
                + ((nextProps.option===null)?"null":nextProps.option) );
     this.setState({ id: nextProps.id,
                     items: nextProps.items,
@@ -45,7 +61,7 @@ class ItemDisplay extends Component {
  
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    console.log("ItemDisplay.render");
+    Log.info("ItemDisplay.render");
     var bottom = zeroValue;
     var left = this.state.left;
     var right = this.state.right;

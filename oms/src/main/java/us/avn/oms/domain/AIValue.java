@@ -1,35 +1,44 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /*
  *           tag_id: 24
- *        type_code: L
- *         scan_int: 6
- *      scan_offset: 4
- *     current_scan: 0
- *       zero_value: 0
- *        max_value: 100
- *   hist_type_code: L
- *          percent: 2
- *            slope: 0
- *        raw_value: NULL
- *       scan_value: NULL
+ *             name:
+ *            value: NULL
  *        scan_time: NULL
- *       prev_value: NULL
- *        prev_time: NULL
- *  last_hist_value: NULL
- *   last_hist_time: NULL
- *               hh: 47.0000
- *               hi: 42.0000
- *               lo: 10.0000
- *               ll: 5.0000
+ *          ai_type: NULL
+ *       value_text: NULL
+ *       alarm_code: 47.0000
+ *      alarm_color: 42.0000
+ *         location: 10.0000
  */
-public class AIValue implements Serializable {
+public class AIValue extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -139,17 +148,5 @@ public class AIValue implements Serializable {
 		this.location = l;
 	}
 
-
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("AIValue{\"id\"=").append(this.tagId);
-		sb.append(", \"name\"=\"").append(this.name).append("\"");
-		sb.append(", \"value\"=\"").append(this.value).append("\"");
-		sb.append(", \"scanTime\"=\"").append(this.scanTime!=null?sdf.format(this.scanTime):"null").append("\"");
-		sb.append(", \"alarmCode\"=\"").append(this.alarmCode).append("\"");
-		sb.append(", \"alarmColor\"=\"").append(this.alarmColor).append("\"");
-		sb.append("}");
-		return sb.toString();
-	}
 
 }

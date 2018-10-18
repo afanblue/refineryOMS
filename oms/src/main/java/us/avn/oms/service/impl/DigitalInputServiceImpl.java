@@ -1,11 +1,30 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.Config;
 import us.avn.oms.domain.DigitalInput;
 import us.avn.oms.domain.ReferenceCode;
@@ -18,6 +37,7 @@ import us.avn.oms.service.DigitalInputService;
 
 public class DigitalInputServiceImpl implements DigitalInputService {
 
+    private Logger log = LogManager.getLogger(this.getClass().getName());
 
 	private DigitalInputMapper diMapper;
 	private ConfigMapper cfgMapper;
@@ -74,15 +94,6 @@ public class DigitalInputServiceImpl implements DigitalInputService {
 		} else {
 			di = diMapper.getDigitalInput(id);
 		}
-		di.setHistTypes(diMapper.getAllHistoryTypes());
-		di.setSiteLocation(cfgMapper.getSiteLocation());
-		Collection<Config> v = cfgMapper.getOmsViews();
-		Collection<String> sv = new Vector<String>();
-		Iterator<Config> iv = v.iterator();
-		while(iv.hasNext()) {
-			sv.add(iv.next().getKey());
-		}
-		di.setViews(sv);
 		return di;
 	}
 	
@@ -90,6 +101,12 @@ public class DigitalInputServiceImpl implements DigitalInputService {
 	public void updateDigitalInput( DigitalInput di ) {
 		diMapper.updateDigitalInput(di );
 	}
+	
+	@Override
+	public Collection<AIValue> getProcUnitValues( String pu ) {
+		return diMapper.getProcUnitValues(pu);
+	}
+
 
 	@Override
 	public void updateDigitalInputStatic( DigitalInput di ) {
@@ -103,8 +120,8 @@ public class DigitalInputServiceImpl implements DigitalInputService {
 
 	@Override
 	public Long insertDigitalInput( DigitalInput di ) {
-		Long id = tagMapper.insertTag(di.getTag());
-		Tag t = tagMapper.getTagByName(di.getTag().getName());
+		Tag t = di.getTag();
+		Long id = tagMapper.insertTag(t);
 		di.setTagId(t.getId());
 		diMapper.insertDigitalInput(di);
 		return id;

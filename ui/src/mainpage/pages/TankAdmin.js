@@ -1,12 +1,32 @@
 import React, {Component} from 'react';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
 import DefaultContents from './DefaultContents.js';
-import TankForm from './forms/TankForm.js';
-import TankList from './lists/TankList.js';
-import Waiting from './Waiting.js';
-import {Tag} from './objects/Tag.js';
-import {Tank} from './objects/Tank.js';
+import Log             from '../requests/Log.js';
+import TankForm        from './forms/TankForm.js';
+import TankList        from './lists/TankList.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {Tank}          from './objects/Tank.js';
 
+
+/*************************************************************************
+ * TankAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -18,13 +38,17 @@ import {Tank} from './objects/Tank.js';
 class TankAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "TankAdmin: " + props.stage );
+    Log.info( "TankAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
       tank: null,
+      siteLocation: null,
+      temperatures: null,
+      levels: null,
+      contentTypes: null,
       color: "green",
       nextCorner: 1
     };
@@ -34,6 +58,11 @@ class TankAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
+    this.finishTankFetch   = this.finishTankFetch.bind(this);
+    this.finishSiteFetch   = this.finishSiteFetch.bind(this);
+    this.finishTempFetch   = this.finishTempFetch.bind(this);
+    this.finishLevelFetch  = this.finishLevelFetch.bind(this);
+    this.finishCntntsFetch = this.finishCntntsFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -44,7 +73,7 @@ class TankAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "TankAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "TankAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -58,46 +87,73 @@ class TankAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "TankAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "TankAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
-  
-  fetchTankData(id) {
-    const myRequest=SERVERROOT + "/tank/" + id;
-    console.log( "TankAdmin.fetchTank - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("TankAdmin.fetchTank: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let ud = json;
-       var tg = new Tag(ud.id,ud.tag.name,ud.tag.description,ud.tag.tagTypeCode
-                       ,ud.tag.tagTypeId
-                       ,ud.tag.c1Lat,ud.tag.c1Long,ud.tag.c2Lat,ud.tag.c2Long
-                       ,ud.tag.active);
-       var tk = new Tank(ud.id,tg,ud.api,ud.density,ud.height
-                        ,ud.diameter,ud.units,ud.contentType
-                        ,ud.contentTypeCode,ud.tempTag,ud.levelTag
-                        ,ud.tempId,ud.levelId);
+
+  finishTankFetch(req) {
+       let tkd = req;
+       var tg = new Tag( tkd.id, tkd.tag.name, tkd.tag.description, tkd.tag.tagTypeCode
+                       , tkd.tag.tagTypeId, tkd.tag.misc
+                       , tkd.tag.c1Lat, tkd.tag.c1Long, tkd.tag.c2Lat, tkd.tag.c2Long
+                       , tkd.tag.active);
+       var tk = new Tank(tkd.id,tg,tkd.api,tkd.density,tkd.height
+                        ,tkd.diameter,tkd.units,tkd.contentType
+                        ,tkd.contentTypeCode,tkd.tempTag,tkd.levelTag
+                        ,tkd.tempId,tkd.levelId,tkd.tempRttId, tkd.levelRttId
+                        ,tkd.volumes);
        this.setState({stage: "itemRetrieved",
                       updateDisplay: true,
                       updateData: false,
-                      returnedText: json,
                       tank: tk
                      });
-    }).catch(function(error) { 
-       alert("Problem selecting tank id "+id+"\n"+error);
-       console.log("TankAdmin.fetchTank: Error - " + error);  
-    });
+    this.setState({stage: "itemRetrieved", updateDisplay: true, tank: tk });
   }
-  
+
+  finishSiteFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, siteLocation:req });
+  }
+
+  finishTempFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, temperatures:req });
+  }
+
+  finishLevelFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, levels:req });
+  }
+
+  finishCntntsFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, contentTypes:req });
+  }
+
+// siteLocation, temperatures, levels, contentTypes
+
+  fetchTankData(id) {
+    const loc = "TankAdmin.fetchTank";
+    const myRequest=SERVERROOT + "/tank/" + id;
+    let req0 = new OMSRequest(loc, myRequest, 
+                            "Problem selecting tank "+myRequest, this.finishTankFetch);
+    req0.fetchData();
+    let req1 = new OMSRequest(loc, SERVERROOT + "/config/site",
+                            "Problem retrieving site location ", this.finishSiteFetch);
+    req1.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/ai/all/T",
+                            "Problem retrieving temperature list ", this.finishTempFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/ai/all/L",
+                            "Problem retrieving level tag list", this.finishLevelFetch);
+    req3.fetchData();
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    let req4 = new OMSRequest(loc, SERVERROOT + "/tank/contentTypes",
+                            "Problem retrieving content types list", this.finishCntntsFetch);
+    req4.fetchData();
+    this.setState({tank:null, siteLocation:null, temperatures:null, levels:null, contentTypes:null})    
+  }
+
+
   handleTankSelect(event) {
     let now = new Date();
-    console.log( "TankAdmin.tankSelect " + now.toISOString() );
+    Log.info( "TankAdmin.tankSelect " + now.toISOString() );
     const id = event.z;
     this.fetchTankData(id);
   }
@@ -105,7 +161,7 @@ class TankAdmin extends Component {
   handleTankUpdate(event) {
     event.preventDefault();
     const id = this.state.tank.id;
-    console.log("TankAdmin.tankUpdate: (data) id="+id
+    Log.info("TankAdmin.tankUpdate: (data) id="+id
                +", alias:"+this.state.alias);
     let method = "PUT";
     let url = SERVERROOT + "/tank/update";
@@ -124,18 +180,18 @@ class TankAdmin extends Component {
     }).catch(function(error) { 
         alert("Problem "+(id===0?"inserting":"updating")+" tank "
              +"id "+id+"\n"+error);
-        console.log("TankAdmin.tankUpdate: Error - " + error);  
+        Log.error("TankAdmin.tankUpdate: Error - " + error);  
     });
 ;
   }
   
   componentDidMount() {
-    console.log( "TankAdmin.didMount: " + this.state.stage );
+    Log.info( "TankAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "TankAdmin.didUpdate: " + this.state.stage );
+    Log.info( "TankAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -166,9 +222,9 @@ class TankAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      console.log( "TankAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"]"
+      Log.info( "TankAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"]"
                  + " SE("+l.c2Lat+","+l.c2Long+")]");
-      console.log( "TankAdmin.mouseUp: "+lat+","+long);
+      Log.info( "TankAdmin.mouseUp: "+lat+","+long);
       let tknew = Object.assign({},this.state.tank);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -184,10 +240,10 @@ class TankAdmin extends Component {
   }
  
   fetchList() {
-    console.log( "TankAdmin.fetchList : " + this.state.stage );
+    Log.info( "TankAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/tank/all";
     const now = new Date();
-    console.log( "TankAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "TankAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -198,7 +254,7 @@ class TankAdmin extends Component {
             }
             throw new TypeError("TankAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("TankAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("TankAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -206,7 +262,7 @@ class TankAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving tank list\n"+e);
            const emsg = "TankAdmin.fetchList: Fetching tank list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -222,7 +278,7 @@ class TankAdmin extends Component {
   }
 
   render() {
-    console.log("TankAdmin (render) - stage: "+this.state.stage);
+    Log.info("TankAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -232,14 +288,23 @@ class TankAdmin extends Component {
                          handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <TankForm tankData = {this.state.returnedText}
-                         tank     = {this.state.tank}
-                         tankUpdate = {this.handleTankUpdate}
-                         fieldChange = {this.handleFieldChange}
-                         handleQuit = {this.handleQuit}
-                         handleMouseUp = {this.handleMouseUp}
-                         handleClick = {this.handleClick}
-               />
+        if( (this.state.tank===null) || (this.state.siteLocation===null) || 
+            (this.state.temperatures===null) || (this.state.levels===null) || 
+            (this.state.contentTypes===null) ) {
+          return <Waiting />
+        } else {
+          return <TankForm tank         = {this.state.tank}
+                           siteLocation = {this.state.siteLocation}
+                           temperatures = {this.state.temperatures}
+                           levels       = {this.state.levels}
+                           contentTypes = {this.state.contentTypes}
+                           tankUpdate   = {this.handleTankUpdate}
+                           fieldChange  = {this.handleFieldChange}
+                           handleQuit   = {this.handleQuit}
+                           handleMouseUp = {this.handleMouseUp}
+                           handleClick  = {this.handleClick}
+                 />
+        }
       default:
         return <DefaultContents />
     }

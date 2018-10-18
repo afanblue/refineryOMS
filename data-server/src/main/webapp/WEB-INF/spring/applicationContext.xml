@@ -20,13 +20,23 @@
    <bean id="viewResolver" 
 	      class="org.springframework.web.servlet.view.ResourceBundleViewResolver" 
 	      p:basename="views" />
-	      
+   <bean id="appProperties"
+         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+         <list>
+            <value>classpath:config/database.properties</value>
+         </list>
+      </property>
+   </bean>
+
    <bean id="mysqlDS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
       <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-      <property name="url"             value="jdbc:mysql://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes"/>
-      <property name="username"        value="oms"/>
-      <property name="password"        value="omsx"/>
-       <property name="initialSize"    value="3" />
+      <property name="url"             value="jdbc:mysql://localhost:3306/${db.instance}?autoReconnect=true&amp;useUnicode=yes"/>
+      <property name="username"        value="${db.user}"/>
+      <property name="password"        value="${db.pwd}"/>
+      <property name="initialSize"     value="5" />
+      <property name="validationQuery" value="select now() from dual" />
+      <property name="validationQueryTimeout" value="2" />
    </bean>
 
    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -76,6 +86,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.DigitalInputMapper" />
    </bean>
 
+   <bean id="digitalOutputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.DigitalOutputMapper" />
+   </bean>
+
    <bean id="fieldMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.FieldMapper" />
@@ -99,6 +114,11 @@
    <bean id="privilegeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.PrivilegeMapper" />
+   </bean>
+
+   <bean id="referenceCodeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ReferenceCodeMapper" />
    </bean>
 
    <bean id="roleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
@@ -146,14 +166,11 @@
       <property name="analogInputMapper" ref="analogInputMapper" />
       <property name="configMapper"      ref="configMapper" />
       <property name="tagMapper"         ref="tagMapper" />
-      <property name="unitMapper"   ref="unitMapper" />
    </bean>
    
    <bean id="analogOutputService" class="us.avn.oms.service.impl.AnalogOutputServiceImpl">
       <property name="analogOutputMapper" ref="analogOutputMapper" />
-      <property name="configMapper"       ref="configMapper" />
       <property name="tagMapper"          ref="tagMapper" />
-      <property name="unitMapper"         ref="unitMapper" />
    </bean>
    
    <bean id="calcVariableService" class="us.avn.oms.service.impl.CalcVariableServiceImpl">
@@ -175,9 +192,14 @@
    </bean>
    
    <bean id="digitalInputService" class="us.avn.oms.service.impl.DigitalInputServiceImpl">
-      <property name="digitalInputMapper" ref="digitalInputMapper" />
-      <property name="configMapper"       ref="configMapper" />
-      <property name="tagMapper"          ref="tagMapper" />
+      <property name="digitalInputMapper"  ref="digitalInputMapper" />
+      <property name="configMapper"        ref="configMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
+   </bean>
+   
+   <bean id="digitalOutputService" class="us.avn.oms.service.impl.DigitalOutputServiceImpl">
+      <property name="digitalOutputMapper" ref="digitalOutputMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="fieldService" class="us.avn.oms.service.impl.FieldServiceImpl">
@@ -200,6 +222,10 @@
    
    <bean id="privilegeService" class="us.avn.oms.service.impl.PrivilegeServiceImpl">
       <property name="privilegeMapper" ref="privilegeMapper" />
+   </bean>
+   
+   <bean id="referenceCodeService" class="us.avn.oms.service.impl.ReferenceCodeServiceImpl">
+      <property name="referenceCodeMapper" ref="referenceCodeMapper" />
    </bean>
    
    <bean id="roleService" class="us.avn.oms.service.impl.RoleServiceImpl">

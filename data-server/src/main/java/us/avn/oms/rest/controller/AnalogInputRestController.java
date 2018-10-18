@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.rest.controller;
 
 import java.util.Collection;
@@ -19,6 +35,7 @@ import us.avn.oms.domain.Field;
 import us.avn.oms.domain.History;
 import us.avn.oms.domain.HistoryData;
 import us.avn.oms.domain.HistoryRequest;
+import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.PlotGroup;
 import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.HistoryService;
@@ -59,9 +76,9 @@ public class AnalogInputRestController {
 	}	
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all/{type}")
-	public Collection<AnalogInput> getAllAnalogInputsByType( @PathVariable String type ) {
+	public Collection<IdName> getAllAIIdNameByType( @PathVariable String type ) {
 		log.debug("get all analog inputs for type "+type.toUpperCase());
-		return aiService.getAllAnalogInputsByType(type.toUpperCase());
+		return aiService.getAllAIIdNameByType(type.toUpperCase());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
@@ -117,12 +134,6 @@ public class AnalogInputRestController {
 	public void updateAnalogInput(@RequestBody AnalogInput ai) {
 	   log.debug("Updating analog input - "+ai.toString());
 	   aiService.updateAnalogInputStatic(ai); 
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value="/pulist/{un}" )
-	public Collection<AIValue> getProcUnitValues(@PathVariable String un ) {
-	   log.debug("retrieve tag values for ProcessUnit "+un);
-	   return aiService.getProcUnitValues(un); 
 	}
 
 }

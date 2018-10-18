@@ -1,10 +1,30 @@
 import React, {Component} from 'react';
 import {SERVERROOT}    from '../../Parameters.js';
+import Log             from '../requests/Log.js';
 import DefaultContents from './DefaultContents.js';
 import Field           from './Field.js';
 import Waiting         from './Waiting.js';
 //import {Field} from './objects/Field.js';
 //import {Tag} from './objects/Tag.js';
+
+/*************************************************************************
+ * SiteOverview.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
@@ -18,7 +38,7 @@ import Waiting         from './Waiting.js';
 class SiteOverview extends Component {
   constructor(props) {
     super(props);
-    console.log( "SiteOverview " );
+    Log.info( "SiteOverview " );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -29,7 +49,7 @@ class SiteOverview extends Component {
   }
   
   componentDidMount() {
-    console.log( "SiteOverview.didMount: " + this.state.stage );
+    Log.info( "SiteOverview.didMount: " + this.state.stage );
     this.fetchSite();
   }
   
@@ -44,10 +64,10 @@ class SiteOverview extends Component {
   
   
   fetchSite() {
-    console.log( "SiteOverview.fetchList : " + this.state.stage );
+    Log.info( "SiteOverview.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/config/SITE";
     const now = new Date();
-    console.log( "SiteOverview.fetchList " + now.toLocaleString() + " Request: " + myRequest );
+    Log.info( "SiteOverview.fetchList " + now.toLocaleString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -58,7 +78,7 @@ class SiteOverview extends Component {
             }
             throw new TypeError("SiteOverview.fetchList: response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("SiteOverview.fetchList: JSON retrieved - " + json);
+           Log.info("SiteOverview.fetchList: JSON retrieved - " + json);
            this.setState( {site: json.value, 
                            updateData: false, 
                            updateDisplay:true,
@@ -66,13 +86,13 @@ class SiteOverview extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving field list\n"+e);
            const emsg = "SiteOverview.fetchList: Fetching field list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
   
   render() {
-    console.log("SiteOverview.render " + this.state.stage );
+    Log.info("SiteOverview.render " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

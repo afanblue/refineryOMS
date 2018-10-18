@@ -1,26 +1,44 @@
 import React, {Component} from 'react';
 import {Stage, Layer} from 'react-konva';
 
+import Log       from '../../requests/Log.js';
 import SiteImage from '../SiteImage.js';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 
+/*************************************************************************
+ * AIForm.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 class AIForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "AIForm: " + props.stage );
+    Log.info( "AIForm: " + props.stage );
     this.state = {  };
   }
 
   render() {
-    const ai = this.props.ai;
-    const aiData = this.props.aiData;
-    const aitypes = aiData.aiTypes;
-    const histTypes = aiData.histTypes;
-    const unitList = aiData.unitList;
-    const aiUpdate = this.props.aiUpdate;
+    let ai          = this.props.ai;
+    let aitypes     = this.props.aiTypes;
+    let histTypes   = this.props.histTypes;
+    let unitList    = this.props.unitList;
+//    let siteLoc     = this.props.siteLoc;
+    const aiUpdate  = this.props.aiUpdate;
     const fieldChange = this.props.fieldChange;
-    const handleQuit = this.props.handleQuit;
+    const handleQuit  = this.props.handleQuit;
     return(
       <div className="oms-tabs">
         <table>
@@ -68,7 +86,7 @@ class AIForm extends Component {
               <tr>
                 <td className="oms-spacing-90">Analog Type:</td>
                 <td className="oms-spacing-180">
-                  <select id="typeCode" name="typeCode" value={ai.typeCode}
+                  <select id="analogTypeCode" name="analogTypeCode" value={ai.analogTypeCode}
                           className={["oms-spacing-180","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange} >
                     { aitypes.map( 

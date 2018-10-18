@@ -1,11 +1,31 @@
 import React, {Component} from 'react';
 import {SERVERROOT}       from '../../Parameters.js';
+import Log                from '../requests/Log.js';
 import DefaultContents    from './DefaultContents.js';
 import ItemDisplay        from './displays/ItemDisplay.js';
 import ProcessUnitDisplay from './displays/ProcessUnitDisplay.js';
 import Waiting            from './Waiting.js';
 //import {Field}            from './objects/Field.js';
 //import {Tag}              from './objects/Tag.js';
+
+/*************************************************************************
+ * ProcessUnit.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
@@ -19,7 +39,7 @@ import Waiting            from './Waiting.js';
 class ProcessUnit extends Component {
   constructor(props) {
     super(props);
-    console.log( "ProcessUnit " );
+    Log.info( "ProcessUnit " );
     this.state = {
       stage: props.stage,
       option: props.option,
@@ -42,7 +62,7 @@ class ProcessUnit extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("ProcessUnit.willReceiveProps: "+this.state.option+" =? next "+ nextProps.option );
+    Log.info("ProcessUnit.willReceiveProps: "+this.state.option+" =? next "+ nextProps.option );
     clearInterval(this.state.itemTimer);
     if( nextProps.option !== this.state.option ) {
       this.setState({option: nextProps.option});
@@ -52,13 +72,13 @@ class ProcessUnit extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "ProcessUnit.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "ProcessUnit.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   handleItemSelect(event) {
     let now = new Date();
-    console.log( "ProcessUnit.itemSelect " + now.toLocaleString() );
+    Log.info( "ProcessUnit.itemSelect " + now.toLocaleString() );
     const id = (event.z1 != null?event.z1:(event.z2 != null?event.z2:event.z3));
     this.fetchItemData(id);
     clearInterval(this.state.unitTimer);
@@ -70,7 +90,7 @@ class ProcessUnit extends Component {
   fetchItemData( id ) {
     const myRequest=SERVERROOT + "/ai/history/" + id + "/2";
     var now = new Date();
-    console.log( "ProcessUnit.fetchItemData - Request: " + myRequest + now.toLocaleString() );
+    Log.info( "ProcessUnit.fetchItemData - Request: " + myRequest + now.toLocaleString() );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -87,12 +107,12 @@ class ProcessUnit extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting process unit id "+id+"\n"+error);
-       console.log("ProcessUnit.fetchItemData: Error - " + error);  
+       Log.error("ProcessUnit.fetchItemData: Error - " + error);  
     });
   }
   
   handleQuit() {
-    console.log( "ProcessUnit: handleQuit" );
+    Log.info( "ProcessUnit: handleQuit" );
     this.fetchList(this.state.option);
     clearInterval(this.state.itemTimer);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
@@ -100,10 +120,10 @@ class ProcessUnit extends Component {
   }
 
   fetchList(opt) {
-    console.log( "ProcessUnit.fetchList : " + opt );
-    const myRequest = SERVERROOT + "/ai/pulist/" + opt;
+    Log.info( "ProcessUnit.fetchList : " + opt );
+    const myRequest = SERVERROOT + "/processunit/values/" + opt;
     const now = new Date();
-    console.log( "ProcessUnit.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ProcessUnit.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest,{
               method: 'GET',
@@ -118,7 +138,7 @@ class ProcessUnit extends Component {
             }
             throw new TypeError("TransferAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ProcessUnit.fetchList: JSON retrieved - " + json);
+           Log.info("ProcessUnit.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -126,20 +146,20 @@ class ProcessUnit extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving field list\n"+e);
            const emsg = "ProcessUnit.fetchList: Fetching field list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
 
   componentDidMount() {
-    console.log( "ProcessUnit.didMount: " + this.state.stage );
+    Log.info( "ProcessUnit.didMount: " + this.state.stage );
     this.fetchList(this.state.option);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
     this.setState( {unitTimer: myTimerID } );
   }
   
   componentWillUnmount() {
-    console.log( "ProcessUnit.willUnmount "+this.state.unitTimer);
+    Log.info( "ProcessUnit.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -149,7 +169,7 @@ class ProcessUnit extends Component {
   }
 
   render() {
-    console.log("ProcessUnit.render " + this.state.stage );
+    Log.info("ProcessUnit.render " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

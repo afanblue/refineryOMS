@@ -38,7 +38,7 @@
      <result property="toId"      column="to_id" />
      <result property="to"        column="toName" />
      <result property="offset"    column="offset" />
-     <result property="factor"        column="factor" />
+     <result property="factor"    column="factor" />
   </resultMap>
 
   <resultMap id="UnitTypeMap" type="UnitType">
@@ -85,7 +85,7 @@
   <select id="getUnit" resultMap="UnitMap">
     select u.id, u.name, u.code, unit_type_id, ut.name unit_type
       from unit u join unit_type ut on u.unit_type_id = ut.id
-     where id = {#parm1}
+     where u.id = #{parm1}
   </select>
 
   <update id="updateUnit" parameterType="Unit">
@@ -101,13 +101,13 @@
     values ( #{name}, #{code}, #{unitTypeId} )
   </insert>
 
- 
 <!-- -->
+
   <select id="getUnitConversion" resultMap="UnitConversionMap">
     select uc.id, from_id, uf.name fromName, to_id, ut.name toName, offset, factor 
       from unit_conversion uc join unit uf on uc.from_id = uf.id
       join unit ut on uc.to_id = ut.id
-	 where id = #{parm1}
+	 where uc.id = #{parm1}
   </select>
   
   <select id="getAllUnitConversions" resultMap="UnitConversionMap">

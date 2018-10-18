@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
@@ -33,10 +49,6 @@ public class AnalogInputServiceImpl implements AnalogInputService {
 
 	public void setTagMapper( TagMapper tm ) {
 		this.tagMapper = tm;
-	}
-	
-	public void setUnitMapper( UnitMapper tm ) {
-		this.unitMapper = tm;
 	}
 	
 	@Override
@@ -86,10 +98,6 @@ public class AnalogInputServiceImpl implements AnalogInputService {
 		if( id != 0 ) {
 			ai = aiMapper.getAnalogInput(id);
 		}
-		ai.setAiTypes(aiMapper.getAllAnalogInputTypes());
-		ai.setHistTypes(aiMapper.getAllHistoryTypes());
-		ai.setSiteLocation(cfgMapper.getSiteLocation());
-		ai.setUnitList(unitMapper.getAllUnits());
 		return ai;
 	}
 	
@@ -115,9 +123,10 @@ public class AnalogInputServiceImpl implements AnalogInputService {
 
 	@Override
 	public Long insertAnalogInput( AnalogInput ai ) {
-		Long id = tagMapper.insertTag(ai.getTag());
-		Tag t = tagMapper.getTagByName(ai.getTag().getName());
-		ai.setTagId(t.getId());
+		Tag t = ai.getTag();
+		tagMapper.insertTag(t);
+		Long id = t.getId();
+		ai.setTagId(id);
 		aiMapper.insertAnalogInput(ai);
 		return id;
 	}

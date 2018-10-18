@@ -20,7 +20,9 @@
   <resultMap id="coMap" type="CalcOperand">
     <result property="id"              column="id" />
 	<result property="name"            column="name" />
+	<result property="type"            column="type" />
 	<result property="scanValue"       column="scan_value" />
+	<result property="orderNo"         column="key" /> 
   </resultMap>  
   
   <select id="getAllCalcVariables" resultMap="cvMap">
@@ -50,20 +52,19 @@
      where rtt.parent_tag_id = #{parm1}
   </select>
   
-  <select id="getAIValuesForCalculation" resultMap="coMap">
-    select t.id, t.name, ai.scan_value
+  <select id="getValuesForCalculation" resultMap="coMap">
+    select t.id, t.name, "AI" type, coalesce(ai.scan_value,0.0) scan_value, rtt.code
       from rel_tag_tag rtt 
            join tag t on rtt.child_tag_id = t.id
            join analog_input ai on ai.tag_id = rtt.child_tag_id
      where rtt.parent_tag_id = #{parm1}
-  </select>
-  
-  <select id="getDIValuesForCalculation" resultMap="coMap">
-    select t.id, t.name, di.scan_value
+    union
+    select t.id, t.name, "DI" type, coalesce(di.scan_value,0.0) scan_value, rtt.code
       from rel_tag_tag rtt 
            join tag t on rtt.child_tag_id = t.id
            join digital_input di on di.tag_id = rtt.child_tag_id
      where rtt.parent_tag_id = #{parm1}
+     order by code
   </select>
   
   

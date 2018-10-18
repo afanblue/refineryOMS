@@ -1,22 +1,42 @@
 import React, {Component} from 'react';
 import {Stage, Layer} from 'react-konva';
 
+import Log       from '../../requests/Log.js';
 import SiteImage from '../SiteImage.js';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
+
+/*************************************************************************
+ * DIForm.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class DIForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "DIForm: " + props.stage );
+    Log.info( "DIForm: " + props.stage );
     this.state = {  };
   }
 
   render() {
     const di = this.props.di;
-    const diData = this.props.diData;
-    const histTypes = diData.histTypes;
-    const views = diData.views;
+//    const diData = this.props.diData;
+    const histTypes = this.props.histTypes;
+    const views = this.props.valueViews;
+//    const site  = this.props.siteLoc;
     const diUpdate = this.props.diUpdate;
     const diCopy = this.props.diCopy;
     const fieldChange = this.props.fieldChange;

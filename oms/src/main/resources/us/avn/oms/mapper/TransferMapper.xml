@@ -27,6 +27,7 @@
 
   <resultMap id="transferResultMap" type="Transfer">
     <result property="id"              column="id"/>
+    <result property="tagId"           column="tag_id"/>
     <result property="name"            column="name"/>
     <result property="statusId"        column="status_id"/>
     <result property="status"          column="status" />
@@ -56,7 +57,7 @@
   </resultMap>
 
   <select id="getAllTransfers" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -73,7 +74,7 @@
   </select>
 
   <select id="getActiveTransfers" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -88,7 +89,7 @@
   </select>
   
   <select id="getLastTransfers" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -104,7 +105,7 @@
   </select>
 
   <select id="getScheduledTransfers" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -119,7 +120,7 @@
   </select>
 
   <select id="getTransfer" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, x.transfer_type_id
+    select x.id, x.tag_id, x.name, x.status_id, x.transfer_type_id
          , x.source_id, x.destination_id
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta 
@@ -128,7 +129,7 @@
   </select>
 
   <select id="getEndingTransfers" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -146,7 +147,7 @@
   </select>
 
   <select id="getStartingTransfers" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -166,7 +167,7 @@
   </select>
 
   <select id="getPendingTemplates" resultMap="transferResultMap">
-    select x.id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -241,11 +242,11 @@
   
   <insert id="insertTransfer" parameterType="Transfer">
     insert transfer
-         ( name, status_id, transfer_type_id
+         ( tag_id, name, status_id, transfer_type_id
          , source_id, destination_id, delta
          , exp_start_time, exp_end_time, exp_volume 
          , act_start_time, act_end_time, act_volume )
-   values( #{name}, #{statusId}, #{transferTypeId}
+   values( #{tagId}, #{name}, #{statusId}, #{transferTypeId}
          , #{sourceId}, #{destinationId}, #{delta}
          , #{expStartTime}, #{expEndTime}, #{expVolume} 
          , #{actStartTime}, #{actEndTime}, #{actVolume} )

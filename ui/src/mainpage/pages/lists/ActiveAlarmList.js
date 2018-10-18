@@ -1,5 +1,23 @@
 import React, {Component} from 'react';
+import Log       from '../../requests/Log.js';
 
+/*************************************************************************
+ * ActiveAlarmList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 class ActiveAlarmList extends Component {
   constructor(props) {
@@ -8,7 +26,7 @@ class ActiveAlarmList extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log( "ActiveAlarmList.willRcvProps: "
+    Log.info( "ActiveAlarmList.willRcvProps: "
                + ((nextProps.option===null)?"null":nextProps.option) );
     this.setState({ alarmList: nextProps.alarmList });
   }
@@ -16,7 +34,7 @@ class ActiveAlarmList extends Component {
 
   
   render() {
-    console.log("ActiveAlarmList.render ");
+    Log.info("ActiveAlarmList.render ");
     var almList = this.state.alarmList;
     let handleSelect  = this.props.handleSelect;
     var now = (new Date()).toLocaleString('en-US', {hour12:false});

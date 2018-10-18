@@ -7,8 +7,10 @@ DigitalInput,Y
 Transfer,Y
 DataCollectionAI,Y
 DataCollectionDI,Y
-AnalogOutput,N
-DigitalOutput,N
+AnalogOutput,Y
+DigitalOutput,Y
 DataCollectionAO,Y
 DataCollectionDO,Y
+CalculatedVariable,Y
+ControlBlock,Y
 End

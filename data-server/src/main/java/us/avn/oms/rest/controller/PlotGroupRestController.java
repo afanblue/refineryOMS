@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.rest.controller;
 
 import java.util.ArrayList;
@@ -50,7 +66,7 @@ public class PlotGroupRestController {
 			pg = pgs.getPlotGroupDefinition(id);
 		}
 
-		Collection<IdName> pgl = ais.getAllAIIdNameByType("F");
+/*		Collection<IdName> pgl = ais.getAllAIIdNameByType("F");
 		pgl.addAll(ais.getAllAIIdNameByType("L"));
 		pgl.addAll(ais.getAllAIIdNameByType("M"));
 		pgl.addAll(ais.getAllAIIdNameByType("P"));
@@ -58,6 +74,7 @@ public class PlotGroupRestController {
 		pgl.addAll(ais.getAllAIIdNameByType("T"));
 		pgl.addAll(ais.getAllAIIdNameByType("C"));
 		pg.setAiList(pgl);
+ */
 		return pg;
 	}
 	

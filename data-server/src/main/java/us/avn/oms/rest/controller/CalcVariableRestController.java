@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.rest.controller;
 
 import java.util.ArrayList;
@@ -59,17 +75,17 @@ public class CalcVariableRestController {
 		ArrayList<String> tl = new ArrayList<>(Arrays.asList("AI", "DI", "C"));
 		Collection<IdName> itl = cvs.getInputTagList(id);
 		cv.setInputTags(itl);
-		Collection<IdName> pitl = ts.getAllIdNamesByTypeList(tl);
-		if( itl != null ) {
-			Iterator<IdName> itli = itl.iterator();
-			while( itli.hasNext() ) {
-				IdName it = itli.next();
-				boolean rq = pitl.remove(it);
-				log.debug("Remove: "+it+(rq?" true":" false"));
-			}
-		}
-		cv.setInputTagList(pitl);
-		cv.setOutputTagList(ais.getAllAIIdNameByType("C"));
+//		Collection<IdName> pitl = ts.getAllIdNamesByTypeList(tl);
+//		if( itl != null ) {
+//			Iterator<IdName> itli = itl.iterator();
+//			while( itli.hasNext() ) {
+//				IdName it = itli.next();
+//				boolean rq = pitl.remove(it);
+//				log.debug("Remove: "+it+(rq?" true":" false"));
+//			}
+//		}
+//		cv.setInputTagList(pitl);
+//		cv.setOutputTagList(ais.getAllAIIdNameByType("C"));
 		return cv;
 	}
 	
@@ -102,11 +118,14 @@ public class CalcVariableRestController {
 	private void insertInputTags( Long id, Collection<IdName> ct ) {
 		// insert tags
 		Iterator<IdName> ict = ct.iterator();
+		Long orderNo = 0L;
 		while( ict.hasNext() ) {
 			IdName cidn = ict.next();
+			orderNo++;
 			RelTagTag rtt = new RelTagTag();
 			rtt.setId(0L);
 			rtt.setParentTagId(id);
+			rtt.setCode(orderNo.toString());
 			rtt.setChildTagId(cidn.getId());
 			ts.insertRelationship(rtt);
 		}		

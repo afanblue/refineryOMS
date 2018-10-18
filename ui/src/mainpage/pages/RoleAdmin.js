@@ -1,17 +1,37 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
+import {SERVERROOT}    from '../../Parameters.js';
+import Log             from '../requests/Log.js';
 import DefaultContents from './DefaultContents.js';
-import RoleForm from './forms/RoleForm.js';
-import RoleList from './lists/RoleList.js';
-import Waiting from './Waiting.js';
-import {Role} from './objects/Role.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import RoleForm        from './forms/RoleForm.js';
+import RoleList        from './lists/RoleList.js';
+import Waiting         from './Waiting.js';
+import {Role}          from './objects/Role.js';
+
+/*************************************************************************
+ * RoleAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
 class RoleAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "RoleAdmin: " + props.stage );
+    Log.info( "RoleAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -25,6 +45,9 @@ class RoleAdmin extends Component {
     this.handleRoleSelect = this.handleRoleSelect.bind(this);
     this.handleRoleUpdate = this.handleRoleUpdate.bind(this);
     this.handleRoleQuit   = this.handleRoleQuit.bind(this);
+    this.finishRoleFetch  = this.finishRoleFetch.bind(this);
+    this.finishPrivsFetch = this.finishPrivsFetch.bind(this);
+    this.finishRolePrivsFetch  = this.finishRolePrivsFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -35,7 +58,7 @@ class RoleAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "RoleAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "RoleAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -49,13 +72,45 @@ class RoleAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "RoleAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "RoleAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
+  finishRoleFetch( req ) {
+    let rd = req;
+    const role = new Role(rd.id,rd.name,rd.active,this.state.privs,null);
+    this.setState({stage: "itemRetrieved", updateDisplay: true, role: role });
+  }
+  
+  finishPrivsFetch(req) {
+    let privs = [];
+    req.map(function(n,x){ return privs.push(n.id); } )
+    let rnew = Object.assign({},this.state.role);
+    rnew.privs = privs;    
+    this.setState({stage: "itemRetrieved", updateDisplay: true, role: rnew, privs: privs });
+  }
+  
+  finishRolePrivsFetch(req) {
+    let privList = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, privList: privList });
+  }
+  
+  fetchFormData(id) {
+    const loc = "RoleAdmin.select";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/role/" + id,
+                            "Problem selecting role id "+id, this.finishRoleFetch);
+    req0.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/privilege/role/" + id,
+                            "Problem retrieving role privs "+id, this.finishPrivsFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/privilege/all",
+                            "Problem retrieving privilege list", this.finishRolePrivsFetch);
+    req3.fetchData();    
+  }
+/*
   fetchFormData(id) {
     const myRequest = SERVERROOT + "/role/" + id;
-    console.log( "RoleAdmin.fetchFormData - Request: " + myRequest );
+    Log.info( "RoleAdmin.fetchFormData - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -77,13 +132,14 @@ class RoleAdmin extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting role id "+id+"\n"+error);
-       console.log("RoleAdmin.fetchFormData: Error - " + error);  
+       Log.error("RoleAdmin.fetchFormData: Error - " + error);  
     });
   }
+*/
 
   handleRoleSelect(event) {
     let now = new Date();
-    console.log( "RoleAdmin.roleSelect " + now.toISOString() );
+    Log.info( "RoleAdmin.roleSelect " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -99,7 +155,7 @@ class RoleAdmin extends Component {
     }
     var r = this.state.role;
     const b = JSON.stringify(r);
-    console.log("RoleAdmin.roleUpdate "+method)
+    Log.info("RoleAdmin.roleUpdate "+method)
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
@@ -110,17 +166,17 @@ class RoleAdmin extends Component {
     }).catch(function(error) { 
         alert("Problem "+(id===0?"inserting":"updating")+" role "
              +"id "+id+"\n"+error);
-        console.log("RoleAdmin.roleUpdate: Error - " + error);  
+        Log.error("RoleAdmin.roleUpdate: Error - " + error);  
     });
   }
   
   componentDidMount() {
-    console.log( "RoleAdmin.didMount: " + this.state.stage );
+    Log.info( "RoleAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "RoleAdmin.didUpdate: " + this.state.stage );
+    Log.info( "RoleAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -161,10 +217,10 @@ class RoleAdmin extends Component {
   }
   
   fetchList() {
-    console.log( "RoleAdmin.fetchList : " + this.state.stage );
+    Log.info( "RoleAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/role/all";
     const now = new Date();
-    console.log( "RoleAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "RoleAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -175,7 +231,7 @@ class RoleAdmin extends Component {
             }
             throw new TypeError("RoleAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("RoleAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("RoleAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -183,7 +239,7 @@ class RoleAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving role list\n"+e);
            const emsg = "RoleAdmin.fetchList: Fetching role list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -198,7 +254,7 @@ class RoleAdmin extends Component {
   }
 
   render() {
-    console.log("RoleAdmin.render - stage: "+this.state.stage);
+    Log.info("RoleAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -206,14 +262,19 @@ class RoleAdmin extends Component {
         return <RoleList returnedText = {this.state.returnedText}
                          roleSelect   = {this.handleRoleSelect} />
       case "itemRetrieved":
-        return <RoleForm returnedText = {this.state.returnedText}
-                          role        = {this.state.role}
-                          privList    = {this.state.privList}
-                          roleUpdate  = {this.handleRoleUpdate}
-                          roleChange  = {this.handleRoleChange}
-                          handleQuit    = {this.handleRoleQuit}
-                          handleMouseUp = {this.handleMouseUp}
-               />
+        if( (this.state.role === null) || (this.state.privs === null) ||
+            (this.state.privList === null) ) {
+          return <Waiting />
+        } else {
+          return <RoleForm returnedText = {this.state.returnedText}
+                           role         = {this.state.role}
+                           privs        = {this.state.privs}
+                           privList     = {this.state.privList}
+                           roleUpdate   = {this.handleRoleUpdate}
+                           roleChange   = {this.handleRoleChange}
+                           handleQuit    = {this.handleRoleQuit}
+                           handleMouseUp = {this.handleMouseUp} />
+        }
       default:
         return <DefaultContents />
     }

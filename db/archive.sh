@@ -6,6 +6,9 @@
 pd=`date +%y%m%d --date="-$2 days"`
 echo $pd
 
+pushd .
+cd $OMS_HOME/db/archive
+
 mysqldump -uoms -p$1 oms history --no-create-info --where "create_dt < date_sub(sysdate(), interval $2 day)" --result-file=history-$pd.arch
 
 mysql -uoms -p$1 -Doms --execute="set @days=$2; delete from history where create_dt < date_sub(sysdate(), interval @days day)"
@@ -14,3 +17,5 @@ mysql -uoms -p$1 -Doms --execute="set @days=$2; delete from history where create
 mysqldump -uoms -p$1 oms transfer --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $2 day) and transfer_type_id <> 7" --result-file=transfer-$pd.arch
 
 mysql -uoms -p$1 -Doms --execute="set @days=$2; delete from transfer where create_dt < date_sub(sysdate(), interval @days day) and transfer_type_id <> 7"
+
+popd

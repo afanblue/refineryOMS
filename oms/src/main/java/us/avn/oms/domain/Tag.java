@@ -1,21 +1,42 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Collection;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  *              id: 1
  *            name: DeCity
  *     description: NULL
  *   tag_type_code: FLD
- *    js_draw_file: NULL
+ *            misc: NULL
  *          c1_lat: 39.592313
  *         c1_long: -75.641903
  *          c2_lat: 39.579168
  *         c2_long: -75.619368
  *          active: Y
  */
-public class Tag implements Serializable {
+public class Tag extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -24,26 +45,29 @@ public class Tag implements Serializable {
 	public static final String CALCULATED = "C";
 	public static final String CONTROL_BLOCK = "CB";
 	public static final String DIGITAL_INPUT = "DI";
-	public static final String DOCK = "DK";
 	public static final String DIGITAL_OUTPUT = "DO";
+	public static final String DOCK = "DK";
 	public static final String FIELD = "FLD";
 	public static final String HOT_SPOT = "HS";
 	public static final String PIPE = "P";
+	public static final String PLOT_GROUP = "PG";
 	public static final String PROCESS_UNIT = "PU";
 	public static final String REFINERY_UNIT = "RU";
 	public static final String SCHEMATIC = "SCM";
+	public static final String SCHEMATIC_OBJECT = "SCO";
 	public static final String SHIP = "S";
-	public static final String TANK_CAR = "TC";
 	public static final String TANK = "TK";
+	public static final String TANK_CAR = "TC";
 	public static final String TANK_TRUCK = "TT";
-	public static final String VALVE = "V";
 	public static final String TRANSFER = "XFR";
+	public static final String VALVE = "V";
 	
 	protected Long id;
 	protected String name;
 	protected String description;
 	protected String tagTypeCode;
 	protected Long   tagTypeId;
+	protected String misc;
 	protected Double c1Lat;
 	protected Double c1Long;
 	protected Double c2Lat;
@@ -57,7 +81,26 @@ public class Tag implements Serializable {
     	this.name = n;
     }
 
-	
+    public Tag( Long i, String n, String c ) {
+    	this.id = i;
+    	this.name = n;
+    	this.tagTypeCode = c;
+    }
+
+    public Tag( Tag t ) {
+    	this.id = t.getId();
+    	this.name = t.getName();
+    	this.description = t.getDescription();
+    	this.tagTypeCode = t.getTagTypeCode();
+    	this.tagTypeId = t.getTagTypeId();
+    	this.misc = t.getMisc();
+    	this.c1Lat = t.getC1Lat();
+    	this.c1Long = t.getC1Long();
+    	this.c2Lat = t.getC2Lat();
+    	this.c2Long = t.getC2Long();
+    	this.active = t.getActive();
+    }
+    
 	public Long getId() {
 		return id;
 	}
@@ -100,6 +143,15 @@ public class Tag implements Serializable {
 
 	public void setTagTypeId(Long tagTypeId) {
 		this.tagTypeId = tagTypeId;
+	}
+
+	
+	public String getMisc() {
+		return misc;
+	}
+
+	public void setMisc(String misc) {
+		this.misc = misc;
 	}
 
 	
@@ -147,20 +199,5 @@ public class Tag implements Serializable {
 		this.active = active;
 	}
 
-	
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("Tag{\"id\"=").append(this.id);
-		sb.append(", \"name\"=\"").append(this.name).append("\"");
-		sb.append(", \"description\"=").append(this.description).append("\"");
-		sb.append(", \"tagTypeCode\"=").append(this.tagTypeCode).append("\"");
-		sb.append(", \"c1Lat\"=").append(this.c1Lat);
-		sb.append(", \"c1Long\"=").append(this.c1Long);
-		sb.append(", \"c2Lat\"=").append(this.c2Lat);
-		sb.append(", \"c2Long\"=").append(this.c2Long);
-		sb.append(", \"active\"=\"").append(this.active).append("\"");
-		sb.append("}");
-		return sb.toString();
-	}
 
 }

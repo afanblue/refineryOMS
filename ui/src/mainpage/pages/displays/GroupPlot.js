@@ -1,10 +1,28 @@
 import React, {Component} from 'react';
+import Log           from '../../requests/Log.js';
+import {PlotDetails} from '../objects/PlotGroup.js';
+
 //import { Stage, Layer, Text } from 'react-konva';
 import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
 import moment from 'moment';
 
-//import {SERVERROOT}  from '../../Parameters.js';
-//import {AIValue}     from './objects/AIValue.js';
+/*************************************************************************
+ * GroupPlot.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
@@ -17,16 +35,18 @@ class GroupPlot extends Component {
       d0: props.d0,
       d1: props.d1,
       d2: props.d2,
-      d3: props.d3
+      d3: props.d3,
+      plotDetails: props.plotDetails
     };
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log( "GroupPlot.willRcvProps " );
+    Log.info( "GroupPlot.willRcvProps " );
     this.setState({ d0: nextProps.d0,
                     d1: nextProps.d1,
                     d2: nextProps.d2,
-                    d3: nextProps.d3 });
+                    d3: nextProps.d3,
+                    plotDetails: nextProps.plotDetails });
   }
 
   getStyles() {
@@ -186,40 +206,51 @@ class GroupPlot extends Component {
 
   render () {
     let styles = this.getStyles();
-    let d0 = this.state.d0;
-    let d1 = this.state.d1;
-    let d2 = this.state.d2;
-    let d3 = this.state.d3;
+    let d0 = ((this.state.d0!==null)&&(this.state.d0!==undefined))?this.state.d0:null;
+    let d1 = ((this.state.d1!==null)&&(this.state.d1!==undefined))?this.state.d1:null;
+    let d2 = ((this.state.d2!==null)&&(this.state.d2!==undefined))?this.state.d2:null;
+    let d3 = ((this.state.d3!==null)&&(this.state.d3!==undefined))?this.state.d3:null;
+    let pd = this.state.plotDetails;
+    if( (pd===null) || (pd===undefined) ) { pd = new PlotDetails(); }
     
-    if( d0 == null ) {
-        return
+    const minTime = Math.min( ( d0 !== null ) ? d0.history[0].x:Infinity
+                            , ( d1 !== null ) ? d1.history[0].x:Infinity
+                            , ( d2 !== null ) ? d2.history[0].x:Infinity
+                            , ( d3 !== null ) ? d3.history[0].x:Infinity);
+
+    const maxTime = Math.max( ( d0 !== null ) ? d0.history[d0.history.length-1].x:-Infinity
+                            , ( d1 !== null ) ? d1.history[d1.history.length-1].x:-Infinity
+                            , ( d2 !== null ) ? d2.history[d2.history.length-1].x:-Infinity
+                            , ( d3 !== null ) ? d3.history[d3.history.length-1].x:-Infinity);
+    
+    let LabelZero = "";
+    let AxisZero = "";
+    let LineZero = "";
+    let minY0 = 0;
+    let maxY0 = 100;
+    let tick0Values = this.getTickYValues(minY0,maxY0);
+    if( d0 !== null ) {
+      minY0 = pd.min0;
+      maxY0 = pd.max0;
+      tick0Values = this.getTickYValues(minY0,maxY0);
+      const dataSetZero = d0.history;
+      const labelZero  = d0.aiTag.tag.name + " - " + d0.aiTag.tag.description;
+
+      LabelZero = <VictoryLabel x={25} y={15} text={labelZero} style={styles.labelZero} />
+      AxisZero  = <VictoryAxis dependentAxis domain={ [minY0, maxY0] } offsetX={50}
+                               orientation="left" standalone={false}
+                               style={styles.axisZero} tickValues={tick0Values} />;
+      LineZero  = <VictoryLine data={dataSetZero} domain={{x: [minTime, maxTime], y: [minY0, maxY0] }}
+                               interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                               standalone={false} style={styles.lineZero} />
     }
-    const minTime = Math.min( d0.history[0].x
-                            , d1 !== null?d1.history[0].x:d0.history[0].x
-                            , d2 !== null?d2.history[0].x:d0.history[0].x
-                            , d3 !== null?d3.history[0].x:d0.history[0].x);
-    const maxTime = d0.history[d0.history.length-1].x;
     
-    const minY0 = d0.aiTag.zeroValue;
-    const maxY0 = d0.aiTag.maxValue;
-    const tick0Values = this.getTickYValues(minY0,maxY0);
-    const dataSetZero = d0.history;
-    const labelZero  = d0.aiTag.tag.name + " - " + d0.aiTag.tag.description;
-
-    let LabelZero = <VictoryLabel x={25} y={15} text={labelZero} style={styles.labelZero} />
-    let AxisZero  = <VictoryAxis dependentAxis domain={ [minY0, maxY0] } offsetX={50}
-                                orientation="left" standalone={false}
-                                style={styles.axisZero} tickValues={tick0Values} />;
-    let LineZero  = <VictoryLine data={dataSetZero} domain={{x: [minTime, maxTime], y: [minY0, maxY0] }}
-                                 interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
-                                 standalone={false} style={styles.lineZero} />
-
     let LabelOne = "";
     let AxisOne  = "";
     let LineOne  = "";
     if( d1 !== null ) {
-      const minY1 = d1.aiTag.zeroValue;
-      const maxY1 = d1.aiTag.maxValue;
+      const minY1 = pd.min1;
+      const maxY1 = pd.max1;
       const tick1Values = this.getTickYValues(minY1,maxY1);
       const dataSetOne = d1.history;
       const labelOne   = d1.aiTag.tag.name + " - " + d1.aiTag.tag.description;
@@ -236,14 +267,14 @@ class GroupPlot extends Component {
     let AxisTwo  = "";
     let LineTwo  = "";
     if( d2 !== null ) {
-      const minY2 = d2.aiTag.zeroValue;
-      const maxY2 = d2.aiTag.maxValue;
+      const minY2 = pd.min2;
+      const maxY2 = pd.max2;
       const tick2Values = this.getTickYValues(minY2,maxY2);
       const dataSetTwo = d2.history;
       const labelTwo   = d2.aiTag.tag.name + " - " + d2.aiTag.tag.description;
 
       LabelTwo = <VictoryLabel x={25} y={45} text={labelTwo} style={styles.labelTwo} />;
-      AxisTwo =  <VictoryAxis domain={[minY2, maxY2]} orientation="right" 
+      AxisTwo  = <VictoryAxis domain={[minY2, maxY2]} orientation="right" 
                               standalone={false} style={styles.axisTwo} tickValues={tick2Values} />;
       LineTwo  = <VictoryLine data={dataSetTwo} domain={{x: [minTime, maxTime], y: [minY2,   maxY2] }}
                               interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
@@ -257,8 +288,8 @@ class GroupPlot extends Component {
     let AxisThree  = "";
     let LineThree  = "";
     if( d3 !== null ) {
-      const minY3 = d3.aiTag.zeroValue;
-      const maxY3 = d3.aiTag.maxValue;
+      const minY3 = pd.min3;
+      const maxY3 = pd.max3;
       const tick3Values = this.getTickYValues(minY3,maxY3);
       const dataSetThree  = d3.history;
       const labelThree = d3.aiTag.tag.name + " - " + d3.aiTag.tag.description;
@@ -275,7 +306,7 @@ class GroupPlot extends Component {
     
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    console.log(now+" GroupPlot.render");
+    Log.info(now+" GroupPlot.render");
     return(
       <div>
       <h2>
@@ -317,8 +348,40 @@ class GroupPlot extends Component {
         </g>
       </svg>
       </div>
+
     );
   }
 }
 
 export default GroupPlot;
+
+/*
+      <table>
+        <tbody>
+          <tr>
+            <td>Days to display:</td>
+            <td colspan={4}><input type={"text"} />
+          </tr>
+          <tr>
+            <td>Max values:</td>
+            <td><input type={"text"} name="max1" id="max1" /></td>
+            <td><input type={"text"} name="max1" id="max1" /></td>
+            <td><input type={"text"} name="max1" id="max1" /></td>
+            <td><input type={"text"} name="max1" id="max1" /></td>
+          </tr>
+          <tr>
+            <td>Min values:</td>
+            <td><input type={"text"} name="min1" id="min1" /></td>
+            <td><input type={"text"} name="min1" id="min1" /></td>
+            <td><input type={"text"} name="min1" id="min1" /></td>
+            <td><input type={"text"} name="min1" id="min1" /></td>
+          </tr>
+          <tr>
+            <td colspan={5}>
+              <button type={"submit"} value={"Submit"} name={"req"} id={"req"}/>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+*/

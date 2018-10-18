@@ -37,6 +37,8 @@
      <result property="levelTag"        column="level_tag"/>
      <result property="tempId"          column="temp_tag_id" />
      <result property="levelId"         column="level_tag_id" />
+     <result property="tempRttId"       column="temp_rtt_id" />
+     <result property="levelRttId"      column="level_rtt_id" />
   </resultMap>
   
   <resultMap id="idNameMap" type="IdName">
@@ -78,7 +80,8 @@
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
          , t.description, t.tag_type_code, t.active
          , ct.name content_type, tk.content_type_code
-         , trt.temp_tag, trt.temp_tag_id, trt.level_tag, trt.level_tag_id 
+         , trt.temp_tag, trt.temp_tag_id, trt.temp_rtt_id
+         , trt.level_tag, trt.level_tag_id, trt.level_rtt_id 
       from tank tk join tag t on tk.id = t.id
            join content_type_vw ct on ct.code = tk.content_type_code
            left outer join tank_ref_tag_vw trt on t.id = trt.id

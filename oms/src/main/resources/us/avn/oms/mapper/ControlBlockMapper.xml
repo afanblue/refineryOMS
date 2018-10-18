@@ -16,76 +16,97 @@
 -->  
 
   <resultMap id="cbResultMap" type="ControlBlock">
-     <result property="id"        column="id" />
-     <result property="tagId"     column="tag_id"/>
-     <result property="blockType" column="block_type"/>
-     <result property="output"    column="output" />
-     <result property="input"     column="input" />
-     <result property="scanValue" column="scan_value" />
+     <result property="id"          column="id" />
+     <result property="pvId"        column="pv_id"/>
+     <result property="spId"        column="sp_id"/>
+     <result property="blockType"   column="block_type"/>
+     <result property="co"          column="co" />
+     <result property="pv"          column="pv" />
+     <result property="sp"          column="sp" />
+     <result property="output"      column="output" />
+     <result property="procValue"   column="process_value" />
+     <result property="setpoint"    column="setpoint" />
   </resultMap>
   
   <select id="getAllCBs" resultMap="cbResultMap">
-    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type
-         , t.name output, ti.name input, do.scan_value
+    select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name co, tpv.name pv, null sp, do.scan_value output
       from oms.control_block cb 
       join digital_output do on cb.id=do.tag_id
       join tag t on cb.id=t.id
-      join tag ti on cb.tag_id = ti.id
+      join tag tpv on cb.pv_id = tpv.id
     union
-    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, ao.scan_value
+    select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name co, tpv.name pv, tsp.name sp, ao.scan_value output
       from oms.control_block cb 
       join analog_output ao on cb.id=ao.tag_id
       join tag t on cb.id=t.id
-      join tag ti on cb.tag_id = ti.id
-     order by 4
+      join tag tpv on cb.pv_id = tpv.id
+      left outer join tag tsp on cb.sp_id = tsp.id
+     order by 4,5
   </select>
   
+  <!-- get all analog control blocks where the process variable and the setpoint are not equal -->
   <select id="getAllAOs" resultMap="cbResultMap">
-    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, ao.scan_value
+    select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name co, tsp.name sp, tpv.name pv
+         , ao.scan_value output, aisp.scan_value setpoint, aipv.scan_value process_value
       from oms.control_block cb 
       join analog_output ao on cb.id=ao.tag_id
       join tag t on cb.id=t.id
-      join tag ti on cb.tag_id = ti.id
+      join tag tpv on cb.pv_id = tpv.id
+      join analog_input aipv on cb.pv_id = aipv.tag_id
+      left outer join tag tsp on cb.sp_id = tsp.id
+      left outer join analog_input aisp on cb.sp_id = aisp.tag_id
+     where coalesce(aisp.scan_value,0) != coalesce(aipv.scan_value,0)
      order by 4
   </select>
   
+  <!-- get all digital control blocks where the process variable and the output are not equal  -->
   <select id="getAllDOs" resultMap="cbResultMap">
-    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type
-         , t.name output, ti.name input, do.scan_value
+    select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name co, null sp, tpv.name pv
+         , do.scan_value output, null setpoint, dopv.scan_value process_value
       from oms.control_block cb 
       join digital_output do on cb.id=do.tag_id
       join tag t on cb.id=t.id
-      join tag ti on cb.tag_id = ti.id
+      join tag tpv on cb.pv_id = tpv.id
+      join digital_input dopv on cb.pv_id = dopv.tag_id
+     where coalesce(do.scan_value,0) != coalesce(dopv.scan_value,0)
      order by 4
   </select>
   
   <!--  should only return one row!  -->
   <select id="getControlBlock" resultMap="cbResultMap">
-    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, do.scan_value
+    select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name co, null sp, tpv.name pv, do.scan_value output
       from oms.control_block cb 
       join digital_output do on cb.id=do.tag_id
       join tag t on cb.id=t.id
-      join tag ti on cb.tag_id = ti.id
+      join tag tpv on cb.pv_id = tpv.id
      where cb.id = #{parm1}
     union
-    select cb.id, cb.tag_id, coalesce(cb.block_type,t.tag_type_code) block_type, t.name output, ti.name input, ao.scan_value
+    select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
+         , t.name co, tsp.name sp, tpv.name pv, ao.scan_value output
       from oms.control_block cb 
       join analog_output ao on cb.id=ao.tag_id
       join tag t on cb.id=t.id
-      join tag ti on cb.tag_id = ti.id
+      join tag tpv on cb.pv_id = tpv.id
+      left outer join tag tsp on cb.sp_id = tsp.id
      where cb.id = #{parm1}    
   </select>
   
   <update id="updateControlBlock" parameterType="ControlBlock">
     update control_block
-       set tag_id = #{tagId}
+       set pv_id = #{pvId}
+         , sp_id = #{spId}
          , block_type = #{blockType}
      where id = #{id}
   </update>
   
   <insert id="insertControlBlock" parameterType="ControlBlock">
-    insert control_block( id, tag_id, block_type )
-    values( #{id}, #{tagId}, #{blockType} )
+    insert control_block( id, pv_id, sp_id, block_type )
+    values( #{id}, #{pvId}, #{spId}, #{blockType} )
   </insert>
   
 </mapper>

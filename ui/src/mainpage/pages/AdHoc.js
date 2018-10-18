@@ -1,11 +1,30 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
+import {SERVERROOT}    from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
 
 import DefaultContents from './DefaultContents.js';
-import GroupPlot       from './displays/GroupPlot.js';
+import PlotGroupVars   from './PlotGroupVars.js';
 import Waiting         from './Waiting.js';
 import {PlotGroup}     from './objects/PlotGroup.js';
 
+/*************************************************************************
+ * AdHoc.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 /**
  * the ad hoc form is appropriately ad hoc.  I fetch the contents of plot group
@@ -19,7 +38,7 @@ import {PlotGroup}     from './objects/PlotGroup.js';
  * the history data as well.  it turns out this isn't a big problem, since the
  * new item is always the last one.
  *
- * anyway, once the submit button is clicked, we generate the plot form.
+ * Anyway, once the submit button is clicked, we generate the plot form.
  *
  * Notice I broke from my usual form by adding the form into the admin script. 
  */
@@ -27,12 +46,12 @@ import {PlotGroup}     from './objects/PlotGroup.js';
 class AdHocForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "AdHocForm: " + props.stage );
+    Log.info( "AdHocForm: " + props.stage );
     this.state = { aiList: props.ailist };
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "AdHocForm.willRcvProps " );
+    Log.info( "AdHocForm.willRcvProps " );
     this.setState({ plotGroup: nextProps.plotGroup,
                     aiList: nextProps.aiList,
                     updateData: true,
@@ -99,7 +118,7 @@ class AdHocForm extends Component {
 class AdHocAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "AdHoc: " + props.stage );
+    Log.info( "AdHoc: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -113,9 +132,11 @@ class AdHocAdmin extends Component {
       aiList: null,
       unitTimer: null
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
-    this.handleQuit   = this.handleQuit.bind(this);
+    this.handleChange  = this.handleChange.bind(this);
+    this.handleUpdate  = this.handleUpdate.bind(this);
+    this.handleQuit    = this.handleQuit.bind(this);
+    this.finishPGFetch = this.finishPGFetch.bind(this);
+    this.finishAIListFetch = this.finishAIListFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -126,7 +147,7 @@ class AdHocAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "AdHoc.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "AdHoc.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -140,48 +161,47 @@ class AdHocAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "AdHoc.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "AdHoc.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
-  fetchFormData(id) {
-    const myRequest = SERVERROOT + "/plotGroup/" + id;
-    console.log( "AdHoc.fetchFormData - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("AdHoc.fetchFormData: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let fd = json;
-       let ail = [];
-       if( fd.id1 !== null ) { ail.push(fd.id1); }
-       if( fd.id2 !== null ) { ail.push(fd.id2); }
-       if( fd.id3 !== null ) { ail.push(fd.id3); }
-       if( fd.id4 !== null ) { ail.push(fd.id4); }
-       let pg = new PlotGroup(fd.id, fd.name, fd.active, fd.id1
-                             ,fd.id2, fd.id3, fd.id4);
-       pg.aiList = ail;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      plotGroup: pg,
-                      aiList: fd.aiList                 
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting AdHoc id "+id+"\n"+error);
-       console.log("AdHoc.fetchFormData: Error - " + error);  
-    });
+  finishPGFetch( req ) {
+    let fd = req;
+    let ail = [];
+    if( fd.id1 !== null ) { ail.push(fd.id1); }
+    if( fd.id2 !== null ) { ail.push(fd.id2); }
+    if( fd.id3 !== null ) { ail.push(fd.id3); }
+    if( fd.id4 !== null ) { ail.push(fd.id4); }
+    let pg = new PlotGroup(fd.id, fd.name, fd.active, fd.id1
+                          ,fd.id2, fd.id3, fd.id4, fd.source);
+    pg.aiList = ail;
+    this.setState({stage: "itemRetrieved",
+                   updateDisplay: true,
+                   updateData: false,
+                   plotGroup: pg                 
+                  });
   }
+  
+  finishAIListFetch(req) {
+    let aiList = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, aiList: aiList });
+  }
+  
+  fetchFormData(id) {
+    const loc = "AdHoc.pgSelect";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/plotGroup/" + id,
+                            "Problem selecting plot group id "+id, this.finishPGFetch);
+    req0.fetchData();
+    let req1 = new OMSRequest(loc, SERVERROOT + "/tag/idname/AI",
+                            "Problem retrieving AI types", this.finishAIListFetch);
+    req1.fetchData();
+  }
+
 
   fetchHistory(id,ndx) {
     if( id !== undefined) {
       const myRequest = SERVERROOT + "/ai/history/" + id + "/2";
-      console.log( "AdHoc.fetchHistory - Request: " + myRequest );
+      Log.info( "AdHoc.fetchHistory - Request: " + myRequest );
       fetch(myRequest)
         .then(this.handleErrors)
         .then(response => {
@@ -200,7 +220,7 @@ class AdHocAdmin extends Component {
          }
       }).catch(function(error) { 
          alert("Problem selecting AdHoc id "+id+"\n"+error);
-         console.log("AdHoc.fetchHistory: Error - " + error);  
+         Log.error("AdHoc.fetchHistory: Error - " + error);  
       });
     }
   }
@@ -211,21 +231,25 @@ class AdHocAdmin extends Component {
     var id2 = this.state.plotGroup.aiList[1];
     var id3 = this.state.plotGroup.aiList[2];
     var id4 = this.state.plotGroup.aiList[3];
-    var myTimerID = setInterval(() => {this.fetchHistory(id1,1);
+    var pg  = new PlotGroup(0,"","Y",id1,id2,id3,id4,"PG");
+/*    var myTimerID = setInterval(() => {this.fetchHistory(id1,1);
                                        this.fetchHistory(id2,2);
                                        this.fetchHistory(id3,3);
                                        this.fetchHistory(id4,4);}, 60000 );
     this.setState({stage: "generatePlot",
                    unitTimer: myTimerID});
+*/
+    this.setState({stage: "generatePlot",
+                   plotGroup: pg});
   }
   
   componentDidMount() {
-    console.log( "AdHoc.didMount: " + this.state.stage );
+    Log.info( "AdHoc.didMount: " + this.state.stage );
     this.fetchFormData(0);
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "AdHoc.didUpdate: " + this.state.stage );
+    Log.info( "AdHoc.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -256,7 +280,7 @@ class AdHocAdmin extends Component {
           alert("Plot Groups can only contain 4 tags\n\nPlease remove one before selecting another");
         } else {
           tNew.push(tv);
-          this.fetchHistory(tv,tNew.length);
+//          this.fetchHistory(tv,tNew.length);
         }
         pgnew.aiList = tNew;
       }
@@ -278,7 +302,7 @@ class AdHocAdmin extends Component {
   }
   
   componentWillUnmount() {
-    console.log( "AdHoc.willUnmount "+this.state.unitTimer);
+    Log.info( "AdHoc.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -287,22 +311,25 @@ class AdHocAdmin extends Component {
 
 
   render() {
-    console.log("AdHoc.render - stage: "+this.state.stage);
+    Log.info("AdHoc.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
       case "itemRetrieved":
-        return <AdHocForm plotGroup    = {this.state.plotGroup}
-                          aiList       = {this.state.aiList}
-                          handleUpdate = {this.handleUpdate}
-                          handleChange = {this.handleChange}
+        if( (this.state.plotGroup===null) || (this.state.aiList===null)) {
+          return <Waiting />        
+        } else {
+          return <AdHocForm plotGroup    = {this.state.plotGroup}
+                            aiList       = {this.state.aiList}
+                            handleUpdate = {this.handleUpdate}
+                            handleChange = {this.handleChange}
                />
+         }
       case "generatePlot":
-        return <GroupPlot d0 = {this.state.d0}
-                          d1 = {this.state.d1}
-                          d2 = {this.state.d2}
-                          d3 = {this.state.d3}
-                          handleQuit = {this.handleQuit} />
+        return <PlotGroupVars stage = {"next"}
+                            plotGroup = {this.state.plotGroup}
+                            id = {"0"}
+                            source = {"pg"} />
       default:
         return <DefaultContents />
     }

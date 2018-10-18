@@ -1,12 +1,31 @@
 import React, {Component} from 'react';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
-import AOForm from './forms/AOForm.js';
-import AOList from './lists/AOList.js';
-import Waiting from './Waiting.js';
-import {Tag} from './objects/Tag.js';
-import {AnalogOutput} from './objects/AO.js';
+import AOForm          from './forms/AOForm.js';
+import AOList          from './lists/AOList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {AnalogOutput}  from './objects/AO.js';
 
+/*************************************************************************
+ * AlarmOutputAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -18,12 +37,15 @@ import {AnalogOutput} from './objects/AO.js';
 class AnalogOutputAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "AnalogOutputAdmin: " + props.stage );
+    Log.info( "AnalogOutputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
+      histTypes: null,
+      unitList: null,
+      siteLoc: null,
       ao: null,
       color: "green",
       nextCorner: 1
@@ -34,6 +56,10 @@ class AnalogOutputAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
+    this.finishAOFetch     = this.finishAOFetch.bind(this);
+    this.finishHistTypesFetch = this.finishHistTypesFetch.bind(this);
+    this.finishUnitsFetch  = this.finishUnitsFetch.bind(this);
+    this.finishSiteFetch   = this.finishSiteFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -44,7 +70,7 @@ class AnalogOutputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "AnalogOutputAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "AnalogOutputAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -58,17 +84,61 @@ class AnalogOutputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "AnalogOutputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "AnalogOutputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
+  }
+
+  finishAOFetch( req ) {
+    let aod = req;
+    var tg = new Tag( aod.tag.id, aod.tag.name, aod.tag.description, aod.tag.tagTypeCode
+                    , aod.tag.tagTypeId, aod.misc, aod.tag.c1Lat, aod.tag.c1Long
+                    , aod.tag.c2Lat, aod.tag.c2Long, aod.tag.active);
+    var ao = new AnalogOutput( aod.tagId, tg, aod.zeroValue, aod.maxValue
+                    , aod.histTypeCode, aod.percent, aod.slope, aod.scanValue, aod.scanTime
+                    , aod.prevValue, aod.prevTime, aod.lastHistValue, aod.lastHistTime, aod.unitId);
+    this.setState({stage: "itemRetrieved", updateDisplay: true, ao: ao });
+  }
+  
+  finishHistTypesFetch(req) {
+    let histTypes = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, histTypes: histTypes });
+  }
+  
+  finishUnitsFetch(req) {
+    let unitList = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, unitList: unitList });
+  }
+  
+  finishSiteFetch(req) {
+    let sl = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, siteLoc: sl });
   }
   
   handleSelect(event) {
+    const id = event.z;
+    const loc = "AnalogOutputAdmin.aiSelect";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/ao/" + id,
+                            "Problem selecting analog output id "+id, this.finishAOFetch);
+    req0.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/referencecode/historytypes",
+                            "Problem retrieving history types", this.finishHistTypesFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/unit/all",
+                            "Problem retrieving unit list", this.finishUnitsFetch);
+    req3.fetchData();
+    let req4 = new OMSRequest(loc, SERVERROOT + "/config/site",
+                            "Problem retrieving site location", this.finishSiteFetch);
+    req4.fetchData();
+  }
+
+/*
+  handleSelect(event) {
     let now = new Date();
-    console.log( "AnalogOutputAdmin.aoSelect " + now.toISOString() );
+    Log.info( "AnalogOutputAdmin.aoSelect " + now.toISOString() );
     const id = event.z;
     const myRequest=SERVERROOT + "/ao/" + id;
     now = new Date();
-    console.log( "AnalogOutputAdmin.aoSelect - Request: " + myRequest );
+    Log.info( "AnalogOutputAdmin.aoSelect - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -79,9 +149,9 @@ class AnalogOutputAdmin extends Component {
         throw new TypeError("AnalogOutputAdmin.aoSelect: response ("+contentType+") must be a JSON string");
     }).then(json => {
        let aod = json;
-       var tg = new Tag( aod.tag.id,aod.tag.name,aod.tag.description,aod.tag.tagTypeCode
-                       , aod.tag.tagTypeId, aod.tag.c1Lat,aod.tag.c1Long,aod.tag.c2Lat,aod.tag.c2Long
-                       , aod.tag.active);
+       var tg = new Tag( aod.tag.id, aod.tag.name, aod.tag.description, aod.tag.tagTypeCode
+                       , aod.tag.tagTypeId, aod.tag.misc, aod.tag.c1Lat, aod.tag.c1Long
+                       , aod.tag.c2Lat, aod.tag.c2Long, aod.tag.active);
        var ao = new AnalogOutput( aod.tagId, tg, aod.zeroValue, aod.maxValue
                        , aod.histTypeCode, aod.percent, aod.slope, aod.scanValue, aod.scanTime
                        , aod.prevValue, aod.prevTime, aod.lastHistValue, aod.lastHistTime, aod.unitId);
@@ -95,10 +165,10 @@ class AnalogOutputAdmin extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting analog output id "+id+"\n"+error);
-       console.log("AnalogOutputAdmin.aoSelect: Error - " + error);  
+       Log.error("AnalogOutputAdmin.aoSelect: Error - " + error);  
     });
   }
-  
+*/  
   /** 
    * validateForm - x is an AO object
    */
@@ -126,7 +196,7 @@ class AnalogOutputAdmin extends Component {
   handleUpdate(event) {
     event.preventDefault();
     const id = this.state.ao.tagId;
-    console.log("AnalogOutputAdmin.aoUpdate: (data) tagId="+id
+    Log.info("AnalogOutputAdmin.aoUpdate: (data) tagId="+id
                +", name:"+this.state.ao.tag.name);
     let method = "PUT";
     let url = SERVERROOT + "/ao/update";
@@ -144,18 +214,18 @@ class AnalogOutputAdmin extends Component {
         .catch(function(error) { 
           alert("Problem "+(id===0?"inserting":"updating")+" analog output "
                 +"id "+id+"\n"+error);
-          console.log("AnalogOutputAdmin.aoUpdate: Error - " + error);  
+          Log.error("AnalogOutputAdmin.aoUpdate: Error - " + error);  
       });
     }
   }
   
   componentDidMount() {
-    console.log( "AnalogOutputAdmin.didMount: " + this.state.stage );
+    Log.info( "AnalogOutputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "AnalogOutputAdmin.didUpdate: " + this.state.stage );
+    Log.info( "AnalogOutputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -194,8 +264,8 @@ class AnalogOutputAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      console.log( "AnalogOutputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      console.log( "AnalogOutputAdmin.mouseUp: "+lat+","+long);
+      Log.info( "AnalogOutputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+      Log.info( "AnalogOutputAdmin.mouseUp: "+lat+","+long);
       let aonew = Object.assign({},this.state.ao);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -211,10 +281,10 @@ class AnalogOutputAdmin extends Component {
   }
  
   fetchList() {
-    console.log( "AnalogOutputAdmin.fetchList : " + this.state.stage );
+    Log.info( "AnalogOutputAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/ao/all";
     const now = new Date();
-    console.log( "AnalogOutputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "AnalogOutputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -225,7 +295,7 @@ class AnalogOutputAdmin extends Component {
             }
             throw new TypeError("AnalogOutputAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("AnalogOutputAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("AnalogOutputAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -233,7 +303,7 @@ class AnalogOutputAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving analog output list\n"+e);
            const emsg = "AnalogOutputAdmin.fetchList: Fetching ao list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -249,7 +319,7 @@ class AnalogOutputAdmin extends Component {
   }
 
   render() {
-    console.log("AnalogOutputAdmin (render) - stage: "+this.state.stage);
+    Log.info("AnalogOutputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -259,14 +329,21 @@ class AnalogOutputAdmin extends Component {
                        handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <AOForm aoData = {this.state.returnedText}
-                       ao     = {this.state.ao}
-                       aoUpdate = {this.handleUpdate}
-                       fieldChange = {this.handleFieldChange}
-                       handleQuit = {this.handleQuit}
-                       handleMouseUp = {this.handleMouseUp}
-                       handleClick = {this.handleClick}
-               />
+        if( (this.state.ao === null) || (this.state.histTypes === null) || 
+            (this.state.unitList === null) || (this.state.siteLoc === null) ) {
+          return <Waiting />        
+        } else {
+          return <AOForm aoData    = {this.state.returnedText}
+                         ao        = {this.state.ao}
+                         histTypes = {this.state.histTypes}
+                         unitList  = {this.state.unitList}
+                         siteLoc   = {this.state.siteLoc}
+                         aoUpdate  = {this.handleUpdate}
+                         fieldChange = {this.handleFieldChange}
+                         handleQuit = {this.handleQuit}
+                         handleMouseUp = {this.handleMouseUp}
+                         handleClick = {this.handleClick} />
+        }
       default:
         return <DefaultContents />
     }

@@ -1,10 +1,31 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class History implements Serializable {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class History extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -55,15 +76,4 @@ public class History implements Serializable {
 	}
 	
 	
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		sb.append("History{\"id\":\"").append(this.id);
-		sb.append(", \"tagId\"=").append(this.tagId);
-		sb.append("\", scanValue\":\"").append(this.y);
-		sb.append(", \"scanTime\"=").append(this.x);
-		sb.append("}");
-		return sb.toString();
-	}
-
 }

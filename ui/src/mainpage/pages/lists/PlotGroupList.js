@@ -1,11 +1,30 @@
 import React, {Component} from 'react';
+import Log         from '../../requests/Log.js';
 import {PlotGroup} from '../objects/PlotGroup.js';
+
+/*************************************************************************
+ * PlotGroupList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class PlotGroupList extends Component {
   constructor(props) {
     super(props);
-    console.log( "PlotGroupList: " + props.stage );
+    Log.info( "PlotGroupList: " + props.stage );
     this.state = {  };
   }
 
@@ -13,12 +32,18 @@ class PlotGroupList extends Component {
     var json = this.props.returnedText;
     var handleSelect = this.props.handleSelect;
     var plotGroupList = [];
-    var nf = new PlotGroup(0,"New Plot Group","N",null,null,null,null);
+    var nf = new PlotGroup(0,"New Plot Group","N",null,null,null,null,'PG');
     plotGroupList.push(nf);
-    json.map(function(n,x){
+    json.map(function(n,x) {
+      if( "PG" === n.source ) {
         var f = new PlotGroup( n.id, n.name, n.active
-                             , n.id1,n.id2,n.id3,n.id4); 
-        return plotGroupList.push( f ); } );
+                             , n.id1,n.id2,n.id3,n.id4,n.source); 
+        return plotGroupList.push( f ); 
+      } else {
+        return plotGroupList;
+      } 
+    } );
+        
     return ( 
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Site PlotGroups</div></h2>

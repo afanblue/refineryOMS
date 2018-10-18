@@ -9,9 +9,9 @@
         </Console>
         <RollingFile name="RollingFile">
             <FileName>${filename}</FileName>
-            <FilePattern>${env:OMS_LOGS}/simulate-%d{yyyy-MM-dd-hh-mm}.log.gz</FilePattern>
+            <FilePattern>${env:OMS_LOGS}/simulate-%d{yyyy-MM-dd-HH-mm}.log.gz</FilePattern>
             <PatternLayout>
-                <Pattern>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n</Pattern>
+                <Pattern>%d{yyyy-MMM-dd HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
             </PatternLayout>
             <Policies>
                 <CronTriggeringPolicy schedule="0 0 0 * * ?" evaluateOnStartup="true" />
@@ -30,10 +30,6 @@
         </Logger>
         <Logger name="us.avn.oms.mapper" level="ERROR" additivity="false">
       		<AppenderRef ref="RollingFile"/>
-        </Logger>
-        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">
-      		<AppenderRef ref="RollingFile"/>
-      		<AppenderRef ref="Console"/>
         </Logger>
     </Loggers>
 </Configuration>

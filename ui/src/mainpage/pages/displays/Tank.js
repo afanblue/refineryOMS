@@ -1,7 +1,26 @@
 import React, {Component} from 'react';
 //import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import { Group, Arc, Line, Rect, Text } from 'react-konva';
+import Log      from '../../requests/Log.js';
+import { Group, Ellipse, Rect, Line, Text } from 'react-konva';
 
+
+/*************************************************************************
+ * Tank.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 /**
@@ -10,7 +29,7 @@ import { Group, Arc, Line, Rect, Text } from 'react-konva';
 class Tank extends Component {
   constructor(props) {
     super(props);
-    console.log( "Tank constructor");
+    Log.info( "Tank constructor");
     this.state = {
       updateData:    false,
       updateDisplay: true,
@@ -18,8 +37,8 @@ class Tank extends Component {
       name : props.name,
       xp   : props.xp,
       yp   : props.yp,
-      h    : props.height,
-      w    : props.width,
+      ht   : props.height,
+      wd   : props.width,
       tkHt : props.tankHeight,
       tkType: props.tankType,
       level : props.level,
@@ -29,7 +48,7 @@ class Tank extends Component {
   }
   
   componentDidMount() {
-    console.log( "Tank.didMount" );
+    Log.info( "Tank.didMount" );
   }
   
   componentWillReceiveProps(nextProps) {
@@ -37,8 +56,8 @@ class Tank extends Component {
                     name : nextProps.name,
                     xp   : nextProps.xp,
                     yp   : nextProps.yp,
-                    h    : nextProps.height,
-                    w    : nextProps.width,
+                    ht   : nextProps.height,
+                    wd   : nextProps.width,
                     tkHt : nextProps.tankHeight,
                     tkType: nextProps.tankType,
                     level : nextProps.level,
@@ -47,28 +66,47 @@ class Tank extends Component {
   }
 
   render() {
-    var xp    = this.state.xp;
+    var xt    = this.state.xp;
     var yp    = this.state.yp;
-    var w     = this.state.w;
-    var h     = this.state.h;
+    var wd    = this.state.wd;
+    var ht    = this.state.ht;
     var tkHt  = this.state.tkHt;
     var color = this.state.color;
     var name  = this.state.name;
+    var level = this.state.level;
+    var temp  = this.state.temp;
     switch( this.state.tkType ) {
       case "filled":
         return(
           <Group>
-          <Rect x={xp} y={yp} width={w} height={h}
+          <Rect x={xt} y={yp} width={wd} height={ht}
                 stroke={color} strokeWidth={1} />
-          <Rect x={xp} y={yp+h-tkHt} width={w} height={tkHt}
+          <Rect x={xt} y={yp+ht-tkHt} width={wd} height={tkHt}
                 stroke={color} fill={color} strokeWidth={1} />
           </Group>
         );
       case "empty":
         return(
-          <Rect x={xp} y={yp} width={w} height={h} stroke={color} strokeWidth={1} />
+          <Rect x={xt} y={yp} width={wd} height={ht} stroke={color} strokeWidth={1} />
         );
       default:
+        var ch = 0.05 * ht;
+        ch = (ch===0?2:ch);
+        var rx = wd/2;
+        var yt = yp - ch/2;
+        var yb = yp + ht - ch/2;
+        var rt = { x:rx, y:ch };
+//        var scale = tkHt;
+        var ptsl = [xt, yt, xt, yb];
+        var ptsr = [xt+wd, yt, xt+wd, yb];
+//        var vscl = parseFloat(level)/scale;
+//        var yscl = tkHt * (yb - yt);
+        var ybscl = yb - tkHt;
+        var tpyn = yt - 16 + ht/2;
+        var tpyl = yt + ht/2;
+        var tpyt = yt + 16 + ht/2; 
+
+/*
         var r = 3 * h;
         var phi = Math.asin(w/(2*r));
         var deg = Math.round(360 * phi/Math.PI);
@@ -86,40 +124,30 @@ class Tank extends Component {
         var ir = tkHt < (r-xl)?(r-tkHt):xl;
         var arcColor = tkHt<(r-xl)?"midnightblue":color;
         var wRect = tkHt<(r-xl)?1:w;
-//      1st arc: Top tank arc (top)
-//      2nd arc: Top tank arc (bottom)
-//      3rd arc: Bottom tank arc
-//      4th arc: Top tank level 
+*/
+//      1st ellipse: Top of tank
+//      2nd ellipse: Bottom of tank 
+//      Rectangle: body of tank ?
+//      4th ellipse: Top of tank contents 
 //      Lines:  sides of tank (1st is left; 2nd is right)
         return(
           <Group>
-          <Rect x={xp} y={yp+h-tkHt} width={wRect} height={tkHt}
-                stroke={color} fill={color} strokeWidth={1} />
-          <Arc x={xp+w/2} y={yp+xl}
-               innerRadius={r} outerRadius={r}
-               angle={deg} rotation={rt1}
-               stroke={color} strokeWidth={1} counterclockwise={true} />
-          <Arc x={xp+w/2} y={by-h}
-               innerRadius={r} outerRadius={r}
-               angle={deg} rotation={rt3}
-               stroke={color} strokeWidth={1} clockwise={false} />
-          <Arc x={xp+w/2} y={by}
-               innerRadius={ir} outerRadius={r}
-               angle={deg} rotation={rt3} fill={arcColor}
-               stroke={color} strokeWidth={1} clockwise={false} />
-          <Arc x={xp+w/2} y={yp+xl+h-tkHt}
-               innerRadius={ir} outerRadius={r}
-               angle={deg} rotation={rt1}
-               stroke={color} strokeWidth={1} 
-               fill={arcColor} counterclockwise={true} />
-          <Line points={lp1} stroke={color} strokeWidth={1} />
-          <Line points={lp2} stroke={color} strokeWidth={1} />
-          <Text text={name} x={xp+w+2} y={tpyn}
-                fontSize={10} stroke={color} strokeWidth={1} />
-          <Text text={level} x={xp+w+2} y={tpyl}
-                fontSize={10} stroke={color} strokeWidth={1} />
-          <Text text={temp} x={xp+w+2} y={tpyt}
-                fontSize={10} stroke={color} strokeWidth={1} />
+            <Ellipse x = {xt+rx} y = {yt} radius={rt} stroke={color}
+                     strokeWidth={1} />
+            <Ellipse x = {xt+rx} y = {yb} radius={rt} stroke={color}
+                     strokeWidth={1} fill={color} />
+            <Line points={ptsl} stroke={color} strokeWidth={1} />
+            <Line points={ptsr} stroke={color} strokeWidth={1} />
+            <Ellipse x = {xt+rx} y = {ybscl} radius={rt} stroke={color}
+                     strokeWidth={1} fill={color} />
+            <Rect x={xt} y={ybscl} width={wd} height={tkHt}
+                  stroke={color} fill={color} strokeWidth={1} />
+            <Text text={name} x={xt+wd+2} y={tpyn}
+                  fontSize={10} stroke={color} strokeWidth={1} />
+            <Text text={level} x={xt+wd+2} y={tpyl}
+                  fontSize={10} stroke={color} strokeWidth={1} />
+            <Text text={temp} x={xt+wd+2} y={tpyt}
+                  fontSize={10} stroke={color} strokeWidth={1} />
           </Group>
         );
     }

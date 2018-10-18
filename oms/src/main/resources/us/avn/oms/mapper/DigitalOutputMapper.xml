@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.DigitalOutputMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<DigitalOutput> getAllDigitalOutputs( );
+	
+	DigitalInput getDigitalOutput( String key);
+	
+	Integer updateDigitalOutputStatic( DigitalOutput t );
+
+	Integer insertDigitalOutput( DigitalOutput t );
+	
+          tag_id: 281
+  hist_type_code: 'H'
+      scan_value: NULL
+       scan_time: NULL
+      zero_value: 0
+       max_value: 440
+      prev_value: NULL
+       prev_time: NULL
+ last_hist_value: NULL
+  last_hist_time: NULL
+  
+-->  
+
+  <resultMap id="digitalOutputResultMap" type="DigitalOutput">
+     <result property="tagId"           column="tag_id"/>
+     <result property="tag.id"          column="tag_id"/>
+     <result property="tag.name"        column="name" />
+     <result property="tag.description" column="description" />
+     <result property="tag.tagTypeCode" column="tag_type_code" />
+     <result property="tag.tagTypeId"   column="tag_type_id" />
+     <result property="tag.c1Lat"       column="c1_lat"/>
+     <result property="tag.c1Long"      column="c1_long"/>
+     <result property="tag.c2Lat"       column="c2_lat"/>
+     <result property="tag.c2Long"      column="c2_long"/>
+     <result property="tag.active"      column="active" />
+     <result property="histTypeCode"    column="hist_type_code"/>
+     <result property="valueView"       column="value_view"/>
+     <result property="scanValue"       column="scan_value"/>
+     <result property="scanTime"        column="scan_time"/>
+     <result property="isNew"           column="is_new" />
+     <result property="prevValue"       column="prev_value" />
+     <result property="prevTime"        column="prev_time"/>
+     <result property="lastHistValue"   column="last_hist_value"/>
+     <result property="lastHistTime"    column="last_hist_time"/>
+     <result property="intSinceLhs"     column="int_since_lhs"/>
+     <result property="intScanTime"     column="int_scan_time"/>
+  </resultMap>
+  
+
+  <select id="getAllActiveDOtags" resultMap="digitalOutputResultMap">
+    select d.tag_id, t.name, d.hist_type_code, d.value_view, d.is_new
+         , d.scan_value, d.scan_time, d.prev_value, d.prev_time
+         , d.last_hist_value, d.last_hist_time
+         , coalesce(UNIX_TIMESTAMP(d.scan_time)
+                  - UNIX_TIMESTAMP(d.last_hist_time), 0) int_since_lhs
+		 , coalesce(TIMESTAMPDIFF(MINUTE,d.last_hist_time,d.scan_time),0) int_scan_time
+         , x.updated, x.scan_time pmc_scan_time, x.float_value
+      from digital_output d join tag t on d.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+           join xfer x on t.id = x.id 
+     where t.active = 'Y'
+     order by 2
+  </select>
+
+  <select id="getAllDigitalOutputs" resultMap="digitalOutputResultMap">
+    select d.tag_id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, d.hist_type_code, d.value_view
+         , d.scan_value, d.scan_time, d.prev_value, d.is_new
+         , d.prev_time, d.last_hist_value, d.last_hist_time
+         , tt.id tag_type_id
+      from digital_output d join tag t on d.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+     order by 3
+  </select>
+
+  <select id="getDigitalOutput" resultMap="digitalOutputResultMap">
+    select d.tag_id, t.name, t.description, t.c1_lat, t.c1_long
+         , t.c2_lat, t.c2_long, t.tag_type_code, t.active
+         , d.hist_type_code, d.value_view, d.is_new
+         , d.scan_value, d.scan_time, d.prev_value
+         , d.prev_time, d.last_hist_value, d.last_hist_time
+         , tt.id tag_type_id
+      from digital_output d join tag t on d.tag_id = t.id
+           join tag_type tt on tt.code = t.tag_type_code
+     where t.id = #{parm1}
+  </select>
+  
+  <select id="getDigitalOutputsToUpdate" resultMap="digitalOutputResultMap">
+    select d.tag_id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, d.hist_type_code
+         , d.scan_value, d.scan_time, d.prev_value
+         , d.prev_time, d.last_hist_value, d.last_hist_time
+         , tt.id tag_type_id
+      from digital_output d join tag t on d.tag_id = t.id
+      join tag_type tt on tt.code = t.tag_type_code
+     where coalesce(d.is_new,0) != 0
+     order by 3
+  </select>
+  
+  <update id="updateDigitalOutput" parameterType="DigitalOutput">
+    update digital_output
+       set is_new = 1
+         , scan_value = #{scanValue}
+         , scan_time = coalesce(#{scanTime},now())
+         , prev_value = #{prevValue}
+         , prev_time = #{prevTime}
+         , last_hist_value = #{lastHistValue}
+         , last_hist_time = #{lastHistTime}
+     where tag_id = #{tagId}
+  </update>
+
+  <update id="updateDigitalOutputStatic" parameterType="DigitalOutput">
+    update digital_output
+       set is_new = 0
+         , hist_type_code = #{histTypeCode}
+         , value_view = #{valueView}
+     where tag_id = #{tagId}
+  </update>
+  
+  
+  <update id="clearDOupdate" parameterType="Long">
+    update digital_output set is_new = 0 where tag_id = #{parm1}
+  </update>
+  
+  <insert id="insertDigitalOutput" parameterType="DigitalOutput">
+    insert digital_output
+         ( tag_id, hist_type_code, is_new, scan_value, scan_time
+         , prev_value, prev_time, last_hist_value, last_hist_time
+         , value_view )
+   values( #{tagId}, #{histTypeCode}, 0, null, null
+         , null,       null,      null,            null
+         , #{valueView} )
+  </insert>
+  
+</mapper>

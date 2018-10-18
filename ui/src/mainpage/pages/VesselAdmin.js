@@ -1,18 +1,37 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
+import {SERVERROOT}    from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
-import VesselForm from './forms/VesselForm.js';
-import VesselList from './lists/VesselList.js';
-import Waiting from './Waiting.js';
-import {Vessel} from './objects/Vessel.js';
-import {Tag} from './objects/Tag.js';
+import Log             from '../requests/Log.js';
+import VesselForm      from './forms/VesselForm.js';
+import VesselList      from './lists/VesselList.js';
+import Waiting         from './Waiting.js';
+import {Vessel}        from './objects/Vessel.js';
+import {Tag}           from './objects/Tag.js';
+
+/*************************************************************************
+ * VesselAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
 class VesselAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "VesselAdmin: " + props.stage );
+    Log.info( "VesselAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -35,7 +54,7 @@ class VesselAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "VesselAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "VesselAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -49,13 +68,13 @@ class VesselAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "VesselAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "VesselAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
   fetchFormData(id) {
     const myRequest = SERVERROOT + "/vessel/" + id;
-    console.log( "VesselAdmin.fetchFormData - Request: " + myRequest );
+    Log.info( "VesselAdmin.fetchFormData - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -67,7 +86,7 @@ class VesselAdmin extends Component {
     }).then(json => {
        let vd = json;
        const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode,vd.tag.tagTypeId
-                        ,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
+                        ,vd.tag.misc,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
        const v = new Vessel(vd.id,t,vd.vesselName,vd.quantity,vd.customerId,vd.customer);
        const custList = vd.customers;
        this.setState({stage: "itemRetrieved",
@@ -79,13 +98,13 @@ class VesselAdmin extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting vessel id "+id+"\n"+error);
-       console.log("VesselAdmin.fetchFormData: Error - " + error);  
+       Log.error("VesselAdmin.fetchFormData: Error - " + error);  
     });
   }
 
   handleVesselSelect(event) {
     let now = new Date();
-    console.log( "VesselAdmin.vesselSelect " + now.toISOString() );
+    Log.info( "VesselAdmin.vesselSelect " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -102,7 +121,7 @@ class VesselAdmin extends Component {
     var v = this.state.vessel;
     v.tag.name = v.tag.tagTypeCode+id;
     const b = JSON.stringify(v);
-    console.log("VesselAdmin.vesselUpdate "+method)
+    Log.info("VesselAdmin.vesselUpdate "+method)
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
@@ -113,17 +132,17 @@ class VesselAdmin extends Component {
     }).catch(function(error) { 
         alert("Problem "+(id===0?"inserting":"updating")+" vessel "
              +"id "+id+"\n"+error);
-        console.log("VesselAdmin.vesselUpdate: Error - " + error);  
+        Log.error("VesselAdmin.vesselUpdate: Error - " + error);  
     });
   }
   
   componentDidMount() {
-    console.log( "VesselAdmin.didMount: " + this.state.stage );
+    Log.info( "VesselAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "VesselAdmin.didUpdate: " + this.state.stage );
+    Log.info( "VesselAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -148,10 +167,10 @@ class VesselAdmin extends Component {
   }
   
   fetchList() {
-    console.log( "VesselAdmin.fetchList : " + this.state.stage );
+    Log.info( "VesselAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/vessel/all";
     const now = new Date();
-    console.log( "VesselAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "VesselAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -162,7 +181,7 @@ class VesselAdmin extends Component {
             }
             throw new TypeError("VesselAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("VesselAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("VesselAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -170,7 +189,7 @@ class VesselAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving vessel list\n"+e);
            const emsg = "VesselAdmin.fetchList: Fetching vessel list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -185,7 +204,7 @@ class VesselAdmin extends Component {
   }
 
   render() {
-    console.log("VesselAdmin.render - stage: "+this.state.stage);
+    Log.info("VesselAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -199,7 +218,6 @@ class VesselAdmin extends Component {
                           vesselUpdate  = {this.handleVesselUpdate}
                           vesselChange  = {this.handleVesselChange}
                           handleQuit    = {this.handleVesselQuit}
-                          handleMouseUp = {this.handleMouseUp}
                />
       default:
         return <DefaultContents />

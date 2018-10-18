@@ -1,16 +1,35 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import ConfigList from './lists/ConfigList.js';
+import {SERVERROOT}    from '../../Parameters.js';
+import ConfigList      from './lists/ConfigList.js';
 import DefaultContents from './DefaultContents.js';
-import Waiting from './Waiting.js';
+import Log             from '../requests/Log.js';
+import Waiting         from './Waiting.js';
+
+/*************************************************************************
+ * ConfigAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 function ConfigItem(i,k,v) { this.id=i; this.key=k; this.value=v; };
-
 
 class ConfigAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "ConfigAdmin: " + props.selected + ":" + props.option + "/" + props.stage );
+    Log.info( "ConfigAdmin: " + props.selected + ":" + props.option + "/" + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -32,7 +51,7 @@ class ConfigAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "ConfigAdmin.willRcvProps: " + nextProps.stage );
+    Log.info( "ConfigAdmin.willRcvProps: " + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -44,17 +63,17 @@ class ConfigAdmin extends Component {
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "ConfigAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "ConfigAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   componentDidMount() {
-    console.log( "ConfigAdmin.didMount: " + this.state.stage );
+    Log.info( "ConfigAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "ConfigAdmin.didUpdate: " + this.state.stage );
+    Log.info( "ConfigAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -66,7 +85,7 @@ class ConfigAdmin extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    console.log("ConfigAdmin.fieldChange: "+name+" = "+value);
+    Log.info("ConfigAdmin.fieldChange: "+name+" = "+value);
     let np = name.split(".");
     let cfg = this.state.configItems.slice(0);
     let ndx = np[1];
@@ -79,10 +98,10 @@ class ConfigAdmin extends Component {
   }
   
   fetchList() {
-    console.log( "ConfigAdmin.fetchList : " + this.state.stage );
+    Log.info( "ConfigAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/config/all";
     const now = new Date();
-    console.log( "ConfigAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ConfigAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -93,7 +112,7 @@ class ConfigAdmin extends Component {
             }
             throw new TypeError("ConfigAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ConfigAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("ConfigAdmin.fetchList: JSON retrieved - " + json);
            var itemList = [];
            var c = new ConfigItem(0,"Add new item","");
            itemList.push(c);
@@ -107,7 +126,7 @@ class ConfigAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving system configuration list\n"+e);
            const emsg = "ConfigAdmin.fetchList: Fetching system configuration list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -124,7 +143,7 @@ class ConfigAdmin extends Component {
         cfg = this.state.configItems.splice(0);
     }
     const b = JSON.stringify(cfg);
-    console.log("ConfigAdmin.configUpdate "+method)
+    Log.info("ConfigAdmin.configUpdate "+method)
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
@@ -133,7 +152,7 @@ class ConfigAdmin extends Component {
       .then(alert("Configuration updated") )
       .catch(function(error) { 
         alert("Problem updatig system configuration list\n"+error);
-        console.log("ConfigAdmin.configUpdate: Error - " + error);  
+        Log.error("ConfigAdmin.configUpdate: Error - " + error);  
     });
   }
 
@@ -149,7 +168,7 @@ class ConfigAdmin extends Component {
 
 
   render() {
-    console.log("ConfigAdmin.render - stage: "+this.state.stage);
+    Log.info("ConfigAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
       case "begin":
         return <Waiting />

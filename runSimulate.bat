@@ -17,6 +17,6 @@ set LOG=%OMS_LOGS%\%OLDLOG%
 date /t >> %LOG%
 time /t >> %LOG%
 
-java -cp %CLASSPATH% us.avn.oms.sim.Sim >>%LOG% 2>&1
+java -cp %CLASSPATH% us.avn.oms.sim.Simulator >>%LOG% 2>&1
 
 popd

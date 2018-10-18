@@ -26,7 +26,7 @@ ANALOG-TYPE,Temperature,T,0,Temperature,Y
 ANALOG-TYPE,Tank Level,L,1,Tank Level,Y
 ANALOG-TYPE,Flow Rate,F,2,Flow Rate,Y
 ANALOG-TYPE,Pressure,P,3,Pressure,Y
-ANALOG-TYPE,Miscellaneous,M,4,Miscellaneous,Y
+ANALOG-TYPE,Manual,M,4,Manual,Y
 CONTENT-TYPE,Crude,C,1,Crude Oil,Y
 CONTENT-TYPE,Gasoline,G,2,Regular Gasoline,Y
 CONTENT-TYPE,FuelOil,FO,4,Fuel Oil,Y
@@ -45,6 +45,24 @@ CALCULATION_TYPE,Division,D,3,Division of two input values,Y
 CALCULATION_TYPE,LogicalAnd,N,4,Logical And of multiple inputs,Y
 CALCULATION_TYPE,LogicalOr,O,5,Logical OR of multiple inputs,Y
 CALCULATION_TYPE,LogicalXOr,X,6,Logical XOR of multiple inputs,Y
-CALCULATION_TYPE,LogicalNot,Z,7,Logical NOT of multiple inputs,Y
-ANALOG-TYPE,Calculated,C,6,Calculation output,Y
+ANALOG-TYPE,Calculated,C,7,Calculation output,Y
+CALCULATION_TYPE,LogicalNot,Z,8,Logical NOT of multiple inputs,Y
+SCM_OBJECT,Ship,SH,1,Schematic ship object,Y
+SCM_OBJECT,Pipe,P,2,Schematic pipe object,Y
+SCM_OBJECT,RefineryUnit,RU,3,Schematic refinery unit object,Y
+SCM_OBJECT,Tank,TK,4,Schematic tank object,Y
+SCM_OBJECT,Text,TX,5,Schematic text object,Y
+SCM_OBJECT,VerticalValve,VV,6,Schematic valve object,Y
+SCM_OBJECT,HorizontalValve,VH,7,Schematic valve object,Y
+SCM_OBJECT,Gauge,G,7,Schematic Gauge object,Y
+SCM_OBJECT,VerticalPumpBtm,PB,8,Schematic pump (vertical) object,Y
+SCM_OBJECT,HorizontalPumpLeft,PL,9,Schematic pump (horizontal) object,Y
+ANALOG-TYPE,Accumulator,A,6,Accumulation of value,Y
+ANALOG-TYPE,Miscellaneous,S,8,Miscellaneous analog,Y
+SCM_OBJECT,HorizontalPumpRight,PR,10,Horizontal pump left output,Y
+SCM_OBJECT,VerticalPumpTop,PT,11,Vertical pump right output,Y
+SCM_OBJECT,3WayValveTop,3VT,12,Three Way Valve,Y
+SCM_OBJECT,3WayValveRight,3VR,13,Three Way Valve,Y
+SCM_OBJECT,3WayValveLeft,3VL,14,Three Way Valve,Y
+SCM_OBJECT,3WayValveBtm,3VB,15,Three Way Valve,Y
 End

@@ -13,7 +13,7 @@
                 active: Y
 --> 
    <resultMap id="privResultMap" type="IdName">
-      <id property="id" column="id"/>
+      <result property="id" column="id"/>
       <result property="name" column="name"/>
    </resultMap>
 
@@ -27,12 +27,12 @@
   </select>
   
   <select id="getPrivilegesForRole" resultMap="privResultMap">
-    select r.id role_id, r.name role, p.id id, p.name name 
+    select p.id id, p.name name 
       from privilege p 
       join role_priv rp on p.id = rp.priv_id 
       join role r on r.id = rp.role_id 
      where r.id = #{parm1}
-     order by 4;
+     order by 2
   </select>
   
   <update id="updatePrivilege" parameterType="IdName" >

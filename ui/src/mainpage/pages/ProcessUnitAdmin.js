@@ -1,24 +1,46 @@
 import React, {Component} from 'react';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
 import DefaultContents from './DefaultContents.js';
 import ProcessUnitForm from './forms/ProcessUnitForm.js';
 import ProcessUnitList from './lists/ProcessUnitList.js';
 import Waiting from './Waiting.js';
-import {Tag, RelTagTag} from './objects/Tag.js';
+import {RelTagTag} from './objects/Tag.js';
 import {ProcessUnit} from './objects/ProcessUnit.js';
+
+/*************************************************************************
+ * ProcessUnitAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
 class ProcessUnitAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "ProcessUnitAdmin: " + props.stage );
+    Log.info( "ProcessUnitAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
       processUnit: null,
+      inpTags: null,
+      siteLocation: null,
       nextCorner: 1
     }
     this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -26,6 +48,9 @@ class ProcessUnitAdmin extends Component {
     this.handleUpdate      = this.handleUpdate.bind(this);
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
+    this.finishPUFetch     = this.finishPUFetch.bind(this);
+    this.finishSiteFetch   = this.finishSiteFetch.bind(this);
+    this.finishInpTagFetch = this.finishInpTagFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -36,7 +61,7 @@ class ProcessUnitAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "ProcessUnitAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "ProcessUnitAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -50,50 +75,56 @@ class ProcessUnitAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "ProcessUnitAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "ProcessUnitAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
-
-  handleSelect(event) {
-    let now = new Date();
-    console.log( "ProcessUnitAdmin.select " + now.toISOString() );
-    const id = event.z;
-    const myRequest = SERVERROOT + "/processunit/" + id;
-    now = new Date();
-    console.log( "ProcessUnitAdmin.select - Request:" + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("ProcessUnitAdmin.select: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let pud = json.tag;
-       const t = new Tag( pud.id, pud.name, pud.description, pud.tagTypeCode, pud.tagTypeId
-                        , pud.c1Lat, pud.c1Long, pud.c2Lat, pud.c2Long, ((pud.active===null)?"Y":pud.active));
-       let tags = [];
-       if( json.childTags != null ) {
-         json.childTags.map( function(n,x){ return tags.push(n.childTagId); } );
-       }
-       const pu = new ProcessUnit(t,json.childTags,tags);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      processUnit: pu                    
-                     });
-    }).catch(function(error) { 
-       alert("problem selecting process unit id "+id+"\n"+error);
-       console.log("ProcessUnitAdmin.select: Error - " + error);  
-    });
+  finishPUFetch( req ) {
+    let pud = req;
+    const tags = []
+    pud.childTags.map(function(n,x) { return tags.push(n.childTagId); } );
+    const pu = new ProcessUnit( pud.id, pud.name, pud.description, pud.tagTypeCode
+                              , pud.tagTypeId, pud.misc, pud.c1Lat, pud.c1Long
+                              , pud.c2Lat, pud.c2Long, pud.active, pud.childTags, tags );
+    this.setState({stage: "itemRetrieved", updateDisplay: true, processUnit:pu });
   }
 
+  finishSiteFetch(req) {
+//    let inpTags = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, siteLocation: req });
+  }
+
+  finishInpTagFetch(req) {
+//    let inpTags = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, inpTags: req });
+  }
+
+  fetchFormData(req) {
+    Log.info( "ProcessUnitAdmin.select - Request:" + req );
+    const loc = "ProcessUnitAdmin.select";
+    let req0 = new OMSRequest(loc, req, 
+                            "Problem selecting process unit "+req, this.finishPUFetch);
+    req0.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/config/site",
+                            "Problem retrieving site location", this.finishSiteFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/TK,AI,DI",
+                            "Problem retrieving tag list", this.finishInpTagFetch);
+    req3.fetchData();
+    this.setState({processUnit:null, siteLocation:null, inpTags:null})    
+  }    
+    
+  handleSelect(event) {
+    let now = new Date();
+    Log.info( "ProcessUnitAdmin.select " + now.toISOString() );
+    const id = event.z;
+    const myRequest = SERVERROOT + "/processunit/" + id;
+    this.fetchFormData(myRequest); 
+  }
+  
   handleUpdate(event) {
     event.preventDefault();
-    const id = this.state.processUnit.tag.id;
+    const id = this.state.processUnit.id;
     let method = "PUT";
     let url = SERVERROOT + "/processunit/update";
     let childTags = [];
@@ -106,28 +137,33 @@ class ProcessUnitAdmin extends Component {
       let rtt = new RelTagTag(0,n,null,id,null);
       return childTags.push(rtt);
     } );
-    let punew = new ProcessUnit(this.state.processUnit.tag,childTags,null);
+    let punew = Object.assign({},this.state.processUnit);
+    punew.childTags = childTags;
+    punew.tags = null;
     const b = JSON.stringify(punew);
-    console.log("ProcessUnitAdmin.update "+method);
+    Log.info("ProcessUnitAdmin.update "+method);
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
       body: b
     }).then(this.handleErrors)
-      .catch(function(error) { 
+      .then(response => {
+        const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
+        this.fetchFormData(myRequest);
+      }).catch(function(error) { 
        alert("Problem "+(id===0?"inserting":"updating")+" process unit "
             +"id "+id+"\n"+error);
-       console.log("ProcessUnitAdmin.update: Error - " + error);  
+       Log.error("ProcessUnitAdmin.update: Error - " + error);  
     });
   }
   
   componentDidMount() {
-    console.log( "ProcessUnitAdmin.didMount: " + this.state.stage );
+    Log.info( "ProcessUnitAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "ProcessUnitAdmin.didUpdate: " + this.state.stage );
+    Log.info( "ProcessUnitAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -168,10 +204,10 @@ class ProcessUnitAdmin extends Component {
   }
   
   fetchList() {
-    console.log( "ProcessUnitAdmin.fetchList : " + this.state.stage );
+    Log.info( "ProcessUnitAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/processunit/all";
     const now = new Date();
-    console.log( "ProcessUnitAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ProcessUnitAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -182,7 +218,7 @@ class ProcessUnitAdmin extends Component {
             }
             throw new TypeError("ProcessUnitAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ProcessUnitAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("ProcessUnitAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -190,7 +226,7 @@ class ProcessUnitAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving process unit list\n"+e);
            const emsg = "ProcessUnitAdmin.fetchList: Fetching process unit list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -203,17 +239,17 @@ class ProcessUnitAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      console.log( "ProcessUnitAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
-      console.log( "ProcessUnitAdmin.mouseUp: "+lat+","+long);
+      Log.info( "ProcessUnitAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
+      Log.info( "ProcessUnitAdmin.mouseUp: "+lat+","+long);
       let punew = Object.assign({},this.state.processUnit);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
-        punew.tag.c1Lat = lat;
-        punew.tag.c1Long = long;
+        punew.c1Lat = lat;
+        punew.c1Long = long;
         nextCorner = 2;
       } else {
-        punew.tag.c2Lat = lat;
-        punew.tag.c2Long = long;
+        punew.c2Lat = lat;
+        punew.c2Long = long;
         nextCorner = 1;        
       }
       this.setState( {tank: punew, nextCorner:nextCorner} );
@@ -229,23 +265,30 @@ class ProcessUnitAdmin extends Component {
   }
 
   render() {
-    console.log("ProcessUnitAdmin.render - stage: "+this.state.stage);
+    Log.info("ProcessUnitAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
       case "dataFetched":
         return <ProcessUnitList 
-                          returnedText = {this.state.returnedText}
-                          puSelect = {this.handleSelect} />
+                   returnedText = {this.state.returnedText}
+                   puSelect = {this.handleSelect} />
       case "itemRetrieved":
-        return <ProcessUnitForm
-                          returnedText = {this.state.returnedText}
-                          processUnit  = {this.state.processUnit}
-                          puUpdate = {this.handleUpdate}
-                          fieldChange = {this.handleFieldChange}
-                          handleQuit = {this.handleQuit}
-                          handleMouseUp = {this.handleMouseUp}
-               />
+        if( (this.state.processUnit === null) || (this.state.inpTags === null) 
+          || (this.state.siteLocation === null) ) {
+          return <Waiting />        
+        } else {
+          return <ProcessUnitForm
+                     returnedText = {this.state.returnedText}
+                     processUnit  = {this.state.processUnit}
+                     site         = {this.state.siteLocation}
+                     tags         = {this.state.inpTags}
+                     puUpdate     = {this.handleUpdate}
+                     fieldChange  = {this.handleFieldChange}
+                     handleQuit   = {this.handleQuit}
+                     handleMouseUp = {this.handleMouseUp}
+                 />
+        }
       default:
         return <DefaultContents />
     }

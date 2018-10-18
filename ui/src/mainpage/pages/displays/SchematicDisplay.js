@@ -1,0 +1,178 @@
+import React, {Component} from 'react';
+import { Stage, Layer, Rect } from 'react-konva';
+
+import {IMAGEHEIGHT, IMAGEWIDTH}  from '../../../Parameters.js';
+import Log          from '../../requests/Log.js';
+import Scm3WayValve from '../objects/Scm3WayValve.js';
+import ScmGauge     from '../objects/ScmGauge.js';
+import ScmPump      from '../objects/ScmPump.js';
+import ScmPipe      from '../objects/ScmPipe.js';
+import ScmRefUnit   from '../objects/ScmRefUnit.js';
+import ScmShip      from '../objects/ScmShip.js';
+import ScmTank      from '../objects/ScmTank.js';
+import ScmText      from '../objects/ScmText.js';
+import ScmValve     from '../objects/ScmValve.js';
+
+/*************************************************************************
+ * SchematicDisplay.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
+
+
+class SchematicDisplay extends Component {
+  constructor( props ) {
+    super(props);
+    this.state = {
+      stage: props.stage,
+      option: props.option,
+      updateData: false,
+      updateDisplay: true,
+      scm: props.schematic,
+      handleMouseup: props.handleMouseup
+    };
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    Log.info( "SchematicDisplay.willRcvProps: "
+               + ((nextProps.option===null)?"null":nextProps.option) );
+    this.setState({ option: nextProps.option,
+                    scm: nextProps.schematic,
+                    handleMouseup: nextProps.handleMouseup });
+  }
+  
+  render () {
+    let handleMouseup = this.state.handleMouseup;
+    let scm = this.state.scm;
+    let scoList = scm.childTags;
+ 
+    var n = new Date();
+    var now = n.toLocaleString('en-US');
+    Log.info("SchematicDisplay.generateList");
+    return(
+      <div>
+      <h2>
+        <div className={"oms-tags"}>
+           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>
+           Schematic {scm.name} - {now}
+        </div>
+      </h2>
+      <table className={"scrollTable"}>
+        <thead className={"fixedHeader"}>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
+                <Layer>
+                  <Rect height={IMAGEHEIGHT}
+                        width={IMAGEWIDTH}
+                        stroke={"red"}
+                        strokeWidth={1} />
+                 { scoList.map(
+                       function(n,z) {
+                         let x = n.c1Lat;
+                         let y = n.c1Long;
+                         let width = n.c2Lat - n.c1Lat;
+                         let height = n.c2Long - n.c1Long;
+                         let cv = (n.inpValue===undefined||n.inpValue===null?0:n.inpValue);
+                         let tx = cv.toFixed(2).toString();
+                         let mx = n.inpMax;
+                         let zero = n.inpZero;
+                         let color = n.inpAlmColor;
+                         switch( n.misc ) {
+                           case "3VB":
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
+                                                  value={cv} max={mx} zero={zero} fill={color} 
+                                                  orient={"bottom"} handleMouseup={handleMouseup}/>
+                           case "3VL":
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
+                                                  value={cv} max={mx} zero={zero} fill={color} 
+                                                  orient={"left"} handleMouseup={handleMouseup}/>
+                           case "3VR":
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
+                                                  value={cv} max={mx} zero={zero} fill={color} 
+                                                  orient={"right"} handleMouseup={handleMouseup}/>
+                           case "3VT":
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
+                                                  value={cv} max={mx} zero={zero} fill={color} 
+                                                  orient={"top"} handleMouseup={handleMouseup}/>
+                           case "G":
+                             return <ScmGauge key={z} x={x} y={y} width={width} height={height} 
+                                              value={cv} max={mx} zero={zero} fill={color}
+                                              handleMouseup={handleMouseup}/>
+                           case "PB":
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color} 
+                                             orient={"PB"} handleMouseup={handleMouseup} />
+                           case "PL":
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color}
+                                             orient={"PL"} handleMouseup={handleMouseup}/>
+                           case "PR":
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color}
+                                             orient={"PR"} handleMouseup={handleMouseup}/>
+                           case "PT":
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color} 
+                                             orient={"PT"} handleMouseup={handleMouseup} />
+                           case "P":
+                             return <ScmPipe key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color}
+                                             handleMouseup={handleMouseup} />
+                           case "RU":
+                             return <ScmRefUnit key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color}
+                                             handleMouseup={handleMouseup} />
+                           case "SH":
+                             return <ScmShip key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color}
+                                             handleMouseup={handleMouseup} />
+                           case "TK":
+                             return <ScmTank key={z} x={x} y={y} width={width} height={height}
+                                             value={cv} max={mx} zero={zero} fill={color} 
+                                             handleMouseup={handleMouseup}/>
+                           case "TX":
+                             return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx} 
+                                             strokeWidth={1} fontSize={14} fill={color}
+                                             handleMouseup={handleMouseup}/>
+                           case "VH":
+                             return <ScmValve key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color} 
+                                             orient={"horizontal"} handleMouseup={handleMouseup} />
+                           case "VV":
+                             return <ScmValve key={z} x={x} y={y} width={width} height={height} 
+                                             value={cv} max={mx} zero={zero} fill={color} 
+                                             orient={"vertical"} handleMouseup={handleMouseup} />
+                           default:
+                             return null
+                         } 
+                       } )
+                     }
+                </Layer>
+              </Stage>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      );
+  }
+}
+
+export default SchematicDisplay;

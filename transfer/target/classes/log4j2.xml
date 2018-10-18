@@ -9,7 +9,7 @@
         </Console>
         <RollingFile name="RollingFile">
             <FileName>${filename}</FileName>
-            <FilePattern>${env:OMS_LOGS}/transfer-%d{yyyy-MM-dd-hh-mm}.log.gz</FilePattern>
+            <FilePattern>${env:OMS_LOGS}/transfer-%d{yyyy-MM-dd-HH-mm}.log.gz</FilePattern>
             <PatternLayout>
                 <Pattern>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n</Pattern>
             </PatternLayout>

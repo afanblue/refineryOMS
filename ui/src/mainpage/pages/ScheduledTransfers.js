@@ -1,10 +1,30 @@
 import React, {Component} from 'react';
 import {SERVERROOT} from '../../Parameters.js';
+import Log          from '../requests/Log.js';
+
 import ScheduledTransferList from './lists/ScheduledTransferList.js';
 import DefaultContents from './DefaultContents.js';
 import TransferForm from './forms/TransferForm.js';
 import Waiting from './Waiting.js';
 import {Transfer} from './objects/Transfer.js';
+
+/*************************************************************************
+ * ScheduledTransfers.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 /*
@@ -17,7 +37,7 @@ import {Transfer} from './objects/Transfer.js';
 class ScheduledTransfers extends Component {
   constructor(props) {
     super(props);
-    console.log( "ScheduledTransfers: " + props.stage );
+    Log.info( "ScheduledTransfers: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -42,7 +62,7 @@ class ScheduledTransfers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "ScheduledTransfers.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "ScheduledTransfers.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -56,17 +76,17 @@ class ScheduledTransfers extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "ScheduledTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "ScheduledTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   handleTransferSelect(event) {
     let now = new Date();
-    console.log( "ScheduledTransfers.transferSelect " + now.toISOString() );
+    Log.info( "ScheduledTransfers.transferSelect " + now.toISOString() );
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     now = new Date();
-    console.log( "ScheduledTransfers.transferSelect - Request: " + myRequest );
+    Log.info( "ScheduledTransfers.transferSelect - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -90,7 +110,7 @@ class ScheduledTransfers extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting transfer id "+id+"\n"+error);
-       console.log("ScheduledTransfers.transferSelect: Error - " + error);  
+       Log.error("ScheduledTransfers.transferSelect: Error - " + error);  
     });
   }
 
@@ -126,7 +146,7 @@ class ScheduledTransfers extends Component {
     let doSubmit = this.validateForm(x);
     if( doSubmit ) {
       const id = this.state.transfer.id;
-      console.log("ScheduledTransfers.transferUpdate: (data) id="+id
+      Log.info("ScheduledTransfers.transferUpdate: (data) id="+id
                  +", name:"+this.state.transfer.name);
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
@@ -147,18 +167,18 @@ class ScheduledTransfers extends Component {
         .catch(function(error) { 
           alert("Problm "+(id===0?"inserting":"updating")+" transfer "
                +"id "+id+"\n"+error);
-          console.log("ScheduledTransfers.transferUpdate: Error - " + error);  
+          Log.error("ScheduledTransfers.transferUpdate: Error - " + error);  
       });
     }
   }
   
   componentDidMount() {
-    console.log( "ScheduledTransfers.didMount: " + this.state.stage );
+    Log.info( "ScheduledTransfers.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "ScheduledTransfers.didUpdate: " + this.state.stage );
+    Log.info( "ScheduledTransfers.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -183,10 +203,10 @@ class ScheduledTransfers extends Component {
   
  
   fetchList() {
-    console.log( "ScheduledTransfers.fetchList : " + this.state.stage );
+    Log.info( "ScheduledTransfers.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/transfer/scheduled";
     const now = new Date();
-    console.log( "ScheduledTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "ScheduledTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -197,7 +217,7 @@ class ScheduledTransfers extends Component {
             }
             throw new TypeError("ScheduledTransfers(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("ScheduledTransfers.fetchList: JSON retrieved - " + json);
+           Log.info("ScheduledTransfers.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -205,7 +225,7 @@ class ScheduledTransfers extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving transfer list\n"+e);
            const emsg = "ScheduledTransfers.fetchList: Fetching transfer list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -221,7 +241,7 @@ class ScheduledTransfers extends Component {
   }
 
   render() {
-    console.log("ScheduledTransfers (render) - stage: "+this.state.stage);
+    Log.info("ScheduledTransfers (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

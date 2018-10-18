@@ -2,6 +2,24 @@ import React, {Component} from 'react';
 import { Stage, Layer, Arc, Line, Circle, Ellipse, Text } from 'react-konva';
 import Konva from 'konva';
 
+/*************************************************************************
+ * LoginDisplay.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 
 function Radius(xp,yp) { this.x=xp; this.y=yp; }
@@ -56,6 +74,7 @@ class OmsEllipse extends React.Component {
  * 10   106, 75        90, 192   OK
  */
 
+/* p1 is the "vertical" ellipse; p2 is the horizontal ellipse */
 class LoginDisplay extends Component {
   constructor( props ) {
     super(props);
@@ -68,10 +87,11 @@ class LoginDisplay extends Component {
       next: 0
     };
     this.interval = setInterval(this.updateScreen.bind(this),500);
+    //            1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40
     this.p1x = [ 71, 74, 77, 81, 84, 89, 95,100,106,115,125,136,155,169,173,174,175,173,172,170, -3, -3, -3, -3, -3,145,141,133,127,120,113,101, 80, 70, 67, 66, 66, 66, 68, 69];
     this.p1y = [195,180,165,150,135,120,105, 89, 74, 58, 43, 28, 15, 30, 45, 60, 75, 90,105,120,135,140,165,180,195,210,225,240,255,267,280,292,305,295,285,270,255,240,225,205];
     this.p2x = [240,225,210,195,180,165,150,135,120,105, 90, 75, 60, 45, 30, 45, 60, 75, 90,105,120,135,150,165,180,195,210,225,240,255,270,292,316,323,331,315,300,285,270,255];
-    this.p2y = [196,197,199,199,199,199,199,198,196,194,192,189,185,179,160,142,136,131,128,126,124,122,120,120,120,120,121,123,124,126,128,136,144,150,160,177,184,188,193,195];
+    this.p2y = [196,197,199,199,199,199,199,198,196,194,192,189,185,179,160,142,136,131,128,126,124,122,120,120,120,120,121,123,124,126,128,134,144,149,160,177,184,188,193,195];
   }
   
   componentWillUnmount() {

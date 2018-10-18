@@ -54,7 +54,7 @@
      <result property="lastHistValue"   column="last_hist_value"/>
      <result property="lastHistTime"    column="last_hist_time"/>
      <result property="valueView"       column="value_view"/>
-     <result property="simValue"        column="integer_value"/>
+     <result property="simValue"        column="sim_value"/>
      <result property="updated"         column="updated" />
   </resultMap>
   
@@ -66,12 +66,24 @@
     <result property="tagTypeInfo"   column="tag_type_info" />
     <result property="active"        column="active" />    
   </resultMap>
+  
+  <resultMap id="aiValueMap" type="AIValue" >
+    <result property="tagId"       column="id" />
+    <result property="name"        column="name" />
+    <result property="value"       column="value" />
+    <result property="valueText"   column="value_text" />
+    <result property="scanTime"    column="scan_time" />
+    <result property="alarmCode"   column="code" />
+    <result property="alarmColor"  column="color" /> 
+  </resultMap>
+  
 
   <select id="getAllActiveDItags" resultMap="digitalInputResultMap">
     select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
          , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
          , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
-         , di.last_hist_time, x.integer_value, x.updated
+         , di.last_hist_time, coalesce(x.float_value,0) sim_value
+         , x.updated
       from digital_input di join tag t on di.tag_id = t.id
            join xfer x on t.id = x.id
      where t.active = 'Y'
@@ -82,7 +94,8 @@
     select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
          , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
          , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
-         , di.last_hist_time, x.integer_value, x.updated
+         , di.last_hist_time, coalesce(x.float_value,0) sim_value
+         , x.updated, x.scan_time
       from digital_input di join tag t on di.tag_id = t.id
            join xfer x on t.id = x.id
      where t.active = 'Y'
@@ -122,18 +135,44 @@
       from history_type_vw
      order by code
   </select>
+  
+  <select id="getProcUnitValues" resultMap="aiValueMap">
+    select rtt.id, tp.id, tc.id, tc.name, di.scan_value value, vv.name value_text
+         , di.scan_time, coalesce(alm.code,'NORM') code, ac.item_value color
+      from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id 
+      join tag tc on rtt.child_tag_id = tc.id 
+      join digital_input di on di.tag_id = tc.id 
+      <choose>
+        <when test="value_view = 'off_on_vw' ">
+          join off_on_vw vv on coalesce(di.scan_value,0) = value
+        </when>
+        <when test="value_view = 'on_off_vw' ">
+          join on_off_vw vv on coalesce(di.scan_value,0) = value
+        </when>
+        <when test="value_view = 'tf_vw' ">
+          join tf_vw vv on coalesce(di.scan_value,0) = value
+        </when>
+        <otherwise>
+          join off_on_vw vv on coalesce(di.scan_value,0) = value
+        </otherwise>
+      </choose>
+      left outer join alarm_info alm on di.tag_id = alm.tag_id  
+      left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name 
+     where tp.name = #{parm1}
+     order by name
+  </select>
 
   <update id="updateDigitalInput" parameterType="DigitalInput">
     update digital_input
-       set scan_int = #{scanInt}
-         , scan_offset = #{scanOffset}
-         , hist_type_code = #{histTypeCode}
-         , alarm_state = #{alarmState}
-         , alarm_code = #{alarmCode}
-         , value_view = #{valueView}
+       set scan_value = #{scanValue}
+         , scan_time = #{scanTime}
+         , last_hist_time = #{lastHistTime}
+         , last_hist_value = #{lastHistValue}
+         , prev_value = #{prevValue}
+         , prev_scan_time = #{prevScanTime}
      where tag_id = #{tagId}
   </update>
-      
+  
   <update id="updateDigitalInputStatic" parameterType="DigitalInput">
     update digital_input
        set scan_int = #{scanInt}

@@ -1,23 +1,41 @@
 import React, {Component} from 'react';
 //import {Stage, Layer} from 'react-konva';
+import Log         from '../../requests/Log.js';
 
 //import SiteImage from '../SiteImage.js';
 //import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 
+/*************************************************************************
+ * AOForm.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 class AOForm extends Component {
   constructor(props) {
     super(props);
-    console.log( "AOForm: " + props.stage );
+    Log.info( "AOForm: " + props.stage );
     this.state = {  };
   }
 
   render() {
     const ao = this.props.ao;
-    const aoData = this.props.aoData;
-    const histTypes = aoData.histTypes;
-    const unitList = aoData.unitList;
-    const aoUpdate = this.props.aoUpdate;
+    const histTypes = this.props.histTypes;
+    const unitList  = this.props.unitList;
+//    const siteLoc   = this.props.siteLoc;
+    const aoUpdate  = this.props.aoUpdate;
     const fieldChange = this.props.fieldChange;
     const handleQuit = this.props.handleQuit;
     return(

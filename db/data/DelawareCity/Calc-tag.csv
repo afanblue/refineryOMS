@@ -1,0 +1,12 @@
+Table,tag,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Data,,,
+name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
+CV-0001,Current Temp degrees F,C,,,,,,Y
+Com011-CV,,C,,,,,,Y
+Com012-CV,,C,,,,,,Y
+Com013-CV,,C,,,,,,Y
+Com021-CV,,C,,,,,,Y
+Com023-CV,,C,,,,,,Y
+Com022-CV,,C,,,,,,Y
+End

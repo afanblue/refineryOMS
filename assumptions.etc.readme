@@ -38,11 +38,12 @@ Each ship berth (slip, type code SB) has 4 pumps.  When a ship docks, the
 simulator creates a transfer for each hold in the ship, up to 4.  There are 
 two ship berths in the DE City refinery.
 
-Each pump has associated w/it 3 variables.  
+Each pump has associated w/it 4 variables.  
 From the perspective of the system: 
 - a digital output which allows the system to turn the pump on and off
 - a digital input which allows the system to know what state the pump is in.
-- a analog output which allows the system to set the speed of the pump.
+- an analog output which allows the system to set the speed of the pump.
+- an analog input which allows the system to know what the speed of the pump is.
 
 Each tank has 2 variables.  In reality, a tank would probably have more; what
 they are is beyond the scope of this (and my explicit knowledge).  Besides, this 
@@ -72,10 +73,7 @@ CalculatedVariables
     Code: C
     Description: Computed Variables
     Explanation: Analog and Digital Inputs that are defined by a combination of
-        values, i.e., sum, product, logical and, etc.  These variables are 
-        defined by a list of tags in the REL_TAG_TAG table.  The first child tag
-        in the list is the output tag; the remaining child tags are the input
-        tags whose values are used in the computation.  
+        values, i.e., sum, product, logical and, etc.
 ControlBlock
 	Code: CB
 	Description: Field control device
@@ -139,7 +137,7 @@ RefineryUnit
 		sending the products of the refining to the storage tanks prior to 
 		shipment.
 Schematic
-    Code: SCHM
+    Code: SCM
     Description: Schematic
     Explanation: Used to display in "real-time" (as envisioned: refreshed every 
         minute) the status of various elements in the fields.  This is different
@@ -194,7 +192,6 @@ Transfer
 	Explanation: There are two types of transfers a template and an
 		executable transfer.  The template allows the user to define
 		an automatically restartable transfer to eliminate user action
-		when a transfer completes.  I'm still not sure how I want to 
-		do that though.
+		when a transfer completes.  
 
 

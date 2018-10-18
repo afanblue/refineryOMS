@@ -1,12 +1,31 @@
 import React, {Component} from 'react';
 //import { Stage, Layer, Text } from 'react-konva';
 
+import Log        from '../../requests/Log.js';
+
 //import {SERVERROOT}  from '../../Parameters.js';
-import {AIValue}     from '../objects/AIValue.js';
+import {AIValue}  from '../objects/AIValue.js';
+import {IL3}      from '../objects/ListObjects.js';
+
+/*************************************************************************
+ * ProcessUnitDisplay.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
-function IL3(i1,i2,i3) {this.i1=i1; this.i2=i2; this.i3=i3;}
-  
 
 class ProcessUnitDisplay extends Component {
   constructor( props ) {
@@ -22,7 +41,7 @@ class ProcessUnitDisplay extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log( "ProcessUnitDisplay.willRcvProps: "
+    Log.info( "ProcessUnitDisplay.willRcvProps: "
                + ((nextProps.option===null)?"null":nextProps.option) );
     this.setState({ option: nextProps.option,
                     items: nextProps.items,
@@ -34,9 +53,9 @@ class ProcessUnitDisplay extends Component {
     let it = this.state.items;
     let puColumns = [];
     it.forEach((i,x) => {
-//      console.log("forEach loop: x="+x);
+//      Log.info("forEach loop: x="+x);
       if( !((x+1) % 3) ) {
-//        console.log("forEachLoop inner: x="+x);
+//        Log.info("forEachLoop inner: x="+x);
         let it0 = it[x-2];
         let it1 = it[x-1];
         let it2 = it[x];
@@ -49,7 +68,7 @@ class ProcessUnitDisplay extends Component {
     });
     const dl = it.length;
     const rem = dl%3;
-//    console.log("Remainder "+dl%3+" processing");
+//    Log.info("Remainder "+dl%3+" processing");
     if( rem > 0 ) {
       let AIV2 = new AIValue(0,"",null,"",null,"NORM","green");
       let AIV1 = new AIValue(0,"",null,"",null,"NORM","green");
@@ -67,7 +86,7 @@ class ProcessUnitDisplay extends Component {
  
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    console.log("ProcessUnitDisplay.generateList");
+    Log.info("ProcessUnitDisplay.generateList");
     return(
       <div>
       <h2>
@@ -79,22 +98,28 @@ class ProcessUnitDisplay extends Component {
       <table className={"scrollTable"}>
         <thead className={"fixedHeader"}>
           <tr>
-	        <td className={"oms-spacing-180"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="10px"/>
+	        <td className={"oms-spacing-120"}>
+	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
 	          Tag
-	          <img src="./images/spacer.png" alt="space" height="1px" width="45px"/>
+	        </td>
+	        <td className={"oms-spacing-90"}>
+	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
 	          Value
 	        </td>
-	        <td className={"oms-spacing-180"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="10px"/>
+	        <td className={"oms-spacing-120"}>
+	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
 	          Tag
-	          <img src="./images/spacer.png" alt="space" height="1px" width="45px"/>
+	        </td>
+	        <td className={"oms-spacing-90"}>
+	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
 	          Value
 	        </td>
-            <td className={"oms-spacing-180"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="10px"/>
+            <td className={"oms-spacing-120"}>
+	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
 	          Tag
-	          <img src="./images/spacer.png" alt="space" height="1px" width="45px"/>
+	        </td>
+	        <td className={"oms-spacing-90"}>
+	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
 	          Value
             </td>
           </tr>
@@ -102,6 +127,7 @@ class ProcessUnitDisplay extends Component {
         <tbody className={"scrollContent"}>
           {puColumns.map( 
             function(n,x) {
+              let ztc = "#C3C2B9";
               let zx1 = n.i1;
               const z1 = zx1.id;
               let zx1c = zx1.color;
@@ -113,23 +139,34 @@ class ProcessUnitDisplay extends Component {
               let zx3c = zx3.color;
               return (
                 <tr key={x}>
-                  <td className={"oms-spacing-180"}>
+                  <td className={"oms-spacing-120"}>
                     <a className={"oms-menu-text"} 
                        id={z1} onClick={() => {itemSelect({z1})}} >
-                      <div style={{"color":zx1c}}>{zx1.name}&nbsp;&nbsp;&nbsp;&nbsp;{zx1.valueText}</div>
+                      <div style={{"color":ztc}}>{zx1.name}</div>
                     </a>
                   </td>
-                  <td className={"oms-spacing-180"}>
+                  <td className={"oms-spacing-90"}>
+                    <div style={{"color":zx1c}}>{zx1.valueText}</div>
+                  </td>
+                  <td className={"oms-spacing-120"}>
                     <a className={"oms-menu-text"} 
                        id={z2} onClick={() => {itemSelect({z2})}} >
-                      <div style={{"color":zx2c}}>{zx2.name}&nbsp;&nbsp;&nbsp;&nbsp;{zx2.valueText}</div>
+                      <div style={{"color":ztc}}>{zx2.name}</div>
                     </a>
                   </td>
-                  <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"}
-                       id={z3} onClick={() => {itemSelect({z3})}} >
-                      <div style={{"color":zx3c}}>{zx3.name}&nbsp;&nbsp;&nbsp;&nbsp;{zx3.valueText}</div>
-                    </a>
+                  <td className={"oms-spacing-90"}>
+                    <div style={{"color":zx2c}}>{zx2.valueText}</div>
+                  </td>
+                  <td className={"oms-spacing-120"}>
+
+                      <a className={"oms-menu-text"}
+                         id={z3} onClick={() => {itemSelect({z3})}} >
+                        {zx3.name}
+                      </a>
+                  </td>
+                  <td className={"oms-spacing-90"}>
+                      <div style={{"color":zx3c}}>{zx3.valueText}</div>
+
                   </td>
                 </tr>
               )

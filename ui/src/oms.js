@@ -3,14 +3,34 @@ import React, { Component } from 'react';
 
 import './reset.css';
 import './oms.css';
+
+import Log          from './mainpage/requests/Log.js';
 import ClassificationMenu from './frames/ClassificationMenu.js';
-import Header from './frames/Header.js';
-import MenuList from './frames/MenuList.js';
+import Header       from './frames/Header.js';
+import MenuList     from './frames/MenuList.js';
 import LoginDisplay from './mainpage/LoginDisplay.js';
 import { SESSIONLENGTH, RESPONSENOTJSON } from './Parameters.js';
-import Contents from './mainpage/Contents.js';
-require('es6-promise').polyfill();
+import Contents     from './mainpage/Contents.js';
+//require('es6-promise').polyfill();
 require('isomorphic-fetch');
+
+/*************************************************************************
+ * oms.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 function AppDisplay(props) {
@@ -102,7 +122,7 @@ class OMS extends Component {
 
 /*
   shouldComponentUpdate(nextProps,nextState) {
-    console.log( "OMS (shouldUpdate)" + nextState.activity );
+    Log.info( "OMS (shouldUpdate)" + nextState.activity );
     return true;
   }
 */
@@ -126,19 +146,19 @@ class OMS extends Component {
     const myRequest="http://localhost:8080/oms/user/"+this.state.alias+"/"+this.state.pwd;
     const alias=this.state.alias;
     const now = new Date();
-    console.log( "OMS (handleLogin) " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "OMS (handleLogin) " + now.toISOString() + " Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
         var contentType = response.headers.get("Content-Type");
-//        console.log("Content type "+contentType);
+//        Log.info("Content type "+contentType);
         if(contentType && contentType.includes("application/json")) {
           return response.json();
         }
         throw new TypeError("UserValidation: "+RESPONSENOTJSON);
     }).then(json => {
        if( json.valid === 1 ) {
-         console.log("OMS (handleLogin): User validated");
+         Log.info("OMS (handleLogin): User validated");
          var vx = new Validation( false, null, null );
          var classes = [];
          var menuList = [];
@@ -157,7 +177,7 @@ class OMS extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem logging in \n"+error);
-       console.log("OMS (handleLogin): Validating user (" + alias + ") " + error);  
+       Log.error("OMS (handleLogin): Validating user (" + alias + ") " + error);  
     });
   }
 
@@ -183,7 +203,7 @@ class OMS extends Component {
   }
 
   render() {
-    console.log( "OMS (render) " + this.state.selected + ":" + this.state.option );
+    Log.info( "OMS (render) " + this.state.selected + ":" + this.state.option );
     let footer='Copyright 2014-'+((new Date()).getFullYear())+', Lobo Azul Software';
     let un = this.state.alias;
     let header=(un!=null&&un!=="")?'OMS ('+un+')':'OMS';

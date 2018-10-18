@@ -1,27 +1,50 @@
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import UserList from './lists/UserList.js';
-import UserForm from './forms/UserForm.js';
+import {SERVERROOT}    from '../../Parameters.js';
+import UserList        from './lists/UserList.js';
+import UserForm        from './forms/UserForm.js';
 import DefaultContents from './DefaultContents.js';
-import Waiting from './Waiting.js';
-import {User} from './objects/User.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {User}          from './objects/User.js';
+
+/*************************************************************************
+ * UserAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
 class UserAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "UserAdmin: " + props.stage );
+    Log.info( "UserAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
+      roles: null,
       user: null
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleUserSelect = this.handleUserSelect.bind(this);
     this.handleUserUpdate = this.handleUserUpdate.bind(this);
+    this.finishUserFetch  = this.finishUserFetch.bind(this);
+    this.finishRolesFetch = this.finishRolesFetch.bind(this);
     this.handleQuit       = this.handleQuit.bind(this);
   }
   
@@ -33,7 +56,7 @@ class UserAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "UserAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "UserAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -47,18 +70,45 @@ class UserAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "UserAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "UserAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
-
+/* */
+  finishUserFetch( req ) {
+    let ud = req;
+    const u = new User(ud.id,ud.alias,ud.firstName,ud.middleName,ud.lastName,ud.email
+                      ,ud.password,ud.state,ud.status,ud.roleId);
+    this.setState({stage: "userRetrieved", updateDisplay: true, user: u });
+  }
+  
+  finishRolesFetch(req) {
+    let roles = req;
+    this.setState({stage: "userRetrieved", updateDisplay: true, roles: roles });
+                      
+  }
+  
+  handleUserSelect(event) {
+    const id = event.z;
+    const loc = "UserAdmin.userSelect";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/user/" + id,
+                            "Problem selecting user id "+id, this.finishUserFetch);
+    req0.fetchData();
+    let req1 = new OMSRequest(loc, SERVERROOT + "/role/all",
+                            "Problem retrieving roles", this.finishRolesFetch);
+    req1.fetchData();
+//    Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
+//    Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
+  }
+/* */
+/*
   handleUserSelect(event) {
     let now = new Date();
-    console.log( "UserAdmin.userSelect " + now.toISOString() );
+    Log.info( "UserAdmin.userSelect " + now.toISOString() );
     const id = event.z;
     const myRequest=SERVERROOT + "/user/" + id;
     now = new Date();
-    console.log( "UserAdmin.userSelect - Request: " + myRequest );
+    Log.info( "UserAdmin.userSelect - Request: " + myRequest );
     fetch(myRequest)
       .then(this.handleErrors)
       .then(response => {
@@ -79,15 +129,16 @@ class UserAdmin extends Component {
                      });
     }).catch(function(error) { 
        alert("Problem selecting user id "+id+"\n"+error);
-       console.log("UserAdmin.userSelect: Error - " + error);  
+       Log.error("UserAdmin.userSelect: Error - " + error);  
     });
   }
+*/
 
   handleUserUpdate(event) {
     event.preventDefault();
-//    console.log("UserAdmin.handleUpdate: "+event);
+//    Log.info("UserAdmin.handleUpdate: "+event);
     const id = this.state.user.id;
-    console.log("UserAdmin.userUpdate: id="+id
+    Log.info("UserAdmin.userUpdate: id="+id
                +", alias:"+this.state.alias);
     let method = "PUT";
     let url = "http://localhost:8080/oms/user/update";
@@ -104,17 +155,17 @@ class UserAdmin extends Component {
       .catch(function(error) { 
         alert("Problem "+(id===0?"inserting":"updating")+" user "
              +"id "+id+"\n"+error);
-        console.log("UserAdmin.userUpdate: Error - " + error);  
+        Log.error("UserAdmin.userUpdate: Error - " + error);  
     });
   }
 
   componentDidMount() {
-    console.log( "UserAdmin.didMount: " + this.state.stage );
+    Log.info( "UserAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "UserAdmin.didUpdate: " + this.state.stage );
+    Log.info( "UserAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -126,14 +177,16 @@ class UserAdmin extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    this.setState({[name]: value, activity:"userInput" } );
+    let unew = Object.assign({},this.state.user);
+    unew[name] = value;
+    this.setState({user:unew, activity:"userInput" } );
   }
   
   fetchList() {
-    console.log( "UserAdmin.fetchList : " + this.state.stage );
+    Log.info( "UserAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/user/all";
     const now = new Date();
-    console.log( "UserAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "UserAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -144,7 +197,7 @@ class UserAdmin extends Component {
             }
             throw new TypeError("UserAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("UserAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("UserAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -152,7 +205,7 @@ class UserAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving user list\n"+e);
            const emsg = "UserAdmin.fetchList: Fetching user list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -167,20 +220,23 @@ class UserAdmin extends Component {
   }
   
   render() {
-    console.log("UserAdmin.render - stage: "+this.state.stage);
+    Log.info("UserAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
       case "dataFetched":
         return <UserList returnedText = {this.state.returnedText}
                          userSelect = {this.handleUserSelect} />
-      case "itemRetrieved":
-        return <UserForm returnedText = {this.state.returnedText}
-                         user         = {this.state.user}
-                         userUpdate   = {this.handleUserUpdate}
-                         fieldChange  = {this.handleFieldChange}
-                         handleQuit   = {this.handleQuit}
-               />
+      case "userRetrieved":
+        if( (this.state.user === null) || (this.state.roles === null) ) {
+          return <Waiting />
+        } else {
+          return <UserForm roles        = {this.state.roles}
+                           user         = {this.state.user}
+                           userUpdate   = {this.handleUserUpdate}
+                           fieldChange  = {this.handleFieldChange}
+                           handleQuit   = {this.handleQuit} />
+        }
       default:
         return <DefaultContents />
     }

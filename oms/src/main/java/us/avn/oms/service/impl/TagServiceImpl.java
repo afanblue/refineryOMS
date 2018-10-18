@@ -1,13 +1,33 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import us.avn.oms.domain.ChildValue;
 import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Tag;
+import us.avn.oms.domain.TagType;
 import us.avn.oms.domain.Taglet;
 import us.avn.oms.mapper.TagMapper;
 import us.avn.oms.service.TagService;
@@ -16,6 +36,7 @@ public class TagServiceImpl implements TagService {
 
 
 	private TagMapper tagMapper;
+	private Logger log = LogManager.getLogger(this.getClass().getName());
 	
 	public void setTagMapper( TagMapper tm ) {
 		this.tagMapper = tm;
@@ -47,8 +68,8 @@ public class TagServiceImpl implements TagService {
 	}
 	
 	@Override
-	public Tag getTagByName( String name ) {
-		return tagMapper.getTagByName( name );
+	public Tag getTagByName( String name, String tagType ) {
+		return tagMapper.getTagByName( name, tagType );
 	}
 	
 	@Override
@@ -71,13 +92,23 @@ public class TagServiceImpl implements TagService {
 	}
 	
 	@Override
+	public Collection<TagType> getSchematicObjectTypes( ) {
+		return tagMapper.getSchematicObjectTypes();
+	}
+	
+	@Override
+	public Collection<ChildValue> getSCMChildValues( Long id) {
+		return tagMapper.getSCMChildValues(id);
+	}
+	
+	@Override
 	public void updateTag( Tag t ) {
 		tagMapper.updateTag( t );
 	}
 
 	@Override
 	public void updateRelationship( RelTagTag rtt ) {
-		if( rtt.getId() == 0) {
+		if( (new Long(0L)).equals(rtt.getId()) ) {
 			tagMapper.insertRelationship(rtt);
 		} else {
 			tagMapper.updateRelationship(rtt);
@@ -86,16 +117,19 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Long insertTag( Tag t ) {
-		return tagMapper.insertTag(t);
+		tagMapper.insertTag(t);
+		log.debug(t);
+		return t.getId();
 	}
 	
 	@Override
 	public Long insertRelationship( RelTagTag rtt ) {
-		if( rtt.getId() != 0 ) {
-			tagMapper.updateRelationship(rtt);
-			return rtt.getId();
+		if( (new Long(0L)).equals(rtt.getId()) ) {
+			tagMapper.insertRelationship(rtt);
+			return 1L;
 		}
-		return tagMapper.insertRelationship(rtt);
+		tagMapper.updateRelationship(rtt);
+		return 1L;
 	}
-
+	
 }

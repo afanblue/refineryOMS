@@ -1,12 +1,31 @@
 import React, {Component} from 'react';
 import {AnalogOutput} from '../objects/AO.js';
-import {Tag} from '../objects/Tag.js';
+import Log    from '../../requests/Log.js';
+import {Tag}  from '../objects/Tag.js';
+
+/*************************************************************************
+ * AOList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class AOList extends Component {
   constructor(props) {
     super(props);
-    console.log( "AOList: " + props.stage );
+    Log.info( "AOList: " + props.stage );
     this.state = {  };
   }
 
@@ -14,15 +33,15 @@ class AOList extends Component {
     var json = this.props.aoData;
     var aoSelect = this.props.aoSelect;
     var aoList = [];
-    var t0 = new Tag(0,'Create new tag',null,'AO',null,null,null,null,null,'Y');
+    var t0 = new Tag(0,'Create new tag',null,'AO',null,null,null,null,null,null,'Y');
     var ao0 = new AnalogOutput(0,t0,null,null ,null,null,null,null,null ,null,null,null,null,null);
     aoList.push(ao0);
     json.map(function(n,x){
-        var t = new Tag(n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,n.tag.tagTypeId
-                       ,n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long,n.tag.active);
-        var ao = new AnalogOutput(n.tagId,t,n.zeroValue,n.maxValue
-                                 ,n.histTypeCode,n.percent,n.slope,n.scanValue,n.scanTime
-                                 ,n.prevValue,n.prevTime,n.lastHistValue,n.lastHistTime,n.unitId);
+        var t = new Tag( n.id, n.tag.name, n.tag.description, n.tag.tagTypeCode, n.tag.tagTypeId
+                       , n.tag.misc, n.tag.c1Lat, n.tag.c1Long, n.tag.c2Lat, n.tag.c2Long, n.tag.active);
+        var ao = new AnalogOutput( n.tagId, t, n.zeroValue, n.maxValue
+                                 , n.histTypeCode, n.percent, n.slope, n.scanValue, n.scanTime
+                                 , n.prevValue, n.prevTime, n.lastHistValue, n.lastHistTime, n.unitId);
         return aoList.push( ao ); } );
     return ( 
       <div className="oms-tabs">

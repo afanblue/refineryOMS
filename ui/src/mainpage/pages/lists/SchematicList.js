@@ -1,29 +1,46 @@
 import React, {Component} from 'react';
+import Log         from '../../requests/Log.js';
 import {Schematic} from '../objects/Schematic.js';
+
+/*************************************************************************
+ * SchematicList.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 class SchematicList extends Component {
   constructor(props) {
     super(props);
-    console.log( "SchematicList: " + props.stage );
+    Log.info( "SchematicList: constructor" );
     this.state = {  };
   }
 
   render() {
-    var json = this.props.transferData;
-    var transferSelect = this.props.transferSelect;
-    var transferList = [];
-    var z = new Schematic( 0, "New Schematic", 0, "", 0, "", 0, "", 0, ""
-                        , null, null, null, null, null, null, null, null,0 );
-    transferList.push(z);
-    json.map(function(ud,x){
-        var xf = new Schematic(ud.id, ud.name, ud.statusId, ud.status
-                             ,ud.transferTypeId, ud.transferType
-                             ,ud.sourceId, ud.source,ud.destinationId, ud.destination
-                             ,ud.expStartTime, ud.expEndTime, ud.expVolume
-                             ,ud.actStartTime, ud.actEndTime, ud.actVolume,ud.delta); 
-        return transferList.push( xf ); 
-      } );
+    var json = this.props.schematicData;
+    var schematicSelect = this.props.schematicSelect;
+    var schematicList = [];
+    var z = new Schematic( 0, "New Schematic", "", "N", "SCM", 0, null, null, null, null, null, null );
+    schematicList.push(z);
+    if( json.length !== 0 ) {
+      json.map(function(ud,x){
+          var xf = new Schematic( ud.id, ud.name, ud.description, ud.active, ud.tagTypeCode, ud.tagTypeId
+                                , ud.misc, ud.c1Lat, ud.c1Long, ud.c2Lat, ud.c2Long, ud.childTags); 
+          return schematicList.push( xf ); 
+        } );
+    }
     return ( 
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="space" width="50px" 
@@ -32,30 +49,22 @@ class SchematicList extends Component {
           <thead className="fixedHeader">
             <tr>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> Name </th>
-              <th className={["oms-spacing-50","oms-underline"].join(' ')}> Status </th>
-              <th className={["oms-spacing-90","oms-underline"].join(' ')}> Type </th>
-              <th className={["oms-spacing-90","oms-underline"].join(' ')}> Source </th>
-              <th className={["oms-spacing-90","oms-underline"].join(' ')}> Destination </th>
-              <th className={["oms-spacing-150","oms-underline"].join(' ')}> Exp Start </th>
-              <th className={["oms-spacing-80","oms-underline"].join(' ')}> Exp Volume </th>
+              <th className={["oms-spacing-240","oms-underline"].join(' ')}> Description </th>
+              <th className={["oms-spacing-80","oms-underline"].join(' ')}> Active </th>
             </tr>
           </thead>
           <tbody className="scrollContent">
-          {transferList.map(
+          {schematicList.map(
             function(n,x){
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {transferSelect({z})}} >
+                         <a id={z} onClick={() => {schematicSelect({z})}} >
                            {n.name}
                          </a>
                        </td>
-                       <td className="oms-spacing-50">{n.status}</td>
-                       <td className="oms-spacing-90">{n.transferType}</td>
-                       <td className="oms-spacing-90">{n.source}</td>
-                       <td className="oms-spacing-90">{n.destination}</td>
-                       <td className="oms-spacing-150">{n.expStartTime}</td>
-                       <td className="oms-spacing-80">{n.expVolume} </td>
+                       <td className={["oms-spacing-240","oms-cursor-pointer"].join(' ')}>{n.description}</td>
+                       <td className={["oms-spacing-80","oms-cursor-pointer"].join(' ')}>{n.active}</td>
                      </tr>; 
             } )
           }

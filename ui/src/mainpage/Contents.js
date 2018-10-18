@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 //import logo from './logo.svg';
+import Log                from './requests/Log.js';
+
 import ActiveAlarms       from './pages/ActiveAlarms.js';
 import ActiveTransfers    from './pages/ActiveTransfers.js';
 import AdHoc              from './pages/AdHoc.js';
@@ -12,18 +14,20 @@ import ConfigAdmin        from './pages/ConfigAdmin.js';
 import ControlBlockAdmin  from './pages/ControlBlockAdmin.js';
 import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
+import DigitalOutputAdmin from './pages/DigitalOutputAdmin.js';
 import FieldAdmin         from './pages/FieldAdmin.js';
 import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
 import Last7DaysTransfers from './pages/Last7DaysTransfers.js';
 import ListSchematics     from './pages/ListSchematics.js';
-import PlotGroup          from './pages/PlotGroup.js';
+import PlotGroupVars      from './pages/PlotGroupVars.js';
 import PlotGroupAdmin     from './pages/PlotGroupAdmin.js';
 import ProcessUnit        from './pages/ProcessUnit.js';
 import ProcessUnitAdmin   from './pages/ProcessUnitAdmin.js';
 import ProcessUnitList    from './pages/ProcessUnitList.js';
 import RoleAdmin          from './pages/RoleAdmin.js';
 import ScheduledTransfers from './pages/ScheduledTransfers.js';
+import Schematic          from './pages/Schematic.js';
 import SchematicAdmin     from './pages/SchematicAdmin.js';
 import SiteOverview       from './pages/SiteOverview.js';
 import SiteStar           from './pages/SiteStar.js';
@@ -31,12 +35,31 @@ import TankAdmin          from './pages/TankAdmin.js';
 import TransferAdmin      from './pages/TransferAdmin.js';
 import UserAdmin          from './pages/UserAdmin.js';
 import VesselAdmin        from './pages/VesselAdmin.js';
-require('es6-promise').polyfill();
+//require('es6-promise').polyfill();
 require('isomorphic-fetch');
+
+/*************************************************************************
+ * Contents.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
+
 
 
 function fetchContents( category, option, stage, jsonData, menuSelect ) {
-  console.log("Contents.fetchContents: category: "+category+", option="+option+", stage="+stage);
+  Log.info("Contents.fetchContents: category: "+category+", option="+option+", stage="+stage);
   switch ( category ) {
     case "Admin":
       option = (((option==="")||(option===null))?"Users":option);
@@ -55,6 +78,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <ControlBlockAdmin stage={stage} />
         case "DigitalInputs":
           return <DigitalInputAdmin stage={stage} />
+        case "DigitalOutputs":
+          return <DigitalOutputAdmin stage={stage} />
         case "Fields":
           return <FieldAdmin stage={stage} />
         case "ProcessUnits":
@@ -109,8 +134,9 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           if( typeof option === 'string' ) {
             return <DefaultContents />
           } else {
-            return <PlotGroup stage={stage}
-                              id={option} />
+            return <PlotGroupVars stage={stage}
+                              id={option}
+                              source={"id"} />
           }    
       }
     case "ProcessUnits" :
@@ -126,12 +152,13 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
     case "Schematics" :
       option = (((option==="")||(option===null))?"ListSchematics":option);
       switch ( option ) {
-        case "ManageSchematics":
+        case "AdminSchematics":
           return <SchematicAdmin stage={stage} />
         case "ListSchematics":
-          return <ListSchematics stage={stage} />        
+          return <ListSchematics stage={stage}
+                                 menuSelect={menuSelect} />
         default:
-          return <DefaultContents />
+          return <Schematic stage={stage} option={option} />
       }
     case "Transfers" :
       option = (((option==="")||(option===null))?"ActiveTransfers":option);
@@ -160,7 +187,7 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
 class Contents extends Component {
   constructor(props) {
     super(props);
-    console.log( "Contents: " + props.selected + ":" + props.option + "/" + props.stage );
+    Log.info( "Contents: " + props.selected + ":" + props.option + "/" + props.stage );
     this.state = {
       categorySelected: props.selected,
       pageSelected: props.option,
@@ -173,7 +200,7 @@ class Contents extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log( "Contents.willRcvProps: " + nextProps.selected +"=?"+this.state.categorySelected
+    Log.info( "Contents.willRcvProps: " + nextProps.selected +"=?"+this.state.categorySelected
                + ":" + nextProps.page + "=?" + this.state.pageSelected + " -- " 
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
@@ -190,20 +217,20 @@ class Contents extends Component {
   }
 
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "Contents.didUpdate: updated? " + (this.state.updated?"T":"F") );
+    Log.info( "Contents.didUpdate: updated? " + (this.state.updated?"T":"F") );
   }
 
   shouldComponentUpdate(nextProps,nextState) {
-    console.log( "Contents.shouldUpdate: " + nextProps.selected + ":" 
+    Log.info( "Contents.shouldUpdate: " + nextProps.selected + ":" 
                + nextProps.option + "/" + nextState.stage
                + " - " + (nextState.updateDisplay?"T":"F") );
-    console.log( "Contents.shouldUpdate: " 
+    Log.info( "Contents.shouldUpdate: " 
                + this.state.categorySelected + "/" + nextState.categorySelected + ":" 
                + this.state.pageSelected + "/" + nextState.pageSelected );
     let sts = this.state.categorySelected !== nextProps.selected;
     sts = sts || this.state.pageSelected !== nextProps.option;
 //    sts = sts || nextState.updateDisplay;
-    console.log( "Contents.shouldUpdate? : " + (sts?"T":"F") );
+    Log.info( "Contents.shouldUpdate? : " + (sts?"T":"F") );
     return sts;
   }
   

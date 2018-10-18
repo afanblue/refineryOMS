@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
 import java.io.Serializable;
@@ -5,7 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
-public class Transfer implements Serializable {
+
+public class Transfer extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -22,6 +39,7 @@ public class Transfer implements Serializable {
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	protected Long    id;
+	protected Long    tagId;
 	protected String  name;
 	protected Long    statusId;
 	protected String  status;
@@ -45,10 +63,10 @@ public class Transfer implements Serializable {
     protected Date    newStartTime;
     protected Date    newEndTime;
     
-    private Collection<IdName> statuses;
-    private Collection<IdName> transferTypes;
-    private Collection<IdName> sources;
-    private Collection<IdName> destinations;
+//    private Collection<IdName> statuses;
+//    private Collection<IdName> transferTypes;
+//    private Collection<IdName> sources;
+//    private Collection<IdName> destinations;
     
     
 	public Transfer() { }
@@ -60,6 +78,7 @@ public class Transfer implements Serializable {
     
     public Transfer( Transfer x ) {
     	id = x.id;
+    	tagId = x.tagId;
     	name = x.name;
     	statusId = x.statusId;
     	transferTypeId = x.transferTypeId;
@@ -87,6 +106,15 @@ public class Transfer implements Serializable {
 	
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+
+	public Long getTagId() {
+		return tagId;
+	}
+	
+	public void setTagId(Long id) {
+		this.tagId = id;
 	}
 	
 
@@ -320,7 +348,7 @@ public class Transfer implements Serializable {
 		}
 	}
 	
-
+/*
 	public Collection<IdName> getStatuses() {
 		return statuses;
 	}
@@ -355,36 +383,5 @@ public class Transfer implements Serializable {
 	public void setDestinations(Collection<IdName> destinations) {
 		this.destinations = destinations;
 	}
-
-	
-	public String toString() {
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("Transfer{\"id\"=").append(this.id);
-		sb.append(", \"name\"=\"").append(this.name).append("\"");
-		sb.append(", \"statusId\"=").append(this.statusId);
-		sb.append(", \"transferTypeId\"=").append(this.transferTypeId);
-		sb.append(", \"sourceId\"=").append(this.sourceId);
-		sb.append(", \"destinationId\"=").append(this.destinationId);
-		sb.append(", \"expStartTime\"=\"");
-		sb.append(this.expStartTime==null?"null":sdf.format(this.expStartTime));
-		sb.append("\"");
-		sb.append(", \"expEndTime\"=\"");
-		sb.append(this.expEndTime==null?"null":sdf.format(this.expEndTime));
-		sb.append("\"");
-		sb.append(", \"expVolume\"=").append(this.expVolume);
-		sb.append(", \"delta\"=").append(this.delta);
-		sb.append(", \"actStartTime\"=\"");
-		sb.append(this.actStartTime==null?"null":sdf.format(this.actStartTime));
-		sb.append("\"");
-		sb.append(", \"actEndTime\"=\"");
-		sb.append(this.actEndTime==null?"null":sdf.format(this.actEndTime));
-		sb.append("\"");
-		sb.append(", \"actVolume\"=").append(this.actVolume);
-		sb.append(", \"startDiff\"=").append(this.startDiff);
-		sb.append(", \"endDiff\"=").append(this.endDiff);
-		sb.append("}");
-		return sb.toString();
-	}
-
+*/
 }

@@ -2,29 +2,51 @@ import React, {Component} from 'react';
 import {SERVERROOT} from '../../Parameters.js';
 
 import DefaultContents from './DefaultContents.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
 import PlotGroupForm   from './forms/PlotGroupForm.js';
 import PlotGroupList   from './lists/PlotGroupList.js';
 import Waiting         from './Waiting.js';
 import {PlotGroup}     from './objects/PlotGroup.js';
+
+/*************************************************************************
+ * PlotGroupAdmin.js
+ * Copyright (C) 2018  A. E. Van Ness
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***********************************************************************/
 
 
 
 class PlotGroupAdmin extends Component {
   constructor(props) {
     super(props);
-    console.log( "PlotGroupAdmin: " + props.stage );
+    Log.info( "PlotGroupAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
       plotGroup: null,
-      aiList: null
+      aiVarList: null
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
-    this.handleQuit   = this.handleQuit.bind(this);
+    this.handleChange   = this.handleChange.bind(this);
+    this.handleSelect   = this.handleSelect.bind(this);
+    this.handleUpdate   = this.handleUpdate.bind(this);
+    this.handleQuit     = this.handleQuit.bind(this);
+    this.finishPGFetch     = this.finishPGFetch.bind(this);
+    this.finishAIListFetch = this.finishAIListFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -35,7 +57,7 @@ class PlotGroupAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log( "PlotGroupAdmin.willRcvProps: " + nextProps.selected + ":"
+    Log.info( "PlotGroupAdmin.willRcvProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
                + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
@@ -49,47 +71,45 @@ class PlotGroupAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    console.log( "PlotGroupAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "PlotGroupAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
+  finishPGFetch( req ) {
+    let fd = req;
+    let ail = [];
+    if( fd.id1 !== null ) { ail.push(fd.id1); }
+    if( fd.id2 !== null ) { ail.push(fd.id2); }
+    if( fd.id3 !== null ) { ail.push(fd.id3); }
+    if( fd.id4 !== null ) { ail.push(fd.id4); }
+    let pg = new PlotGroup(fd.id, fd.name, fd.active, fd.id1
+                          ,fd.id2, fd.id3, fd.id4, fd.source);
+    pg.aiList = ail;
+    this.setState({stage: "itemRetrieved",
+                   updateDisplay: true,
+                   updateData: false,
+                   plotGroup: pg                 
+                  });
+  }
+  
+  finishAIListFetch(req) {
+    let aiVarList = req;
+    this.setState({stage: "itemRetrieved", updateDisplay: true, aiVarList: aiVarList });
+  }
+  
   fetchFormData(id) {
-    const myRequest = SERVERROOT + "/plotGroup/" + id;
-    console.log( "PlotGroupAdmin.fetchFormData - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("PlotGroupAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let fd = json;
-       let ail = [];
-       if( fd.id1 !== null ) { ail.push(fd.id1); }
-       if( fd.id2 !== null ) { ail.push(fd.id2); }
-       if( fd.id3 !== null ) { ail.push(fd.id3); }
-       if( fd.id4 !== null ) { ail.push(fd.id4); }
-       let pg = new PlotGroup(fd.id, fd.name, fd.active, fd.id1
-                             ,fd.id2, fd.id3, fd.id4);
-       pg.aiList = ail;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      plotGroup: pg,
-                      aiList: fd.aiList                 
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting PlotGroup id "+id+"\n"+error);
-       console.log("PlotGroupAdmin.fetchFormData: Error - " + error);  
-    });
+    const loc = "PlotGroupAdmin.pgSelect";
+    let req0 = new OMSRequest(loc, SERVERROOT + "/plotGroup/" + id,
+                            "Problem selecting plot group id "+id, this.finishPGFetch);
+    req0.fetchData();
+    let req1 = new OMSRequest(loc, SERVERROOT + "/tag/idname/AI",
+                            "Problem retrieving AI types", this.finishAIListFetch);
+    req1.fetchData();
   }
 
   handleSelect(event) {
     let now = new Date();
-    console.log( "PlotGroupAdmin.select " + now.toISOString() );
+    Log.info( "PlotGroupAdmin.select " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -115,7 +135,7 @@ class PlotGroupAdmin extends Component {
     }
     pg.aiList = null;
     const b = JSON.stringify(pg);
-    console.log("PlotGroupAdmin.PlotGroupUpdate "+method)
+    Log.info("PlotGroupAdmin.PlotGroupUpdate "+method)
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
@@ -126,17 +146,17 @@ class PlotGroupAdmin extends Component {
     }).catch(function(error) { 
         alert("Problem "+(id===0?"inserting":"updating")+" PlotGroup "
              +"id "+id+"\n"+error);
-        console.log("PlotGroupAdmin.PlotGroupUpdate: Error - " + error);  
+        Log.error("PlotGroupAdmin.PlotGroupUpdate: Error - " + error);  
     });
   }
   
   componentDidMount() {
-    console.log( "PlotGroupAdmin.didMount: " + this.state.stage );
+    Log.info( "PlotGroupAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    console.log( "PlotGroupAdmin.didUpdate: " + this.state.stage );
+    Log.info( "PlotGroupAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -177,10 +197,10 @@ class PlotGroupAdmin extends Component {
   }
   
   fetchList() {
-    console.log( "PlotGroupAdmin.fetchList : " + this.state.stage );
+    Log.info( "PlotGroupAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/plotGroup/all";
     const now = new Date();
-    console.log( "PlotGroupAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( "PlotGroupAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       fetch(myRequest)
           .then(this.handleErrors)
@@ -191,7 +211,7 @@ class PlotGroupAdmin extends Component {
             }
             throw new TypeError("PlotGroupAdmin(fetchList): response ("+contentType+") must be a JSON string");
         }).then(json => {
-           console.log("PlotGroupAdmin.fetchList: JSON retrieved - " + json);
+           Log.info("PlotGroupAdmin.fetchList: JSON retrieved - " + json);
            this.setState( {returnedText: json, 
                            updateData: false, 
                            updateDisplay:true,
@@ -199,7 +219,7 @@ class PlotGroupAdmin extends Component {
         }).catch(function(e) { 
            alert("Problem retrieving PlotGroup list\n"+e);
            const emsg = "PlotGroupAdmin.fetchList: Fetching PlotGroup list " + e;
-           console.log(emsg);
+           Log.error(emsg);
       });
     }
   }
@@ -214,7 +234,7 @@ class PlotGroupAdmin extends Component {
   }
 
   render() {
-    console.log("PlotGroupAdmin.render - stage: "+this.state.stage);
+    Log.info("PlotGroupAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -222,13 +242,17 @@ class PlotGroupAdmin extends Component {
         return <PlotGroupList returnedText = {this.state.returnedText}
                               handleSelect = {this.handleSelect} />
       case "itemRetrieved":
-        return <PlotGroupForm returnedText = {this.state.returnedText}
-                              plotGroup    = {this.state.plotGroup}
-                              aiList       = {this.state.aiList}
-                              handleUpdate = {this.handleUpdate}
-                              handleChange = {this.handleChange}
-                              handleQuit   = {this.handleQuit}
+        if( (this.state.plotGroup === null) || (this.state.aiVarList === null) ) {
+          return <Waiting />
+        } else {
+          return <PlotGroupForm returnedText = {this.state.returnedText}
+                                plotGroup    = {this.state.plotGroup}
+                                aiVarList    = {this.state.aiVarList}
+                                handleUpdate = {this.handleUpdate}
+                                handleChange = {this.handleChange}
+                                handleQuit   = {this.handleQuit}
                />
+        }
       default:
         return <DefaultContents />
     }

@@ -1,9 +1,33 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Collection;
+import java.util.Iterator;
 
-public class Tank implements Serializable {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import us.avn.oms.service.TankService;
+
+public class Tank extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -29,12 +53,12 @@ public class Tank implements Serializable {
     private String contentTypeCode;
     private Long tempId;
     private Long levelId;
+    private Long tempRttId;
+    private Long levelRttId;
     private String tempTag;
     private String levelTag;
     private Tag siteLocation;
-    private Collection<IdName> temperatures;
-    private Collection<IdName> levels;
-    private Collection<ReferenceCode> contentTypes;
+    private Collection<Volume> volumes;
     
     
 	public Tank() { }
@@ -146,6 +170,24 @@ public class Tank implements Serializable {
 	}
 	
 
+	public Long getTempRttId() {
+		return tempRttId;
+	}
+
+	public void setTempRttId(Long tempRttId) {
+		this.tempRttId = tempRttId;
+	}
+	
+
+	public Long getLevelRttId() {
+		return levelRttId;
+	}
+
+	public void setLevelRttId(Long levelRttId) {
+		this.levelRttId = levelRttId;
+	}
+
+	
 	public String getTempTag() {
 		return tempTag;
 	}
@@ -173,6 +215,78 @@ public class Tank implements Serializable {
 	}
 
 	
+	public Collection<Volume> getVolumes() {
+		return volumes;
+	}
+
+	public void setVolumes(Collection<Volume> vs) {
+		this.volumes = vs;
+	}
+	
+	@SuppressWarnings("unused")
+	public Double computeLevel( Double vol ) {
+		Double level = 0D;
+		Volume vb = null;     // beginning volume for interpolation
+		Volume ve = null;     // ending volume for interpolation
+		Volume vl = null;     // "last" volume checked
+		Integer cvSize = volumes.size();
+		Integer loopCount = 0;
+		Iterator<Volume> iv = volumes.iterator();
+		while( iv.hasNext() ) {
+			loopCount++;
+			Volume v = iv.next();
+			if( (v.getVolume() < vol) && (loopCount < (cvSize-1)) ) {
+				vb = v;
+			}
+			if( (v.getVolume() >= vol) || (loopCount == cvSize) ) {
+				if( vb == null ) {
+					vb = v;
+					ve = iv.next();
+				} else {
+					ve = v;
+				}
+				break;
+			}
+		}
+		Double slope = (ve.getLevel() - vb.getLevel())
+					 / (ve.getVolume() - vb.getVolume());
+		level = vb.getLevel() + slope * (vol - vb.getVolume());
+		return level;
+	}
+
+	@SuppressWarnings("unused")
+	public Double computeVolume( Double level ) {
+		Double vol = 0D;
+		Volume vb = null;
+		Volume ve = null;
+		Integer cvSize = volumes.size();
+		Integer loopCount = 0;
+		Iterator<Volume> iv = volumes.iterator();
+		while( iv.hasNext() ) {
+			loopCount++;
+			Volume v = iv.next();
+//			log.debug("Level: "+level+", volume: "+v.toString());
+			if( (v.getLevel() < level) && (loopCount < (cvSize-1)) ) {
+				vb = v;
+			}
+			if( v.getLevel() >= level || (loopCount == cvSize) ) {
+				if( loopCount == 1 ) {
+					vb = v;
+					ve = iv.next();
+				} else {
+					ve = v;
+				}
+				break;
+			}
+		}
+		Double slope = (ve.getVolume() - vb.getVolume())
+					 / (ve.getLevel() - vb.getLevel());
+		vol = vb.getVolume() + slope * (level - vb.getLevel());
+		return vol;
+	}
+
+	
+/*
 	public Collection<IdName> getTemperatures() {
 		return temperatures;
 	}
@@ -198,23 +312,6 @@ public class Tank implements Serializable {
 	public void setContentTypes(Collection<ReferenceCode> contentTypes) {
 		this.contentTypes = contentTypes;
 	}
-
-
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("Tank{\"id\"=").append(this.id);
-		sb.append(", \"tag\"=[").append(tag.toString()).append("]");
-		sb.append(", \"api\"=").append(this.api);
-		sb.append(", \"density\"=").append(this.density);
-		sb.append(", \"height\"=").append(this.height);
-		sb.append(", \"diameter\"=").append(this.diameter);
-		sb.append(", \"units\"=\"").append(this.units).append("\"");
-		sb.append(", \"contentType\"=\"").append(this.contentType).append("\"");
-		sb.append(", \"contentTypeCode\"=\"").append(this.contentTypeCode).append("\"");
-		sb.append(", \"levelTag\"=\"").append(this.levelTag).append("\"");
-		sb.append(", \"tempTag\"=\"").append(this.tempTag).append("\"");
-		sb.append("}");
-		return sb.toString();
-	}
+*/
 
 }

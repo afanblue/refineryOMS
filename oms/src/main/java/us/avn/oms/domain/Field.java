@@ -1,14 +1,29 @@
+/*******************************************************************************
+ * Copyright (C) 2018 A. E. Van Ness
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package us.avn.oms.domain;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-public class Field implements Serializable {
+public class Field extends Tag implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
 	private Long id;
-	private Tag tag;
 	private String roadImage;
 	private String satelliteImage;
     private Long parentId;
@@ -20,10 +35,11 @@ public class Field implements Serializable {
     
     public Field() {}
 
-    public Field( Long i, Tag t, String ri, String si
+    public Field( Long i, String nm, String ri, String si
     		    , Long pid, String p) {
     	this.id = i;
-    	this.tag = t;
+    	this.name = nm;
+    	this.tagTypeCode = "FLD";
     	this.roadImage = ri;
     	this.satelliteImage = si;
     	this.parentId = pid;
@@ -32,28 +48,29 @@ public class Field implements Serializable {
     
     public Field( Long i, String n ) {
     	this.id = i;
-    	Tag t = new Tag(i,n);
-    	t.setTagTypeCode("FLD");
-    	this.tag = t;
+    	this.name = n;
+    	this.tagTypeCode = "FLD";
+    }
+    
+    public Field( Tag t ) {
+    	super(t);
     }
     	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public Tag getTag() {
-		return tag;
-	}
-
-	public void setTag(Tag tag) {
-		this.tag = tag;
-	}
-	
+    
+    public void setTag( Tag t ) {
+    	this.id = t.getId();
+    	this.name = t.getName();
+    	this.description = t.getDescription();
+    	this.tagTypeCode = t.getTagTypeCode();
+    	this.tagTypeId = t.getTagTypeId();
+    	this.misc = t.getMisc();
+    	this.c1Lat = t.getC1Lat();
+    	this.c1Long = t.getC1Long();
+    	this.c2Lat = t.getC2Lat();
+    	this.c2Long = t.getC2Long();
+    	this.active = t.getActive();    	    	
+    }
+    
 
 	public String getRoadImage() {
 		return roadImage;
@@ -126,17 +143,5 @@ public class Field implements Serializable {
 		this.siteLocation = siteLocation;
 	}
 	
-
-	public String toString() {
-		StringBuffer sb = new StringBuffer(2000);
-		sb.append("Field{\"id\"=").append(this.id);
-		sb.append(", \"tag\"=[").append(this.tag.toString()).append("]");
-		sb.append(", \"roadImage\"=\"").append(this.roadImage);
-		sb.append(", \"satelliteImage\"=\"").append(this.satelliteImage);
-	    sb.append(", \"parentId\"=\"").append(this.parentId);
-	    sb.append(", \"parent\"=\"").append(this.parent).append("\"");
-	    sb.append("}");
-		return sb.toString();
-	}
 
 }

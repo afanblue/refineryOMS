@@ -38,6 +38,11 @@
       <property name="mapperInterface" value="us.avn.oms.mapper.AnalogInputMapper" />
    </bean>
 
+   <bean id="analogOutputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface" value="us.avn.oms.mapper.AnalogOutputMapper" />
+   </bean>
+
    <bean id="calcVariableMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface" value="us.avn.oms.mapper.CalcVariableMapper" />
@@ -48,9 +53,19 @@
       <property name="mapperInterface" value="us.avn.oms.mapper.ConfigMapper" />
    </bean>
 
+   <bean id="controlBlockMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface" value="us.avn.oms.mapper.ControlBlockMapper" />
+   </bean>
+
    <bean id="digitalInputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface" value="us.avn.oms.mapper.DigitalInputMapper" />
+   </bean>
+
+   <bean id="digitalOutputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface" value="us.avn.oms.mapper.DigitalOutputMapper" />
    </bean>
 
    <bean id="historyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
@@ -88,7 +103,11 @@
       <property name="analogInputMapper" ref="analogInputMapper" />
       <property name="configMapper" ref="configMapper" />
       <property name="tagMapper" ref="tagMapper" />
-      <property name="unitMapper" ref="unitMapper" />
+   </bean>
+   
+   <bean id="analogOutputService" class="us.avn.oms.service.impl.AnalogOutputServiceImpl">
+      <property name="analogOutputMapper" ref="analogOutputMapper" />
+      <property name="tagMapper"          ref="tagMapper" />
    </bean>
    
    <bean id="calcVariableService" class="us.avn.oms.service.impl.CalcVariableServiceImpl">
@@ -101,10 +120,19 @@
       <property name="configMapper" ref="configMapper" />
    </bean>
    
+   <bean id="controlBlockService" class="us.avn.oms.service.impl.ControlBlockServiceImpl">
+      <property name="controlBlockMapper"  ref="controlBlockMapper" />
+   </bean>
+   
    <bean id="digitalInputService" class="us.avn.oms.service.impl.DigitalInputServiceImpl">
-      <property name="digitalInputMapper" ref="digitalInputMapper" />
-      <property name="configMapper" ref="configMapper" />
-      <property name="tagMapper" ref="tagMapper" />
+      <property name="digitalInputMapper"  ref="digitalInputMapper" />
+      <property name="configMapper"        ref="configMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
+   </bean>
+   
+   <bean id="digitalOutputService" class="us.avn.oms.service.impl.DigitalOutputServiceImpl">
+      <property name="digitalOutputMapper" ref="digitalOutputMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="historyService" class="us.avn.oms.service.impl.HistoryServiceImpl">
