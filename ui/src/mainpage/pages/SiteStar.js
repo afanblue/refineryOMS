@@ -49,30 +49,27 @@ class SiteStar extends Component {
   }
 
   fetchSiteValues() {
-    Log.info( "SiteStar.fetchSiteValues : " + this.state.stage );
+    Log.info( this.state.stage,"SiteStar.fetchSiteValues" );
     const myRequest = SERVERROOT + "/ai/all/values";
     const now = new Date();
-    Log.info( "SiteStar.fetchSiteValues " + now.toLocaleString() + " Request: " + myRequest );
+    Log.info( now.toLocaleString() + " Request: " + myRequest,"SiteStar.fetchSiteValues" );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("SiteStar.fetchSiteValues: response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("SiteStar.fetchSiteValues: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving site values\n"+e);
-           const emsg = "SiteStar.fetchSiteValues: Fetching field list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        Log.info( "I/O complete ", "SiteStar.fetchSiteValues" );
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem retrieving process unit list\n"+error);
+        const emsg = "Fetching process unit list " + error;
+        Log.error(emsg, "SiteStar.fetchSiteValues");
+      }
     }
   }
 

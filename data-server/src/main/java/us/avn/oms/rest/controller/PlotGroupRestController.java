@@ -64,17 +64,7 @@ public class PlotGroupRestController {
 		PlotGroup pg = new PlotGroup(0L, "New Plot Group");
 		if( id != 0L ) {
 			pg = pgs.getPlotGroupDefinition(id);
-		}
-
-/*		Collection<IdName> pgl = ais.getAllAIIdNameByType("F");
-		pgl.addAll(ais.getAllAIIdNameByType("L"));
-		pgl.addAll(ais.getAllAIIdNameByType("M"));
-		pgl.addAll(ais.getAllAIIdNameByType("P"));
-		pgl.addAll(ais.getAllAIIdNameByType("R"));
-		pgl.addAll(ais.getAllAIIdNameByType("T"));
-		pgl.addAll(ais.getAllAIIdNameByType("C"));
-		pg.setAiList(pgl);
- */
+		} 
 		return pg;
 	}
 	

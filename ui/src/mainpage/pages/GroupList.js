@@ -1,12 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}  from '../../Parameters.js';
-//import {ProcessUnit} from './objects/ProcessUnit.js';
-//import {Tag}         from './objects/Tag.js';
-import {CE, IL3}     from './objects/ListObjects.js';
-import Log           from '../requests/Log.js';
-import SiteOverview  from './SiteOverview.js';
-import Waiting       from './Waiting.js';
-
 /*************************************************************************
  * GroupList.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -24,6 +15,15 @@ import Waiting       from './Waiting.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}  from '../../Parameters.js';
+//import {ProcessUnit} from './objects/ProcessUnit.js';
+//import {Tag}         from './objects/Tag.js';
+import {CE, IL3}     from './objects/ListObjects.js';
+import Log           from '../requests/Log.js';
+import SiteOverview  from './SiteOverview.js';
+import Waiting       from './Waiting.js';
 
   
 
@@ -47,30 +47,27 @@ class GroupList extends Component {
   }
 
   fetchList() {
-    Log.info( "GroupList.fetchList : " + this.state.stage );
+    Log.info( this.state.stage, "GroupList.fetchList" );
     const myRequest = SERVERROOT + "/plotGroup/all";
     const now = new Date();
-    Log.info( "GroupList.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,"GroupList.fetchList" );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("GroupList(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("GroupList.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving process unit list\n"+e);
-           const emsg = "GroupList.fetchList: Fetching process unit list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        Log.info( "I/O complete ", "GroupList.fetchList" );
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem retrieving process unit list\n"+error);
+        const emsg = "Fetching process unit list " + error;
+        Log.error(emsg, "GroupList.fetchList");
+      }
     }
   }
 

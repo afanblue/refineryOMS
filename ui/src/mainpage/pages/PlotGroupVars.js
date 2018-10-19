@@ -1,11 +1,3 @@
-import React, {Component} from 'react';
-import Log             from '../requests/Log.js';
-
-import {SERVERROOT}    from '../../Parameters.js';
-import GroupPlot       from './displays/GroupPlot.js';
-import Waiting         from './Waiting.js';
-import {PlotDetails}   from './objects/PlotGroup.js';
-
 /*************************************************************************
  * PlotGroup.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -24,6 +16,14 @@ import {PlotDetails}   from './objects/PlotGroup.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
  
+import React, {Component} from 'react';
+import Log             from '../requests/Log.js';
+
+import {SERVERROOT}    from '../../Parameters.js';
+import GroupPlot       from './displays/GroupPlot.js';
+import Waiting         from './Waiting.js';
+import {PlotDetails}   from './objects/PlotGroup.js';
+
 const CLASS = "PlotGroupVars";  
  
 class PlotGroupVars extends Component {
@@ -46,8 +46,11 @@ class PlotGroupVars extends Component {
       unitTimer: null,
       color: "green"
     };
-    this.fetchData    = this.fetchData.bind(this);
-    this.fetchHistory = this.fetchHistory.bind(this);
+    this.fetchAll          = this.fetchAll.bind(this);
+    this.fetchData         = this.fetchData.bind(this);
+    this.fetchHistory      = this.fetchHistory.bind(this);
+    this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleClick       = this.handleClick.bind(this);
   }
   
   handleErrors(response) {
@@ -75,6 +78,13 @@ class PlotGroupVars extends Component {
     Log.info( CLASS+".shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
+
+  fetchAll( pg ) {
+    this.fetchHistory(pg.id1,1);
+    this.fetchHistory(pg.id2,2);
+    this.fetchHistory(pg.id3,3);
+    this.fetchHistory(pg.id4,4);
+  }
   
   fetchData( id ) {
     let now = new Date();
@@ -88,14 +98,8 @@ class PlotGroupVars extends Component {
       Log.info( "fetched plotGroup",CLASS+".fetchData" );
 //      var contentType = response.headers.get("ContentType");
 //      if( contentType && contentType.includes("application/json")) {
-      this.fetchHistory(pg.id1,1);
-      this.fetchHistory(pg.id2,2);
-      this.fetchHistory(pg.id3,3);
-      this.fetchHistory(pg.id4,4);
-      var myTimerID = setInterval(() => {this.fetchHistory(pg.id1,1);
-                                         this.fetchHistory(pg.id2,2);
-                                         this.fetchHistory(pg.id3,3);
-                                         this.fetchHistory(pg.id4,4);}, 60000 );
+      this.fetchAll(pg);
+      var myTimerID = setInterval(() => {this.fetchAll(pg);}, 60000 );
       this.setState({stage: "begin",
                      unitTimer: myTimerID});
 //      }
@@ -111,12 +115,17 @@ class PlotGroupVars extends Component {
   }
 
   fetchHistory(id,ndx) {
-    if( id !== undefined) {
-      const pd = this.state.plotDetails;
-      var noDays = 2;
-      if( pd !== null && pd !== undefined ) {
+    const pd = this.state.plotDetails;
+    var noDays = 2;
+    let skip = false;
+    if( pd !== null && pd !== undefined ) {
+      if( pd.numberDays === "" ) {
+        skip = true;
+      } else {
         noDays = (pd.numberDays!==null)?pd.numberDays:2;
       }
+    }
+    if( id !== undefined && ! skip ) {
       const myRequest = SERVERROOT + "/ai/history/" + id + "/" + noDays;
       Log.info( "Request: " + myRequest, CLASS+".fetchHistory" );
       const request = async () => {
@@ -124,34 +133,34 @@ class PlotGroupVars extends Component {
         const fd = await response.json();
         var pd = null;
         if( this.state.plotDetails === null ) {
-          pd = new PlotDetails(2,null,null,null,null,null,null,null,null);
+          pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
         } else {
           pd = Object.assign({},this.state.plotDetails);
         }
         switch( ndx ) {
           case 1:
-            if( pd.max0 === null ) {
+            if( pd.max0 === Infinity ) {
               pd.min0 = fd.aiTag.zeroValue;
               pd.max0 = fd.aiTag.maxValue;
             }
             this.setState({stage: "generatePlot", d0:fd, plotDetails: pd});
             break;
           case 2:  
-            if( pd.max1 === null ) {
+            if( pd.max1 === Infinity ) {
               pd.min1 = fd.aiTag.zeroValue;
               pd.max1 = fd.aiTag.maxValue;
             }
             this.setState({stage: "generatePlot", d1:fd, plotDetails: pd});
             break;
           case 3:  
-            if( pd.max2 === null ) {
+            if( pd.max2 === Infinity ) {
               pd.min2 = fd.aiTag.zeroValue;
               pd.max2 = fd.aiTag.maxValue;
             }
             this.setState({stage: "generatePlot", d2:fd, plotDetails: pd});
             break;
           default: 
-            if( pd.max3 === null ) {
+            if( pd.max3 === Infinity ) {
               pd.min3 = fd.aiTag.zeroValue;
               pd.max3 = fd.aiTag.maxValue;
             }
@@ -165,28 +174,6 @@ class PlotGroupVars extends Component {
          alert("Problem selecting history for AI id "+id+"\n"+error);
          Log.error("Error - " + error, CLASS+".fetchHistory" );  
       }
-
-/*      fetch(myRequest)
-        .then(this.handleErrors)
-        .then(response => {
-          var contentType = response.headers.get("Content-Type");
-          if(contentType && contentType.includes("application/json")) {
-            return response.json();
-          }
-          throw new TypeError(CLASS+".fetchHistory: response ("+contentType+") must be a JSON string");
-      }).then(json => {
-         let fd = json;
-         switch( ndx ) {
-           case 1:  this.setState({stage: "generatePlot", d0:fd}); break;
-           case 2:  this.setState({stage: "generatePlot", d1:fd}); break;
-           case 3:  this.setState({stage: "generatePlot", d2:fd}); break;
-           default: this.setState({stage: "generatePlot", d3:fd}); break;
-         }
-      }).catch(function(error) { 
-         alert("Problem selecting history for AI id "+id+"\n"+error);
-         Log.error("Error - " + error, CLASS+".fetchHistory" );  
-      });
-*/
     }
   }
 
@@ -197,14 +184,8 @@ class PlotGroupVars extends Component {
       this.fetchData(this.state.id);
     } else {
       var pg = this.state.plotGroup;
-      this.fetchHistory(pg.id1,1);
-      this.fetchHistory(pg.id2,2);
-      this.fetchHistory(pg.id3,3);
-      this.fetchHistory(pg.id4,4);
-      var myTimerID = setInterval(() => {this.fetchHistory(pg.id1,1);
-                                         this.fetchHistory(pg.id2,2);
-                                         this.fetchHistory(pg.id3,3);
-                                         this.fetchHistory(pg.id4,4);}, 60000 );
+      this.fetchAll(pg);
+      var myTimerID = setInterval(() => {this.fetchAll(pg);}, 60000 );
       this.setState({stage: "begin",
                      unitTimer: myTimerID});
     }
@@ -221,6 +202,21 @@ class PlotGroupVars extends Component {
     }
   }
   
+  handleClick() {
+  };
+
+  handleFieldChange(event) {
+    event.preventDefault();
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    let pdNew = Object.assign({},this.state.plotDetails);
+    pdNew[name] = parseInt(value,10);
+    this.setState( {plotDetails: pdNew} );
+  }
+  
+
+  
   render() {
     Log.info(CLASS+".render - stage: "+this.state.stage);
     switch( this.state.stage ) {
@@ -229,7 +225,9 @@ class PlotGroupVars extends Component {
       case "generatePlot":
         return <GroupPlot d0 = {this.state.d0} d1 = {this.state.d1} 
                           d2 = {this.state.d2} d3 = {this.state.d3}
-                          plotDetails = {this.state.plotDetails} />
+                          plotDetails = {this.state.plotDetails}
+                          fieldChange = {this.handleFieldChange}
+                          handleClick = {this.handleClick} />
       default:
         return <Waiting />
     }

@@ -1,5 +1,3 @@
-import Log          from './Log.js';
-
 /*************************************************************************
  * OMSRequest.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -17,6 +15,8 @@ import Log          from './Log.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import Log          from './Log.js';
 
 class OMSRequest {
   constructor(id,uri,erm,fComplete) {

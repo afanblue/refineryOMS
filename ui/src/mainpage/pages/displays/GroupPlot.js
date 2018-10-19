@@ -1,11 +1,3 @@
-import React, {Component} from 'react';
-import Log           from '../../requests/Log.js';
-import {PlotDetails} from '../objects/PlotGroup.js';
-
-//import { Stage, Layer, Text } from 'react-konva';
-import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
-import moment from 'moment';
-
 /*************************************************************************
  * GroupPlot.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -23,6 +15,14 @@ import moment from 'moment';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import Log           from '../../requests/Log.js';
+import {PlotDetails} from '../objects/PlotGroup.js';
+
+//import { Stage, Layer, Text } from 'react-konva';
+import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
+import moment from 'moment';
 
 
 
@@ -64,7 +64,7 @@ class GroupPlot extends Component {
         padding: 0,
         fontFamily: "'Fira Sans', sans-serif",
         maxWidth: "100%",
-        height: "80%"
+        height: "100%"
       },
       title: {
         textAnchor: "start",
@@ -109,22 +109,22 @@ class GroupPlot extends Component {
         axis: { stroke: WHITE_COLOR, strokeWidth: 1 },
         ticks: { strokeWidth: 1 },
         tickLabels: {
-          fill: WHITE_COLOR,
+          fill: GREEN_COLOR,
           fontFamily: "inherit",
           fontSize: 10
         }
       },
       labelZero: {
-        fill: WHITE_COLOR,
+        fill: GREEN_COLOR,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic"
       },
       lineZero: {
-        data: { stroke: WHITE_COLOR, strokeWidth: 1.5 }
+        data: { stroke: GREEN_COLOR, strokeWidth: 1.5 }
       },
       axisZeroCustomLabel: {
-        fill: WHITE_COLOR,
+        fill: GREEN_COLOR,
         fontFamily: "inherit",
         fontWeight: 300,
         fontSize: 10
@@ -154,20 +154,20 @@ class GroupPlot extends Component {
       axisTwo: {
         axis: { stroke: WHITE_COLOR, strokeWidth: 1 },
         tickLabels: {
-          fill: GREEN_COLOR,
+          fill: WHITE_COLOR,
           fontFamily: "inherit",
           fontSize: 10
         }
       },
       labelTwo: {
         textAnchor: "start",
-        fill: GREEN_COLOR,
+        fill: WHITE_COLOR,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic"
       },
       lineTwo: {
-        data: { stroke: GREEN_COLOR, strokeWidth: 1.5 }
+        data: { stroke: WHITE_COLOR, strokeWidth: 1.5 }
       },
       
       // DATA SET THREE
@@ -212,6 +212,7 @@ class GroupPlot extends Component {
     let d3 = ((this.state.d3!==null)&&(this.state.d3!==undefined))?this.state.d3:null;
     let pd = this.state.plotDetails;
     if( (pd===null) || (pd===undefined) ) { pd = new PlotDetails(); }
+    let fc = this.props.fieldChange;
     
     const minTime = Math.min( ( d0 !== null ) ? d0.history[0].x:Infinity
                             , ( d1 !== null ) ? d1.history[0].x:Infinity
@@ -233,14 +234,14 @@ class GroupPlot extends Component {
       minY0 = pd.min0;
       maxY0 = pd.max0;
       tick0Values = this.getTickYValues(minY0,maxY0);
-      const dataSetZero = d0.history;
-      const labelZero  = d0.aiTag.tag.name + " - " + d0.aiTag.tag.description;
+      const dsZero  = d0.history;
+      const lblZero = d0.aiTag.tag.name + " - " + d0.aiTag.tag.description;
 
-      LabelZero = <VictoryLabel x={25} y={15} text={labelZero} style={styles.labelZero} />
+      LabelZero = <VictoryLabel x={25} y={15} text={lblZero} style={styles.labelZero} />
       AxisZero  = <VictoryAxis dependentAxis domain={ [minY0, maxY0] } offsetX={50}
                                orientation="left" standalone={false}
                                style={styles.axisZero} tickValues={tick0Values} />;
-      LineZero  = <VictoryLine data={dataSetZero} domain={{x: [minTime, maxTime], y: [minY0, maxY0] }}
+      LineZero  = <VictoryLine data={dsZero} domain={{x: [minTime, maxTime], y: [minY0, maxY0] }}
                                interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
                                standalone={false} style={styles.lineZero} />
     }
@@ -252,13 +253,13 @@ class GroupPlot extends Component {
       const minY1 = pd.min1;
       const maxY1 = pd.max1;
       const tick1Values = this.getTickYValues(minY1,maxY1);
-      const dataSetOne = d1.history;
-      const labelOne   = d1.aiTag.tag.name + " - " + d1.aiTag.tag.description;
+      const dsOne  = d1.history;
+      const lblOne = d1.aiTag.tag.name + " - " + d1.aiTag.tag.description;
       
-      LabelOne = <VictoryLabel x={25} y={30} text={labelOne} style={styles.labelOne} />;
+      LabelOne = <VictoryLabel x={25} y={30} text={lblOne} style={styles.labelOne} />;
       AxisOne =  <VictoryAxis domain={[minY1, maxY1]} offsetX={30} orientation="left"
                               standalone={false} style={styles.axisOne} tickValues={tick1Values} />;
-      LineOne  = <VictoryLine data={dataSetOne} domain={{x: [minTime, maxTime], y: [minY1,   maxY1] }}
+      LineOne  = <VictoryLine data={dsOne} domain={{x: [minTime, maxTime], y: [minY1,   maxY1] }}
                               interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
                               standalone={false} style={styles.lineOne} />;
     }
@@ -270,13 +271,13 @@ class GroupPlot extends Component {
       const minY2 = pd.min2;
       const maxY2 = pd.max2;
       const tick2Values = this.getTickYValues(minY2,maxY2);
-      const dataSetTwo = d2.history;
-      const labelTwo   = d2.aiTag.tag.name + " - " + d2.aiTag.tag.description;
+      const dsTwo  = d2.history;
+      const lblTwo = d2.aiTag.tag.name + " - " + d2.aiTag.tag.description;
 
-      LabelTwo = <VictoryLabel x={25} y={45} text={labelTwo} style={styles.labelTwo} />;
+      LabelTwo = <VictoryLabel x={25} y={45} text={lblTwo} style={styles.labelTwo} />;
       AxisTwo  = <VictoryAxis domain={[minY2, maxY2]} orientation="right" 
                               standalone={false} style={styles.axisTwo} tickValues={tick2Values} />;
-      LineTwo  = <VictoryLine data={dataSetTwo} domain={{x: [minTime, maxTime], y: [minY2,   maxY2] }}
+      LineTwo  = <VictoryLine data={dsTwo} domain={{x: [minTime, maxTime], y: [minY2,   maxY2] }}
                               interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
                               standalone={false} style={styles.lineTwo} />;
     } else {
@@ -291,13 +292,13 @@ class GroupPlot extends Component {
       const minY3 = pd.min3;
       const maxY3 = pd.max3;
       const tick3Values = this.getTickYValues(minY3,maxY3);
-      const dataSetThree  = d3.history;
-      const labelThree = d3.aiTag.tag.name + " - " + d3.aiTag.tag.description;
+      const dsThree  = d3.history;
+      const lblThree = d3.aiTag.tag.name + " - " + d3.aiTag.tag.description;
       
-      LabelThree = <VictoryLabel x={25} y={60} text={labelThree} style={styles.labelThree} />
+      LabelThree = <VictoryLabel x={25} y={60} text={lblThree} style={styles.labelThree} />
       AxisThree  = <VictoryAxis domain={[minY3, maxY3]} offsetX={30} orientation="right"
                                 standalone={false} style={styles.axisThree} tickValues={tick3Values} />;
-      LineThree  = <VictoryLine data={dataSetThree} domain={{x: [minTime, maxTime],y: [minY3,   maxY3] }}
+      LineThree  = <VictoryLine data={dsThree} domain={{x: [minTime, maxTime],y: [minY3,   maxY3] }}
                                 interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
                                 standalone={false} style={styles.lineThree} />;
     }
@@ -309,6 +310,58 @@ class GroupPlot extends Component {
     Log.info(now+" GroupPlot.render");
     return(
       <div>
+      <form>
+      <table>
+        <tbody>
+          <tr>
+            <td>Days to display:</td>
+            <td colSpan={4}>
+              <input className="oms-spacing-60" type={"text"} value={pd.numberDays}
+                     name="numberDays" id="numberDays" size="3" maxLength="3" 
+                     onChange={fc}/>
+            </td>
+          </tr>
+          <tr>
+            <td>Max values (1,2,3,4):</td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.max0} 
+                     name="max0" id="max0" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.max1}
+                     name="max1" id="max1" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.max2}
+                     name="max2" id="max2" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.max3} 
+                     name="max3" id="max3" size="5" maxLength="5" onChange={fc}/>
+            </td>
+          </tr>
+          <tr>
+            <td>Min values (1,2,3,4):</td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.min0} 
+                     name="min0" id="min0" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.min1} 
+                     name="min1" id="min1" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.min2}
+                     name="min2" id="min2" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.min3}
+                     name="min3" id="min3" size="5" maxLength="5" onChange={fc}/>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </form>
       <h2>
         <div className={"oms-tags"}>
            <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>
@@ -354,34 +407,3 @@ class GroupPlot extends Component {
 }
 
 export default GroupPlot;
-
-/*
-      <table>
-        <tbody>
-          <tr>
-            <td>Days to display:</td>
-            <td colspan={4}><input type={"text"} />
-          </tr>
-          <tr>
-            <td>Max values:</td>
-            <td><input type={"text"} name="max1" id="max1" /></td>
-            <td><input type={"text"} name="max1" id="max1" /></td>
-            <td><input type={"text"} name="max1" id="max1" /></td>
-            <td><input type={"text"} name="max1" id="max1" /></td>
-          </tr>
-          <tr>
-            <td>Min values:</td>
-            <td><input type={"text"} name="min1" id="min1" /></td>
-            <td><input type={"text"} name="min1" id="min1" /></td>
-            <td><input type={"text"} name="min1" id="min1" /></td>
-            <td><input type={"text"} name="min1" id="min1" /></td>
-          </tr>
-          <tr>
-            <td colspan={5}>
-              <button type={"submit"} value={"Submit"} name={"req"} id={"req"}/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-*/

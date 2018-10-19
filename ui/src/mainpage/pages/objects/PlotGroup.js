@@ -1,5 +1,3 @@
-//import React, {Component} from 'react';
-
 /*************************************************************************
  * PlotGroup.js
  * Copyright (C) 2018  A. E. Van Ness

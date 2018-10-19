@@ -1,7 +1,3 @@
-import React, {Component} from 'react';
-//import {Tabs, Tab} from 'react-bootstrap';
-import Log       from '../../requests/Log.js';
-
 /*************************************************************************
  * TransferForm.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -20,6 +16,10 @@ import Log       from '../../requests/Log.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+//import {Tabs, Tab} from 'react-bootstrap';
+import Log       from '../../requests/Log.js';
+
 class TransferForm extends Component {
   constructor(props) {
     super(props);
@@ -35,7 +35,7 @@ class TransferForm extends Component {
     const tt     = this.props.transferTypes;
     const srcs   = this.props.sources;
     const dests  = this.props.sources;
-//    var fc       = this.handleFieldChange;
+    var fc       = this.props.fieldChange;
     return (
       <table width="100%">
         <tbody>
@@ -57,14 +57,13 @@ class TransferForm extends Component {
                   <input type="hidden" name="id" value={x.id} />
                   <input type="text" id="name" name="name" value={x.name} 
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
-                         size="20" maxLength="20" onChange={this.props.fieldChange} />
+                         size="20" maxLength="20" onChange={fc} />
                 </td>
               </tr>            
               <tr>
                 <th className="oms-spacing-90">Status:</th>
                 <td className="oms-spacing">
-                  <select id="statusId" name="statusId" value={x.statusId}
-                          onChange={this.props.fieldChange} >
+                  <select id="statusId" name="statusId" value={x.statusId} onChange={fc} >
                     { st.map( 
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
@@ -77,7 +76,7 @@ class TransferForm extends Component {
                 <th className="oms-spacing-90">Transfer Type:</th>
                 <td className="oms-spacing">
                   <select id="transferTypeId" name="transferTypeId" value={x.transferTypeId} 
-                          onChange={this.props.fieldChange} >
+                          onChange={fc} >
                     { tt.map( 
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
@@ -90,7 +89,7 @@ class TransferForm extends Component {
                 <th className="oms-spacing-90">Source:</th>
                 <td className="oms-spacing">
                   <select id="sourceId" name="sourceId" value={x.sourceId} 
-                          onChange={this.props.fieldChange} >
+                          onChange={fc} >
                     { srcs.map( 
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
@@ -103,7 +102,7 @@ class TransferForm extends Component {
                 <th className="oms-spacing-90">Destination:</th>
                 <td className="oms-spacing">
                   <select id="destinationId" name="destinationId" value={x.destinationId} 
-                          onChange={this.props.fieldChange} >
+                          onChange={fc} >
                     { dests.map( 
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
@@ -117,7 +116,7 @@ class TransferForm extends Component {
                 <td className="oms-spacing">
                   <input type="text" id="expStartTime" name="expStartTime" value={x.expStartTime}
                          className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
-                         size="20" maxLength="20" onChange={this.props.fieldChange} />
+                         size="20" maxLength="20" onChange={fc} />
                 </td>
               </tr>
               <tr>
@@ -125,7 +124,7 @@ class TransferForm extends Component {
                 <td className="oms-spacing">
                   <input type="text" id="expEndTime" name="expEndTime" value={x.expEndTime}
                          className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
-                         size="20" maxLength="20" onChange={this.props.fieldChange} />
+                         size="20" maxLength="20" onChange={fc} />
                 </td>
               </tr>
               <tr>
@@ -133,14 +132,13 @@ class TransferForm extends Component {
                 <td className="oms-spacing">
                   <input type="text" id="expVolume" name="expVolume" value={x.expVolume}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
-                         size="20" maxLength="10" onChange={this.props.fieldChange} />
+                         size="20" maxLength="10" onChange={fc} />
                 </td>
               </tr>
               <tr>
                 <td className="oms-spacing-90">Repeat Interval:</td>
                 <td className="oms-spacing">
-                  <select id="delta" name="delta" value={x.delta}
-                          onChange={this.props.fieldChange} >
+                  <select id="delta" name="delta" value={x.delta} onChange={fc} >
                     <option value="0">0</option>
                     <option value="15">15 min</option>
                     <option value="30">30 min</option>

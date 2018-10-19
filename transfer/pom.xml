@@ -6,7 +6,7 @@
   <name>transfer</name>
   
   <properties>
-    <spring.version>4.0.1.RELEASE</spring.version>
+    <spring.version>5.0.7.RELEASE</spring.version>
     <mybatis.version>3.4.5</mybatis.version>
     <mysql.connector.version>5.1.30</mysql.connector.version>
   </properties>

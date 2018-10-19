@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
-import TransferForm    from './forms/TransferForm.js';
-import TransferList    from './lists/TransferList.js';
-import Waiting         from './Waiting.js';
-import {Transfer}      from './objects/Transfer.js';
-
 /*************************************************************************
  * TransferAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {Transfer}      from './objects/Transfer.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT} from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import DefaultContents from './DefaultContents.js';
+import Log             from '../requests/Log.js';
+import TransferForm    from './forms/TransferForm.js';
+import TransferList    from './lists/TransferList.js';
+import Waiting         from './Waiting.js';
+import {Transfer}      from './objects/Transfer.js';
 
 
 /*
@@ -218,17 +218,6 @@ class TransferAdmin extends Component {
            +"id "+id+"\n"+error);
       Log.error("TransferAdmin.updateTransfer: Error - " + error);
     }
-/*  fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" transfer "
-             +"id "+id+"\n"+error);
-        Log.info("TransferAdmin.updateTransfer: Error - " + error);  
-    });
-*/
   }
 
   handleUpdate(event) {

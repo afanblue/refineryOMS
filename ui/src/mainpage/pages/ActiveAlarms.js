@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import ActiveAlarmList from './lists/ActiveAlarmList.js';
-import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
-import Waiting         from './Waiting.js';
-
-import {Alarm} from './objects/Alarm.js';
-import {Tag}   from './objects/Tag.js';
-
 /*************************************************************************
  * ActiveAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,11 +16,21 @@ import {Tag}   from './objects/Tag.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import ActiveAlarmList from './lists/ActiveAlarmList.js';
+import DefaultContents from './DefaultContents.js';
+import Log             from '../requests/Log.js';
+import Waiting         from './Waiting.js';
+
+import {Alarm} from './objects/Alarm.js';
+import {Tag}   from './objects/Tag.js';
+
 
 class ActiveAlarms extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ActiveAlarms: " + props.selected + ":" + props.option + "/" + props.stage );
+    Log.info( props.selected + ":" + props.option + "/" + props.stage,"ActiveAlarms" );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -51,7 +51,7 @@ class ActiveAlarms extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "ActiveAlarms.willRcvProps: " + nextProps.stage );
+    Log.info( nextProps.stage,"ActiveAlarms.willReceiveProps" );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -64,19 +64,17 @@ class ActiveAlarms extends Component {
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "ActiveAlarms.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( (sts?"T":"F"),"ActiveAlarms.shouldUpdae" );
     return sts;
   }
   
   componentDidMount() {
-    Log.info( "ActiveAlarms.didMount: " + this.state.stage );
     this.fetchList();
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
     this.setState( {unitTimer: myTimerID } );    
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "ActiveAlarms.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -85,51 +83,46 @@ class ActiveAlarms extends Component {
   }
   
   componentWillUnmount() {
-    Log.info( "ActiveAlarms.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
   }
     
   fetchList() {
-    Log.info( "ActiveAlarms.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/alarm/active/all";
     const now = new Date();
-    Log.info( "ActiveAlarms.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,"ActiveAlarms.fetchList" );
     if( myRequest !== null ) {
-      fetch(myRequest,{
+      const request = async () => {
+        const response = await fetch(myRequest,{
               method: 'GET',
               headers: {'Content-Type':'application/json',
                         'Cache-Control':'no-cache, no-store, max-age=0' }
-           })
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ActiveAlarms(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ActiveAlarms.fetchList: JSON retrieved - " + json);
-           var almList = [];
-           json.map( function(n,x) { 
-             var t = new Tag( n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
-                            , n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId, null
-                            , null, null, null, null, 'Y');
-             var a = new Alarm( n.id, t, n.almOccurred, n.acknowledged, n.active, n.priority
-                              , n.alarmCode, n.color, n.message, n.value); 
-             return almList.push( a ); 
-           } );
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched",
-                           alarmList: almList } );
-        }).catch(function(e) { 
-           alert("Problem retrieving active alarm list\n"+e);
-           const emsg = "ActiveAlarms.fetchList: Fetching active alarm list " + e;
-           Log.error(emsg);
-      });
+           });
+        const json = await response.json();
+        Log.info( "I/O complete ", "ActiveAlarms.fetchList" );
+        var almList = [];
+        json.map( function(n,x) { 
+          var t = new Tag( n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
+                         , n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId, null
+                         , null, null, null, null, 'Y');
+          var a = new Alarm( n.id, t, n.almOccurred, n.acknowledged, n.active, n.priority
+                           , n.alarmCode, n.color, n.message, n.value); 
+          return almList.push( a ); 
+        } );
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched",
+                        alarmList: almList } );
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem retrieving process unit list\n"+error);
+        const emsg = "Fetching process unit list " + error;
+        Log.error(emsg, "ActiveAlarms.fetchList");
+      }
     }
   }
   
@@ -166,7 +159,6 @@ class ActiveAlarms extends Component {
 
 
   render() {
-    Log.info("ActiveAlarms.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
       case "begin":
         return <Waiting />

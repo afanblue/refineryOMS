@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-
-import DefaultContents from './DefaultContents.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Log             from '../requests/Log.js';
-import PlotGroupForm   from './forms/PlotGroupForm.js';
-import PlotGroupList   from './lists/PlotGroupList.js';
-import Waiting         from './Waiting.js';
-import {PlotGroup}     from './objects/PlotGroup.js';
-
 /*************************************************************************
  * PlotGroupAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +15,17 @@ import {PlotGroup}     from './objects/PlotGroup.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT} from '../../Parameters.js';
+
+import DefaultContents from './DefaultContents.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
+import PlotGroupForm   from './forms/PlotGroupForm.js';
+import PlotGroupList   from './lists/PlotGroupList.js';
+import Waiting         from './Waiting.js';
+import {PlotGroup}     from './objects/PlotGroup.js';
 
 
 
@@ -133,9 +133,8 @@ class PlotGroupAdmin extends Component {
         default: pg.id4 = ail[i]; break;
       }
     }
-    pg.aiList = null;
+    delete pg.aiList;
     const b = JSON.stringify(pg);
-    Log.info("PlotGroupAdmin.PlotGroupUpdate "+method)
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
@@ -174,9 +173,10 @@ class PlotGroupAdmin extends Component {
       let f = -1;
       let tNew = [];
       let tLength = (pgnew.aiList===null?0:pgnew.aiList.length);
+      let nVal = parseInt(value,10);
       for( var i=0; i<tLength; i++) {
         let v = parseInt(pgnew.aiList.shift(),10);
-        if( v === parseInt(value,10) ) { 
+        if( v === nVal ) { 
           f = i;
         } else {
           tNew.push(v);
@@ -186,7 +186,7 @@ class PlotGroupAdmin extends Component {
         if( tNew.length >= 4 ) {
           alert("Plot Groups can only contain 4 tags\n\nPlease remove one before selecting another");
         } else {
-          tNew.push(value);
+          tNew.push(nVal);
         }
       }
       pgnew.aiList = tNew;
