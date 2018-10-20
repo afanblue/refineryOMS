@@ -20,7 +20,6 @@ import React, {Component} from 'react';
 import Log           from '../../requests/Log.js';
 import {PlotDetails} from '../objects/PlotGroup.js';
 
-//import { Stage, Layer, Text } from 'react-konva';
 import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
 import moment from 'moment';
 

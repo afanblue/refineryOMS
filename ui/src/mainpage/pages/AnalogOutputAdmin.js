@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import AOForm          from './forms/AOForm.js';
-import AOList          from './lists/AOList.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Waiting         from './Waiting.js';
-import {Tag}           from './objects/Tag.js';
-import {AnalogOutput}  from './objects/AO.js';
-
 /*************************************************************************
  * AlarmOutputAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +15,17 @@ import {AnalogOutput}  from './objects/AO.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import AOForm          from './forms/AOForm.js';
+import AOList          from './lists/AOList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {AnalogOutput}  from './objects/AO.js';
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -60,6 +60,7 @@ class AnalogOutputAdmin extends Component {
     this.finishHistTypesFetch = this.finishHistTypesFetch.bind(this);
     this.finishUnitsFetch  = this.finishUnitsFetch.bind(this);
     this.finishSiteFetch   = this.finishSiteFetch.bind(this);
+    this.finishListFetch   = this.finishListFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -131,44 +132,6 @@ class AnalogOutputAdmin extends Component {
     req4.fetchData();
   }
 
-/*
-  handleSelect(event) {
-    let now = new Date();
-    Log.info( "AnalogOutputAdmin.aoSelect " + now.toISOString() );
-    const id = event.z;
-    const myRequest=SERVERROOT + "/ao/" + id;
-    now = new Date();
-    Log.info( "AnalogOutputAdmin.aoSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("AnalogOutputAdmin.aoSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let aod = json;
-       var tg = new Tag( aod.tag.id, aod.tag.name, aod.tag.description, aod.tag.tagTypeCode
-                       , aod.tag.tagTypeId, aod.tag.misc, aod.tag.c1Lat, aod.tag.c1Long
-                       , aod.tag.c2Lat, aod.tag.c2Long, aod.tag.active);
-       var ao = new AnalogOutput( aod.tagId, tg, aod.zeroValue, aod.maxValue
-                       , aod.histTypeCode, aod.percent, aod.slope, aod.scanValue, aod.scanTime
-                       , aod.prevValue, aod.prevTime, aod.lastHistValue, aod.lastHistTime, aod.unitId);
-       ao.histTypes = aod.histTypes;
-       ao.unitList = aod.unitList;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      ao: ao
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting analog output id "+id+"\n"+error);
-       Log.error("AnalogOutputAdmin.aoSelect: Error - " + error);  
-    });
-  }
-*/  
   /** 
    * validateForm - x is an AO object
    */
@@ -195,27 +158,30 @@ class AnalogOutputAdmin extends Component {
 
   handleUpdate(event) {
     event.preventDefault();
-    const id = this.state.ao.tagId;
-    Log.info("AnalogOutputAdmin.aoUpdate: (data) tagId="+id
-               +", name:"+this.state.ao.tag.name);
+    const clsMthd = "AnalogOutputAdmin.aoUpdate";
+    const ao = this.state.ao;
+    const id = ao.tagId;
+    Log.info("(data) tagId="+id+", name:"+ao.tag.name,clsMthd);
     let method = "PUT";
     let url = SERVERROOT + "/ao/update";
     if( id === 0 ) {
       method = "POST";
       url = SERVERROOT + "/ao/insert";
     }
-    if( this.validateForm( this.state.ao ) ) {
-      var b = JSON.stringify( this.state.ao );
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .catch(function(error) { 
-          alert("Problem "+(id===0?"inserting":"updating")+" analog output "
-                +"id "+id+"\n"+error);
-          Log.error("AnalogOutputAdmin.aoUpdate: Error - " + error);  
-      });
+    if( this.validateForm( ao ) ) {
+      var b = JSON.stringify( ao );
+      const request = async () => {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        Log.info( "update complete",clsMthd );
+        alert("Update/insert complete on "+ao.tag.name)
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" analog output "
+             +"id "+id+" ("+ao.tag.name+")\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
   }
   
@@ -279,32 +245,23 @@ class AnalogOutputAdmin extends Component {
       }
       this.setState( {ao: aonew, nextCorner:nextCorner} );
   }
+  
+  finishListFetch(resp) {
+    this.setState( {returnedText: resp, 
+                    updateData: false, 
+                    updateDisplay:true,
+                    stage: "dataFetched" } );
+  }
  
   fetchList() {
-    Log.info( "AnalogOutputAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/ao/all";
     const now = new Date();
-    Log.info( "AnalogOutputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    const loc = "AnalogOutputAdmin.aiSelect";
+    Log.info( now.toISOString() + " Request: " + myRequest,loc );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("AnalogOutputAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("AnalogOutputAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving analog output list\n"+e);
-           const emsg = "AnalogOutputAdmin.fetchList: Fetching ao list " + e;
-           Log.error(emsg);
-      });
+      let req0 = new OMSRequest(loc, myRequest,
+                              "Problem selecting analog output list", this.finishListFetch);
+      req0.fetchData();
     }
   }
 

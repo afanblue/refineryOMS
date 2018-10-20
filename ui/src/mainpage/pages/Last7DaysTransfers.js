@@ -1,12 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import Log          from '../requests/Log.js';
-import Last7DaysTransferList from './lists/Last7TransferList.js';
-import DefaultContents from './DefaultContents.js';
-import TransferForm from './forms/TransferForm.js';
-import Waiting from './Waiting.js';
-import {Transfer} from './objects/Transfer.js';
-
 /*************************************************************************
  * Last7DaysTransfers.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -24,6 +15,15 @@ import {Transfer} from './objects/Transfer.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT} from '../../Parameters.js';
+import Log          from '../requests/Log.js';
+import Last7DaysTransferList from './lists/Last7TransferList.js';
+import DefaultContents from './DefaultContents.js';
+import TransferForm from './forms/TransferForm.js';
+import Waiting from './Waiting.js';
+import {Transfer} from './objects/Transfer.js';
 
 
 /*
@@ -80,37 +80,31 @@ class Last7DaysTransfers extends Component {
   }
   
   handleTransferSelect(event) {
-    let now = new Date();
-    Log.info( "Last7DaysTransfers.transferSelect " + now.toISOString() );
+    const clsMthd = "Last7DaysTransfers.transferSelect";
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
-    now = new Date();
-    Log.info( "Last7DaysTransfers.transferSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("Last7DaysTransfers.transferSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let ud = json;
-       var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                           ,ud.transferTypeId,ud.transferType
-                           ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                           ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                           ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      transfer: x
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting transfer id "+id+"\n"+error);
-       Log.error("Last7DaysTransfers.transferSelect: Error - " + error);  
-    });
+    const request = async () => {
+      const response = await fetch(myRequest);
+      const json = await response.json();
+      let ud = json;
+      var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
+                          ,ud.transferTypeId,ud.transferType
+                          ,ud.sourceId,ud.source,ud.destinationId, ud.destination
+                          ,ud.expStartTime,ud.expEndTime,ud.expVolume
+                          ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
+      this.setState({stage: "itemRetrieved",
+                     updateDisplay: true,
+                     updateData: false,
+                     returnedText: json,
+                     transfer: x
+                    });
+    }
+    try {
+      request();
+    } catch( e ) {
+      alert("Problem fetching XXXX id "+id+"\n"+e);
+      Log.error("Error - " + e, clsMthd);        
+    }
   }
 
   validateForm( x ) {
@@ -145,19 +139,29 @@ class Last7DaysTransfers extends Component {
     let doSubmit = this.validateForm(x);
     if( doSubmit ) {
       const id = this.state.transfer.id;
-      Log.info("Last7DaysTransfers.transferUpdate: (data) id="+id
-                 +", name:"+this.state.transfer.name);
+      const clsMthd = "Last7DaysTransfers.transferUpdate";
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
       if( id === 0 ) {
         method = "POST";
         url = SERVERROOT + "/transfer/insert";
       }
-//      let tt = new Date(x.expStartTime);
-//      x.expStartTime = tt;
-//      tt = new Date(x.expEndTime);
-//      x.expEndTime = tt;
       var b = JSON.stringify( this.state.transfer );
+      const request = async () => {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        Log.info( "update complete",clsMthd );
+        alert("Update/insert complete on "+this.state.transfer.name)
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" XXXX "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
+
+
+
       fetch(url, {
         method: method,
         headers: {'Content-Type':'application/json'},

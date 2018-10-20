@@ -1,8 +1,3 @@
-import React, {Component} from 'react';
-
-import {Role} from '../objects/Role.js';
-import Log    from '../../requests/Log.js';
-
 /*************************************************************************
  * RoleList.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -20,6 +15,11 @@ import Log    from '../../requests/Log.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+
+import {Role} from '../objects/Role.js';
+import Log    from '../../requests/Log.js';
 
 
 class RoleList extends Component {

@@ -1,11 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}  from '../../Parameters.js';
-//import {Schematic} from './objects/Schematic.js';
-import {CE, IL3}     from './objects/ListObjects.js';
-import Log           from '../requests/Log.js';
-import SiteOverview  from './SiteOverview.js';
-import Waiting       from './Waiting.js';
-
 /*************************************************************************
  * ListSchematics.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -23,6 +15,13 @@ import Waiting       from './Waiting.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}  from '../../Parameters.js';
+import {CE, IL3}     from './objects/ListObjects.js';
+import Log           from '../requests/Log.js';
+import SiteOverview  from './SiteOverview.js';
+import Waiting       from './Waiting.js';
 
 
 class ListSchematics extends Component {
@@ -45,30 +44,26 @@ class ListSchematics extends Component {
   }
 
   fetchList() {
-    Log.info( "ListSchematics.fetchList : " + this.state.stage );
+    const clsMthd = "ListSchematics.fetchList";
     const myRequest = SERVERROOT + "/schematic/all";
     const now = new Date();
-    Log.info( "ListSchematics.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ListSchematics(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ListSchematics.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving schematic list\n"+e);
-           const emsg = "ListSchematics.fetchList: Fetching schematic list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem retrieving schematic list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
 

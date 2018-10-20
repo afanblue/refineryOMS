@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import UserList        from './lists/UserList.js';
-import UserForm        from './forms/UserForm.js';
-import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Waiting         from './Waiting.js';
-import {User}          from './objects/User.js';
-
 /*************************************************************************
  * UserAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {User}          from './objects/User.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import UserList        from './lists/UserList.js';
+import UserForm        from './forms/UserForm.js';
+import DefaultContents from './DefaultContents.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {User}          from './objects/User.js';
 
 
 
@@ -56,9 +56,10 @@ class UserAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "UserAdmin.willRcvProps: " + nextProps.selected + ":"
+    let clsMthd = "UserAdmin.willRcvProps";
+    Log.info( "nextProps: " + nextProps.selected + ":"
                + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
+               + "/" + nextProps.stage, clsMthd );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -69,8 +70,9 @@ class UserAdmin extends Component {
   }
   
   shouldComponentUpdate(nextProps,nextState) {
+    let clsMthd = "UserAdmin.shouldUpdate";
     let sts = nextState.updateDisplay;
-    Log.info( "UserAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
+    Log.info( "stage (" + nextState.stage + ") " + (sts?"T":"F"), clsMthd );
     return sts;
   }
 
@@ -100,72 +102,38 @@ class UserAdmin extends Component {
 //    Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
 //    Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
   }
-/* */
-/*
-  handleUserSelect(event) {
-    let now = new Date();
-    Log.info( "UserAdmin.userSelect " + now.toISOString() );
-    const id = event.z;
-    const myRequest=SERVERROOT + "/user/" + id;
-    now = new Date();
-    Log.info( "UserAdmin.userSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("UserAdmin.userSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let ud = json;
-       const u = new User(ud.id,ud.alias,ud.firstName,ud.middleName,ud.lastName,ud.email
-                         ,ud.password,ud.state,ud.status,ud.roleId);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      user: u                     
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting user id "+id+"\n"+error);
-       Log.error("UserAdmin.userSelect: Error - " + error);  
-    });
-  }
-*/
 
   handleUserUpdate(event) {
     event.preventDefault();
-//    Log.info("UserAdmin.handleUpdate: "+event);
-    const id = this.state.user.id;
-    Log.info("UserAdmin.userUpdate: id="+id
-               +", alias:"+this.state.alias);
+    const clsMthd = "UserAdmin.handleUpdate";
+    const user = this.state.user;
+    const id = user.id;
     let method = "PUT";
     let url = "http://localhost:8080/oms/user/update";
     if( id === 0 ) {
       method = "POST";
       url = "http://localhost:8080/oms/user/insert";
     }
-    const b = JSON.stringify(this.state.user);
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" user "
-             +"id "+id+"\n"+error);
-        Log.error("UserAdmin.userUpdate: Error - " + error);  
-    });
+    const b = JSON.stringify(user);
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "update complete",clsMthd );
+      alert("Update/insert complete on user, id="+id)
+    }
+    try {
+      request();
+    } catch( error ) {
+      const emsg = "Problem "+(id===0?"inserting":"updating")+" user, id="+id;
+      alert(emsg+"\n"+error);
+      Log.error(emsg+" - " + error,clsMthd);
+    }
   }
 
   componentDidMount() {
-    Log.info( "UserAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "UserAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -183,30 +151,24 @@ class UserAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "UserAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "UserAdmin.fetchList";
     const myRequest = SERVERROOT + "/user/all";
-    const now = new Date();
-    Log.info( "UserAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("UserAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("UserAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving user list\n"+e);
-           const emsg = "UserAdmin.fetchList: Fetching user list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching user list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
 
@@ -220,7 +182,6 @@ class UserAdmin extends Component {
   }
   
   render() {
-    Log.info("UserAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import DIForm          from './forms/DIForm.js';
-import DIList          from './lists/DIList.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Waiting         from './Waiting.js';
-import {Tag}           from './objects/Tag.js';
-import {DigitalInput}  from './objects/DI.js';
-
 /*************************************************************************
  * DigitalInputAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +15,17 @@ import {DigitalInput}  from './objects/DI.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import DIForm          from './forms/DIForm.js';
+import DIList          from './lists/DIList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {DigitalInput}  from './objects/DI.js';
 
 
 
@@ -133,47 +133,9 @@ class DigitalInputAdmin extends Component {
                             "Problem retrieving site location", this.finishSiteFetch);
     req4.fetchData();    
   }
-/*
-    let now = new Date();
-    Log.info( "DigitalInputAdmin.diSelect " + now.toISOString() );
-    const id = event.z;
-    const myRequest=SERVERROOT + "/di/" + id;
-    now = new Date();
-    Log.info( "DigitalInputAdmin.diSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("DigitalInputAdmin.diSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let did = json;
-       var tg = new Tag(did.tag.id,did.tag.name,did.tag.description,did.tag.tagTypeCode
-                       ,did.tag.tagTypeId, did.tag.misc
-                       ,did.tag.c1Lat,did.tag.c1Long,did.tag.c2Lat,did.tag.c2Long
-                       ,did.tag.active);
-       var di = new DigitalInput(did.tagId, tg, did.scanInt, did.scanOffset
-                       , did.currentScan, did.histTypeCode, did.alarmState, did.alarmCode
-                       , did.scanValue, did.scanTime, did.prevValue, did.prevScanTime
-                       , did.lastHistValue, did.lastHistTime, did.valueView);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      di: di
-                     });
-    }).catch(function(error) { 
-       alert("Problem retrieving digital input id "+id+"\n"+error);
-       Log.error("DigitalInputAdmin.diSelect: Error - " + error);  
-    });
-  }
-*/
 
   handleUpdate(id) {
-    Log.info("DigitalInputAdmin.diUpdate: (data) tagId="+id
-               +", name:"+this.state.di.tag.name);
+    const clsMthd = "DigitalInputAdmin.diUpdate";
     let method = "PUT";
     let url = SERVERROOT + "/di/update";
     var diNew = Object.assign({},this.state.di);
@@ -190,16 +152,18 @@ class DigitalInputAdmin extends Component {
  	diNew.updated=null;
  	diNew.views=null;
     var b = JSON.stringify( diNew );
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" digital input "
-             +" id "+id+"\n"+error);
-        Log.error("DigitalInputAdmin.diUpdate: Error - " + error);  
-    });
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "update complete",clsMthd );
+      alert("Update/insert complete on "+diNew.tag.name)
+    }
+    try {
+      request();
+    } catch( error ) {
+      alert("Problem "+(id===0?"inserting":"updating")+" digital input "
+           +"id "+id+"\n"+error);
+      Log.error("Error - " + error,clsMthd);
+    }
   }
 
   handleDIUpdate(event) {
@@ -268,30 +232,25 @@ class DigitalInputAdmin extends Component {
   }
  
   fetchList() {
-    Log.info( "DigitalInputAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "DigitalInputAdmin.fetchList";
     const myRequest = SERVERROOT + "/di/all";
     const now = new Date();
-    Log.info( "DigitalInputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("DigitalInputAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("DigitalInputAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving digital input list\n"+e);
-           const emsg = "DigitalInputAdmin.fetchList: Fetching di list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        alert("Problem fetching digital input list\n"+e);
+        Log.error("Error - " + e, clsMthd);   
+      }
     }
   }
 

@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import Log             from '../requests/Log.js';
-import DefaultContents from './DefaultContents.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import RoleForm        from './forms/RoleForm.js';
-import RoleList        from './lists/RoleList.js';
-import Waiting         from './Waiting.js';
-import {Role}          from './objects/Role.js';
-
 /*************************************************************************
  * RoleAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {Role}          from './objects/Role.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import Log             from '../requests/Log.js';
+import DefaultContents from './DefaultContents.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import RoleForm        from './forms/RoleForm.js';
+import RoleList        from './lists/RoleList.js';
+import Waiting         from './Waiting.js';
+import {Role}          from './objects/Role.js';
 
 
 
@@ -107,35 +107,6 @@ class RoleAdmin extends Component {
                             "Problem retrieving privilege list", this.finishRolePrivsFetch);
     req3.fetchData();    
   }
-/*
-  fetchFormData(id) {
-    const myRequest = SERVERROOT + "/role/" + id;
-    Log.info( "RoleAdmin.fetchFormData - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("RoleAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let rd = json;
-       const r = new Role(rd.id,rd.name,rd.active,rd.privs,null);
-       const privList = rd.privileges;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: rd,
-                      role: r,
-                      privList: privList
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting role id "+id+"\n"+error);
-       Log.error("RoleAdmin.fetchFormData: Error - " + error);  
-    });
-  }
-*/
 
   handleRoleSelect(event) {
     let now = new Date();
@@ -146,6 +117,7 @@ class RoleAdmin extends Component {
 
   handleRoleUpdate(event) {
     event.preventDefault();
+    const clsMthd = "RoleAdmin.roleUpdate";
     const id = this.state.role.id;
     let method = "PUT";
     let url = SERVERROOT + "/role/update";
@@ -155,19 +127,19 @@ class RoleAdmin extends Component {
     }
     var r = this.state.role;
     const b = JSON.stringify(r);
-    Log.info("RoleAdmin.roleUpdate "+method)
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
-        this.fetchFormData(id);
-    }).catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" role "
-             +"id "+id+"\n"+error);
-        Log.error("RoleAdmin.roleUpdate: Error - " + error);  
-    });
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "Role update complete",clsMthd );
+      alert("Update/insert complete on "+r.name)
+      this.fetchFormData(id);
+    }
+    try {
+      request();
+    } catch( error ) {
+      alert("Problem "+(id===0?"inserting":"updating")+" role "
+           +"id "+id+"\n"+error);
+      Log.error("Error - " + error,clsMthd);
+    }
   }
   
   componentDidMount() {
@@ -217,30 +189,26 @@ class RoleAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "RoleAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "RoleAdmin.fetchList";
     const myRequest = SERVERROOT + "/role/all";
     const now = new Date();
-    Log.info( "RoleAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest, clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("RoleAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("RoleAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving role list\n"+e);
-           const emsg = "RoleAdmin.fetchList: Fetching role list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching role list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
   

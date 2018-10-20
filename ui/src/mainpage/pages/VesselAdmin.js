@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
-import VesselForm      from './forms/VesselForm.js';
-import VesselList      from './lists/VesselList.js';
-import Waiting         from './Waiting.js';
-import {Vessel}        from './objects/Vessel.js';
-import {Tag}           from './objects/Tag.js';
-
 /*************************************************************************
  * VesselAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {Tag}           from './objects/Tag.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import Log             from '../requests/Log.js';
+import VesselForm      from './forms/VesselForm.js';
+import VesselList      from './lists/VesselList.js';
+import Waiting         from './Waiting.js';
+import {Vessel}        from './objects/Vessel.js';
+import {Tag}           from './objects/Tag.js';
 
 
 
@@ -74,37 +74,32 @@ class VesselAdmin extends Component {
 
   fetchFormData(id) {
     const myRequest = SERVERROOT + "/vessel/" + id;
-    Log.info( "VesselAdmin.fetchFormData - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("VesselAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let vd = json;
-       const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode,vd.tag.tagTypeId
-                        ,vd.tag.misc,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
-       const v = new Vessel(vd.id,t,vd.vesselName,vd.quantity,vd.customerId,vd.customer);
-       const custList = vd.customers;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: vd,
-                      vessel: v,
-                      custList: custList
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting vessel id "+id+"\n"+error);
-       Log.error("VesselAdmin.fetchFormData: Error - " + error);  
-    });
+    const clsMthd = "VesselAdmin.fetchFormData";
+    const request = async () => {
+      const response = await fetch(myRequest);
+      const vd = await response.json();
+      const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode,vd.tag.tagTypeId
+                       ,vd.tag.misc,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
+      const v = new Vessel(vd.id,t,vd.vesselName,vd.quantity,vd.customerId,vd.customer);
+      const custList = vd.customers;
+      this.setState({stage: "itemRetrieved",
+                     updateDisplay: true,
+                     updateData: false,
+                     returnedText: vd,
+                     vessel: v,
+                     custList: custList
+                    });
+    }
+    try {
+      request();
+    } catch( e ) {
+      const emsg = "Problem fetching vessel id "+id; 
+      alert(emsg+"\n"+e);
+      Log.error(emsg+" - " + e, clsMthd);        
+    }
   }
 
   handleVesselSelect(event) {
-    let now = new Date();
-    Log.info( "VesselAdmin.vesselSelect " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -121,7 +116,21 @@ class VesselAdmin extends Component {
     var v = this.state.vessel;
     v.tag.name = v.tag.tagTypeCode+id;
     const b = JSON.stringify(v);
-    Log.info("VesselAdmin.vesselUpdate "+method)
+    const clsMthd = "VesselAdmin.vesselUpdate";
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "update complete",clsMthd );
+      alert("Update/insert complete on "+v.tag.name)
+      this.fetchFormData(id);
+    }
+    try {
+      request();
+    } catch( error ) {
+      const emsg = "Problem "+(id===0?"inserting":"updating")+" vessel, id="+id;
+      alert(emsg+"\n"+error);
+      Log.error(emsg+" - " + error,clsMthd);
+    }
+    
     fetch(url, {
       method: method,
       headers: {'Content-Type':'application/json'},
@@ -167,30 +176,24 @@ class VesselAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "VesselAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "VesselAdmin.fetchList";
     const myRequest = SERVERROOT + "/vessel/all";
-    const now = new Date();
-    Log.info( "VesselAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("VesselAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("VesselAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving vessel list\n"+e);
-           const emsg = "VesselAdmin.fetchList: Fetching vessel list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching vessel list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
   

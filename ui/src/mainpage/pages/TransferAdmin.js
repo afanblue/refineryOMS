@@ -208,8 +208,9 @@ class TransferAdmin extends Component {
     }
     var b = JSON.stringify( newt );
     const request = async () => {
-      const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
       Log.info( "TransferAdmin.fetchList: update complete " );
+      alert("Update complete on "+newt.name)
     }
     try {
       request();

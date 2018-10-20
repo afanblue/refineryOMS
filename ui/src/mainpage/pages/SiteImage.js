@@ -1,9 +1,3 @@
-import React, {Component} from 'react';
-import Log                from '../requests/Log.js';
-
-import {Image}            from 'react-konva';
-import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-
 /*************************************************************************
  * SiteImage.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -21,6 +15,12 @@ import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import Log                from '../requests/Log.js';
+
+import {Image}            from 'react-konva';
+import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 
 
 class SiteImage extends Component {

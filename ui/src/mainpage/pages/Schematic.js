@@ -1,11 +1,3 @@
-import React, {Component} from 'react';
-import Log                from '../requests/Log.js';
-
-import {SERVERROOT}       from '../../Parameters.js';
-import DefaultContents    from './DefaultContents.js';
-import SchematicDisplay   from './displays/SchematicDisplay.js';
-import Waiting            from './Waiting.js';
-
 /*************************************************************************
  * Schematic.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -23,6 +15,14 @@ import Waiting            from './Waiting.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import Log                from '../requests/Log.js';
+
+import {SERVERROOT}       from '../../Parameters.js';
+import DefaultContents    from './DefaultContents.js';
+import SchematicDisplay   from './displays/SchematicDisplay.js';
+import Waiting            from './Waiting.js';
 
 
 class Schematic extends Component {
@@ -102,7 +102,6 @@ class Schematic extends Component {
 
 /* */
   handleQuit() {
-    Log.info( "Schematic: handleQuit" );
     this.fetchList(this.state.option);
     clearInterval(this.state.itemTimer);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
@@ -110,34 +109,25 @@ class Schematic extends Component {
   }
 
   fetchList(opt) {
-    Log.info( "Schematic.fetchList : " + opt );
+    const clsMthd = "Schematic.fetchList";
     const myRequest = SERVERROOT + "/schematic/" + opt;
-    const now = new Date();
-    Log.info( "Schematic.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest,{
-              method: 'GET',
-              headers: {'Content-Type':'application/json',
-                        'Cache-Control':'no-cache, no-store, max-age=0' }
-           })
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("Schematic.fetchList: response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("Schematic.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched"} );
-        }).catch(function(e) { 
-           alert("Problem retrieving field list\n"+e);
-           const emsg = "Schematic.fetchList: Fetching field list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching schematic list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
+
     }
   }
 

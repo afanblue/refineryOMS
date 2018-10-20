@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import {CalcVar}    from './objects/CalcVar.js';
-import CalcVarForm  from './forms/CalcVarForm.js';
-import CalcVarList  from './lists/CalcVarList.js';
-import Log          from '../requests/Log.js';
-import OMSRequest   from '../requests/OMSRequest.js';
-import {Tag}        from './objects/Tag.js';
-import Waiting      from './Waiting.js';
-
 /*************************************************************************
  * CalcVarAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -27,6 +16,17 @@ import Waiting      from './Waiting.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {SERVERROOT} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import {CalcVar}    from './objects/CalcVar.js';
+import CalcVarForm  from './forms/CalcVarForm.js';
+import CalcVarList  from './lists/CalcVarList.js';
+import Log          from '../requests/Log.js';
+import OMSRequest   from '../requests/OMSRequest.js';
+import {Tag}        from './objects/Tag.js';
+import Waiting      from './Waiting.js';
+
 
 class CalcVarAdmin extends Component {
   constructor(props) {
@@ -41,14 +41,14 @@ class CalcVarAdmin extends Component {
       calcInpList: null,
       calcOutList: null
     }
-    this.handleChange   = this.handleChange.bind(this);
-    this.handleSelect   = this.handleSelect.bind(this);
-    this.handleUpdate   = this.handleUpdate.bind(this);
-    this.handleQuit     = this.handleQuit.bind(this);
-    this.requestRender  = this.requestRender.bind(this);
-    this.handleCVFetch  = this.handleCVFetch.bind(this);
-    this.handleInpFetch = this.handleInpFetch.bind(this);
-    this.handleOutFetch = this.handleOutFetch.bind(this);
+    this.handleChange    = this.handleChange.bind(this);
+    this.handleSelect    = this.handleSelect.bind(this);
+    this.handleUpdate    = this.handleUpdate.bind(this);
+    this.handleQuit      = this.handleQuit.bind(this);
+    this.requestRender   = this.requestRender.bind(this);
+    this.handleCVFetch   = this.handleCVFetch.bind(this);
+    this.handleInpFetch  = this.handleInpFetch.bind(this);
+    this.handleOutFetch  = this.handleOutFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -165,17 +165,33 @@ class CalcVarAdmin extends Component {
 
   handleUpdate(event) {
     event.preventDefault();
-    const id = this.state.calcVar.id;
+    const clsMthd = "CalcVarAdmin.update";
+    const cv = this.state.calcVar;
+    const id = cv.id;
     let method = "PUT";
     let url = SERVERROOT + "/calcVariable/update";
     if( id === 0 ) {
       method = "POST";
       url = SERVERROOT + "/calcVariable/insert";
     }
-    var cv = Object.assign({},this.state.calcVar);
-    delete cv.inputTagIds;
+    var cvo = Object.assign({},cv);
+    delete cvo.inputTagIds;
     if( this.validateForm( cv ) ) {
-      const b = JSON.stringify(cv);
+      const b = JSON.stringify(cvo);
+      const request = async () => {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        Log.info( "update complete "+cvo.tag.name,clsMthd );
+        alert("Update/insert complete on "+cvo.tag.name)
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" CalcVar "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
+
+
       Log.info("CalcVarAdmin.update "+method)
       fetch(url, {
         method: method,
@@ -243,33 +259,27 @@ class CalcVarAdmin extends Component {
     this.setState({calcVar: cvnew } );
   }
   
-  
   fetchList() {
-    Log.info( "CalcVarAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "CalcVarAdmin.fetchList";
     const myRequest = SERVERROOT + "/calcVariable/all";
     const now = new Date();
-    Log.info( "CalcVarAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("CalcVarAdmin(fetchList): response ("+contentType+") must be a JSON string"); })
-          .then(json => {
-            Log.info("CalcVarAdmin.fetchList: JSON retrieved - " + json);
-            this.setState({ returnedText: json, 
-                            updateData: false, 
-                            updateDisplay:true,
-                            stage: "dataFetched" });
-            })
-          .catch(function(e) {
-             alert("Problem retrieving calcVar list\n"+e);
-             const emsg = "CalcVarAdmin.fetchList: Fetching calcVar list " + e;
-             Log.error(emsg);
-          });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        alert("Problem retrieving calcVar list\n"+e);
+        const emsg = "CalcVarAdmin.fetchList: Fetching calcVar list " + e;
+        Log.error(emsg,clsMthd);
+      }
     }
   }
 

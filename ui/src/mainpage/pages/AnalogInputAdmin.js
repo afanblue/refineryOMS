@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import AIForm          from './forms/AIForm.js';
-import AIList          from './lists/AIList.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Waiting         from './Waiting.js';
-import {Tag}           from './objects/Tag.js';
-import {AnalogInput}   from './objects/AI.js';
-
 /*************************************************************************
  * AlarmTypeAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -27,6 +16,17 @@ import {AnalogInput}   from './objects/AI.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import AIForm          from './forms/AIForm.js';
+import AIList          from './lists/AIList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {AnalogInput}   from './objects/AI.js';
+
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -38,7 +38,6 @@ import {AnalogInput}   from './objects/AI.js';
 class AnalogInputAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AnalogInputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -73,9 +72,6 @@ class AnalogInputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "AnalogInputAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -87,7 +83,6 @@ class AnalogInputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "AnalogInputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -188,27 +183,30 @@ class AnalogInputAdmin extends Component {
 
   handleUpdate(event) {
     event.preventDefault();
-    const id = this.state.ai.tagId;
-    Log.info("AnalogInputAdmin.aiUpdate: (data) tagId="+id
-               +", name:"+this.state.ai.tag.name);
+    let ai = this.state.ai;
+    const id = ai.tagId;
+    const clsMthd = "AnalogInputAdmin.aiUpdate";
+    Log.info("(data) tagId="+id+", name:"+this.state.ai.tag.name,clsMthd);
     let method = "PUT";
     let url = SERVERROOT + "/ai/update";
     if( id === 0 ) {
       method = "POST";
       url = SERVERROOT + "/ai/insert";
     }
-    if( this.validateForm( this.state.ai ) ) {
-      var b = JSON.stringify( this.state.ai );
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .catch(function(error) { 
-          alert("Problem "+(id===0?"inserting":"updating")+" analog input "
-                +"id "+id+"\n"+error);
-          Log.error("Error - " + error,"AnalogInputAdmin.aiUpdate");  
-      });
+    if( this.validateForm( ai ) ) {
+      var b = JSON.stringify( ai );
+      const request = async () => {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        Log.info( "update complete",clsMthd );
+        alert("Update/insert complete on analog input ");
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" analog input "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
   }
   

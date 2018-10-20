@@ -131,24 +131,19 @@ class ActiveAlarms extends Component {
     const id = event.z;
     const myRequest = SERVERROOT + "/alarm/acknowledge/" + id;
     const now = new Date();
-    Log.info( "ActiveAlarms.handleSelect " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,"ActiveAlarms.handleSelect");
     if( myRequest !== null ) {
-      fetch(myRequest, {method: 'PUT'} )
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ActiveAlarms.handleSelect: response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ActiveAlarms.handleSelect: JSON retrieved - " + json);
-           this.fetchList()
-        }).catch(function(e) { 
-           alert("Problem acknowledging alarm\n"+e);
-           const emsg = "ActiveAlarms.handleSelect: Acknowledging alarm " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        await fetch(myRequest, {method:'PUT'});
+        Log.info( "update complete","ActiveAlarms.handleSelect" );
+      }
+      try {
+        request();
+      } catch( e ) {
+        alert("Problem acknowledging alarm\n"+e);
+        const emsg = "Acknowledging alarm " + e;
+        Log.error(emsg,"ActiveAlarms.handleSelect");
+      }
     }
   }
 

@@ -1,8 +1,3 @@
-import React from 'react';
-//import ReactDOM from 'react-dom';
-import { Circle, Line, Group } from 'react-konva';
-import Log      from '../../requests/Log.js';
-
 /*************************************************************************
  * ScmGauge.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -20,6 +15,11 @@ import Log      from '../../requests/Log.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React from 'react';
+//import ReactDOM from 'react-dom';
+import { Circle, Line, Group } from 'react-konva';
+import Log      from '../../requests/Log.js';
 
 
 export default class ScmGauge extends React.Component {

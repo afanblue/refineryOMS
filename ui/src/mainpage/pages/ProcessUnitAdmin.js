@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Log             from '../requests/Log.js';
-import DefaultContents from './DefaultContents.js';
-import ProcessUnitForm from './forms/ProcessUnitForm.js';
-import ProcessUnitList from './lists/ProcessUnitList.js';
-import Waiting from './Waiting.js';
-import {RelTagTag} from './objects/Tag.js';
-import {ProcessUnit} from './objects/ProcessUnit.js';
-
 /*************************************************************************
  * ProcessUnitAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -27,6 +16,16 @@ import {ProcessUnit} from './objects/ProcessUnit.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
+import DefaultContents from './DefaultContents.js';
+import ProcessUnitForm from './forms/ProcessUnitForm.js';
+import ProcessUnitList from './lists/ProcessUnitList.js';
+import Waiting from './Waiting.js';
+import {RelTagTag} from './objects/Tag.js';
+import {ProcessUnit} from './objects/ProcessUnit.js';
 
 
 class ProcessUnitAdmin extends Component {
@@ -141,20 +140,21 @@ class ProcessUnitAdmin extends Component {
     punew.childTags = childTags;
     punew.tags = null;
     const b = JSON.stringify(punew);
-    Log.info("ProcessUnitAdmin.update "+method);
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
-        const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
-        this.fetchFormData(myRequest);
-      }).catch(function(error) { 
-       alert("Problem "+(id===0?"inserting":"updating")+" process unit "
-            +"id "+id+"\n"+error);
-       Log.error("ProcessUnitAdmin.update: Error - " + error);  
-    });
+    const clsMthd = "ProcessUnitAdmin.update";
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "update complete",clsMthd );
+      const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
+      this.fetchFormData(myRequest);
+    }
+    try {
+      request();
+    } catch( error ) {
+      const emsg = "Problem "+(id===0?"inserting":"updating")+" XXXX "
+           +"id "+id;
+      alert(emsg+"\n"+error);
+      Log.error(emsg+" - " + error,clsMthd);
+    }
   }
   
   componentDidMount() {
@@ -204,30 +204,26 @@ class ProcessUnitAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "ProcessUnitAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "ProcessUnitAdmin.fetchList";
     const myRequest = SERVERROOT + "/processunit/all";
     const now = new Date();
-    Log.info( "ProcessUnitAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ProcessUnitAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ProcessUnitAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving process unit list\n"+e);
-           const emsg = "ProcessUnitAdmin.fetchList: Fetching process unit list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "ProcessUnitAdmin.fetchList: Fetching process unit list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - "+e);
+      }
     }
   }
 

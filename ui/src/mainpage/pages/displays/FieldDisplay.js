@@ -1,10 +1,3 @@
-import React, {Component} from 'react';
-import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import { Stage, Layer, Image } from 'react-konva';
-
-import Log    from '../../requests/Log.js';
-import Tank   from './Tank.js';
-
 /*************************************************************************
  * FieldDisplay.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -23,6 +16,12 @@ import Tank   from './Tank.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
+import { Stage, Layer, Image } from 'react-konva';
+
+import Log    from '../../requests/Log.js';
+import Tank   from './Tank.js';
 
 
 class Field extends Component {

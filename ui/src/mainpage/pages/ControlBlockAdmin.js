@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import ControlBlockForm from './forms/ControlBlockForm.js';
-import ControlBlockList from './lists/ControlBlockList.js';
-import Log              from '../requests/Log.js';
-import OMSRequest       from '../requests/OMSRequest.js';
-import Waiting from './Waiting.js';
-//import {Tag} from './objects/Tag.js';
-import {ControlBlock} from './objects/ControlBlock.js';
-
 /*************************************************************************
  * ControlBlockAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +15,17 @@ import {ControlBlock} from './objects/ControlBlock.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import ControlBlockForm from './forms/ControlBlockForm.js';
+import ControlBlockList from './lists/ControlBlockList.js';
+import Log              from '../requests/Log.js';
+import OMSRequest       from '../requests/OMSRequest.js';
+import Waiting from './Waiting.js';
+//import {Tag} from './objects/Tag.js';
+import {ControlBlock} from './objects/ControlBlock.js';
 
 
 /*

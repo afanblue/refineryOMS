@@ -1,15 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
-import TankForm        from './forms/TankForm.js';
-import TankList        from './lists/TankList.js';
-import Waiting         from './Waiting.js';
-import {Tag}           from './objects/Tag.js';
-import {Tank}          from './objects/Tank.js';
-
-
 /*************************************************************************
  * TankAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -27,6 +15,18 @@ import {Tank}          from './objects/Tank.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import DefaultContents from './DefaultContents.js';
+import Log             from '../requests/Log.js';
+import TankForm        from './forms/TankForm.js';
+import TankList        from './lists/TankList.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {Tank}          from './objects/Tank.js';
+
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -152,17 +152,15 @@ class TankAdmin extends Component {
 
 
   handleTankSelect(event) {
-    let now = new Date();
-    Log.info( "TankAdmin.tankSelect " + now.toISOString() );
     const id = event.z;
     this.fetchTankData(id);
   }
 
   handleTankUpdate(event) {
     event.preventDefault();
-    const id = this.state.tank.id;
-    Log.info("TankAdmin.tankUpdate: (data) id="+id
-               +", alias:"+this.state.alias);
+    const tk = this.state.tank;
+    const id = tk.id;
+    const clsMthd = "TankAdmin.tankUpdate";
     let method = "PUT";
     let url = SERVERROOT + "/tank/update";
     if( id === 0 ) {
@@ -170,19 +168,19 @@ class TankAdmin extends Component {
       url = SERVERROOT + "/tank/insert";
     }
     var b = JSON.stringify( this.state.tank );
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
-        this.fetchTankData(id);
-    }).catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" tank "
-             +"id "+id+"\n"+error);
-        Log.error("TankAdmin.tankUpdate: Error - " + error);  
-    });
-;
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "Tank update complete",clsMthd );
+      alert("Update/insert complete on "+tk.tag.name)
+      this.fetchTankData(id);
+    }
+    try {
+      request();
+    } catch( error ) {
+      const emsg = "Problem "+(id===0?"inserting":"updating")+" tank, id="+id;
+      alert(emsg+"\n"+error);
+      Log.error(emsg+" - " + error,clsMthd);
+    }
   }
   
   componentDidMount() {
@@ -240,30 +238,24 @@ class TankAdmin extends Component {
   }
  
   fetchList() {
-    Log.info( "TankAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "TankAdmin.fetchList";
     const myRequest = SERVERROOT + "/tank/all";
-    const now = new Date();
-    Log.info( "TankAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("TankAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("TankAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving tank list\n"+e);
-           const emsg = "TankAdmin.fetchList: Fetching tank list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "TankAdmin.fetchList: Fetching tank list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
 

@@ -1,16 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Log             from '../requests/Log.js';
-
-import DefaultContents from './DefaultContents.js';
-import SchematicForm   from './forms/SchematicForm.js';
-import SchematicList   from './lists/SchematicList.js';
-import Waiting         from './Waiting.js';
-import {ChildValue}    from './objects/ChildValue.js';
-import {Schematic}     from './objects/Schematic.js';
-//import {Tag}           from './objects/Tag.js';
-
 /*************************************************************************
  * SchematicAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -29,6 +16,17 @@ import {Schematic}     from './objects/Schematic.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
+
+import DefaultContents from './DefaultContents.js';
+import SchematicForm   from './forms/SchematicForm.js';
+import SchematicList   from './lists/SchematicList.js';
+import Waiting         from './Waiting.js';
+import {ChildValue}    from './objects/ChildValue.js';
+import {Schematic}     from './objects/Schematic.js';
 
 
 class SchematicAdmin extends Component {
@@ -103,15 +101,16 @@ class SchematicAdmin extends Component {
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
+    const clsMthd = "SchematicAdmin.shouldUpdate";
     if( nextState.stage !== nextProps.stage ) { sts = true; }
     if( nextState.type  !== nextProps.type  ) { sts = true; }
-    Log.info( "SchematicAdmin.shouldUpdate (state? " + nextState.stage + "/" + nextProps.stage
-               + ", display: " + (sts?"T":"F") 
-               + ", data: " + (nextState.updateData?"T":"F") );
-    Log.info( "SchematicAdmin.shouldUpdate (props)? : display: " 
-               + (nextProps.updateDisplay?"T":"F") 
-               + ", data: " + (nextProps.updateData?"T":"F") );
-    Log.info("SchematicAdmin.shouldUpdate: type (props:" + nextProps.type+", state:"+nextState.type+")");
+    Log.info( "state? " + nextState.stage + "/" + nextProps.stage
+            + ", display: " + (sts?"T":"F") 
+            + ", data: " + (nextState.updateData?"T":"F"), clsMthd );
+    Log.info( "props? : display: " 
+            + (nextProps.updateDisplay?"T":"F") 
+            + ", data: " + (nextProps.updateData?"T":"F"), clsMthd );
+    Log.info("type (props:" + nextProps.type+", state:"+nextState.type+")", clsMthd);
 //    if( nextProps.type !== nextState.type ) {
 //      this.fetchList();
 //    }
@@ -197,8 +196,7 @@ class SchematicAdmin extends Component {
   }
 
   updateSchematic(id) {
-    Log.info("SchematicAdmin.updateSchematic: (data) id="+id
-               +", name:"+this.state.schematic.name);
+    const clsMthd = "SchematicAdmin.updateSchematic";
     let newt = Object.assign({},this.state.schematic);
     let method = "PUT";
     let url = SERVERROOT + "/schematic/update";
@@ -214,19 +212,18 @@ class SchematicAdmin extends Component {
     }
     newt.childTags = sct;
     var b = JSON.stringify( newt );
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
-        const myRequest=SERVERROOT + "/schematic/name/" + newt.name;
-        this.fetchFormData(myRequest);
-    }).catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" schematic "
-             +"id "+id+"\n"+error);
-        Log.error("SchematicAdmin.updateSchematic: Error - " + error);  
-    });
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      Log.info( "update complete",clsMthd );
+      alert("Update/insert complete on "+newt.name)
+    }
+    try {
+      request();
+    } catch( error ) {
+      const emsg = "Problem "+(id===0?"inserting":"updating")+" schematic id="+id; 
+      alert(emsg+"\n"+error);
+      Log.error(emsg+" - " + error,clsMthd);
+    }
   }
 
   handleSchematicUpdate(event) {
@@ -351,30 +348,24 @@ class SchematicAdmin extends Component {
   
  
   fetchList() {
-    Log.info( "SchematicAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "SchematicAdmin.fetchList";
     const myRequest = SERVERROOT + "/tag/type/SCM";
-    const now = new Date();
-    Log.info( "SchematicAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("SchematicAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("SchematicAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving schematic list\n"+e);
-           const emsg = "SchematicAdmin.fetchList: Fetching schematic list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching schematic list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
 

@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Log             from '../requests/Log.js';
-
-import DefaultContents from './DefaultContents.js';
-import PlotGroupVars   from './PlotGroupVars.js';
-import Waiting         from './Waiting.js';
-import {PlotGroup}     from './objects/PlotGroup.js';
-
 /*************************************************************************
  * AdHoc.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {PlotGroup}     from './objects/PlotGroup.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Log             from '../requests/Log.js';
+
+import DefaultContents from './DefaultContents.js';
+import PlotGroupVars   from './PlotGroupVars.js';
+import Waiting         from './Waiting.js';
+import {PlotGroup}     from './objects/PlotGroup.js';
 
 /**
  * the ad hoc form is appropriately ad hoc.  I fetch the contents of plot group
@@ -195,34 +195,6 @@ class AdHocAdmin extends Component {
     let req1 = new OMSRequest(loc, SERVERROOT + "/tag/idname/AI",
                             "Problem retrieving AI types", this.finishAIListFetch);
     req1.fetchData();
-  }
-
-
-  fetchHistory(id,ndx) {
-    if( id !== undefined) {
-      const myRequest = SERVERROOT + "/ai/history/" + id + "/2";
-      Log.info( "AdHoc.fetchHistory - Request: " + myRequest );
-      fetch(myRequest)
-        .then(this.handleErrors)
-        .then(response => {
-          var contentType = response.headers.get("Content-Type");
-          if(contentType && contentType.includes("application/json")) {
-            return response.json();
-          }
-          throw new TypeError("AdHoc.fetchHistory: response ("+contentType+") must be a JSON string");
-      }).then(json => {
-         let fd = json;
-         switch( ndx ) {
-           case 1:  this.setState({d0:fd}); break;
-           case 2:  this.setState({d1:fd}); break;
-           case 3:  this.setState({d2:fd}); break;
-           default: this.setState({d3:fd}); break;
-         }
-      }).catch(function(error) { 
-         alert("Problem selecting AdHoc id "+id+"\n"+error);
-         Log.error("AdHoc.fetchHistory: Error - " + error);  
-      });
-    }
   }
 
   handleUpdate(event) {

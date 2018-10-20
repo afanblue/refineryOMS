@@ -1,12 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}       from '../../Parameters.js';
-import ActiveTransferList from './lists/ActiveTransferList.js';
-import DefaultContents    from './DefaultContents.js';
-import Log                from '../requests/Log.js';
-import TransferForm       from './forms/TransferForm.js';
-import Waiting            from './Waiting.js';
-import {Transfer}         from './objects/Transfer.js';
-
 /*************************************************************************
  * ActiveTransfers.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -24,6 +15,15 @@ import {Transfer}         from './objects/Transfer.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}       from '../../Parameters.js';
+import ActiveTransferList from './lists/ActiveTransferList.js';
+import DefaultContents    from './DefaultContents.js';
+import Log                from '../requests/Log.js';
+import TransferForm       from './forms/TransferForm.js';
+import Waiting            from './Waiting.js';
+import {Transfer}         from './objects/Transfer.js';
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -79,40 +79,38 @@ class ActiveTransfers extends Component {
   
   handleTransferSelect(event) {
     let now = new Date();
-    Log.info( "ActiveTransfers.transferSelect " + now.toISOString() );
+    let method = "ActiveTransfers.transferSelect"; 
+    Log.info( now.toISOString(), method );
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     now = new Date();
-    Log.info( "ActiveTransfers.transferSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("ActiveTransfers.transferSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       if( this.state.unitTimer !== null ) {
-         clearInterval(this.state.unitTimer);
-       }
-       let ud = json;
-       var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                           ,ud.transferTypeId,ud.transferType
-                           ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                           ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                           ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      transfer: x,
-                      unitTimer:null
-                     });
-    }).catch(function(error) { 
+    Log.info( "Request: " + myRequest, method);
+    const request = async () => {
+      const response = await fetch(myRequest);
+      const json = await response.json();
+      if( this.state.unitTimer !== null ) {
+        clearInterval(this.state.unitTimer);
+      }
+      let ud = json;
+      var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
+                          ,ud.transferTypeId,ud.transferType
+                          ,ud.sourceId,ud.source,ud.destinationId, ud.destination
+                          ,ud.expStartTime,ud.expEndTime,ud.expVolume
+                          ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
+      this.setState({stage: "itemRetrieved",
+                     updateDisplay: true,
+                     updateData: false,
+                     returnedText: json,
+                     transfer: x,
+                     unitTimer:null
+                    });
+    }
+    try {
+      request();
+    } catch( error ) {
        alert("Problem selecting transfer id "+id+"\n"+error);
-       Log.error("ActiveTransfers.transferSelect: Error - " + error);  
-    });
+       Log.error("Error - " + error,method);  
+    }
   }
 
   validateForm( x ) {
@@ -145,43 +143,40 @@ class ActiveTransfers extends Component {
     event.preventDefault();
     let x = this.state.transfer;
     let doSubmit = this.validateForm(x);
+    let clsMthd = "ActiveTransfers.transferUpdate";
     if( doSubmit ) {
       const id = this.state.transfer.id;
-      Log.info("ActiveTransfers.transferUpdate: (data) id="+id
-                 +", name:"+this.state.transfer.name);
+      Log.info("(data) id="+id+", name:"+this.state.transfer.name,clsMthd);
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
       if( id === 0 ) {
         method = "POST";
         url = SERVERROOT + "/transfer/insert";
       }
-//      let tt = new Date(x.expStartTime);
-//      x.expStartTime = tt;
-//      tt = new Date(x.expEndTime);
-//      x.expEndTime = tt;
       var b = JSON.stringify( this.state.transfer );
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .catch(function(error) { 
-          alert("Problm "+(id===0?"inserting":"updating")+" transfer "
-               +"id "+id+"\n"+error);
-          Log.error("ActiveTransfers.transferUpdate: Error - " + error);  
-      });
+      const request = async () => {
+        await fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:b});
+        Log.info( "update complete ",clsMthd );
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" transfer "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
   }
   
   componentDidMount() {
-    Log.info( "ActiveTransfers.didMount: " + this.state.stage );
+    Log.info( this.state.stage, "ActiveTransfers.didMount" );
     var myTimerID = setInterval(() => {this.fetchList()}, 60000 );
     this.fetchList();
     this.setState({unitTimer:myTimerID});
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "ActiveTransfers.didUpdate: " + this.state.stage );
+    Log.info( this.state.stage,"ActiveTransfers.didUpdate" );
   }
 
   handleClick() {
@@ -206,30 +201,26 @@ class ActiveTransfers extends Component {
   
  
   fetchList() {
-    Log.info( "ActiveTransfers.fetchList : " + this.state.stage );
+    let method = "ActiveTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/active";
     const now = new Date();
-    Log.info( "ActiveTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,method );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ActiveTransfers(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ActiveTransfers.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving transfer list\n"+e);
-           const emsg = "ActiveTransfers.fetchList: Fetching transfer list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        alert("Problem retrieving transfer list\n"+e);
+        const emsg = "Fetching transfer list " + e;
+        Log.error(emsg,method);
+      }
     }
   }
 

@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import Log          from '../requests/Log.js';
-
-import ScheduledTransferList from './lists/ScheduledTransferList.js';
-import DefaultContents from './DefaultContents.js';
-import TransferForm from './forms/TransferForm.js';
-import Waiting from './Waiting.js';
-import {Transfer} from './objects/Transfer.js';
-
 /*************************************************************************
  * ScheduledTransfers.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {Transfer} from './objects/Transfer.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT} from '../../Parameters.js';
+import Log          from '../requests/Log.js';
+
+import ScheduledTransferList from './lists/ScheduledTransferList.js';
+import DefaultContents from './DefaultContents.js';
+import TransferForm from './forms/TransferForm.js';
+import Waiting from './Waiting.js';
+import {Transfer} from './objects/Transfer.js';
 
 
 /*
@@ -81,37 +81,32 @@ class ScheduledTransfers extends Component {
   }
   
   handleTransferSelect(event) {
-    let now = new Date();
-    Log.info( "ScheduledTransfers.transferSelect " + now.toISOString() );
+    const clsMthd = "ScheduledTransfers.transferSelect";
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
-    now = new Date();
-    Log.info( "ScheduledTransfers.transferSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("ScheduledTransfers.transferSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let ud = json;
-       var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                           ,ud.transferTypeId,ud.transferType
-                           ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                           ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                           ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      transfer: x
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting transfer id "+id+"\n"+error);
-       Log.error("ScheduledTransfers.transferSelect: Error - " + error);  
-    });
+    const request = async () => {
+      const response = await fetch(myRequest);
+      const json = await response.json();
+      let ud = json;
+      var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
+                          ,ud.transferTypeId,ud.transferType
+                          ,ud.sourceId,ud.source,ud.destinationId, ud.destination
+                          ,ud.expStartTime,ud.expEndTime,ud.expVolume
+                          ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
+      this.setState({stage: "itemRetrieved",
+                     updateDisplay: true,
+                     updateData: false,
+                     returnedText: json,
+                     transfer: x
+                    });
+    }
+    try {
+      request();
+    } catch( e ) {
+      const emsg = "Problem fetching transfer, id "+id;
+      alert(emsg+"\n"+e);
+      Log.error(emsg+" - " + e, clsMthd);        
+    }
   }
 
   validateForm( x ) {
@@ -145,40 +140,36 @@ class ScheduledTransfers extends Component {
     let x = this.state.transfer;
     let doSubmit = this.validateForm(x);
     if( doSubmit ) {
-      const id = this.state.transfer.id;
-      Log.info("ScheduledTransfers.transferUpdate: (data) id="+id
-                 +", name:"+this.state.transfer.name);
+      const xfer = this.state.transfer;
+      const id = xfer.id;
+      const clsMthd = "ScheduledTransfers.transferUpdate";
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
       if( id === 0 ) {
         method = "POST";
         url = SERVERROOT + "/transfer/insert";
       }
-//      let tt = new Date(x.expStartTime);
-//      x.expStartTime = tt;
-//      tt = new Date(x.expEndTime);
-//      x.expEndTime = tt;
-      var b = JSON.stringify( this.state.transfer );
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .catch(function(error) { 
-          alert("Problm "+(id===0?"inserting":"updating")+" transfer "
-               +"id "+id+"\n"+error);
-          Log.error("ScheduledTransfers.transferUpdate: Error - " + error);  
-      });
+      var b = JSON.stringify( xfer );
+      const request = async () => {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        Log.info( "update complete",clsMthd );
+        alert("Update/insert complete on "+xfer.name)
+      }
+      try {
+        request();
+      } catch( error ) {
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" transfer, id="+id; 
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
     }
   }
   
   componentDidMount() {
-    Log.info( "ScheduledTransfers.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "ScheduledTransfers.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -203,30 +194,24 @@ class ScheduledTransfers extends Component {
   
  
   fetchList() {
-    Log.info( "ScheduledTransfers.fetchList : " + this.state.stage );
+    const clsMthd = "ScheduledTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/scheduled";
-    const now = new Date();
-    Log.info( "ScheduledTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ScheduledTransfers(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ScheduledTransfers.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving transfer list\n"+e);
-           const emsg = "ScheduledTransfers.fetchList: Fetching transfer list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching transfer list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - "+e,clsMthd);        
+      }
     }
   }
 

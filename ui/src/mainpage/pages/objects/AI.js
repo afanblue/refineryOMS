@@ -1,5 +1,3 @@
-import {Tag} from './Tag.js';
-
 /*************************************************************************
  * AI.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -17,6 +15,8 @@ import {Tag} from './Tag.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import {Tag} from './Tag.js';
 
 export function AnalogInput(i,t,tc,si,so,cs,zv,mv,htc,p,s,rv,sv,st,pv,pt,lhv,lht,hh,hi,lo,ll,u) { 
   this.tagId=i; this.tag=t; this.analogTypeCode=tc; this.unitId=u; this.scanInt=si; 

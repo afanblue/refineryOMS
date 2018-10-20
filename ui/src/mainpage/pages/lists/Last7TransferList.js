@@ -1,7 +1,3 @@
-import React, {Component} from 'react';
-import Log        from '../../requests/Log.js';
-import {Transfer} from '../objects/Transfer.js';
-
 /*************************************************************************
  * Last7TransferList.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -19,6 +15,10 @@ import {Transfer} from '../objects/Transfer.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import Log        from '../../requests/Log.js';
+import {Transfer} from '../objects/Transfer.js';
 
 
 class Last7DaysTransferList extends Component {

@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-
-import {AlarmMsg}      from './objects/Alarm.js';
-import {SERVERROOT}    from '../../Parameters.js';
-import AlarmMsgForm    from './forms/AlarmMsgForm.js';
-import AlarmMsgList    from './lists/AlarmMsgList.js';
-import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Waiting         from './Waiting.js';
-
 /*************************************************************************
  * AlarmMsgAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +15,17 @@ import Waiting         from './Waiting.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+
+import {AlarmMsg}      from './objects/Alarm.js';
+import {SERVERROOT}    from '../../Parameters.js';
+import AlarmMsgForm    from './forms/AlarmMsgForm.js';
+import AlarmMsgList    from './lists/AlarmMsgList.js';
+import DefaultContents from './DefaultContents.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
 
 
 class AlarmMsgAdmin extends Component {
@@ -95,43 +95,13 @@ class AlarmMsgAdmin extends Component {
 //    Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
 //    Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
   }
-/*
-  handleMsgSelect(event) {
-    let now = new Date();
-    Log.info( "AlarmMsgAdmin.msgSelect " + now.toISOString() );
-    const id = event.z;
-    const myRequest=SERVERROOT + "/alarm/message/"+id;
-    now = new Date();
-    Log.info( "AlarmMsgAdmin.msgSelect - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("AlarmMsgAdmin.msgSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let amd = json;
-       const am = new AlarmMsg(amd.id,amd.abbr,amd.message);
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      msg: am                   
-                     });
-    }).catch(function(error) { 
-       alert("Problem getting selected alarm message id = "+id+"\n"+error);
-       Log.error("AlarmMsgAdmin.msgSelect: Error - " + error);  
-    });
-  }
-*/
+
   handleMsgUpdate(event) {
     event.preventDefault();
 //    Log.info("AlarmMsgAdmin.handleUpdate: "+event);
+    const clsMthd = "AlarmMsgAdmin.handleUpdate";
     const id = this.state.msg.id;
-    Log.info("AlarmMsgAdmin.msgUpdate: (data) id="+id
-               +", abbr:"+this.state.msg.abbr);
+    Log.info("(data) id="+id+", abbr:"+this.state.msg.abbr,clsMthd);
     let method = "PUT";
     let url = "http://localhost:8080/oms/alarm/message/update";
     if( id === 0 ) {
@@ -139,18 +109,18 @@ class AlarmMsgAdmin extends Component {
       url = "http://localhost:8080/oms/alarm/message/insert";
     }
     const b = JSON.stringify(this.state.msg);
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    })
-    .then(this.handleErrors)
-    .then(alert("Alarm message updated") )
-    .catch(function(error) { 
-       alert("Problem "+(method==="PUT"?"updating":"inserting")
-             +" alarm message\n"+error);
-       Log.error("Error - " + error,"AlarmMsgAdmin.msgUpdate");  
-    });
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      alert("Update/insert complete on message # "+id)
+      Log.info( "update complete",clsMthd );
+    }
+    try {
+      request();
+    } catch( error ) {
+      alert("Problem "+(id===0?"inserting":"updating")+" transfer "
+           +"id "+id+"\n"+error);
+      Log.error("Error - " + error,clsMthd);
+    }
   }
   
   componentDidMount() {
@@ -178,30 +148,26 @@ class AlarmMsgAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "AlarmMsgAdmin.fetchList : " + this.state.stage );
     const myRequest = SERVERROOT + "/alarm/message/all";
     const now = new Date();
-    Log.info( "AlarmMsgAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    let clsMthd = "AlarmMsgAdmin.fetchList";
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("AlarmMsgAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("AlarmMsgAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem getting selected alarm message list\n"+e);
-           const emsg = "AlarmMsgAdmin.fetchList: Fetching msg list " + e;
-           Log.error(emsg,"AlarmMsgAdmin.msgUpdate");
-      });
+      const request = async () => {
+        const resp = await fetch(myRequest);
+        const json = await resp.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        alert("Problem getting selected alarm message list\n"+e);
+        const emsg = "Fetching msg list " + e;
+        Log.error(emsg,clsMthd);
+      }
     }
   }
   

@@ -1,14 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import DOForm          from './forms/DOForm.js';
-import DOList          from './lists/DOList.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import Waiting         from './Waiting.js';
-import {Tag}           from './objects/Tag.js';
-import {DigitalOutput}  from './objects/DO.js';
-
 /*************************************************************************
  * DigitalOutputAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +15,17 @@ import {DigitalOutput}  from './objects/DO.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import DOForm          from './forms/DOForm.js';
+import DOList          from './lists/DOList.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import Waiting         from './Waiting.js';
+import {Tag}           from './objects/Tag.js';
+import {DigitalOutput}  from './objects/DO.js';
 
 
 /*
@@ -158,9 +158,9 @@ class DigitalOutputAdmin extends Component {
 
   handleUpdate(event) {
     event.preventDefault();
-    const id = this.state.doObj.tagId;
-    Log.info("DigitalOutputAdmin.doUpdate: (data) tagId="+id
-               +", name:"+this.state.doObj.tag.name);
+    const clsMthd = "DigitalOutputAdmin.update";
+    const doObj = this.state.doObj;
+    const id = doObj.tagId;
     let method = "PUT";
     let url = SERVERROOT + "/do/update";
     if( id === 0 ) {
@@ -169,16 +169,18 @@ class DigitalOutputAdmin extends Component {
     }
     if( this.validateForm( this.state.doObj ) ) {
       var b = JSON.stringify( this.state.doObj );
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .catch(function(error) { 
-          alert("Problem "+(id===0?"inserting":"updating")+" analog output "
-                +"id "+id+"\n"+error);
-          Log.error("DigitalOutputAdmin.doUpdate: Error - " + error);  
-      });
+      const request = async () => {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        Log.info( "update complete",clsMthd );
+        alert("Update/insert complete on "+doObj.tag.name)
+      }
+      try {
+        request();
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" digital output "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
   }
   

@@ -1,8 +1,3 @@
-import React from 'react';
-//import ReactDOM from 'react-dom';
-import Log      from '../../requests/Log.js';
-import { Group, Arc, Rect } from 'react-konva';
-
 /*************************************************************************
  * ScmShip.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -20,6 +15,10 @@ import { Group, Arc, Rect } from 'react-konva';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React from 'react';
+import Log   from '../../requests/Log.js';
+import { Group, Arc, Rect } from 'react-konva';
 
 
 export default class ScmShip extends React.Component {

@@ -1,9 +1,3 @@
-import React, {Component} from 'react';
-//import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import Log      from '../../requests/Log.js';
-import { Group, Ellipse, Rect, Line, Text } from 'react-konva';
-
-
 /*************************************************************************
  * Tank.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -21,6 +15,11 @@ import { Group, Ellipse, Rect, Line, Text } from 'react-konva';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+//import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
+import Log      from '../../requests/Log.js';
+import { Group, Ellipse, Rect, Line, Text } from 'react-konva';
 
 
 /**

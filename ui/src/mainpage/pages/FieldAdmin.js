@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import DefaultContents from './DefaultContents.js';
-import FieldForm   from './forms/FieldForm.js';
-import FieldList   from './lists/FieldList.js';
-import Log         from '../requests/Log.js';
-import Waiting     from './Waiting.js';
-import {Field}     from './objects/Field.js';
-import {RelTagTag} from './objects/Tag.js';
-
 /*************************************************************************
  * FieldAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import {RelTagTag} from './objects/Tag.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
+import DefaultContents from './DefaultContents.js';
+import FieldForm   from './forms/FieldForm.js';
+import FieldList   from './lists/FieldList.js';
+import Log         from '../requests/Log.js';
+import Waiting     from './Waiting.js';
+import {Field}     from './objects/Field.js';
+import {RelTagTag} from './objects/Tag.js';
 
 
 /* 
@@ -96,36 +96,33 @@ class FieldAdmin extends Component {
 
   fetchFormData(id) {
     const myRequest = SERVERROOT + "/field/" + id;
-    Log.info( "FieldAdmin.fetchFormData - Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("FieldAdmin.fetchFormData: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let fd = json;
-       const f = new Field( fd.id, fd.name, fd.description, fd.tagTypeCode, fd.tagTypeId
-                          , fd.misc, fd.c1Lat, fd.c1Long, fd.c2Lat, fd.c2Long, fd.active
-                          , fd.parentId, fd.parent, fd.roadImage, fd.satelliteImage);
-       var cTanks = [];
-       fd.childTanks.map(function(n,x) {
-         let id = n.childTagId;
-         return cTanks.push(id);
-       } );
-       f.childTanks = cTanks;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json,
-                      field: f                    
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting field id "+id+"\n"+error);
-       Log.error("FieldAdmin.fetchFormData: Error - " + error);  
-    });
+    const clsMthd = "FieldAdmin.fetchFormData";
+    const request = async () => {
+      const response = await fetch(myRequest);
+      const fd = await response.json();
+      const f = new Field( fd.id, fd.name, fd.description, fd.tagTypeCode, fd.tagTypeId
+                         , fd.misc, fd.c1Lat, fd.c1Long, fd.c2Lat, fd.c2Long, fd.active
+                         , fd.parentId, fd.parent, fd.roadImage, fd.satelliteImage);
+      var cTanks = [];
+      fd.childTanks.map(function(n,x) {
+        let id = n.childTagId;
+        return cTanks.push(id);
+      } );
+      f.childTanks = cTanks;
+      this.setState({stage: "itemRetrieved",
+                     updateDisplay: true,
+                     updateData: false,
+                     returnedText: fd,
+                     field: f                    
+                    });
+    }
+    try {
+      request();
+    } catch( e ) {
+      let emsg = "Problem selecting field id "+id;
+      alert(emsg+"\n"+e);
+      Log.error(emsg+"  "+ e,clsMthd);  
+    }
   }
 
   handleFieldSelect(event) {
@@ -218,30 +215,26 @@ class FieldAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "FieldAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "FieldAdmin.fetchList";
     const myRequest = SERVERROOT + "/field/all";
     const now = new Date();
-    Log.info( "FieldAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("FieldAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("FieldAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving field list\n"+e);
-           const emsg = "FieldAdmin.fetchList: Fetching field list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching field list";
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
 

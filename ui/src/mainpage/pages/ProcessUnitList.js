@@ -1,12 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}  from '../../Parameters.js';
-import {CE, IL3}     from './objects/ListObjects.js';
-import Log           from '../requests/Log.js';
-//import {ProcessUnit} from './objects/ProcessUnit.js';
-//import {Tag}         from './objects/Tag.js';
-import SiteOverview  from './SiteOverview.js';
-import Waiting       from './Waiting.js';
-
 /*************************************************************************
  * ProcessUnitList.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -24,6 +15,13 @@ import Waiting       from './Waiting.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}  from '../../Parameters.js';
+import {CE, IL3}     from './objects/ListObjects.js';
+import Log           from '../requests/Log.js';
+import SiteOverview  from './SiteOverview.js';
+import Waiting       from './Waiting.js';
 
 
 class ProcessUnitList extends Component {
@@ -46,35 +44,28 @@ class ProcessUnitList extends Component {
   }
 
   fetchList() {
-    Log.info( "ProcessUnitList.fetchList : " + this.state.stage );
+    const clsMthd = "ProcessUnitList.fetchList";
     const myRequest = SERVERROOT + "/processunit/all";
-    const now = new Date();
-    Log.info( "ProcessUnitList.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("ProcessUnitList(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ProcessUnitList.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving process unit list\n"+e);
-           const emsg = "ProcessUnitList.fetchList: Fetching process unit list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "ProcessUnitList.fetchList: Fetching process unit list " + e;
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - "+e, clsMthd);        
+      }
     }
   }
 
   componentDidMount() {
-    Log.info( "ProcessUnitList.didMount: " + this.state.stage );
     this.fetchList();
   }
   
@@ -110,7 +101,6 @@ class ProcessUnitList extends Component {
       puColumns.push(il);
     }
     
-    Log.info("ProcessUnitList.generateList");
     return(
       <div>
       <h2>

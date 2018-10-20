@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}       from '../../Parameters.js';
-import Log                from '../requests/Log.js';
-import DefaultContents    from './DefaultContents.js';
-import ItemDisplay        from './displays/ItemDisplay.js';
-import ProcessUnitDisplay from './displays/ProcessUnitDisplay.js';
-import Waiting            from './Waiting.js';
-//import {Field}            from './objects/Field.js';
-//import {Tag}              from './objects/Tag.js';
-
 /*************************************************************************
  * ProcessUnit.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -26,6 +16,15 @@ import Waiting            from './Waiting.js';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+import {SERVERROOT}       from '../../Parameters.js';
+import Log                from '../requests/Log.js';
+import DefaultContents    from './DefaultContents.js';
+import ItemDisplay        from './displays/ItemDisplay.js';
+import ProcessUnitDisplay from './displays/ProcessUnitDisplay.js';
+import Waiting            from './Waiting.js';
+import {PlotDetails}      from './objects/PlotGroup.js';
+
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
@@ -43,6 +42,7 @@ class ProcessUnit extends Component {
     this.state = {
       stage: props.stage,
       option: props.option,
+      plotDetails: null,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
@@ -52,6 +52,7 @@ class ProcessUnit extends Component {
     };
     this.handleItemSelect  = this.handleItemSelect.bind(this);
     this.handleQuit = this.handleQuit.bind(this);
+    this.handleFieldChange = this.handleFieldChange.bind(this);
   }
   
   handleErrors(response) {
@@ -88,27 +89,31 @@ class ProcessUnit extends Component {
   }
   
   fetchItemData( id ) {
-    const myRequest=SERVERROOT + "/ai/history/" + id + "/2";
-    var now = new Date();
-    Log.info( "ProcessUnit.fetchItemData - Request: " + myRequest + now.toLocaleString() );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("ProcessUnit.fetchItemData: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      updateData: false,
-                      returnedText: json
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting process unit id "+id+"\n"+error);
-       Log.error("ProcessUnit.fetchItemData: Error - " + error);  
-    });
+    const noDays = this.state.plotDetails.numberDays;
+    const myRequest=SERVERROOT + "/ai/history/" + id + "/" + noDays;
+    const clsMthd = "ProcessUnit.fetchItemData";
+    const request = async () => {
+      const response = await fetch(myRequest);
+      const json = await response.json();
+      let pdNew = Object.assign({},this.state.plotDetails);
+      if( this.state.plotDetails.max0 === Infinity ) {
+        let aiTag = json.aiTag;
+        pdNew.max0 = aiTag.maxValue;
+        pdNew.min0 = aiTag.zeroValue;
+      }
+      this.setState( {returnedText: json,
+                      plotDetails: pdNew,
+                      updateData: false, 
+                      updateDisplay:true,
+                      stage: "itemRetrieved" } );
+    }
+    try {
+      request();
+    } catch( e ) {
+      const emsg = "Problem selecting process unit id "+id; 
+      alert(emsg+"\n"+e);
+      Log.error(emsg+" - " + e, clsMthd);        
+    }
   }
   
   handleQuit() {
@@ -120,42 +125,36 @@ class ProcessUnit extends Component {
   }
 
   fetchList(opt) {
-    Log.info( "ProcessUnit.fetchList : " + opt );
+    const clsMthd = "ProcessUnit.fetchList";
     const myRequest = SERVERROOT + "/processunit/values/" + opt;
     const now = new Date();
-    Log.info( "ProcessUnit.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest,{
-              method: 'GET',
-              headers: {'Content-Type':'application/json',
-                        'Cache-Control':'no-cache, no-store, max-age=0' }
-           })
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("TransferAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("ProcessUnit.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched"} );
-        }).catch(function(e) { 
-           alert("Problem retrieving field list\n"+e);
-           const emsg = "ProcessUnit.fetchList: Fetching field list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem selecting process unit list"; 
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
 
   componentDidMount() {
     Log.info( "ProcessUnit.didMount: " + this.state.stage );
+    let pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
+    if( this.state.plotDetails !== null ) { pd = this.state.plotDetails; } 
     this.fetchList(this.state.option);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );
+    this.setState( {plotDetails:pd, unitTimer: myTimerID } );
   }
   
   componentWillUnmount() {
@@ -167,6 +166,17 @@ class ProcessUnit extends Component {
       clearInterval(this.state.itemTimer);
     }
   }
+  
+  handleFieldChange(event) {
+    event.preventDefault();
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    let pdNew = Object.assign({},this.state.plotDetails);
+    pdNew[name] = parseInt(value,10);
+    this.setState( {plotDetails: pdNew} );
+  }
+
 
   render() {
     Log.info("ProcessUnit.render " + this.state.stage );
@@ -180,6 +190,8 @@ class ProcessUnit extends Component {
       case "itemRetrieved":
         return <ItemDisplay id    = {this.state.id}
                             items = {this.state.returnedText}
+                            plotDetails = {this.state.plotDetails}
+                            fieldChange = {this.handleFieldChange}
                             quit  = {this.handleQuit} />
       default:
         return <DefaultContents />

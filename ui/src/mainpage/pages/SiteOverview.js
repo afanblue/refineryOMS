@@ -1,12 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import Log             from '../requests/Log.js';
-import DefaultContents from './DefaultContents.js';
-import Field           from './Field.js';
-import Waiting         from './Waiting.js';
-//import {Field} from './objects/Field.js';
-//import {Tag} from './objects/Tag.js';
-
 /*************************************************************************
  * SiteOverview.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -24,6 +15,13 @@ import Waiting         from './Waiting.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import Log             from '../requests/Log.js';
+import DefaultContents from './DefaultContents.js';
+import Field           from './Field.js';
+import Waiting         from './Waiting.js';
 
 
 /*
@@ -64,30 +62,24 @@ class SiteOverview extends Component {
   
   
   fetchSite() {
-    Log.info( "SiteOverview.fetchList : " + this.state.stage );
+    const clsMthd = "SiteOverview.fetchList";
     const myRequest = SERVERROOT + "/config/SITE";
-    const now = new Date();
-    Log.info( "SiteOverview.fetchList " + now.toLocaleString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("SiteOverview.fetchList: response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("SiteOverview.fetchList: JSON retrieved - " + json);
-           this.setState( {site: json.value, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving field list\n"+e);
-           const emsg = "SiteOverview.fetchList: Fetching field list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {site: json.value, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        const emsg = "Problem fetching field list"; 
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
   }
   

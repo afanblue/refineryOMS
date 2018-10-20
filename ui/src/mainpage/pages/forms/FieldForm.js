@@ -1,10 +1,3 @@
-import React, {Component} from 'react';
-import {Stage, Layer, Group, Rect} from 'react-konva';
-import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-
-import Log       from '../../requests/Log.js';
-import SiteImage from '../SiteImage.js';
-
 /*************************************************************************
  * FieldForm.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -22,6 +15,13 @@ import SiteImage from '../SiteImage.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {Stage, Layer, Group, Rect} from 'react-konva';
+import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
+
+import Log       from '../../requests/Log.js';
+import SiteImage from '../SiteImage.js';
 
 
 class FieldForm extends Component {

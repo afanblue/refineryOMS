@@ -1,9 +1,3 @@
-import React, {Component} from 'react';
-//import { Stage, Layer, Text } from 'react-konva';
-import Log      from '../../requests/Log.js';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
-import moment   from 'moment';
-
 /*************************************************************************
  * ItemDisplay.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -22,6 +16,12 @@ import moment   from 'moment';
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
+import React, {Component} from 'react';
+
+import Log      from '../../requests/Log.js';
+//import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
+import moment   from 'moment';
 
 
 class ItemDisplay extends Component {
@@ -31,6 +31,7 @@ class ItemDisplay extends Component {
       id: props.id,
       updateData: false,
       updateDisplay: true,
+      plotDetails: props.plotDetails,
       items: props.items,
       quit: props.quit,
       left : 'dataMin',
@@ -45,35 +46,222 @@ class ItemDisplay extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    Log.info( "ItemDisplay.willRcvProps: "
-               + ((nextProps.option===null)?"null":nextProps.option) );
+//    Log.info( ((nextProps.option===null)?"null":nextProps.option),"ItemDisplay.willRcvProps" );
     this.setState({ id: nextProps.id,
                     items: nextProps.items,
+                    plotDetails: nextProps.plotDetails,
                     quit:  nextProps.quit });
   }
   
+    getStyles() {
+//    const BLUE_COLOR = "#00a3de";
+    const RED_COLOR = "#7c270b";
+    const WHITE_COLOR = "#C3C2B9";
+    const GREEN_COLOR = "darkgreen";
+    const YELLOW_COLOR = "yellow";
+
+    return {
+      parent: {
+        background: "midnightblue",
+        boxSizing: "border-box",
+        display: "inline",
+        padding: 0,
+        fontFamily: "'Fira Sans', sans-serif",
+        maxWidth: "100%",
+        height: "100%"
+      },
+      title: {
+        textAnchor: "start",
+        verticalAnchor: "end",
+        fill: "#ffffff",
+        fontFamily: "inherit",
+        fontSize: "18px",
+        fontWeight: "bold"
+      },
+      labelNumber: {
+        textAnchor: "middle",
+        fill: "#ffffff",
+        fontFamily: "inherit",
+        fontSize: "14px"
+      },
+
+      // INDEPENDENT AXIS
+      axisYears: {
+        axis: { stroke: WHITE_COLOR, strokeWidth: 1},
+        ticks: {
+          size: (tick) => {
+            const tickSize = 10;
+            return tickSize;
+          },
+          stroke: WHITE_COLOR,
+          strokeWidth: 1
+        },
+        tickLabels: {
+          fill: WHITE_COLOR,
+          fontFamily: "inherit",
+          fontSize: 10
+        }
+      },
+
+      // DATA SET ZERO
+      axisZero: {
+        grid: {
+          stroke: (tick) =>
+            tick === -10 ? "transparent" : "#ffffff",
+          strokeWidth: 1
+        },
+        axis: { stroke: WHITE_COLOR, strokeWidth: 1 },
+        ticks: { strokeWidth: 1 },
+        tickLabels: {
+          fill: WHITE_COLOR,
+          fontFamily: "inherit",
+          fontSize: 10
+        }
+      },
+      labelZero: {
+        fill: WHITE_COLOR,
+        fontFamily: "inherit",
+        fontSize: 10,
+        fontStyle: "italic"
+      },
+      lineZero: {
+        data: { stroke: WHITE_COLOR, strokeWidth: 1.5 }
+      },
+      axisZeroCustomLabel: {
+        fill: WHITE_COLOR,
+        fontFamily: "inherit",
+        fontWeight: 300,
+        fontSize: 10
+      }
+    }
+  }
+
+  getTickValues(minX, maxX) {
+    let xd = (maxX-minX)/4;
+    return [ minX, minX+xd, minX+2*xd, minX+3*xd, maxX ];
+  }
+
+  getTickYValues(minY, maxY) {
+    let xd = (maxY-minY)/5;
+    return [ minY, minY+xd, minY+2*xd, minY+3*xd, minY+4*xd, maxY ];
+  }
+
   render () {
-    let name = this.state.items.aiTag.tag.name;
-    let zeroValue = this.state.items.aiTag.zeroValue;
-    let maxValue = this.state.items.aiTag.maxValue;
+    let aiTag = this.state.items.aiTag;
+    let pd = this.state.plotDetails;
+    if( pd === null ) {
+      pd.numberDays = 2;
+      pd.max0 = aiTag.maxValue;
+      pd.min0 = aiTag.minValue;
+    }
+    let styles = this.getStyles();
+    let tag = aiTag.tag;
+    let name = tag.name;
+    let zeroValue = pd.min0===-Infinity?aiTag.zeroValue:pd.min0;
+    let maxValue = pd.max0===Infinity?aiTag.maxValue:pd.max0;
     let it = this.state.items.history;
     const quit = this.state.quit;
+    let fc = this.props.fieldChange;
  
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    Log.info("ItemDisplay.render");
     var bottom = zeroValue;
     var left = this.state.left;
     var right = this.state.right;
     var top = maxValue;
+
+    let LabelZero = "";
+    let AxisZero = "";
+    let LineZero = "";
+    let AxisTwo = "";
+
+    let minTime = it[0].x;
+    let maxTime = it[it.length-1].x;
+    let tickValues = this.getTickYValues(minTime,maxTime);
+
+    const lblZero = name + " - " + tag.description;
+
+    LabelZero = <VictoryLabel x={25} y={15} text={lblZero} style={styles.labelZero} />
+    AxisZero  = <VictoryAxis dependentAxis domain={ [zeroValue, maxValue] } offsetX={50}
+                             orientation="left" standalone={false}
+                             style={styles.axisZero} tickValues={tick0Values} />;
+    LineZero  = <VictoryLine data={it} domain={{x: [minTime, maxTime], y: [zeroValue, maxValue] }}
+                             interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                             standalone={false} style={styles.lineZero} />
+    AxisTwo  = <VictoryAxis domain={[zeroValue, maxValue]} orientation="right" 
+                            standalone={false} style={styles.axisZero} tickValues={tick0Values} />;
+    const tick0Values = this.getTickValues(zeroValue, maxValue);
+    
     return(
       <div>
       <h2>
         <div className={"oms-tags"}>
            <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>
-           Tag {name} ({this.state.id}) - {now}
+           {now}
         </div>
+      <table>
+        <tbody>
+          <tr>
+            <td>Days to display:</td>
+            <td colSpan={4}>
+              <input className="oms-spacing-60" type={"text"} value={pd.numberDays}
+                     name="numberDays" id="numberDays" size="3" maxLength="3" 
+                     onChange={fc}/>
+            </td>
+          </tr>
+          <tr>
+            <td>Max value</td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.max0} 
+                     name="max0" id="max0" size="5" maxLength="5" onChange={fc}/>
+            </td>
+          </tr>
+          <tr>
+            <td>Min value</td>
+            <td className="oms-spacing-80">
+              <input className="oms-spacing-60" type={"text"} value={pd.min0} 
+                     name="min0" id="min0" size="5" maxLength="5" onChange={fc}/>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="submit" id="closeForm"  name="closeForm"  
+                     value=" Quit " className="oms-spacing"
+                     onClick={(e) => {quit(e)}} />
+            </td>
+            <td colSpan="4">&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
       </h2>
+      <svg style={styles.parent} viewBox="0 0 640 400">
+        {LabelZero}
+        <g transform={"translate(20, 0)"}>
+            {/* Add shared independent axis */}
+          <VictoryAxis
+              scale="linear"
+              standalone={false}
+              style={styles.axisYears}
+              tickValues={tickValues}
+              tickFormat={
+                (x) => {
+                  return moment(x*1000).format('MM-DD HH:mm')
+                }
+              }
+            />
+          {AxisZero}
+          {LineZero}
+          {AxisTwo}
+        </g>
+      </svg>
+      </div>
+    );
+  }
+}
+
+export default ItemDisplay;
+
+/* rechart
       <LineChart width={480}
                  height={300}
                  data={it} >
@@ -91,13 +279,4 @@ class ItemDisplay extends Component {
                stroke="#C3C2B9" />
 
       </LineChart>      
-      <p/>
-      <input type="submit" id="closeForm"  name="closeForm"  
-             value=" Quit " className="oms-spacing"
-             onClick={(e) => {quit(e)}} />
-      </div>
-    );
-  }
-}
-
-export default ItemDisplay;
+*/

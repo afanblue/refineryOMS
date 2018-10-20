@@ -1,18 +1,3 @@
-import React, {Component} from 'react';
-import { Stage, Layer, Rect } from 'react-konva';
-//import Konva from 'konva';
-import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import Log          from '../../requests/Log.js';
-import Scm3WayValve from '../objects/Scm3WayValve.js';
-import ScmGauge     from '../objects/ScmGauge.js';
-import ScmPump      from '../objects/ScmPump.js';
-import ScmPipe      from '../objects/ScmPipe.js';
-import ScmRefUnit   from '../objects/ScmRefUnit.js';
-import ScmShip      from '../objects/ScmShip.js';
-import ScmTank      from '../objects/ScmTank.js';
-import ScmText      from '../objects/ScmText.js';
-import ScmValve    from '../objects/ScmValve.js';
-
 /*************************************************************************
  * SchematicForm.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -30,6 +15,21 @@ import ScmValve    from '../objects/ScmValve.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import { Stage, Layer, Rect } from 'react-konva';
+import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
+import Log          from '../../requests/Log.js';
+import Scm3WayValve from '../objects/Scm3WayValve.js';
+import ScmGauge     from '../objects/ScmGauge.js';
+import ScmPump      from '../objects/ScmPump.js';
+import ScmPipe      from '../objects/ScmPipe.js';
+import ScmRefUnit   from '../objects/ScmRefUnit.js';
+import ScmShip      from '../objects/ScmShip.js';
+import ScmTank      from '../objects/ScmTank.js';
+import ScmText      from '../objects/ScmText.js';
+import ScmValve    from '../objects/ScmValve.js';
+
 
 class SchematicForm extends Component {
   constructor(props) {

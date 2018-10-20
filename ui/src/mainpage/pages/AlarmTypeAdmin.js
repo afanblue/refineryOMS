@@ -1,13 +1,3 @@
-import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
-import Log             from '../requests/Log.js';
-import OMSRequest      from '../requests/OMSRequest.js';
-import DefaultContents from './DefaultContents.js';
-import Waiting         from './Waiting.js';
-import {AlarmType}     from './objects/Alarm.js';
-import AlarmTypeList   from './lists/AlarmTypeList.js';
-import AlarmTypeForm   from './forms/AlarmTypeForm.js';
-
 /*************************************************************************
  * AlarmTypeAdmin.js
  * Copyright (C) 2018  A. E. Van Ness
@@ -25,6 +15,16 @@ import AlarmTypeForm   from './forms/AlarmTypeForm.js';
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+
+import React, {Component} from 'react';
+import {SERVERROOT}    from '../../Parameters.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
+import DefaultContents from './DefaultContents.js';
+import Waiting         from './Waiting.js';
+import {AlarmType}     from './objects/Alarm.js';
+import AlarmTypeList   from './lists/AlarmTypeList.js';
+import AlarmTypeForm   from './forms/AlarmTypeForm.js';
 
 
 class AlarmTypeAdmin extends Component {
@@ -83,41 +83,12 @@ class AlarmTypeAdmin extends Component {
     Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
     Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
   }
-/* */
-/* 
-  handleTypeSelect(event) {
-    const id = event.z;
-    const myRequest=SERVERROOT + "/alarm/type/" + id;
-    const now = new Date();
-    Log.info( "AlarmTypeAdmin.typeSelect: " + now.toISOString() + " Request: " + myRequest );
-    fetch(myRequest)
-      .then(this.handleErrors)
-      .then(response => {
-        var contentType = response.headers.get("Content-Type");
-        if(contentType && contentType.includes("application/json")) {
-          return response.json();
-        }
-        throw new TypeError("AlarmTypeAdmin.typeSelect: response ("+contentType+") must be a JSON string");
-    }).then(json => {
-       let atd = json;
-       const at = new AlarmType(atd.id,atd.priority,atd.code,atd.alarmMsgId,atd.alarmMsg);
-       const msgs = atd.alarmMessages;
-       this.setState({stage: "itemRetrieved",
-                      updateDisplay: true,
-                      msgs: msgs,
-                      type: at
-                     });
-    }).catch(function(error) { 
-       alert("Problem selecting alarm type id "+id+"\n"+error);
-       Log.info("AlarmTypeAdmin.typeSelect: Error - " + error);  
-    });
-  }
-/* */
+
   handleTypeUpdate(event) {
     event.preventDefault();
     const id = this.state.type.id;
-    Log.info("AlarmTypeAdmin.typeUpdate: (data) id="+id
-               +", code:"+this.state.type.code);
+    const clsMthd = "AlarmTypeAdmin.typeUpdate";
+    Log.info("(data) id="+id+", code:"+this.state.type.code, clsMthd);
     let method = "PUT";
     let url = "http://localhost:8080/oms/alarm/type/update";
     if( id === 0 ) {
@@ -125,16 +96,17 @@ class AlarmTypeAdmin extends Component {
       url = "http://localhost:8080/oms/alarm/type/insert";
     }
     const b = JSON.stringify(this.state.type);
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(alert("Alarm Type updated") )
-      .catch(function(error) { 
-        alert("Problem updating alarm type id "+id+"\n"+error);
-        Log.error("Error - " + error,"AlarmMsgAdmin.msgUpdate");  
-    });
+    const request = async () => {
+      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+      alert("Update/insert complete on alarm type # "+id)
+      Log.info( "update complete",clsMthd );
+    }
+    try {
+      request();
+    } catch( error ) {
+      alert("Problem updating alarm type id "+id+"\n"+error);
+      Log.error("Error - " + error,clsMthd);  
+    }
   }
   
   
@@ -149,30 +121,26 @@ class AlarmTypeAdmin extends Component {
   }
 
   fetchList() {
-    Log.info( "AlarmTypeAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "AlarmTypeAdmin.fetchList";
     const myRequest = SERVERROOT + "/alarm/type/all";
     const now = new Date();
-    Log.info( "AlarmTypeAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
+    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("AlarmTypeAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("AlarmTypeAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving alarm type list\n"+e);
-           const emsg = "AlarmTypeAdmin.fetchList: Fetching user list " + e;
-           Log.error(emsg,"AlarmMsgAdmin.msgUpdate");
-      });
+      const request = async () => {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        this.setState( {returnedText: json, 
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "dataFetched" } );
+      }
+      try {
+        request();
+      } catch( e ) {
+        alert("Problem retrieving alarm type list\n"+e);
+        const emsg = "Fetching user list " + e;
+        Log.error(emsg,clsMthd);
+      }
     }
   }
 

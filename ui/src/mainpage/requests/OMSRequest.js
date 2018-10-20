@@ -31,7 +31,7 @@ class OMSRequest {
   
   fetchData() {
     const now = new Date();
-    Log.info( this.identifier+" "+ now.toISOString() + " Request: " + this.uri );
+    Log.info( now.toISOString() + " Request: " + this.uri,this.identifier );
     const erm = this.errMsg;
 /* --
     const request = async () => {
@@ -55,11 +55,11 @@ class OMSRequest {
         throw new TypeError(this.identifier + ": response ("+contentType+") must be a JSON string");
     }).then(json => {
         let x = json;
-        Log.info("json: "+x);
+        Log.info("json: "+x,this.identifier);
         this.fc(x);
     }).catch(function(error) { 
         alert(erm+"\n"+error);
-        Log.error(": Error - " + error);  
+        Log.error("Error - " + error,this.identifier);  
     });
 /* */
   }
