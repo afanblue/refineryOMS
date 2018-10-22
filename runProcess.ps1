@@ -65,6 +65,6 @@ echo $ARGLIST
 
 $PROCID=(Start-Process java -argumentlist $ARGLIST -NoNewWindow -RedirectStandardOutput $OUT -RedirectStandardError $ERR -passthru).ID
 echo $PROCID
-Add-Content -Path .\$PROC.pid -Value($PROCID)
+Set-Content -Path .\$PROC.pid -Value($PROCID)
 
 popd

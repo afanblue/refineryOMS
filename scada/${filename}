@@ -1,4 +1,0 @@
-2018-04-24 16:23:00,001 DEBUG i.a.o.p.XferDIData [Timer-1] Start DI processing
-2018-04-24 16:23:00,001 DEBUG i.a.o.p.XferAIData [Timer-0] Start AI processing
-2018-04-24 16:23:00,289 DEBUG i.a.o.p.XferDIData [Timer-1] End DI processing
-2018-04-24 16:23:00,312 DEBUG i.a.o.p.XferAIData [Timer-0] End AI processing

@@ -77,10 +77,15 @@ public class SchematicRestController {
 	public Schematic getSchematic( @PathVariable Long id) {
 		log.debug("getSchematic (w/id) "+id);
 		Schematic scm = new Schematic(0L, "New schematic");
-		if( 0L != id ) {
-			Tag t = tagService.getTag(id);
-			scm = new Schematic(t);
-			scm.setChildTags(tagService.getSCMChildValues(id));
+		if( id >= 0 ) {
+			if( 0L != id ) {
+				Tag t = tagService.getTag(id);
+				scm = new Schematic(t);
+				scm.setChildTags(tagService.getSCMChildValues(id));
+			}
+		} else {
+			Transfer x = xferService.getTransfer(-id);
+			scm = new Schematic(id, x.getName());
 		}
 		return scm;
 	}	

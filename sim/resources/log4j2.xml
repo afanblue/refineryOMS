@@ -14,7 +14,7 @@
                 <Pattern>%d{yyyy-MMM-dd HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
             </PatternLayout>
             <Policies>
-                <CronTriggeringPolicy schedule="0 0 0 * * ?" evaluateOnStartup="true" />
+                <CronTriggeringPolicy schedule="59 23 0 * * ?" evaluateOnStartup="true" />
             </Policies>
             <DefaultRolloverStrategy max="5" />
         </RollingFile>

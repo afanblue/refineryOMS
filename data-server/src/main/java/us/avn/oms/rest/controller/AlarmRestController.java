@@ -21,11 +21,13 @@ import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.Alarm;
@@ -45,24 +47,28 @@ public class AlarmRestController {
 	AlarmService alarmService;
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<Alarm> getAllAlarms( ) {
 		log.debug("get all alarms");
 		return alarmService.getAllAlarms();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/active/all")
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<Alarm> getAllActiveAlarms( ) {
 		log.debug("get all active alarms");
 		return alarmService.getAllActiveAlarms();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/message/all")
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<AlarmMessage> getAllAlarmMsgs( ) {
 		log.debug("get all alarm messages");
 		return alarmService.getAllAlarmMsgs();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/all")
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<AlarmType> getAllAlarmTypes( ) {
 		log.debug("get all alarm types");
 		return alarmService.getAllAlarmTypes();
@@ -70,23 +76,27 @@ public class AlarmRestController {
 	
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/message/{id}")
+    @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public AlarmMessage getAlarmMessage( @PathVariable Long id) {
 		return alarmService.getAlarmMessage(id);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/{id}")
+    @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public AlarmType getAlarmType( @PathVariable Long id) {
 		return alarmService.getAlarmType(id);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/message/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateAlarmMessage( @RequestBody AlarmMessage am) {
 		alarmService.updateAlarmMessage(am);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/acknowledge/{id}")
+    @ResponseStatus(HttpStatus.OK)
 	public Long updateAlarm( @PathVariable Long id ) {
 		Alarm alm = new Alarm();
 		alm.setId(id);
@@ -97,16 +107,19 @@ public class AlarmRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value="/type/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateAlarmType( @RequestBody AlarmType at) {
 		alarmService.updateAlarmType(at);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/message/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertAlarmMessage( @RequestBody AlarmMessage am) {
 		alarmService.insertAlarmMessage(am);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/type/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertAlarmType( @RequestBody AlarmType at) {
 		alarmService.insertAlarmType(at);
 	}

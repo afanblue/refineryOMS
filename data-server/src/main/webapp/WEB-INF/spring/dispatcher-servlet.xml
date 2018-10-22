@@ -10,8 +10,8 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd ">
 
-    <context:component-scan base-package="us.avn.oms.rest.controller" />
     <mvc:annotation-driven />
+    <context:component-scan base-package="us.avn.oms.rest.controller" />
     
     <mvc:resources mapping="/css/**"    location="/css/" />
     <mvc:resources mapping="/images/**" location="/images/" />
@@ -29,16 +29,16 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-	
+<!-- 
 	<bean id="jacksonMessageConverter" 
 	      class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 	</bean>
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <bean class="org.springframework.web.servlet.mvc.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
                 <ref bean="jacksonMessageConverter"/>
             </list>
         </property>
     </bean>
-
+-->
 </beans>

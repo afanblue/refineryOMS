@@ -8,19 +8,21 @@ This project provides a simulation of an oil refinery w/a UI for watching/contro
 
 **DISCLAIMER 3:**  The historical compression algorithms are my implementations of some algorithms originally developed at another employer.  FWIW, while I had access to the code that implemented these, I do not currently have access nor do I remember the details. (It was a long time ago.) That employer bears no responsibility for any errors in my implementations. 
 
+**Terminology clarification:  I usually use braces (curly brackets) to indicate the replacement of that with the value of the symbol/environment variable, e.g., {OMS_HOME} is replaced with /
+
 There are a number of features which have not (yet) been implemented.  These include, but are not limited to 
 - [x] Linux installation procedures.
 - [ ] On the field displays, selecting a tank, will generate a more detailed display of the tank selected.  While cute, I'm not sure of the value of this.  The information the system has on a tank is the volume, temperature corrected volume (future), level, temperature, and some configuration values.  Is this worth a special page to display?
 - [ ] digital input processing [the full implementation of this would be associated w/inputs indicating the presence of tank cars, tank trucks and ships (set by the simulator based on a schedule defined somewhere or a random number ) and on cute animations of transfers]
-- [ ] analog output processing (the assumption is that these are setpoints.  For the simulator to respond "realistically", we need to define the input(s) which reflects the actions of the setpoint which would imply needing to understand the reaction time (IIRC, dead time) to the set point. Sorry, TMI required)
-- [ ] digital output processing (like the analog outputs, the effect of a digital output is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position)
+- [x] analog output processing (the assumption is that these are setpoints.  For the simulator to respond "realistically", we need to define the input(s) which reflects the actions of the setpoint which would imply needing to understand the reaction time (IIRC, dead time) to the set point. Sorry, TMI required).  **Sortof implemented, i.e., not realistically.  At the very least, it needs a DEAD_TIME field in the table.  Added a table (SIM_IO) which relates the output tag (ID) to the input tag (IN_ID).  Also added a field (IS_NEW) to the ANALOG_OUTPUT (and DIGITAL_OUTPUT) table(s) to indicate when an output has been requested, i.e., that the SCAN_VALUE for these tables has been updated.**
+- [x] digital output processing (like the analog outputs, the effect of a digital output is shown in some other value, e.g., the status of a valve or an analog value, like a pump or valve position) **See comment for analog outputs, above**
 - [ ] implementation of digital inputs to more realistically handle tank car, tank truck, and ship presence
 - [ ] temperature correction of the volumes (http://www.oilconsultancy.com/pdf/warm-fuel.pdf; http://www.emerson.com/documents/automation/-engineer%E2%80%99s-guide-to-tank-gauging-en-175314.pdf).  Standard temperature 15 deg C. It turns out this is a non-trivial problem, despite all the talk in the second article about it being computerized.
 - [ ] simulated arrival of additional crude for processing
 - [ ] automated transfers for refined products to tank cars (railroads), tank trucks, and ships.  There is a first pass implementation of this, but it needs additional testing.  For this to work properly, it should be possible to set up transfers to the tank cars and or tank trucks for multiple products and the transfers end up being multiply defined.  In addition, the presence of a given tank car/truck would ideally have a product associated with it.
-- [ ] graphical display of transfers (cute animations!)
+- [ ] graphical display of transfers (cute animations!).  **Schematics are a more static implmentation of this.  The idea here is to list the active transfers in the schematics list (done) and the display of the schematic will show the various sources and destinations w/pipes, pumps, and valves.**
 - [x] computed variables (implemented w/an RPN, e.g., post-fix, but only allows analog inputs.)
-- [x] an archival mechanism for the historical data (db/archive.bat; db/archive.sh)
+- [x] an archival mechanism for the historical data **db/archive.bat; db/archive.sh**
 - [ ] automated payment
 - [x] watchdog to notification that applications are down
 - [ ] user manual
@@ -145,7 +147,7 @@ To configure this
 	       
 	   The log file can be checked to verify that all tables and views have been created and all the records have been inserted.  Look for occurrences of
 	   
-	       'mysql' which is **not** an error, but a warning that the password shouldn't be entered on the command line.
+	       'mysql' which is **not** an error, but a warning that the password shouldn't be entered on the command line, which, BTW, it isn't.  Not really.
 	       'false' (not case sensitive) There should be two entries found on one line for an insert
 	       '0 row' the DB insert will sometimes indicate success, but 0 rows inserted.  This is an error, usually indicating that either a lookup or the select used for the insert has failed.
 	      
