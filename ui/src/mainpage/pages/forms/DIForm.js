@@ -1,6 +1,6 @@
 /*************************************************************************
  * DIForm.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 import React, {Component} from 'react';
 import {Stage, Layer} from 'react-konva';
 
-import Log       from '../../requests/Log.js';
 import SiteImage from '../SiteImage.js';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 
@@ -27,7 +26,6 @@ import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 class DIForm extends Component {
   constructor(props) {
     super(props);
-    Log.info( "DIForm: " + props.stage );
     this.state = {  };
   }
 
@@ -54,7 +52,7 @@ class DIForm extends Component {
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
                 <td className="oms-spacing"><img src="images/spacer.png" 
-                    alt="space" height="5px" width="180px"/></td>
+                    alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-90">DI name:</th>

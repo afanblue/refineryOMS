@@ -25,11 +25,13 @@ import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.IdName;
@@ -52,6 +54,7 @@ public class PlotGroupRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<PlotGroup> getAllPlotGroups( ) {
 		log.debug("getting all fields");
 		return pgs.getAllPlotGroups();
@@ -59,6 +62,7 @@ public class PlotGroupRestController {
 		
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public PlotGroup getPlotGroup( @PathVariable Long id  ) {
 		
 		PlotGroup pg = new PlotGroup(0L, "New Plot Group");
@@ -69,12 +73,14 @@ public class PlotGroupRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertPlotGroup(@RequestBody PlotGroup pg) {
 		log.debug("Inserting plot group "+pg.toString());
 		pgs.insertPlotGroup(pg);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updatePlotGroup(@RequestBody PlotGroup pg) {
 		log.debug("Updating plot group - "+pg.toString());
 		pgs.updatePlotGroup(pg); 

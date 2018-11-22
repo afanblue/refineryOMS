@@ -1,6 +1,6 @@
 /*************************************************************************
  * ProcessUnitList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log           from '../../requests/Log.js';
 
 import {ProcessUnit} from '../objects/ProcessUnit.js';
 //import {Tag} from '../objects/Tag.js';
@@ -26,7 +25,6 @@ import {ProcessUnit} from '../objects/ProcessUnit.js';
 class ProcessUnitList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ProcessUnitList: " + props.stage );
     this.state = {  };
   }
 
@@ -45,7 +43,7 @@ class ProcessUnitList extends Component {
         return puList.push( pu ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Process Units</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Process Units</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>

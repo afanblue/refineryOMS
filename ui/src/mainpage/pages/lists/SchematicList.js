@@ -1,6 +1,6 @@
 /*************************************************************************
  * SchematicList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log         from '../../requests/Log.js';
+
 import {Schematic} from '../objects/Schematic.js';
 
 
 class SchematicList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "SchematicList: constructor" );
     this.state = {  };
   }
 
@@ -43,7 +42,7 @@ class SchematicList extends Component {
     }
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="50px" 
+        <h2><div><img src="./images/spacer.png" alt="" width="50px" 
                       height="2px"/>OMS Schematics</div></h2>
         <table>
           <thead className="fixedHeader">

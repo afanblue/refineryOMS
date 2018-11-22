@@ -1,6 +1,6 @@
 /*************************************************************************
  * DefaultContents.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,11 @@
 import React, {Component} from 'react';
 import {Stage, Layer, Image, Circle} from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
-import Log          from '../requests/Log.js';
 
 
 class DefaultContents extends Component {
   constructor(props) {
     super(props);
-    Log.info( "DefaultContents " );
     this.state = {
        img:null,
        onMouseUp: props.handleMouseUp

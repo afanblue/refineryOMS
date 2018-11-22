@@ -1,6 +1,6 @@
 /*************************************************************************
  * ProcessUnitForm.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,11 @@ import React, {Component} from 'react';
 import {Stage, Layer, Group, Rect} from 'react-konva';
 
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import Log       from '../../requests/Log.js';
 import SiteImage from '../SiteImage.js';
 
 class ProcessUnitForm extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ProcessUnitForm: " + props.stage );
     this.state = {  };
   }
 
@@ -74,7 +72,7 @@ class ProcessUnitForm extends Component {
           <tr>
             <th className="oms-spacing-120">&nbsp;</th>
             <td className="oms-spacing"><img src="images/spacer.png" 
-                alt="space" height="5px" width="240px"/>
+                alt="" height="5px" width="240px"/>
             </td>
           </tr>
           <tr>

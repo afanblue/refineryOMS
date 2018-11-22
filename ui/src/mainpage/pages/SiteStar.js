@@ -1,6 +1,6 @@
 /*************************************************************************
  * SiteStar.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import Waiting from './Waiting.js';
 class SiteStar extends Component {
   constructor(props) {
     super(props);
-    Log.info( "DefaultContents " );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -49,40 +48,34 @@ class SiteStar extends Component {
   }
 
   fetchSiteValues() {
-    Log.info( this.state.stage,"SiteStar.fetchSiteValues" );
     const myRequest = SERVERROOT + "/ai/all/values";
-    const now = new Date();
-    Log.info( now.toLocaleString() + " Request: " + myRequest,"SiteStar.fetchSiteValues" );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        Log.info( "I/O complete ", "SiteStar.fetchSiteValues" );
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( error ) {
+          alert("Problem retrieving process unit list\n"+error);
+          const emsg = "Fetching process unit list " + error;
+          Log.error(emsg, "SiteStar.fetchSiteValues");
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem retrieving process unit list\n"+error);
-        const emsg = "Fetching process unit list " + error;
-        Log.error(emsg, "SiteStar.fetchSiteValues");
-      }
+      request();
     }
   }
 
 
   componentDidMount() {
-    Log.info( "SiteStar.didMount: " + this.state.stage );
     this.fetchSiteValues();
     var myTimerID = setInterval(() => {this.fetchSiteValues()}, 60000 );
     this.setState( {unitTimer: myTimerID } );    
   }
   
   componentWillUnmount() {
-    Log.info( "SiteStar.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }

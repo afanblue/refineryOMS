@@ -1,6 +1,6 @@
 /*************************************************************************
  * Last7TransferList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log        from '../../requests/Log.js';
+
 import {Transfer} from '../objects/Transfer.js';
 
 
 class Last7DaysTransferList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Last7DaysTransferList: " + props.stage );
     this.state = {  };
   }
 
@@ -41,7 +40,7 @@ class Last7DaysTransferList extends Component {
       } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="50px" 
+        <h2><div><img src="./images/spacer.png" alt="" width="50px" 
                       height="2px"/>OMS Transfers</div></h2>
         <table>
           <thead className="fixedHeader">

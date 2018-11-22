@@ -1,6 +1,6 @@
 /*************************************************************************
  * ActiveAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import {Tag}   from './objects/Tag.js';
 class ActiveAlarms extends Component {
   constructor(props) {
     super(props);
-    Log.info( props.selected + ":" + props.option + "/" + props.stage,"ActiveAlarms" );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -51,7 +50,6 @@ class ActiveAlarms extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( nextProps.stage,"ActiveAlarms.willReceiveProps" );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -64,7 +62,6 @@ class ActiveAlarms extends Component {
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( (sts?"T":"F"),"ActiveAlarms.shouldUpdae" );
     return sts;
   }
   
@@ -89,61 +86,57 @@ class ActiveAlarms extends Component {
   }
     
   fetchList() {
+    const clsMthd = "ActiveAlarms.fetchList";
     const myRequest = SERVERROOT + "/alarm/active/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,"ActiveAlarms.fetchList" );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest,{
-              method: 'GET',
-              headers: {'Content-Type':'application/json',
-                        'Cache-Control':'no-cache, no-store, max-age=0' }
-           });
-        const json = await response.json();
-        Log.info( "I/O complete ", "ActiveAlarms.fetchList" );
-        var almList = [];
-        json.map( function(n,x) { 
-          var t = new Tag( n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
-                         , n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId, null
-                         , null, null, null, null, 'Y');
-          var a = new Alarm( n.id, t, n.almOccurred, n.acknowledged, n.active, n.priority
-                           , n.alarmCode, n.color, n.message, n.value); 
-          return almList.push( a ); 
-        } );
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched",
-                        alarmList: almList } );
+        try {
+          const response = await fetch(myRequest,{
+                method: 'GET',
+                headers: {'Content-Type':'application/json',
+                          'Cache-Control':'no-cache, no-store, max-age=0' }
+             });
+          const json = await response.json();
+          var almList = [];
+          json.map( function(n,x) { 
+            var t = new Tag( n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
+                           , n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId, null
+                           , null, null, null, null, 'Y');
+            var a = new Alarm( n.id, t, n.almOccurred, n.acknowledged, n.active, n.priority
+                             , n.alarmCode, n.color, n.message, n.value); 
+            return almList.push( a ); 
+          } );
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched",
+                          alarmList: almList } );
+        } catch( error ) {
+          alert("Problem retrieving process unit list\n"+error);
+          const emsg = "Fetching process unit list " + error;
+          Log.error(emsg, clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem retrieving process unit list\n"+error);
-        const emsg = "Fetching process unit list " + error;
-        Log.error(emsg, "ActiveAlarms.fetchList");
-      }
+      request();
     }
   }
   
   handleSelect(event) {
 //    event.preventDefault();
+    const clsMthd = "ActiveAlarms.select";
     const id = event.z;
     const myRequest = SERVERROOT + "/alarm/acknowledge/" + id;
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,"ActiveAlarms.handleSelect");
     if( myRequest !== null ) {
       const request = async () => {
-        await fetch(myRequest, {method:'PUT'});
-        Log.info( "update complete","ActiveAlarms.handleSelect" );
+        try {
+          await fetch(myRequest, {method:'PUT'});
+        } catch( e ) {
+          alert("Problem acknowledging alarm\n"+e);
+          const emsg = "Acknowledging alarm " + e;
+          Log.error(emsg,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem acknowledging alarm\n"+e);
-        const emsg = "Acknowledging alarm " + e;
-        Log.error(emsg,"ActiveAlarms.handleSelect");
-      }
+      request();
     }
   }
 

@@ -1,6 +1,6 @@
 /*************************************************************************
  * ProcessUnitList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,20 +48,20 @@ class ProcessUnitList extends Component {
     const myRequest = SERVERROOT + "/processunit/all";
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "ProcessUnitList.fetchList: Fetching process unit list " + e;
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - "+e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "ProcessUnitList.fetchList: Fetching process unit list " + e;
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - "+e, clsMthd);        
-      }
+      request();
     }
   }
 
@@ -77,9 +77,7 @@ class ProcessUnitList extends Component {
       data.shift(1);
     }
     data.forEach((i,x) => {
-//      Log.info("forEach loop: x="+x);
       if( !((x+1) % 3) ) {
-//        Log.info("forEachLoop inner: x="+x);
         let CE0 = new CE(data[x-2].id,data[x-2].name);
         let CE1 = new CE(data[x-1].id,data[x-1].name);
         let CE2 = new CE(data[x].id,data[x].name);
@@ -105,7 +103,7 @@ class ProcessUnitList extends Component {
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>Process Units
+           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>Process Units
         </div>
       </h2>
       <table className={"scrollTable"}>

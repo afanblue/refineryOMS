@@ -1,6 +1,6 @@
 /*************************************************************************
  * UserList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class UserList extends Component {
                            return userList.push( u ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>OMS Users</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>OMS Users</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>

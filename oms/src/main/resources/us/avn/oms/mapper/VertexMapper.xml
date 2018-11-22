@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.VertexMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Vertex> getAllVertices( );
+	
+	Vertex getVertex( String key);
+	
+	Integer updateVertex( Vertex cfg );
+
+	Integer insertVertex( Vertex cfg );
+-->  
+
+  <resultMap id="vertexResultMap" type="Vertex">
+     <result property="id"           column="id"/>
+     <result property="tagId"        column="tag_id" />
+     <result property="seqNo"        column="seq_no" />
+     <result property="latitude"     column="latitude" />
+     <result property="longitude"    column="longitude" />
+  </resultMap>
+  
+
+  <select id="getAllVertices" resultMap="vertexResultMap">
+    select v.id, v.tag_id, v.seq_no, v.latitude, v.longitude
+      from vertex v
+     where tag_id = #{parm1}
+     order by 2
+  </select>
+
+  <select id="getVertex" resultMap="vertexResultMap">
+    select v.tag_id, v.seq_no, v.latitude, v.longitude from vertex v
+	 where v.id = #{parm1}
+  </select>
+  
+  <delete id="clearVertices" parameterType="Long">
+    delete from vertex where tag_id = #{parm1}
+  </delete>
+  
+  <update id="updateVertex" parameterType="Vertex">
+    update vertex
+       set seq_no = #{seqNo}
+         , latitude = #{latitude}
+         , longitude = #{longitude}
+     where tag_id= #{tagId}
+  </update>
+  
+  <insert id="insertVertex">
+    insert vertex( tag_id, seq_no, latitude, longitude) 
+    values (#{tagId}, #{seqNo}, #{latitude}, #{longitude})
+  </insert>
+  
+</mapper>

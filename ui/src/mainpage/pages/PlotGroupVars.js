@@ -1,6 +1,6 @@
 /*************************************************************************
  * PlotGroup.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ const CLASS = "PlotGroupVars";
 class PlotGroupVars extends Component {
   constructor(props) {
     super(props);
-    Log.info( "PlotGroup: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -61,9 +60,6 @@ class PlotGroupVars extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( CLASS+".willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -75,7 +71,6 @@ class PlotGroupVars extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( CLASS+".shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -87,31 +82,21 @@ class PlotGroupVars extends Component {
   }
   
   fetchData( id ) {
-    let now = new Date();
-    Log.info( CLASS+".fetchData " + now.toISOString() );
     const myRequest=SERVERROOT + "/plotGroup/" + id;
-    now = new Date();
-    Log.info( CLASS+".fetchData - Request: " + myRequest );
     const request = async () => {
-      const response = await fetch(myRequest);
-      const pg = await response.json();
-      Log.info( "fetched plotGroup",CLASS+".fetchData" );
-//      var contentType = response.headers.get("ContentType");
-//      if( contentType && contentType.includes("application/json")) {
-      this.fetchAll(pg);
-      var myTimerID = setInterval(() => {this.fetchAll(pg);}, 60000 );
-      this.setState({stage: "begin",
-                     unitTimer: myTimerID});
-//      }
-//      throw new TypeError(CLASS+".fetchData: response ("+contentType+") must be a JSON string");
+      try {
+        const response = await fetch(myRequest);
+        const pg = await response.json();
+        this.fetchAll(pg);
+        var myTimerID = setInterval(() => {this.fetchAll(pg);}, 60000 );
+        this.setState({stage: "begin", unitTimer: myTimerID});
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" transfer "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,CLASS+".updateTransfer");
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      alert("Problem "+(id===0?"inserting":"updating")+" transfer "
-           +"id "+id+"\n"+error);
-      Log.error("Error - " + error,CLASS+".updateTransfer");
-    }
+    request();
   }
 
   fetchHistory(id,ndx) {
@@ -127,59 +112,57 @@ class PlotGroupVars extends Component {
     }
     if( id !== undefined && ! skip ) {
       const myRequest = SERVERROOT + "/ai/history/" + id + "/" + noDays;
-      Log.info( "Request: " + myRequest, CLASS+".fetchHistory" );
       const request = async () => {
-        const response = await fetch(myRequest);
-        const fd = await response.json();
-        var pd = null;
-        if( this.state.plotDetails === null ) {
-          pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
-        } else {
-          pd = Object.assign({},this.state.plotDetails);
-        }
-        switch( ndx ) {
-          case 1:
-            if( pd.max0 === Infinity ) {
-              pd.min0 = fd.aiTag.zeroValue;
-              pd.max0 = fd.aiTag.maxValue;
-            }
-            this.setState({stage: "generatePlot", d0:fd, plotDetails: pd});
-            break;
-          case 2:  
-            if( pd.max1 === Infinity ) {
-              pd.min1 = fd.aiTag.zeroValue;
-              pd.max1 = fd.aiTag.maxValue;
-            }
-            this.setState({stage: "generatePlot", d1:fd, plotDetails: pd});
-            break;
-          case 3:  
-            if( pd.max2 === Infinity ) {
-              pd.min2 = fd.aiTag.zeroValue;
-              pd.max2 = fd.aiTag.maxValue;
-            }
-            this.setState({stage: "generatePlot", d2:fd, plotDetails: pd});
-            break;
-          default: 
-            if( pd.max3 === Infinity ) {
-              pd.min3 = fd.aiTag.zeroValue;
-              pd.max3 = fd.aiTag.maxValue;
-            }
-            this.setState({stage: "generatePlot", d3:fd, plotDetails: pd});
-            break;
+        try {
+          const response = await fetch(myRequest);
+          const fd = await response.json();
+          var pd = null;
+          if( this.state.plotDetails === null ) {
+            pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
+          } else {
+            pd = Object.assign({},this.state.plotDetails);
+          }
+          switch( ndx ) {
+            case 1:
+              if( pd.max0 === Infinity ) {
+                pd.min0 = fd.aiTag.zeroValue;
+                pd.max0 = fd.aiTag.maxValue;
+              }
+              this.setState({stage: "generatePlot", d0:fd, plotDetails: pd});
+              break;
+            case 2:  
+              if( pd.max1 === Infinity ) {
+                pd.min1 = fd.aiTag.zeroValue;
+                pd.max1 = fd.aiTag.maxValue;
+              }
+              this.setState({stage: "generatePlot", d1:fd, plotDetails: pd});
+              break;
+            case 3:  
+              if( pd.max2 === Infinity ) {
+                pd.min2 = fd.aiTag.zeroValue;
+                pd.max2 = fd.aiTag.maxValue;
+              }
+              this.setState({stage: "generatePlot", d2:fd, plotDetails: pd});
+              break;
+            default: 
+              if( pd.max3 === Infinity ) {
+                pd.min3 = fd.aiTag.zeroValue;
+                pd.max3 = fd.aiTag.maxValue;
+              }
+              this.setState({stage: "generatePlot", d3:fd, plotDetails: pd});
+              break;
+          }
+        } catch( error ) {
+           alert("Problem selecting history for AI id "+id+"\n"+error);
+           Log.error("Error - " + error, CLASS+".fetchHistory" );  
         }
       }
-      try {
-        request();
-      } catch( error ) {
-         alert("Problem selecting history for AI id "+id+"\n"+error);
-         Log.error("Error - " + error, CLASS+".fetchHistory" );  
-      }
+      request();
     }
   }
 
   
   componentDidMount() {
-    Log.info( CLASS+".didMount: " + this.state.stage + ", source: " + this.state.source );
     if( this.state.stage === "begin" ) {
       this.fetchData(this.state.id);
     } else {
@@ -192,11 +175,9 @@ class PlotGroupVars extends Component {
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( CLASS+".didUpdate: " + this.state.stage );
   }
 
   componentWillUnmount() {
-    Log.info( CLASS+".willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -218,7 +199,6 @@ class PlotGroupVars extends Component {
 
   
   render() {
-    Log.info(CLASS+".render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

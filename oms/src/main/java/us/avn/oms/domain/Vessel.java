@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Quantities are 5000 - 11600 gal
  *                119  - 276 bbl
  */
-public class Vessel implements Serializable {
+public class Vessel extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -106,19 +106,5 @@ public class Vessel implements Serializable {
 		this.customers = customers;
 	}
 
-	
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
-	}
 
 }

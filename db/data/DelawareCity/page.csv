@@ -35,4 +35,6 @@ Calc Var Admin,,Calc Admin,Calc Admin,Y
 Digital Out,,DO Admin,DO Admin,Y
 Analog Out,,AO Admin,AO Admin,Y
 Control Block,,ControlBlock Admin,ControlBlock Admin,Y
+Tag Admin,,Tag Admin,Tag Admin,Y
+Pipe,,AdminPipes,AdminPipes,Y
 End

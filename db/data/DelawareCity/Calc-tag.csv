@@ -3,10 +3,22 @@ ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
 Data,,,
 name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
 CV-0001,Current Temp degrees F,C,,,,,,Y
-Com011-CV,,C,,,,,,Y
-Com012-CV,,C,,,,,,Y
-Com013-CV,,C,,,,,,Y
+Com011-CV,Crude Tank 1 Pump Out state,C,,,,,,Y
+Com013-CV,Crude Tank 3 Pump Out state,C,,,,,,Y
+Com015-CV,Crude Tank 5 Pump Out state,C,,,,,,Y
 Com021-CV,,C,,,,,,Y
 Com023-CV,,C,,,,,,Y
+Com025-CV,,C,,,,,,Y
+Com012-CV,Crude Tank 2 Pump Out state,C,,,,,,Y
+Com014-CV,Crude Tank 4 Pump Out state,C,,,,,,Y
+Com016-CV,Crude Tank 6 Pump Out state,C,,,,,,Y
 Com022-CV,,C,,,,,,Y
+Com024-CV,,C,,,,,,Y
+Com026-CV,,C,,,,,,Y
+RU1-3-CV,,C,,,,,,Y
+RU1-4-CV,,C,,,,,,Y
+RU2-3-CV,,C,,,,,,Y
+RU2-4-CV,,C,,,,,,Y
+RU1-2-CV,,C,,,,,,Y
+RU2-2-CV,,C,,,,,,Y
 End

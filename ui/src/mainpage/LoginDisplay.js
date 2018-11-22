@@ -1,6 +1,6 @@
 /*************************************************************************
  * LoginDisplay.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -180,7 +180,7 @@ class LoginDisplay extends Component {
                 <tbody>
                 <tr>
                   <td className="oms-right-text">
-                    <img src="./images/spacer.png" alt="space" height="90px"/>
+                    <img src="../images/spacer.png" alt="" height="90px"/>
                   </td>
                   <td className="oms-left-text">&nbsp;</td>
                 </tr>
@@ -205,7 +205,9 @@ class LoginDisplay extends Component {
                   </td>
                 </tr>
                 <tr>
-                  <td className="oms-right-text"><img src="./images/spacer.png" alt="space" height="10px"/></td>
+                  <td className="oms-right-text">
+                    <img src="../images/spacer.png" alt="" height="10px"/>
+                  </td>
                   <td className="oms-left-text">&nbsp;</td>
                 </tr>
                 </tbody>

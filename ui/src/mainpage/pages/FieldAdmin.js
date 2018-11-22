@@ -1,6 +1,6 @@
 /*************************************************************************
  * FieldAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,6 @@ select af.id, af.name, af.parent_id, af.parent
 class FieldAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "FieldAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -76,9 +75,6 @@ class FieldAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "FieldAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -90,7 +86,6 @@ class FieldAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "FieldAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -98,42 +93,41 @@ class FieldAdmin extends Component {
     const myRequest = SERVERROOT + "/field/" + id;
     const clsMthd = "FieldAdmin.fetchFormData";
     const request = async () => {
-      const response = await fetch(myRequest);
-      const fd = await response.json();
-      const f = new Field( fd.id, fd.name, fd.description, fd.tagTypeCode, fd.tagTypeId
-                         , fd.misc, fd.c1Lat, fd.c1Long, fd.c2Lat, fd.c2Long, fd.active
-                         , fd.parentId, fd.parent, fd.roadImage, fd.satelliteImage);
-      var cTanks = [];
-      fd.childTanks.map(function(n,x) {
-        let id = n.childTagId;
-        return cTanks.push(id);
-      } );
-      f.childTanks = cTanks;
-      this.setState({stage: "itemRetrieved",
-                     updateDisplay: true,
-                     updateData: false,
-                     returnedText: fd,
-                     field: f                    
-                    });
+      try {
+        const response = await fetch(myRequest);
+        const fd = await response.json();
+        const f = new Field( fd.id, fd.name, fd.description, fd.tagTypeCode, fd.tagTypeId
+                           , fd.misc, fd.c1Lat, fd.c1Long, fd.c2Lat, fd.c2Long, fd.active
+                           , fd.parentId, fd.parent, fd.roadImage, fd.satelliteImage);
+        var cTanks = [];
+        fd.childTanks.map(function(n,x) {
+          let id = n.childTagId;
+          return cTanks.push(id);
+        } );
+        f.childTanks = cTanks;
+        this.setState({stage: "itemRetrieved",
+                       updateDisplay: true,
+                       updateData: false,
+                       returnedText: fd,
+                       field: f                    
+                      });
+      } catch( e ) {
+        let emsg = "Problem selecting field id "+id;
+        alert(emsg+"\n"+e);
+        Log.error(emsg+"  "+ e,clsMthd);  
+      }
     }
-    try {
-      request();
-    } catch( e ) {
-      let emsg = "Problem selecting field id "+id;
-      alert(emsg+"\n"+e);
-      Log.error(emsg+"  "+ e,clsMthd);  
-    }
+    request();
   }
 
   handleFieldSelect(event) {
-    let now = new Date();
-    Log.info( "FieldAdmin.fieldSelect " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
 
   handleFieldUpdate(event) {
     event.preventDefault();
+    let clsMthd = "FieldAdmin.update";
     const id = this.state.field.id;
     let method = "PUT";
     let url = SERVERROOT + "/field/update";
@@ -153,28 +147,23 @@ class FieldAdmin extends Component {
     } );
     f.childTanks = childTanks;
     const b = JSON.stringify(f);
-    Log.info("FieldAdmin.fieldUpdate "+method)
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
-        this.fetchFormData(id);
-    }).catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" Field "
-             +"id "+id+"\n"+error);
-        Log.error("FieldAdmin.fieldUpdate: Error - " + error);  
-    });
+    const request = async () => {
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on field update id="+id);
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" field id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
+    }
+    request();
   }
   
   componentDidMount() {
-    Log.info( "FieldAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "FieldAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -217,8 +206,6 @@ class FieldAdmin extends Component {
   fetchList() {
     const clsMthd = "FieldAdmin.fetchList";
     const myRequest = SERVERROOT + "/field/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
         const response = await fetch(myRequest);
@@ -246,8 +233,8 @@ class FieldAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "FieldAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
-      Log.info( "FieldAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "FieldAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
+//      Log.info( "FieldAdmin.mouseUp: "+lat+","+long);
       let fnew = Object.assign({},this.state.field);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -272,7 +259,6 @@ class FieldAdmin extends Component {
   }
 
   render() {
-    Log.info("FieldAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

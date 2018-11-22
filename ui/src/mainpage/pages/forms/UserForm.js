@@ -1,6 +1,6 @@
 /*************************************************************************
  * UserForm.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ class UserForm extends Component {
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
             <td className="oms-spacing"><img src="images/spacer.png" 
-                alt="space" height="5px" width="240px"/></td>
+                alt="" height="5px" width="240px"/></td>
           </tr>
           <tr>
             <th className="oms-spacing-180">Username (10 chars):</th>

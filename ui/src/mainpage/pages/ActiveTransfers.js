@@ -1,6 +1,6 @@
 /*************************************************************************
  * ActiveTransfers.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 import React, {Component} from 'react';
 import {SERVERROOT}       from '../../Parameters.js';
+import OMSRequest         from '../requests/OMSRequest.js';
 import ActiveTransferList from './lists/ActiveTransferList.js';
 import DefaultContents    from './DefaultContents.js';
 import Log                from '../requests/Log.js';
@@ -35,20 +36,26 @@ import {Transfer}         from './objects/Transfer.js';
 class ActiveTransfers extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ActiveTransfers: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
       transfer: null,
+      transferTypes: null,
+      statuses: null,
+      sources: null,
       unitTimer: null
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.handleTransferSelect  = this.handleTransferSelect.bind(this);
-    this.handleTransferUpdate  = this.handleTransferUpdate.bind(this);
+    this.handleSelect      = this.handleSelect.bind(this);
+    this.handleUpdate      = this.handleUpdate.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
+    this.finishXferFetch   = this.finishXferFetch.bind(this);
+    this.finishTypesFetch  = this.finishTypesFetch.bind(this);
+    this.finishStsFetch    = this.finishStsFetch.bind(this);
+    this.finishSrcsFetch   = this.finishSrcsFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -59,9 +66,6 @@ class ActiveTransfers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "ActiveTransfers.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -73,46 +77,93 @@ class ActiveTransfers extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "ActiveTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
+
+  finishXferFetch( req ) {
+    let xd = req;
+    var x = new Transfer( xd.id,xd.name,xd.statusId,xd.source
+                        , xd.transferTypeId,xd.transferType
+                        , xd.sourceId,xd.source,xd.destinationId, xd.destination
+                        , xd.expStartTime,xd.expEndTime,xd.expVolume
+                        , xd.actStartTime,xd.actEndTime,xd.actVolume,xd.delta);
+    this.setState({stage: "itemRetrieved",
+                   updateDisplay: true,
+                   updateData: false,
+                   transfer: x
+                  });
+  }
   
-  handleTransferSelect(event) {
-    let now = new Date();
-    let method = "ActiveTransfers.transferSelect"; 
-    Log.info( now.toISOString(), method );
-    const id = event.z;
-    const myRequest=SERVERROOT + "/transfer/" + id;
-    now = new Date();
-    Log.info( "Request: " + myRequest, method);
-    const request = async () => {
-      const response = await fetch(myRequest);
-      const json = await response.json();
-      if( this.state.unitTimer !== null ) {
-        clearInterval(this.state.unitTimer);
-      }
-      let ud = json;
-      var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                          ,ud.transferTypeId,ud.transferType
-                          ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                          ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                          ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-      this.setState({stage: "itemRetrieved",
-                     updateDisplay: true,
-                     updateData: false,
-                     returnedText: json,
-                     transfer: x,
-                     unitTimer:null
-                    });
-    }
-    try {
-      request();
-    } catch( error ) {
-       alert("Problem selecting transfer id "+id+"\n"+error);
-       Log.error("Error - " + error,method);  
-    }
+  finishTypesFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, transferTypes:req });
+  }
+  
+  finishStsFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, statuses: req });
   }
 
+  finishSrcsFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, sources: req });
+  }
+
+  fetchFormData(id) {
+    const loc = "TransferAdmin.select";
+    let myRequest = SERVERROOT + "/transfer/" + id;
+    let req0 = new OMSRequest(loc, myRequest, 
+                            "Problem selecting transfer "+myRequest,
+                            this.finishXferFetch);
+    req0.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/tag/types/TK,RU,S,TC,TT,PU",
+                            "Problem retrieving type list ", this.finishSrcsFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/transfer/types",
+                            "Problem retrieving input tag list", this.finishTypesFetch);
+    req3.fetchData();
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    let req4 = new OMSRequest(loc, SERVERROOT + "/transfer/statuses",
+                            "Problem retrieving output tag list", this.finishStsFetch);
+    req4.fetchData();
+    this.setState({schematic:null, sco:null, typeList:null, outTags:null})    
+  }
+  
+  handleSelect(event) {
+    const id = event.z;
+    this.fetchFormData(id);
+  }
+
+/*  
+  handleSelect(event) {
+    let method = "ActiveTransfers.transferSelect"; 
+    const id = event.z;
+    const myRequest=SERVERROOT + "/transfer/" + id;
+    const request = async () => {
+      try {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        if( this.state.unitTimer !== null ) {
+          clearInterval(this.state.unitTimer);
+        }
+        let ud = json;
+        var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
+                            ,ud.transferTypeId,ud.transferType
+                            ,ud.sourceId,ud.source,ud.destinationId, ud.destination
+                            ,ud.expStartTime,ud.expEndTime,ud.expVolume
+                            ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
+        this.setState({stage: "itemRetrieved",
+                       updateDisplay: true,
+                       updateData: false,
+                       returnedText: json,
+                       transfer: x,
+                       unitTimer:null
+                      });
+      } catch( error ) {
+         alert("Problem selecting transfer id "+id+"\n"+error);
+         Log.error("Error - " + error,method);  
+      }
+    }
+    request();
+  }
+*/
   validateForm( x ) {
     let doSubmit = true;
     let msg = "The following fields ";
@@ -139,14 +190,13 @@ class ActiveTransfers extends Component {
     return doSubmit;
   }
 
-  handleTransferUpdate(event) {
+  handleUpdate(event) {
     event.preventDefault();
     let x = this.state.transfer;
     let doSubmit = this.validateForm(x);
     let clsMthd = "ActiveTransfers.transferUpdate";
     if( doSubmit ) {
       const id = this.state.transfer.id;
-      Log.info("(data) id="+id+", name:"+this.state.transfer.name,clsMthd);
       let method = "PUT";
       let url = SERVERROOT + "/transfer/update";
       if( id === 0 ) {
@@ -155,28 +205,26 @@ class ActiveTransfers extends Component {
       }
       var b = JSON.stringify( this.state.transfer );
       const request = async () => {
-        await fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:b});
-        Log.info( "update complete ",clsMthd );
+        try {
+          await fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:b});
+        } catch( error ) {
+          const emsg = "Problem "+(id===0?"inserting":"updating")+" transfer "
+               +"id "+id;
+          alert(emsg+"\n"+error);
+          Log.error(emsg + " - " + error,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" transfer "
-             +"id "+id+"\n"+error);
-        Log.error("Error - " + error,clsMthd);
-      }
+      request();
     }
   }
   
   componentDidMount() {
-    Log.info( this.state.stage, "ActiveTransfers.didMount" );
     var myTimerID = setInterval(() => {this.fetchList()}, 60000 );
     this.fetchList();
     this.setState({unitTimer:myTimerID});
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( this.state.stage,"ActiveTransfers.didUpdate" );
   }
 
   handleClick() {
@@ -203,24 +251,22 @@ class ActiveTransfers extends Component {
   fetchList() {
     let method = "ActiveTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/active";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,method );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem retrieving transfer list\n"+e);
+          const emsg = "Fetching transfer list " + e;
+          Log.error(emsg,method);
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem retrieving transfer list\n"+e);
-        const emsg = "Fetching transfer list " + e;
-        Log.error(emsg,method);
-      }
+      request();
     }
   }
 
@@ -237,7 +283,6 @@ class ActiveTransfers extends Component {
   }
 
   componentWillUnmount() {
-    Log.info( "ActiveTransfers.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -245,23 +290,29 @@ class ActiveTransfers extends Component {
   
 
   render() {
-    Log.info("ActiveTransfers (render) - stage: "+this.state.stage);
-    switch( this.state.stage ) {
+     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
       case "dataFetched":
         return <ActiveTransferList transferData = {this.state.returnedText}
-                                   transferSelect = {this.handleTransferSelect}
+                                   transferSelect = {this.handleSelect}
                                    handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <TransferForm transferData = {this.state.returnedText}
-                             transfer     = {this.state.transfer}
-                             transferUpdate = {this.handleTransferUpdate}
-                             fieldChange = {this.handleFieldChange}
-                             handleQuit = {this.handleQuit}
-                             handleClick = {this.handleClick}
-               />
+        if( (this.state.transfer === null)  || (this.state.transferTypes === null) || 
+            (this.state.sources === null)   || (this.state.statuses === null)    ) {
+          return <Waiting />
+        } else {
+          return <TransferForm transfer       = {this.state.transfer}
+                               transferTypes  = {this.state.transferTypes}
+                               statuses       = {this.state.statuses}
+                               sources        = {this.state.sources}
+                               transferUpdate = {this.handleUpdate}
+                               fieldChange    = {this.handleFieldChange}
+                               handleQuit     = {this.handleQuit}
+                               handleClick    = {this.handleClick}
+                 />
+        }
       default:
         return <DefaultContents />
     }

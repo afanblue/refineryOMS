@@ -1,6 +1,6 @@
 /*************************************************************************
  * TankAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ import {Tank}          from './objects/Tank.js';
 class TankAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "TankAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -73,9 +72,6 @@ class TankAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "TankAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -87,7 +83,6 @@ class TankAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "TankAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -169,27 +164,24 @@ class TankAdmin extends Component {
     }
     var b = JSON.stringify( this.state.tank );
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "Tank update complete",clsMthd );
-      alert("Update/insert complete on "+tk.tag.name)
-      this.fetchTankData(id);
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on "+tk.tag.name)
+        this.fetchTankData(id);
+      } catch( error ) {
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" tank, id="+id;
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      const emsg = "Problem "+(id===0?"inserting":"updating")+" tank, id="+id;
-      alert(emsg+"\n"+error);
-      Log.error(emsg+" - " + error,clsMthd);
-    }
+    request();
   }
   
   componentDidMount() {
-    Log.info( "TankAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "TankAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -220,9 +212,9 @@ class TankAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "TankAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"]"
-                 + " SE("+l.c2Lat+","+l.c2Long+")]");
-      Log.info( "TankAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "TankAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"]"
+//                 + " SE("+l.c2Lat+","+l.c2Long+")]");
+//      Log.info( "TankAdmin.mouseUp: "+lat+","+long);
       let tknew = Object.assign({},this.state.tank);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -242,20 +234,20 @@ class TankAdmin extends Component {
     const myRequest = SERVERROOT + "/tank/all";
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "TankAdmin.fetchList: Fetching tank list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "TankAdmin.fetchList: Fetching tank list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
 
@@ -270,7 +262,6 @@ class TankAdmin extends Component {
   }
 
   render() {
-    Log.info("TankAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -1,6 +1,6 @@
 /*************************************************************************
  * ScmRefUnit.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,12 @@
  ***********************************************************************/
 
 import React from 'react';
-import Log      from '../../requests/Log.js';
 import { Group, Rect, Arc, Line } from 'react-konva';
 
 
 export default class ScmRefUnit extends React.Component {
   constructor( props ) {
     super( props );
-    Log.info( "ScmVValve: constructor" );
     this.state = {
       x: props.x,
       y: props.y,
@@ -56,6 +54,8 @@ export default class ScmRefUnit extends React.Component {
   }
   
   render() {
+    var val = (this.props.value===null||this.props.value===undefined)?0:this.props.value;
+    val 
     var xt = this.props.x;
     var ht = 36;
     var wd = 60;
@@ -67,7 +67,7 @@ export default class ScmRefUnit extends React.Component {
     var pts4 = [xt+2*r,    yt+ht/4, xt+3*r,    yt+ht/4, xt+3*r, yt+ht-5];
     var pts5 = [xt+6*r,    yt+ht/2, xt+6.5*r+2,  yt+ht/2, xt+6.5*r+2, yt+ht-5];
 //    var stkw = 1;
-    var color = this.props.value===0?"red":"darkgreen";
+    var color = this.props.val===0?"red":"darkgreen";
     var mu = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu}>

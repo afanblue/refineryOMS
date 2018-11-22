@@ -1,6 +1,6 @@
 /*************************************************************************
  * AlarmTypeAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import AlarmTypeForm   from './forms/AlarmTypeForm.js';
 class AlarmTypeAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AlarmTypeAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -80,15 +79,12 @@ class AlarmTypeAdmin extends Component {
     let req1 = new OMSRequest(loc, SERVERROOT + "/alarm/message/all",
                             "Problem retrieving alarm messages", this.finishMsgsFetch);
     req1.fetchData();
-    Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
-    Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
   }
 
   handleTypeUpdate(event) {
     event.preventDefault();
     const id = this.state.type.id;
     const clsMthd = "AlarmTypeAdmin.typeUpdate";
-    Log.info("(data) id="+id+", code:"+this.state.type.code, clsMthd);
     let method = "PUT";
     let url = "http://localhost:8080/oms/alarm/type/update";
     if( id === 0 ) {
@@ -97,16 +93,15 @@ class AlarmTypeAdmin extends Component {
     }
     const b = JSON.stringify(this.state.type);
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      alert("Update/insert complete on alarm type # "+id)
-      Log.info( "update complete",clsMthd );
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on alarm type # "+id)
+      } catch( error ) {
+        alert("Problem updating alarm type id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);  
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      alert("Problem updating alarm type id "+id+"\n"+error);
-      Log.error("Error - " + error,clsMthd);  
-    }
+    request();
   }
   
   
@@ -123,37 +118,33 @@ class AlarmTypeAdmin extends Component {
   fetchList() {
     const clsMthd = "AlarmTypeAdmin.fetchList";
     const myRequest = SERVERROOT + "/alarm/type/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem retrieving alarm type list\n"+e);
+          const emsg = "Fetching user list " + e;
+          Log.error(emsg,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem retrieving alarm type list\n"+e);
-        const emsg = "Fetching user list " + e;
-        Log.error(emsg,clsMthd);
-      }
+      request();
     }
   }
 
 
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "AlarmTypeAdmin.didUpdate: updated? " + (this.state.updated?"T":"F") );
     if( this.state.updateData ) {
       this.fetchList();
     }
   }
   
   componentDidMount() {
-    Log.info( "AlarmTypeAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
@@ -168,7 +159,6 @@ class AlarmTypeAdmin extends Component {
   }
 
   render() {
-    Log.info("AlarmTypeAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
       case "begin":
         return <Waiting />

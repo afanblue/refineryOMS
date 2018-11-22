@@ -1,6 +1,6 @@
 /*************************************************************************
  * ControlBlockAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ const loc = className + ".cbSelect";
 class ControlBlockAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( className + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -74,9 +73,6 @@ class ControlBlockAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( className + ".willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -88,7 +84,6 @@ class ControlBlockAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( className + ".shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -140,8 +135,6 @@ class ControlBlockAdmin extends Component {
   }
   
   handleSelect(event) {
-    let now = new Date();
-    Log.info( className + ".cbSelect " + now.toISOString() );
     const id = event.z;
     this.setState({stage: "dataFetched", updateDisplay: false, newCB: (id===0) });
     this.fetchCBselection(id);
@@ -181,7 +174,6 @@ class ControlBlockAdmin extends Component {
   handleUpdate(event) {
     event.preventDefault();
     const id = this.state.cb.tagId;
-    Log.info(className+".cbUpdate: (data) id="+id);
     let method = "PUT";
     let url = SERVERROOT + "/cb/update";
     if( this.state.newCB ) {
@@ -205,12 +197,10 @@ class ControlBlockAdmin extends Component {
   }
   
   componentDidMount() {
-    Log.info( className + ".didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( className + ".didUpdate: " + this.state.stage );
   }
 
   handleClick() {  };
@@ -246,8 +236,8 @@ class ControlBlockAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( className+".mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      Log.info( className+".mouseUp: "+lat+","+long);
+//      Log.info( className+".mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+//      Log.info( className+".mouseUp: "+lat+","+long);
       let cbnew = Object.assign({},this.state.cb);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -270,7 +260,6 @@ class ControlBlockAdmin extends Component {
   }
    
   fetchList() {
-    Log.info( className + ".fetchList : " + this.state.stage );
     let req = new OMSRequest(loc, SERVERROOT + "/cb/all",
                             "Problem retrieving control block list", this.handleListFetch);
     req.fetchData();
@@ -287,7 +276,6 @@ class ControlBlockAdmin extends Component {
   }
 
   render() {
-    Log.info(className+" (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -1,6 +1,6 @@
 /*************************************************************************
  * ConfigAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ function ConfigItem(i,k,v) { this.id=i; this.key=k; this.value=v; };
 class ConfigAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ConfigAdmin: " + props.selected + ":" + props.option + "/" + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -51,7 +50,6 @@ class ConfigAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "ConfigAdmin.willRcvProps: " + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -63,17 +61,14 @@ class ConfigAdmin extends Component {
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "ConfigAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   componentDidMount() {
-    Log.info( "ConfigAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "ConfigAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -85,7 +80,6 @@ class ConfigAdmin extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    Log.info("ConfigAdmin.fieldChange: "+name+" = "+value);
     let np = name.split(".");
     let cfg = this.state.configItems.slice(0);
     let ndx = np[1];
@@ -100,29 +94,27 @@ class ConfigAdmin extends Component {
   fetchList() {
     const clsMthd = "ConfigAdmin.fetchList";
     const myRequest = SERVERROOT + "/config/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        var itemList = [];
-        var c = new ConfigItem(0,"Add new item","");
-        itemList.push(c);
-        json.map( function(n,x) { var ci = new ConfigItem(n.id,n.key,n.value); 
-                                  return itemList.push( ci ); } );
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched",
-                        configItems: itemList } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          var itemList = [];
+          var c = new ConfigItem(0,"Add new item","");
+          itemList.push(c);
+          json.map( function(n,x) { var ci = new ConfigItem(n.id,n.key,n.value); 
+                                    return itemList.push( ci ); } );
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched",
+                          configItems: itemList } );
+        } catch( e ) {
+          alert("Problem fetching system configuration list\n"+e);
+          Log.error("Error - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem fetching system configuration list\n"+e);
-        Log.error("Error - " + e, clsMthd);        
-      }
+      request();
     }
   }
 
@@ -140,16 +132,15 @@ class ConfigAdmin extends Component {
     }
     const b = JSON.stringify(cfg);
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "update complete",clsMthd );
-      alert("Update/insert complete for system configuration")
-    }
-    try {
-      request();
-    } catch( error ) {
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete for system configuration")
+      } catch( error ) {
         alert("Problem updating system configuration\n"+error);
         Log.error("Error - " + error,clsMthd);  
+      }
     }
+    request();
   }
 
   handleQuit(event) {
@@ -164,7 +155,6 @@ class ConfigAdmin extends Component {
 
 
   render() {
-    Log.info("ConfigAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
       case "begin":
         return <Waiting />

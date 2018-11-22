@@ -1,6 +1,6 @@
 /*************************************************************************
  * GroupList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,32 +47,27 @@ class GroupList extends Component {
   }
 
   fetchList() {
-    Log.info( this.state.stage, "GroupList.fetchList" );
     const myRequest = SERVERROOT + "/plotGroup/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,"GroupList.fetchList" );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        Log.info( "I/O complete ", "GroupList.fetchList" );
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( error ) {
+          alert("Problem retrieving process unit list\n"+error);
+          const emsg = "Fetching process unit list " + error;
+          Log.error(emsg, "GroupList.fetchList");
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem retrieving process unit list\n"+error);
-        const emsg = "Fetching process unit list " + error;
-        Log.error(emsg, "GroupList.fetchList");
-      }
+      request();
     }
   }
 
   componentDidMount() {
-    Log.info( "GroupList.didMount: " + this.state.stage );
     this.fetchList();
   }
   
@@ -106,12 +101,11 @@ class GroupList extends Component {
       puColumns.push(il);
     }
     
-    Log.info("GroupList.generateList");
     return(
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>Process Units
+           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>Process Units
         </div>
       </h2>
       <table className={"scrollTable"}>

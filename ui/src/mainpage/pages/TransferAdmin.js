@@ -1,6 +1,6 @@
 /*************************************************************************
  * TransferAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ import {Transfer}      from './objects/Transfer.js';
 class TransferAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "TransferAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -72,7 +71,6 @@ class TransferAdmin extends Component {
 
 /*
   getDerivedStateFromProps(nextProps,prevState) {
-    Log.info( "TransferAdmin.getDerivedState" + nextProps.stage );
     if(  (nextProps.stage !== prevState.stage) 
       || (nextProps.type != prevState.type ) )
     {
@@ -86,7 +84,6 @@ class TransferAdmin extends Component {
 */
 /* */  
   componentWillReceiveProps(nextProps) {
-    Log.info( "TransferAdmin.willRcvProps = " + nextProps.stage + "/" + nextProps.type );
     if(  (nextProps.stage !== this.state.stage) 
       || (nextProps.type  !== this.state.type ) )
     {
@@ -104,13 +101,6 @@ class TransferAdmin extends Component {
     let sts = nextState.updateDisplay;
     if( nextState.stage !== this.state.stage ) { sts = true; }
     if( nextState.type  !== this.state.type  ) { sts = true;         }
-    Log.info( "TransferAdmin.shouldUpdate: stage (next state? " + nextState.stage + ", this state" + this.state.stage
-               + ", display: " + (sts?"T":"F") 
-               + ", data: " + (nextState.updateData?"T":"F") );
-    Log.info( "TransferAdmin.shouldUpdate (next props)? : display: " 
-               + (nextProps.updateDisplay?"T":"F") 
-               + ", data: " + (nextProps.updateData?"T":"F") );
-    Log.info("TransferAdmin.shouldUpdate: type (next state:" + nextState.type+", this state"+this.state.type+")");
     if( nextProps.type !== this.state.type ) {
       this.fetchList();
     }
@@ -147,7 +137,8 @@ class TransferAdmin extends Component {
     const loc = "TransferAdmin.select";
     let myRequest = SERVERROOT + "/transfer/" + id;
     let req0 = new OMSRequest(loc, myRequest, 
-                            "Problem selecting transfer "+myRequest, this.finishXferFetch);
+                            "Problem selecting transfer "+myRequest,
+                            this.finishXferFetch);
     req0.fetchData();
     let req2 = new OMSRequest(loc, SERVERROOT + "/tag/types/TK,RU,S,TC,TT,PU",
                             "Problem retrieving type list ", this.finishSrcsFetch);
@@ -163,8 +154,6 @@ class TransferAdmin extends Component {
   }
   
   handleSelect(event) {
-    let now = new Date();
-    Log.info( "TransferAdmin.transferSelect " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -196,8 +185,7 @@ class TransferAdmin extends Component {
   }
 
   updateTransfer(id) {
-    Log.info("TransferAdmin.updateTransfer: (data) id="+id
-               +", name:"+this.state.transfer.name);
+    let clsMthd = "TransferAdmin.updateTransfer";
     let newt = Object.assign({},this.state.transfer);
     let method = "PUT";
     let url = SERVERROOT + "/transfer/update";
@@ -208,17 +196,16 @@ class TransferAdmin extends Component {
     }
     var b = JSON.stringify( newt );
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "TransferAdmin.fetchList: update complete " );
-      alert("Update complete on "+newt.name)
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update complete on "+newt.name)
+      } catch( error ) {
+        let emsg = "Problem "+(id===0?"inserting":"updating")+" transfer id "+id; 
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      alert("Problem "+(id===0?"inserting":"updating")+" transfer "
-           +"id "+id+"\n"+error);
-      Log.error("TransferAdmin.updateTransfer: Error - " + error);
-    }
+    request();
   }
 
   handleUpdate(event) {
@@ -242,12 +229,10 @@ class TransferAdmin extends Component {
   }
   
   componentDidMount() {
-    Log.info( "TransferAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "TransferAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -272,19 +257,22 @@ class TransferAdmin extends Component {
   
  
   fetchList() {
-    Log.info( "TransferAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "TransferAdmin.fetchList";
     const myRequest = SERVERROOT + "/transfer/all/"+this.state.type;
-    const now = new Date();
-    Log.info( "TransferAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        Log.info("TransferAdmin.fetchList: JSON retrieved - " + json);
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( error ) {
+          let emsg = "Problem fetching transfer list"; 
+          alert(emsg+"\n"+error);
+          Log.error(emsg+" - " + error,clsMthd);
+        }
       }
       request();
     }
@@ -301,7 +289,6 @@ class TransferAdmin extends Component {
   }
 
   render() {
-    Log.info("TransferAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

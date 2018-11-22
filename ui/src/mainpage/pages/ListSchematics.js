@@ -1,6 +1,6 @@
 /*************************************************************************
  * ListSchematics.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,29 +46,26 @@ class ListSchematics extends Component {
   fetchList() {
     const clsMthd = "ListSchematics.fetchList";
     const myRequest = SERVERROOT + "/schematic/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem retrieving schematic list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem retrieving schematic list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
 
   componentDidMount() {
-    Log.info( "ListSchematics.didMount: " + this.state.stage );
     this.fetchList();
   }
   
@@ -79,9 +76,7 @@ class ListSchematics extends Component {
     if( data.length !== 0 ) { 
 //    if( data[0].id === 0) { data.shift(1); }
       data.forEach((i,x) => {
-//        Log.info("forEach loop: x="+x);
         if( !((x+1) % 3) ) {
-//          Log.info("forEachLoop inner: x="+x);
           let CE0 = new CE(data[x-2].id,data[x-2].name);
           let CE1 = new CE(data[x-1].id,data[x-1].name);
           let CE2 = new CE(data[x].id,data[x].name);
@@ -103,12 +98,11 @@ class ListSchematics extends Component {
         scmColumns.push(il);
       }
     }
-    Log.info("ListSchematics.generateList");
     return(
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="180px"/>Schematics
+           <img src="./images/spacer.png" alt="" height="1px" width="180px"/>Schematics
         </div>
       </h2>
       <table className={"scrollTable"}>

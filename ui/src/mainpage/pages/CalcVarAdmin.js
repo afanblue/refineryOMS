@@ -1,6 +1,6 @@
 /*************************************************************************
  * CalcVarAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import Waiting      from './Waiting.js';
 class CalcVarAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "CalcVarAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -59,9 +58,6 @@ class CalcVarAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "CalcVarAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -75,7 +71,6 @@ class CalcVarAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "CalcVarAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
@@ -128,8 +123,6 @@ class CalcVarAdmin extends Component {
   }
 
   handleSelect(event) {
-    let now = new Date();
-    Log.info( "CalcVarAdmin.select " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -179,42 +172,24 @@ class CalcVarAdmin extends Component {
     if( this.validateForm( cv ) ) {
       const b = JSON.stringify(cvo);
       const request = async () => {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        Log.info( "update complete "+cvo.tag.name,clsMthd );
-        alert("Update/insert complete on "+cvo.tag.name)
-      }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" CalcVar "
-             +"id "+id+"\n"+error);
-        Log.error("Error - " + error,clsMthd);
-      }
-
-
-      Log.info("CalcVarAdmin.update "+method)
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .then(response => {
-          this.fetchFormData(id);
-      }).catch(function(error) { 
+        try {
+          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          alert("Update/insert complete on "+cvo.tag.name)
+        } catch( error ) {
           alert("Problem "+(id===0?"inserting":"updating")+" CalcVar "
                +"id "+id+"\n"+error);
-          Log.error("CalcVarAdmin.update: Error - " + error);  
-      });
+          Log.error("Error - " + error,clsMthd);
+        }
+      }
+      request();
     }
   }
   
   componentDidMount() {
-    Log.info( "CalcVarAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "CalcVarAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -262,24 +237,22 @@ class CalcVarAdmin extends Component {
   fetchList() {
     const clsMthd = "CalcVarAdmin.fetchList";
     const myRequest = SERVERROOT + "/calcVariable/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem retrieving calcVar list\n"+e);
+          const emsg = "CalcVarAdmin.fetchList: Fetching calcVar list " + e;
+          Log.error(emsg,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem retrieving calcVar list\n"+e);
-        const emsg = "CalcVarAdmin.fetchList: Fetching calcVar list " + e;
-        Log.error(emsg,clsMthd);
-      }
+      request();
     }
   }
 
@@ -293,7 +266,6 @@ class CalcVarAdmin extends Component {
   }
 
   render() {
-    Log.info("CalcVarAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -1,6 +1,6 @@
 /*************************************************************************
  * CalcVarList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,12 @@
 
 import React, {Component} from 'react';
 import {CalcVar} from '../objects/CalcVar.js';
-import Log       from '../../requests/Log.js';
 import {Tag}     from '../objects/Tag.js';
 
 
 class CalcVarList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "CalcVarList: " + props.stage );
     this.state = { };
   }
 
@@ -44,11 +42,12 @@ class CalcVarList extends Component {
     } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Calculation Variables</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Calculation Variables</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> CalcVar Name </th>
+              <th className={["oms-spacing-180","oms-underline"].join(' ')}> Description </th>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> Definition (RPN) </th>
             </tr>
           </thead>
@@ -57,12 +56,14 @@ class CalcVarList extends Component {
             function(n,x){
               let z = n.id;
               let defn = n.definition;
+              let descr = n.tag.description;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
                          <a id={z} onClick={() => {handleSelect({z})}} >
                            {n.tag.name}
                          </a>
                        </td>
+                       <td className="oms-spacing-180">{descr}</td>
                        <td className="oms-spacing-120">{defn}</td>
                      </tr>; 
             } )

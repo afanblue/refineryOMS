@@ -44,6 +44,8 @@ Admin,Calc Admin
 Admin,AO Admin
 Admin,DO Admin
 Admin,ControlBlock Admin
+Admin,Tag Admin
+Admin,AdminPipes
 Operator,Access Schematics
 Operator,Acknowledge Alarms
 Operator,Execute Crude Field

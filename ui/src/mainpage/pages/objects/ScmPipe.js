@@ -1,6 +1,6 @@
 /*************************************************************************
  * ScmPipe.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,12 @@
 
 import React from 'react';
 //import ReactDOM from 'react-dom';
-import Log      from '../../requests/Log.js';
 import { Line } from 'react-konva';
 
 
 export default class ScmPipe extends React.Component {
   constructor( props ) {
     super( props );
-    Log.info( "ScmPipe: constructor" );
     this.state = {
       x: props.x,
       y: props.y,
@@ -57,12 +55,10 @@ export default class ScmPipe extends React.Component {
   }
   
   render() {
-    var xt = this.props.x;
-    var ht = this.props.height;
-    var wd = this.props.width;
-    var yt = this.props.y;
-    var pts = [xt, yt, xt+wd, yt+ht];
-    var stkw = 5;
+//    var xt = this.props.x;
+//    var yt = this.props.y;
+    var pts = this.props.points;
+    var stkw = this.props.strokeWidth;
     var color = this.props.value===0?"red":"darkgreen";
     return (
       <Line points={pts} stroke={color} strokeWidth={stkw}  />

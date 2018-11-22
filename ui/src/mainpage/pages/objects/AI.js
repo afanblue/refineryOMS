@@ -1,6 +1,6 @@
 /*************************************************************************
  * AI.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,10 @@ export function AnalogInput(i,t,tc,si,so,cs,zv,mv,htc,p,s,rv,sv,st,pv,pt,lhv,lht
   this.scanOffset=so; this.currentScan=cs; this.zeroValue=zv; this.maxValue=mv; 
   this.histTypeCode=htc; this.percent=p; this.slope=s; this.rawValue=rv; 
   this.scanValue=sv; this.scanTime=st; this.prevValue=pv; this.prevTime=pt; 
-  this.lastHistValue=lhv; this.lastHistTime=lht; this.hh=hh; this.hi=hi; 
-  this.lo=lo; this.ll=ll; this.intSinceLhs=null; this.intScanTime=null;
+  this.lastHistValue=lhv; this.lastHistTime=lht; 
+  this.hh=(hh===null?"":hh); this.hi=(hi===null?"":hh); 
+  this.lo=(lo===null?"":lo); this.ll=(ll===null?"":ll);
+  this.intSinceLhs=null; this.intScanTime=null;
   this.simValue=null; this.simScanTime=null; this.updated=null;
   this.calm=[]; this.siteLocation=new Tag();
 }

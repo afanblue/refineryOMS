@@ -1,6 +1,6 @@
 /*************************************************************************
  * CrudeField.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ import {Tag}           from './objects/Tag.js';
 class CrudeField extends Component {
   constructor(props) {
     super(props);
-    Log.info( "CrudeField: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -47,7 +46,6 @@ class CrudeField extends Component {
   }
   
   render() {
-    Log.info("CrudeField.render " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

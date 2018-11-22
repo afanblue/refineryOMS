@@ -1,6 +1,6 @@
 /*************************************************************************
  * ScmTank.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,12 @@
  ***********************************************************************/
 
 import React from 'react';
-import Log      from '../../requests/Log.js';
-import { Group, Ellipse, Line, Rect } from 'react-konva';
+import { Group, Ellipse, Line, Rect, Text } from 'react-konva';
 
 
 export default class ScmTank extends React.Component {
   constructor( props ) {
     super( props );
-    Log.info( "ScmTank: constructor" );
     this.state = {
       x: props.x,
       y: props.y,
@@ -60,6 +58,9 @@ export default class ScmTank extends React.Component {
   render() {
     var ch = 0.05 * this.props.height;
     ch = (ch===0?2:ch);
+    var val = this.props.value===null?0:this.props.value;
+    var x  = this.props.x;
+    var y  = this.props.y;
     var xt = this.props.x;
     var rx = this.props.width/2;
     var wd = this.props.width;
@@ -70,7 +71,7 @@ export default class ScmTank extends React.Component {
     var ll = [xt, yt, xt, yb];
     var rl = [xr, yt, xr, yb];
     var scale = this.props.max - this.props.zero;
-    var vscl = (this.props.value - this.props.zero)/scale;
+    var vscl = (val - this.props.zero)/scale;
     var yscl = vscl * (yb - yt);
     var ybscl = yb - yscl;
     var fill = this.props.fill;
@@ -78,6 +79,9 @@ export default class ScmTank extends React.Component {
     var mu = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu}>
+      <Text x={x} y={y-18} height={10} width={30} text={val} 
+            stroke={stroke} strokeWidth={1} fontSize={12} />
+
       <Ellipse x = {xt+rx} y = {yt} radius={rt} stroke={stroke}
                strokeWidth={this.props.strokeWidth} />
 

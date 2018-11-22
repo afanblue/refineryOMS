@@ -1,6 +1,6 @@
 /*************************************************************************
  * SiteOverview.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import Waiting         from './Waiting.js';
 class SiteOverview extends Component {
   constructor(props) {
     super(props);
-    Log.info( "SiteOverview " );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -47,7 +46,6 @@ class SiteOverview extends Component {
   }
   
   componentDidMount() {
-    Log.info( "SiteOverview.didMount: " + this.state.stage );
     this.fetchSite();
   }
   
@@ -66,25 +64,24 @@ class SiteOverview extends Component {
     const myRequest = SERVERROOT + "/config/SITE";
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {site: json.value, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {site: json.value, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching field list"; 
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem fetching field list"; 
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
   
   render() {
-    Log.info("SiteOverview.render " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

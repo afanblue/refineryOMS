@@ -1,6 +1,6 @@
 /*************************************************************************
  * ProcessUnitDisplay.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-
-import Log        from '../../requests/Log.js';
 
 import {AIValue}  from '../objects/AIValue.js';
 import {IL3}      from '../objects/ListObjects.js';
@@ -39,8 +37,6 @@ class ProcessUnitDisplay extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    Log.info( "ProcessUnitDisplay.willRcvProps: "
-               + ((nextProps.option===null)?"null":nextProps.option) );
     this.setState({ option: nextProps.option,
                     items: nextProps.items,
                     itemSelect: nextProps.itemSelect });
@@ -51,9 +47,7 @@ class ProcessUnitDisplay extends Component {
     let it = this.state.items;
     let puColumns = [];
     it.forEach((i,x) => {
-//      Log.info("forEach loop: x="+x);
       if( !((x+1) % 3) ) {
-//        Log.info("forEachLoop inner: x="+x);
         let it0 = it[x-2];
         let it1 = it[x-1];
         let it2 = it[x];
@@ -66,7 +60,6 @@ class ProcessUnitDisplay extends Component {
     });
     const dl = it.length;
     const rem = dl%3;
-//    Log.info("Remainder "+dl%3+" processing");
     if( rem > 0 ) {
       let AIV2 = new AIValue(0,"",null,"",null,"NORM","green");
       let AIV1 = new AIValue(0,"",null,"",null,"NORM","green");
@@ -84,12 +77,11 @@ class ProcessUnitDisplay extends Component {
  
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    Log.info("ProcessUnitDisplay.generateList");
     return(
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>
+           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>
            Process Unit {this.state.option} - {now}
         </div>
       </h2>
@@ -97,27 +89,27 @@ class ProcessUnitDisplay extends Component {
         <thead className={"fixedHeader"}>
           <tr>
 	        <td className={"oms-spacing-120"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
+	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
 	          Tag
 	        </td>
 	        <td className={"oms-spacing-90"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
+	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
 	          Value
 	        </td>
 	        <td className={"oms-spacing-120"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
+	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
 	          Tag
 	        </td>
 	        <td className={"oms-spacing-90"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
+	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
 	          Value
 	        </td>
             <td className={"oms-spacing-120"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
+	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
 	          Tag
 	        </td>
 	        <td className={"oms-spacing-90"}>
-	          <img src="./images/spacer.png" alt="space" height="1px" width="5px"/>
+	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
 	          Value
             </td>
           </tr>

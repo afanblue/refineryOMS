@@ -1,6 +1,6 @@
 /*************************************************************************
  * Waiting.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,19 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log          from '../requests/Log.js';
 
 
 class Waiting extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Waiting " );
+    this.state = {stage: props.stage}
   }
+  
   render () {
     return (    
     <table><tbody><tr>
       <td className="oms-padded-menu-text">Waiting ...</td>
-      <td><img src="./images/spacer.png" alt="space" width="20px" height="480px" /></td>
+      <td><img src="../../images/spacer.png" alt="" width="20px" height="480px" /></td>
     </tr></tbody></table> 
     )}
 }

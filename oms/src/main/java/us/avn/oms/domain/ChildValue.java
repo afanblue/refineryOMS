@@ -16,13 +16,8 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.util.Collection;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  *  ChildValue is used to collect the tag IDs and values for objects like schematics
@@ -50,6 +45,7 @@ public class ChildValue extends Tag implements Serializable {
     private Double outMax;
     private Double outZero;
     private String outAlmColor;
+    private Collection<Vertex> vtxList;
     
     public ChildValue() { super(); this.tagTypeCode="SCO"; }
     
@@ -215,5 +211,13 @@ public class ChildValue extends Tag implements Serializable {
 		this.outAlmColor = oac;
 	}
 
+
+	public Collection<Vertex> getVtxList() {
+		return vtxList;
+	}
+
+	public void setVtxList(Collection<Vertex> vtxList) {
+		this.vtxList = vtxList;
+	}
 
 }

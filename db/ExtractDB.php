@@ -43,7 +43,7 @@ echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"Data");
-$q = "select item_name, " 
+$q = "select item_name, "
    . "CASE "
    . "WHEN item_name = 'EMAIL_FROM'  THEN 'email_from' "
    . "WHEN item_name = 'EMAIL_PWD'  THEN 'email_pwd' "
@@ -201,7 +201,7 @@ $a = array( "Table,$t,,",
 		"page,id,name,page_id",
 		"menu_type_vw,id,code,menu_type_id",
 		"Data,,,");
-$q	= "select rc.code menu_type_id, m.text, m.order_no, m.active " 
+$q	= "select rc.code menu_type_id, m.text, m.order_no, m.active "
     . "from menu m join reference_code rc on m.menu_type_id=rc.id "
     . "where m.category_id is null";
 $b = addData( $q, $a );
@@ -274,7 +274,7 @@ echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"Data,,,");
-$q	= "select alias, first_name, middle_name, last_name, email, password, state, status " 
+$q	= "select alias, first_name, middle_name, last_name, email, password, state, status "
 	. "from user";
 $b = addData( $q, $a );
 $a[] = "End";
@@ -431,15 +431,15 @@ $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
 
-/* vertices (of fields) */
-$t = "vertices";
+/* vertex (end points of pipes) */
+$t = "vertex";
 echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
-		"tag,id,name,obj_id",
+		"tag,id,name,tag_id",
 		"Data,,,");
-$q	= "select t.name obj_id, seq_no, latitude, longitude "
-	. "from vertices v, tag t where v.obj_id = t.id";
+$q	= "select t.name tag_id, seq_no, latitude, longitude "
+	. "from vertex v, tag t where v.tag_id = t.id";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );

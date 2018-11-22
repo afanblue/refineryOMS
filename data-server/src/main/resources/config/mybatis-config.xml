@@ -45,8 +45,9 @@
         <typeAlias alias="User"           type="us.avn.oms.domain.User"/>
         <typeAlias alias="UserPriv"       type="us.avn.oms.domain.UserPriv"/>
         <typeAlias alias="Validation"     type="us.avn.oms.domain.Validation"/>
-        <typeAlias alias="Volume"         type="us.avn.oms.domain.Volume" />
+        <typeAlias alias="Vertex"         type="us.avn.oms.domain.Vertex"/>
         <typeAlias alias="Vessel"         type="us.avn.oms.domain.Vessel"/>
+        <typeAlias alias="Volume"         type="us.avn.oms.domain.Volume" />
         <typeAlias alias="Watchdog"       type="us.avn.oms.domain.Watchdog" />
         <typeAlias alias="Xfer"           type="us.avn.oms.domain.Xfer" />
      </typeAliases>

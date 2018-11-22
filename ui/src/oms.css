@@ -59,6 +59,12 @@ element {
   width: 50px;
 }
 
+.oms-spacing-60 {
+  display: table-cell;
+  padding:2px;
+  width: 60px;
+}
+
 .oms-spacing-70 {
   display: table-cell;
   padding:2px;

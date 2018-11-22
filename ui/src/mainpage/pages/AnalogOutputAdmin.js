@@ -1,6 +1,6 @@
 /*************************************************************************
  * AlarmOutputAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ import {AnalogOutput}  from './objects/AO.js';
 class AnalogOutputAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AnalogOutputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -71,9 +70,6 @@ class AnalogOutputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "AnalogOutputAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -85,7 +81,6 @@ class AnalogOutputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "AnalogOutputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -161,7 +156,6 @@ class AnalogOutputAdmin extends Component {
     const clsMthd = "AnalogOutputAdmin.aoUpdate";
     const ao = this.state.ao;
     const id = ao.tagId;
-    Log.info("(data) tagId="+id+", name:"+ao.tag.name,clsMthd);
     let method = "PUT";
     let url = SERVERROOT + "/ao/update";
     if( id === 0 ) {
@@ -171,27 +165,24 @@ class AnalogOutputAdmin extends Component {
     if( this.validateForm( ao ) ) {
       var b = JSON.stringify( ao );
       const request = async () => {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        Log.info( "update complete",clsMthd );
-        alert("Update/insert complete on "+ao.tag.name)
+        try {
+          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          alert("Update/insert complete on "+ao.tag.name)
+        } catch( error ) {
+          alert("Problem "+(id===0?"inserting":"updating")+" analog output "
+               +"id "+id+" ("+ao.tag.name+")\n"+error);
+          Log.error("Error - " + error,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" analog output "
-             +"id "+id+" ("+ao.tag.name+")\n"+error);
-        Log.error("Error - " + error,clsMthd);
-      }
+      request();
     }
   }
   
   componentDidMount() {
-    Log.info( "AnalogOutputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "AnalogOutputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -230,8 +221,8 @@ class AnalogOutputAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "AnalogOutputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      Log.info( "AnalogOutputAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "AnalogOutputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+//      Log.info( "AnalogOutputAdmin.mouseUp: "+lat+","+long);
       let aonew = Object.assign({},this.state.ao);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -255,9 +246,7 @@ class AnalogOutputAdmin extends Component {
  
   fetchList() {
     const myRequest = SERVERROOT + "/ao/all";
-    const now = new Date();
     const loc = "AnalogOutputAdmin.aiSelect";
-    Log.info( now.toISOString() + " Request: " + myRequest,loc );
     if( myRequest !== null ) {
       let req0 = new OMSRequest(loc, myRequest,
                               "Problem selecting analog output list", this.finishListFetch);
@@ -276,7 +265,6 @@ class AnalogOutputAdmin extends Component {
   }
 
   render() {
-    Log.info("AnalogOutputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

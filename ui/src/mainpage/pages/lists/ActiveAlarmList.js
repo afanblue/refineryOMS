@@ -1,6 +1,6 @@
 /*************************************************************************
  * ActiveAlarmList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log       from '../../requests/Log.js';
+
 
 class ActiveAlarmList extends Component {
   constructor(props) {
@@ -26,24 +26,21 @@ class ActiveAlarmList extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    Log.info( "ActiveAlarmList.willRcvProps: "
-               + ((nextProps.option===null)?"null":nextProps.option) );
     this.setState({ alarmList: nextProps.alarmList });
   }
   
 
   
   render() {
-    Log.info("ActiveAlarmList.render ");
     var almList = this.state.alarmList;
     let handleSelect  = this.props.handleSelect;
     var now = (new Date()).toLocaleString('en-US', {hour12:false});
     return ( 
       <div className="oms-tabs">
         <h2><div>
-          <img src="./images/spacer.png" alt="space" width="30px" height="2px"/>
+          <img src="./images/spacer.png" alt="" width="30px" height="2px"/>
           Alarm List 
-          <img src="./images/spacer.png" alt="space" width="50px" height="2px"/>
+          <img src="./images/spacer.png" alt="" width="50px" height="2px"/>
           {now}
         </div></h2>
         <table>

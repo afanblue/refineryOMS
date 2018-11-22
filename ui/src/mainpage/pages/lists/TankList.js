@@ -1,6 +1,6 @@
 /*************************************************************************
  * TankList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log    from '../../requests/Log.js';
+
 import {Tag}  from '../objects/Tag.js';
 import {Tank} from '../objects/Tank.js';
 
@@ -25,7 +25,6 @@ import {Tank} from '../objects/Tank.js';
 class TankList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "TankList: " + props.stage );
     this.state = {  };
   }
 
@@ -50,7 +49,7 @@ class TankList extends Component {
                            return tankList.push( tk ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="50px" 
+        <h2><div><img src="./images/spacer.png" alt="" width="50px" 
                       height="2px"/>OMS Tanks</div></h2>
         <table>
           <thead className="fixedHeader">

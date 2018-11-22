@@ -1,6 +1,6 @@
 /*************************************************************************
  * VesselAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import {Tag}           from './objects/Tag.js';
 class VesselAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "VesselAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -54,9 +53,6 @@ class VesselAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "VesselAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -68,7 +64,6 @@ class VesselAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "VesselAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -76,27 +71,27 @@ class VesselAdmin extends Component {
     const myRequest = SERVERROOT + "/vessel/" + id;
     const clsMthd = "VesselAdmin.fetchFormData";
     const request = async () => {
-      const response = await fetch(myRequest);
-      const vd = await response.json();
-      const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode,vd.tag.tagTypeId
-                       ,vd.tag.misc,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
-      const v = new Vessel(vd.id,t,vd.vesselName,vd.quantity,vd.customerId,vd.customer);
-      const custList = vd.customers;
-      this.setState({stage: "itemRetrieved",
-                     updateDisplay: true,
-                     updateData: false,
-                     returnedText: vd,
-                     vessel: v,
-                     custList: custList
-                    });
+      try {
+        const response = await fetch(myRequest);
+        const vd = await response.json();
+        const t = new Tag(vd.id,vd.tag.name,vd.tag.description,vd.tag.tagTypeCode,vd.tag.tagTypeId
+                         ,vd.tag.misc,vd.tag.c1Lat,vd.tag.c1Long,vd.tag.c2Lat,vd.tag.c2Long,vd.tag.active);
+        const v = new Vessel(vd.id,t,vd.vesselName,vd.quantity,vd.customerId,vd.customer);
+        const custList = vd.customers;
+        this.setState({stage: "itemRetrieved",
+                       updateDisplay: true,
+                       updateData: false,
+                       returnedText: vd,
+                       vessel: v,
+                       custList: custList
+                      });
+      } catch( e ) {
+        const emsg = "Problem fetching vessel id "+id; 
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
-    try {
-      request();
-    } catch( e ) {
-      const emsg = "Problem fetching vessel id "+id; 
-      alert(emsg+"\n"+e);
-      Log.error(emsg+" - " + e, clsMthd);        
-    }
+    request();
   }
 
   handleVesselSelect(event) {
@@ -118,40 +113,24 @@ class VesselAdmin extends Component {
     const b = JSON.stringify(v);
     const clsMthd = "VesselAdmin.vesselUpdate";
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "update complete",clsMthd );
-      alert("Update/insert complete on "+v.tag.name)
-      this.fetchFormData(id);
-    }
-    try {
-      request();
-    } catch( error ) {
-      const emsg = "Problem "+(id===0?"inserting":"updating")+" vessel, id="+id;
-      alert(emsg+"\n"+error);
-      Log.error(emsg+" - " + error,clsMthd);
-    }
-    
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on "+v.tag.name)
         this.fetchFormData(id);
-    }).catch(function(error) { 
-        alert("Problem "+(id===0?"inserting":"updating")+" vessel "
-             +"id "+id+"\n"+error);
-        Log.error("VesselAdmin.vesselUpdate: Error - " + error);  
-    });
+      } catch( error ) {
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" vessel, id="+id;
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
+    }
+    request();
   }
   
   componentDidMount() {
-    Log.info( "VesselAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "VesselAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -180,20 +159,20 @@ class VesselAdmin extends Component {
     const myRequest = SERVERROOT + "/vessel/all";
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching vessel list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem fetching vessel list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
   
@@ -207,7 +186,6 @@ class VesselAdmin extends Component {
   }
 
   render() {
-    Log.info("VesselAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

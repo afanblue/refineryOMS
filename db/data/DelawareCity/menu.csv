@@ -35,4 +35,6 @@ VT,Admin,Calc Variables,30,Y,Calc Var Admin
 VT,Admin,Analog Outputs,34,Y,Analog Out
 VT,Admin,Digital Outputs,38,Y,Digital Out
 VT,Admin,Control Blocks,47,Y,Control Block
+VT,Admin,Tags,56,Y,Tag Admin
+VT,Admin,Pipes,66,Y,Pipe
 End

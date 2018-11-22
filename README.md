@@ -179,3 +179,5 @@ At this point (see above), you should be able to bring up a browser, enter the a
 
    1. You should be able to import the Eclipse projects (oms-shared, oms, pmc (scada), sim, transfer, watchdog) for additional development.  If it's not clear, the "oms-shared" project is shared among the others, where "oms" is the Java webapp (using REST data services) and the others are (I hope) obvious.
    
+   1. **See the SystemManual.md for more documentation on the design and implementation details.**
+   

@@ -1,6 +1,6 @@
 /*************************************************************************
  * Tank.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-//import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import Log      from '../../requests/Log.js';
 import { Group, Ellipse, Rect, Line, Text } from 'react-konva';
 
 
@@ -28,7 +26,6 @@ import { Group, Ellipse, Rect, Line, Text } from 'react-konva';
 class Tank extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Tank constructor");
     this.state = {
       updateData:    false,
       updateDisplay: true,
@@ -47,7 +44,6 @@ class Tank extends Component {
   }
   
   componentDidMount() {
-    Log.info( "Tank.didMount" );
   }
   
   componentWillReceiveProps(nextProps) {

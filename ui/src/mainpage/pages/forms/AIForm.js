@@ -1,6 +1,6 @@
 /*************************************************************************
  * AIForm.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,12 @@
 import React, {Component} from 'react';
 import {Stage, Layer} from 'react-konva';
 
-import Log       from '../../requests/Log.js';
 import SiteImage from '../SiteImage.js';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 
 class AIForm extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AIForm: " + props.stage );
     this.state = {  };
   }
 
@@ -52,7 +50,7 @@ class AIForm extends Component {
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
                 <td className="oms-spacing-180"><img src="images/spacer.png" 
-                    alt="space" height="5px" width="180px"/></td>
+                    alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-90">AI name:</th>
@@ -150,7 +148,7 @@ class AIForm extends Component {
                 <td className="oms-spacing-90">Alarm Limits:</td>
                 <td className="oms-spacing-180">
                   HH: <input type="text" id="hh" name="hh" value={ai.hh} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
                          onChange={fieldChange} />
                 </td>
               </tr>
@@ -158,7 +156,7 @@ class AIForm extends Component {
                 <td className="oms-spacing-90">&nbsp;</td>
                 <td className="oms-spacing-180">
                   HI: <input type="text" id="hi" name="hi" value={ai.hi} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
                          onChange={fieldChange} />
                 </td>
               </tr>
@@ -166,7 +164,7 @@ class AIForm extends Component {
                 <td className="oms-spacing-90"></td>
                 <td className="oms-spacing-180">
                   LO: <input type="text" id="lo" name="lo" value={ai.lo} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
                          onChange={fieldChange} />
                 </td>
               </tr>
@@ -174,7 +172,7 @@ class AIForm extends Component {
                 <td className="oms-spacing-90"></td>
                 <td className="oms-spacing-180">
                   LL: <input type="text" id="ll" name="ll" value={ai.ll} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
                          onChange={fieldChange} />
   	  		  </td>
               </tr>
@@ -182,11 +180,11 @@ class AIForm extends Component {
                 <th className="oms-spacing-90" >Corners (NW)</th>
                 <td className="oms-spacing-180">
                   <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={ai.tag.c1Lat} 
-                         className={["oms-spacing","oms-fontsize-12"].join(' ')}
+                         className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} maxLength="11" size="10" />
                   &nbsp;
                   <input type="text" id="tag.c1Long" name="tag.c1Long" value={ai.tag.c1Long} 
-                         className={["oms-spacing","oms-fontsize-12"].join(' ')}
+                         className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange}  maxLength="11" size="10" />
                 </td>
               </tr>
@@ -194,11 +192,11 @@ class AIForm extends Component {
                 <td className="oms-spacing-90" >&nbsp;&nbsp;&nbsp;(SE)</td>
                 <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
                   <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={ai.tag.c2Lat}
-                         className={["oms-spacing","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-60","oms-fontsize-12"].join(' ')} 
                          onChange={fieldChange} maxLength="11" size="10" />
                   &nbsp;
                   <input type="text" id="tag.c2Long" name="tag.c2Long" value={ai.tag.c2Long} 
-                         className={["oms-spacing","oms-fontsize-12"].join(' ')}
+                         className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange}  maxLength="11" size="10" />
                 </td>
               </tr>

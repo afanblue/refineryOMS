@@ -1,6 +1,6 @@
 /*************************************************************************
  * OMSRequest.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,12 +27,21 @@ class OMSRequest {
     this.fetchData = this.fetchData.bind(this);
     this.rtndData = null;
     this.fc = fComplete;
+    this.handleErrors = this.handleErrors.bind(this);
   }
   
+  handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.status+" ("+response.statusText+")");
+    }
+    return response;
+  }
+
+
+  
   fetchData() {
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + this.uri,this.identifier );
-    const erm = this.errMsg;
+    const ermsg = this.errMsg;
+    const ident = this.identifier;
 /* --
     const request = async () => {
       const response = await fetch(this.uri);
@@ -55,11 +64,10 @@ class OMSRequest {
         throw new TypeError(this.identifier + ": response ("+contentType+") must be a JSON string");
     }).then(json => {
         let x = json;
-        Log.info("json: "+x,this.identifier);
         this.fc(x);
     }).catch(function(error) { 
-        alert(erm+"\n"+error);
-        Log.error("Error - " + error,this.identifier);  
+        alert(ermsg+"\n"+error);
+        Log.error(ermsg+" - " + error,ident);  
     });
 /* */
   }

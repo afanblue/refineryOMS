@@ -1,6 +1,6 @@
 /*************************************************************************
  * ScmShip.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,12 @@
  ***********************************************************************/
 
 import React from 'react';
-import Log   from '../../requests/Log.js';
 import { Group, Arc, Rect } from 'react-konva';
 
 
 export default class ScmShip extends React.Component {
   constructor( props ) {
     super( props );
-    Log.info( "ScmPipe: constructor" );
     this.state = {
       x: props.x,
       y: props.y,

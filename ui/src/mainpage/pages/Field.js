@@ -1,6 +1,6 @@
 /*************************************************************************
  * Field.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import FieldDisplay    from './displays/FieldDisplay.js';
 class Field extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Field.constructor" );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -60,9 +59,6 @@ class Field extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    Log.info( "Field.willRcvProps: " + nextProps.stage + ":"
-               + ((nextProps.field===null)?"null":nextProps.field)
-               + "/" + nextProps.tankType );
     this.fetchSite(nextProps.field);
     this.setState({ stage: nextProps.stage,
                     fieldName: nextProps.field,
@@ -75,38 +71,34 @@ class Field extends Component {
   fetchSite(fn) {
     const clsMthd = "Field.fetchList";
     const myRequest = SERVERROOT + "/field/objects/"+fn;
-    const now = new Date();
-    Log.info( now.toLocaleString() + " Request: " + myRequest, clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {field: json.field,
-                        tags: json.tags,
-                        siteLoc: json.siteLocation, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {field: json.field,
+                          tags: json.tags,
+                          siteLoc: json.siteLocation, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          let emsg = "Problem fetching field objects for field "+fn; 
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - "+e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        let emsg = "Problem fetching field objects for field "+fn; 
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - "+e, clsMthd);        
-      }
+      request();
     }
   }
 
   componentDidMount() {
-    Log.info( "Field.didMount: " + this.state.stage );
     this.fetchSite(this.state.fieldName);
     var myTimerID = setInterval(() => {this.fetchSite(this.state.fieldName)}, 60000 );
     this.setState( {unitTimer: myTimerID } );    
   }
   
   componentWillUnmount() {
-    Log.info( "Field.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -116,7 +108,6 @@ class Field extends Component {
   }
 
   render() {
-    Log.info("Field.render " + this.state.stage + " - " + this.state.field );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

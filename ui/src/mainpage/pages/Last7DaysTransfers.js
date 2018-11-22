@@ -1,6 +1,6 @@
 /*************************************************************************
  * Last7DaysTransfers.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import {Transfer} from './objects/Transfer.js';
 class Last7DaysTransfers extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Last7DaysTransfers: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -61,9 +60,6 @@ class Last7DaysTransfers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "Last7DaysTransfers.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -75,7 +71,6 @@ class Last7DaysTransfers extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "Last7DaysTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
@@ -84,27 +79,27 @@ class Last7DaysTransfers extends Component {
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     const request = async () => {
-      const response = await fetch(myRequest);
-      const json = await response.json();
-      let ud = json;
-      var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                          ,ud.transferTypeId,ud.transferType
-                          ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                          ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                          ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-      this.setState({stage: "itemRetrieved",
-                     updateDisplay: true,
-                     updateData: false,
-                     returnedText: json,
-                     transfer: x
-                    });
+      try {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        let ud = json;
+        var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
+                            ,ud.transferTypeId,ud.transferType
+                            ,ud.sourceId,ud.source,ud.destinationId, ud.destination
+                            ,ud.expStartTime,ud.expEndTime,ud.expVolume
+                            ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
+        this.setState({stage: "itemRetrieved",
+                       updateDisplay: true,
+                       updateData: false,
+                       returnedText: json,
+                       transfer: x
+                      });
+      } catch( e ) {
+        alert("Problem fetching XXXX id "+id+"\n"+e);
+        Log.error("Error - " + e, clsMthd);        
+      }
     }
-    try {
-      request();
-    } catch( e ) {
-      alert("Problem fetching XXXX id "+id+"\n"+e);
-      Log.error("Error - " + e, clsMthd);        
-    }
+    request();
   }
 
   validateForm( x ) {
@@ -148,40 +143,24 @@ class Last7DaysTransfers extends Component {
       }
       var b = JSON.stringify( this.state.transfer );
       const request = async () => {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        Log.info( "update complete",clsMthd );
-        alert("Update/insert complete on "+this.state.transfer.name)
-      }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" XXXX "
-             +"id "+id+"\n"+error);
-        Log.error("Error - " + error,clsMthd);
-      }
-
-
-
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .catch(function(error) { 
-          alert("Problm "+(id===0?"inserting":"updating")+" transfer "
+        try {
+          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          alert("Update/insert complete on "+this.state.transfer.name)
+        } catch( error ) {
+          alert("Problem "+(id===0?"inserting":"updating")+" XXXX "
                +"id "+id+"\n"+error);
-          Log.error("Last7DaysTransfers.transferUpdate: Error - " + error);  
-      });
+          Log.error("Error - " + error,clsMthd);
+        }
+      }
+      request();
     }
   }
   
   componentDidMount() {
-    Log.info( "Last7DaysTransfers.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "Last7DaysTransfers.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -206,30 +185,23 @@ class Last7DaysTransfers extends Component {
   
  
   fetchList() {
-    Log.info( "Last7DaysTransfers.fetchList : " + this.state.stage );
+    let clsMthd = "Last7DaysTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/last/7";
-    const now = new Date();
-    Log.info( "Last7DaysTransfers.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("Last7DaysTransfers(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("Last7DaysTransfers.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving transfer list\n"+e);
-           const emsg = "Last7DaysTransfers.fetchList: Fetching transfer list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem fetching last 7 days list\n"+e);
+          Log.error("Error - " + e, clsMthd);        
+        }
+      }
+      request();
     }
   }
 
@@ -244,7 +216,6 @@ class Last7DaysTransfers extends Component {
   }
 
   render() {
-    Log.info("Last7DaysTransfers (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

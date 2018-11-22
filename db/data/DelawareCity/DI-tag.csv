@@ -32,27 +32,27 @@ TC1Here-DI,Tank Car Present Position 1,DI,,,,,,Y
 TC2Here-DI,Tank Car Present Position 2,DI,,,,,,Y
 Ship2-DI,Ship Present Slip 2,DI,,,,,,Y
 Ship1-DI,Ship Present Slip 1,DI,,,,,,Y
-CT1P-DI,On/Off sensor Crude Tank 1 Pump,DI,,,,,,Y
-CT2P-DI,On/Off sensor Crude Tank 2 Pump,DI,,,,,,Y
-CT3P-DI,On/Off sensor Crude Tank 3 Pump,DI,,,,,,Y
-CT4P-DI,On/Off sensor Crude Tank 4 Pump,DI,,,,,,Y
-CT5P-DI,On/Off sensor Crude Tank 5 Pump,DI,,,,,,Y
-CT6P-DI,On/Off sensor Crude Tank 6 Pump,DI,,,,,,Y
-CT7P-DI,On/Off sensor Crude Tank 7 Pump,DI,,,,,,Y
-CT8P-DI,On/Off sensor Crude Tank 8 Pump,DI,,,,,,Y
-CT9P-DI,On/Off sensor Crude Tank 9 Pump,DI,,,,,,Y
+CT01-P-DI,On/Off sensor Crude Tank 1 Pump,DI,,,,,,Y
+CT02-P-DI,On/Off sensor Crude Tank 2 Pump,DI,,,,,,Y
+CT03-P-DI,On/Off sensor Crude Tank 3 Pump,DI,,,,,,Y
+CT04-P-DI,On/Off sensor Crude Tank 4 Pump,DI,,,,,,Y
+CT05-P-DI,On/Off sensor Crude Tank 5 Pump,DI,,,,,,Y
+CT06-P-DI,On/Off sensor Crude Tank 6 Pump,DI,,,,,,Y
+CT07-P-DI,On/Off sensor Crude Tank 7 Pump,DI,,,,,,Y
+CT08-P-DI,On/Off sensor Crude Tank 8 Pump,DI,,,,,,Y
+CT09-P-DI,On/Off sensor Crude Tank 9 Pump,DI,,,,,,Y
 CT10P-DI,On/Off sensor Crude Tank 10 Pump,DI,,,,,,Y
 CT11P-DI,On/Off sensor Crude Tank 11 Pump,DI,,,,,,Y
 CT12P-DI,On/Off sensor Crude Tank 12 Pump,DI,,,,,,Y
-CT1-1V-DI,Crude Tank 1 Valve,DI,,,,,,Y
-CT2-1V-DI,Crude Tank 2 Valve,DI,,,,,,Y
-CT3-1V-DI,Crude Tank 3 Valve,DI,,,,,,Y
-CT4-1V-DI,Crude Tank 4 Valve,DI,,,,,,Y
-CT5-1V-DI,Crude Tank 5 Valve,DI,,,,,,Y
-CT6-1V-DI,Crude Tank 6 Valve,DI,,,,,,Y
-CT7-1V-DI,Crude Tank 7 Valve,DI,,,,,,Y
-CT8-1V-DI,Crude Tank 8 Valve,DI,,,,,,Y
-CT9-1V-DI,Crude Tank 9 Valve,DI,,,,,,Y
+CT01-1V-DI,Crude Tank 1 Valve,DI,,,,,,Y
+CT02-1V-DI,Crude Tank 2 Valve,DI,,,,,,Y
+CT03-1V-DI,Crude Tank 3 Valve,DI,,,,,,Y
+CT04-1V-DI,Crude Tank 4 Valve,DI,,,,,,Y
+CT05-1V-DI,Crude Tank 5 Valve,DI,,,,,,Y
+CT06-1V-DI,Crude Tank 6 Valve,DI,,,,,,Y
+CT07-1V-DI,Crude Tank 7 Valve,DI,,,,,,Y
+CT08-1V-DI,Crude Tank 8 Valve,DI,,,,,,Y
+CT09-1V-DI,Crude Tank 9 Valve,DI,,,,,,Y
 CT10-1V-DI,Crude Tank 10 Valve,DI,,,,,,Y
 CT11-1V-DI,Crude Tank 11 Valve,DI,,,,,,Y
 CT12-1V-DI,Crude Tank 12 Valve,DI,,,,,,Y
@@ -62,22 +62,36 @@ PV12-DI,Pipe Valve-Unit 1, Tanks 5-8,DI,,,,,,Y
 PV22-DI,Pipe Valve-Unit 2, Tanks 5-8,DI,,,,,,Y
 PV13-DI,Pipe Valve-Unit 1, Tanks 9-12,DI,,,,,,Y
 PV23-DI,Pipe Valve-Unit 2, Tanks 9-12,DI,,,,,,Y
-CT1-2V-DI,Crude Tank 1 Unit 2 Valve,DI,,,,,,Y
-CT2-2V-DI,Crude Tank 2 Unit 2 Valve,DI,,,,,,Y
-CT3-2V-DI,Crude Tank 3 Unit 2 Valve,DI,,,,,,Y
-CT4-2V-DI,Crude Tank 4 Unit 2 Valve,DI,,,,,,Y
-CT5-2V-DI,Crude Tank 5 Unit 2 Valve,DI,,,,,,Y
-CT6-2V-DI,Crude Tank 6 Unit 2 Valve,DI,,,,,,Y
-CT7-2V-DI,Crude Tank 7 Unit 2 Valve,DI,,,,,,Y
-CT8-2V-DI,Crude Tank 8 Unit 2 Valve,DI,,,,,,Y
-CT9-2V-DI,Crude Tank 9 Unit 2 Valve,DI,,,,,,Y
+CT01-2V-DI,Crude Tank 1 Unit 2 Valve,DI,,,,,,Y
+CT02-2V-DI,Crude Tank 2 Unit 2 Valve,DI,,,,,,Y
+CT03-2V-DI,Crude Tank 3 Unit 2 Valve,DI,,,,,,Y
+CT04-2V-DI,Crude Tank 4 Unit 2 Valve,DI,,,,,,Y
+CT05-2V-DI,Crude Tank 5 Unit 2 Valve,DI,,,,,,Y
+CT06-2V-DI,Crude Tank 6 Unit 2 Valve,DI,,,,,,Y
+CT07-2V-DI,Crude Tank 7 Unit 2 Valve,DI,,,,,,Y
+CT08-2V-DI,Crude Tank 8 Unit 2 Valve,DI,,,,,,Y
+CT09-2V-DI,Crude Tank 9 Unit 2 Valve,DI,,,,,,Y
 CT10-2V-DI,Crude Tank 10 Unit 2 Valve,DI,,,,,,Y
 CT11-2V-DI,Crude Tank 11 Unit 2 Valve,DI,,,,,,Y
 CT12-2V-DI,Crude Tank 12 Unit 2 Valve,DI,,,,,,Y
-Com011-DI,Pipe on-off indicator RU1, tanks 1-4,DI,,,,,,Y
-Com012-DI,Pipe on-off indicator RU1, tanks 5-8,DI,,,,,,Y
-Com013-DI,Pipe on-off indicator RU1, tanks 9-12,DI,,,,,,Y
-Com021-DI,Pipe on-off indicator RU2, tanks 1-4,DI,,,,,,Y
-Com022-DI,Pipe on-off indicator RU2, tanks 5-8,DI,,,,,,Y
-Com023-DI,Pipe on-off indicator RU2, tanks 9-12,DI,,,,,,Y
+Com011-DI,Pipe on-off indicator RU1, tanks 1-2,DI,,,,,,Y
+Com013-DI,Pipe on-off indicator RU1, tanks 5-6,DI,,,,,,Y
+Com015-DI,Pipe on-off indicator RU1, tanks 9-10,DI,,,,,,Y
+Com021-DI,Pipe on-off indicator RU2, tanks 1-2,DI,,,,,,Y
+Com023-DI,Pipe on-off indicator RU2, tanks 5-6,DI,,,,,,Y
+Com025-DI,Pipe on-off indicator RU2, tanks 9-10,DI,,,,,,Y
+Com012-DI,Pipe on-off indicator RU1, tanks 3-4,DI,,,,,,Y
+Com014-DI,Pipe on-off indicator RU1, tanks 7-8,DI,,,,,,Y
+Com016-DI,Pipe on-off indicator RU1, tanks 11-12,DI,,,,,,Y
+Com022-DI,Pipe on-off indicator RU2, tanks 3-4,DI,,,,,,Y
+Com024-DI,Pipe on-off indicator RU2, tanks 7-8,DI,,,,,,Y
+Com026-DI,Pipe on-off indicator RU2, tanks 11-12,DI,,,,,,Y
+RU1-OnOff,RU1 run state,DI,,,,,,Y
+RU2-OnOff,RU2 run state,DI,,,,,,Y
+RU1-3-DI,State variable for pipe RU1-3,DI,,,,,,Y
+RU1-4-DI,State variable for pipe RU1-4,DI,,,,,,Y
+RU2-3-DI,State variable for pipe RU2-3,DI,,,,,,Y
+RU2-4-DI,State variable for pipe RU2-4,DI,,,,,,Y
+RU2-2-DI,State variable for pipe RU2-2,DI,,,,,,Y
+RU1-2-DI,State variable for pipe RU1-2,DI,,,,,,Y
 End

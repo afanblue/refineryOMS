@@ -1,6 +1,6 @@
 /*************************************************************************
  * UserAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import {User}          from './objects/User.js';
 class UserAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "UserAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -56,10 +55,6 @@ class UserAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let clsMthd = "UserAdmin.willRcvProps";
-    Log.info( "nextProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage, clsMthd );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -70,9 +65,7 @@ class UserAdmin extends Component {
   }
   
   shouldComponentUpdate(nextProps,nextState) {
-    let clsMthd = "UserAdmin.shouldUpdate";
     let sts = nextState.updateDisplay;
-    Log.info( "stage (" + nextState.stage + ") " + (sts?"T":"F"), clsMthd );
     return sts;
   }
 
@@ -116,17 +109,16 @@ class UserAdmin extends Component {
     }
     const b = JSON.stringify(user);
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "update complete",clsMthd );
-      alert("Update/insert complete on user, id="+id)
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on user, id="+id)
+      } catch( error ) {
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" user, id="+id;
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      const emsg = "Problem "+(id===0?"inserting":"updating")+" user, id="+id;
-      alert(emsg+"\n"+error);
-      Log.error(emsg+" - " + error,clsMthd);
-    }
+    request();
   }
 
   componentDidMount() {
@@ -155,20 +147,20 @@ class UserAdmin extends Component {
     const myRequest = SERVERROOT + "/user/all";
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching user list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem fetching user list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
 

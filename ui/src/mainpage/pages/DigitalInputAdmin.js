@@ -1,6 +1,6 @@
 /*************************************************************************
  * DigitalInputAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import {DigitalInput}  from './objects/DI.js';
 class DigitalInputAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "DigitalInputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -66,9 +65,6 @@ class DigitalInputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "DigitalInputAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -80,7 +76,6 @@ class DigitalInputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "DigitalInputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
@@ -153,17 +148,16 @@ class DigitalInputAdmin extends Component {
  	diNew.views=null;
     var b = JSON.stringify( diNew );
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "update complete",clsMthd );
-      alert("Update/insert complete on "+diNew.tag.name)
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+         alert("Update/insert complete on "+diNew.tag.name)
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" digital input "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      alert("Problem "+(id===0?"inserting":"updating")+" digital input "
-           +"id "+id+"\n"+error);
-      Log.error("Error - " + error,clsMthd);
-    }
+    request();
   }
 
   handleDIUpdate(event) {
@@ -179,12 +173,10 @@ class DigitalInputAdmin extends Component {
   }
   
   componentDidMount() {
-    Log.info( "DigitalInputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "DigitalInputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -215,8 +207,8 @@ class DigitalInputAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "DigitalInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      Log.info( "DigitalInputAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "DigitalInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+//      Log.info( "DigitalInputAdmin.mouseUp: "+lat+","+long);
       let dinew = Object.assign({},this.state.di);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -234,23 +226,21 @@ class DigitalInputAdmin extends Component {
   fetchList() {
     const clsMthd = "DigitalInputAdmin.fetchList";
     const myRequest = SERVERROOT + "/di/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem fetching digital input list\n"+e);
+          Log.error("Error - " + e, clsMthd);   
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem fetching digital input list\n"+e);
-        Log.error("Error - " + e, clsMthd);   
-      }
+      request();
     }
   }
 
@@ -265,7 +255,6 @@ class DigitalInputAdmin extends Component {
   }
 
   render() {
-    Log.info("DigitalInputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

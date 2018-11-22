@@ -16,22 +16,20 @@
  *******************************************************************************/
 package us.avn.oms.rest.controller;
 
-import java.util.AbstractCollection;
 import java.util.Collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import us.avn.oms.domain.Role;
 import us.avn.oms.domain.Unit;
 import us.avn.oms.domain.UnitConversion;
 import us.avn.oms.domain.UnitType;
@@ -51,6 +49,7 @@ public class UnitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<Unit> getAllUnits( ) {
 		log.debug("getting all units");
 		return unitService.getAllUnits();
@@ -58,6 +57,7 @@ public class UnitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Unit getUnitById( @PathVariable Long id ) {
 		log.debug("getting unit by ID "+id);
 		Unit u = new Unit();
@@ -70,12 +70,14 @@ public class UnitRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertUnit(@RequestBody Unit u) {
 		log.debug("Inserting unit "+u.toString());
 		unitService.insertUnit(u);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateUnit(@RequestBody Unit u) {
 	   log.debug("Updating unit - "+u.toString());
 	   unitService.updateUnit(u);
@@ -85,6 +87,7 @@ public class UnitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/all")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<UnitType> getAllUnitTypes( ) {
 		log.debug("getting all units");
 		return unitService.getAllUnitTypes();
@@ -92,6 +95,7 @@ public class UnitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public UnitType getUnitTypeById( @PathVariable Long id ) {
 		log.debug("getting unit by ID "+id);
 		UnitType ut = new UnitType();
@@ -104,12 +108,14 @@ public class UnitRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/type/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertUnitType(@RequestBody UnitType ut) {
 		log.debug("Inserting unit "+ut.toString());
 		unitService.insertUnitType(ut);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/type/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateUnit(@RequestBody UnitType ut) {
 	   log.debug("Updating unit - "+ut.toString());
 	   unitService.updateUnitType(ut);
@@ -119,6 +125,7 @@ public class UnitRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/conversion/all")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<UnitConversion> getAllUnitConversions( ) {
 		log.debug("getting all units");
 		return unitService.getAllUnitConversions();
@@ -126,6 +133,7 @@ public class UnitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/conversion/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public UnitConversion getUnitConversionById( @PathVariable Long id ) {
 		log.debug("getting unit by ID "+id);
 		UnitConversion uc = new UnitConversion();
@@ -138,12 +146,14 @@ public class UnitRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/conversion/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertUnitConversion(@RequestBody UnitConversion uc) {
 		log.debug("Inserting unit "+uc.toString());
 		unitService.insertUnitConversion(uc);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/conversion/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateUnitConversion(@RequestBody UnitConversion uc) {
 	   log.debug("Updating unit conversion - "+uc.toString());
 	   unitService.updateUnitConversion(uc);

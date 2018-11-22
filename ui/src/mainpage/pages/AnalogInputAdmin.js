@@ -1,6 +1,6 @@
 /*************************************************************************
  * AlarmTypeAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -186,7 +186,6 @@ class AnalogInputAdmin extends Component {
     let ai = this.state.ai;
     const id = ai.tagId;
     const clsMthd = "AnalogInputAdmin.aiUpdate";
-    Log.info("(data) tagId="+id+", name:"+this.state.ai.tag.name,clsMthd);
     let method = "PUT";
     let url = SERVERROOT + "/ai/update";
     if( id === 0 ) {
@@ -196,27 +195,24 @@ class AnalogInputAdmin extends Component {
     if( this.validateForm( ai ) ) {
       var b = JSON.stringify( ai );
       const request = async () => {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        Log.info( "update complete",clsMthd );
-        alert("Update/insert complete on analog input ");
+        try {
+          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          alert("Update/insert complete on analog input ");
+        } catch( error ) {
+          alert("Problem "+(id===0?"inserting":"updating")+" analog input "
+               +"id "+id+"\n"+error);
+          Log.error("Error - " + error,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" analog input "
-             +"id "+id+"\n"+error);
-        Log.error("Error - " + error,clsMthd);
-      }
+      request();
     }
   }
   
   componentDidMount() {
-    Log.info( "AnalogInputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "AnalogInputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -255,8 +251,8 @@ class AnalogInputAdmin extends Component {
       var l = this.state.siteLoc;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "AnalogInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      Log.info( "AnalogInputAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "AnalogInputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+//      Log.info( "AnalogInputAdmin.mouseUp: "+lat+","+long);
       let ainew = Object.assign({},this.state.ai);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -272,30 +268,24 @@ class AnalogInputAdmin extends Component {
   }
  
   fetchList() {
-    Log.info( "AnalogInputAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "AnalogInputAdmin.fetchList";
     const myRequest = SERVERROOT + "/ai/all";
-    const now = new Date();
-    Log.info( "AnalogInputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("AnalogInputAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("AnalogInputAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving analog input list\n"+e);
-           const emsg = "AnalogInputAdmin.fetchList: Fetching ai list " + e;
-           Log.error(emsg,"AnalogInputAdmin.aiUpdate");
-      });
+      const request = async () => {
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem retrieving analog input list\n"+e);
+          const emsg = "AnalogInputAdmin.fetchList: Fetching ai list " + e;
+          Log.error(emsg,clsMthd);
+        }
+      }
+      request();
     }
   }
 
@@ -310,7 +300,6 @@ class AnalogInputAdmin extends Component {
   }
 
   render() {
-    Log.info("AnalogInputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -1,6 +1,6 @@
 /*************************************************************************
  * ControlBlockList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,11 @@
 
 import React, {Component} from 'react';
 import {ControlBlock} from '../objects/ControlBlock.js';
-import Log     from '../../requests/Log.js';
-//import {Tag} from '../objects/Tag.js';
 
 
 class ControlBlockList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AOList: " + props.stage );
     this.state = {  };
   }
 
@@ -40,7 +37,7 @@ class ControlBlockList extends Component {
         return ctrlBlkList.push( ctrlBlk ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Control Blocks</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Control Blocks</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>

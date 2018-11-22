@@ -1,6 +1,6 @@
 /*************************************************************************
  * GroupPlot.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log           from '../../requests/Log.js';
 import {PlotDetails} from '../objects/PlotGroup.js';
 
 import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
@@ -40,7 +39,6 @@ class GroupPlot extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    Log.info( "GroupPlot.willRcvProps " );
     this.setState({ d0: nextProps.d0,
                     d1: nextProps.d1,
                     d2: nextProps.d2,
@@ -306,7 +304,6 @@ class GroupPlot extends Component {
     
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    Log.info(now+" GroupPlot.render");
     return(
       <div>
       <form>
@@ -363,7 +360,7 @@ class GroupPlot extends Component {
       </form>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>
+           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>
            {now}
         </div>
       </h2>

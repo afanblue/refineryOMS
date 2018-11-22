@@ -1,6 +1,6 @@
 /*************************************************************************
  * SchematicAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,12 +27,12 @@ import SchematicList   from './lists/SchematicList.js';
 import Waiting         from './Waiting.js';
 import {ChildValue}    from './objects/ChildValue.js';
 import {Schematic}     from './objects/Schematic.js';
+import {Vertex}        from './objects/Vertex.js';
 
 
 class SchematicAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "SchematicAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -53,7 +53,7 @@ class SchematicAdmin extends Component {
     this.handleSchematicUpdate  = this.handleSchematicUpdate.bind(this);
     this.handleQuit             = this.handleQuit.bind(this);
     this.handleAdd              = this.handleAdd.bind(this);
-    this.handleEdit             = this.handleEdit.bind(this);
+    this.handleModify           = this.handleModify.bind(this);
     this.handleItemChange       = this.handleItemChange.bind(this);
     this.handleMouseUp          = this.handleMouseUp.bind(this);
     this.finishSCMFetch         = this.finishSCMFetch.bind(this);
@@ -71,7 +71,6 @@ class SchematicAdmin extends Component {
 
 /*
   getDerivedStateFromProps(nextProps,prevState) {
-    Log.info( "SchematicAdmin.getDerivedState" + nextProps.stage );
     if(  (nextProps.stage !== prevState.stage) 
       || (nextProps.type != prevState.type ) )
     {
@@ -85,7 +84,6 @@ class SchematicAdmin extends Component {
 */
 /* */  
   componentWillReceiveProps(nextProps) {
-    Log.info( "SchematicAdmin.willRcvProps = " + nextProps.stage + "/" + nextProps.type );
     if(  (nextProps.stage !== this.state.stage) 
       || (nextProps.type  !== this.state.type ) )
     {
@@ -101,38 +99,70 @@ class SchematicAdmin extends Component {
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    const clsMthd = "SchematicAdmin.shouldUpdate";
     if( nextState.stage !== nextProps.stage ) { sts = true; }
     if( nextState.type  !== nextProps.type  ) { sts = true; }
-    Log.info( "state? " + nextState.stage + "/" + nextProps.stage
-            + ", display: " + (sts?"T":"F") 
-            + ", data: " + (nextState.updateData?"T":"F"), clsMthd );
-    Log.info( "props? : display: " 
-            + (nextProps.updateDisplay?"T":"F") 
-            + ", data: " + (nextProps.updateData?"T":"F"), clsMthd );
-    Log.info("type (props:" + nextProps.type+", state:"+nextState.type+")", clsMthd);
 //    if( nextProps.type !== nextState.type ) {
 //      this.fetchList();
 //    }
     return sts;
   }
   
+  /**
+   * Notice that the vtxList for the Pipe SCO's comes in as a Vertex object from
+   * the dataserver and leaves (!) as an array of [longitude+","+latitude] strings
+   *
+   * The Vertices get pasted into a TextArea as a long string of "longitude,latitude"
+   * strings (note the comma) with embedded "\n" so it looks pretty on the page.
+   * 
+   * The  
+   */
   finishSCMFetch( req ) {
     let sd = req;
     const scm = new Schematic( sd.id, sd.name, sd.description, sd.active, sd.tagTypeCode, sd.tagTypeId
                              , sd.misc, sd.c1Lat, sd.c1Long, sd.c2Lat, sd.c2Long, sd.childTags);
-//    ChildValue                i,n,d,a,tt,ttid,m,c1Lt,c1Lg, c2Lt,c2Lg,pid,rtid
+//    ChildValue                i,n,d,a, tt,ttid,m, c1Lt,c1Lg,c2Lt,c2Lg,pid,rtid
 //                             ,itId,itName,itVal,itType,irtid,itMx,itz,iac
-//                             ,otId,otName,otVal,otType,ortid,otMx,otz,oac                             
-    const item = new ChildValue( 0, 'New Item', '', 'Y', 'SCO', 0, '', null, null
-                               , null, null, sd.id, null
-                               ,  0, '', 0, '', 0, 0, 0, 'darkgreen' 
-                               ,  0, '', 0, '', 0, 0, 0, 'darkgreen' );
+//                             ,otId,otName,otVal,otType,ortid,otMx,otz,oac,vtl                           
+    const item = new ChildValue( 0, 'New Item', '', 'Y', 'SCO', 0, ''
+                               , null, null, null, null, sd.id, null
+                               , 0, '', 0, '', 0, 0, 0, 'darkgreen' 
+                               , 0, '', 0, '', 0, 0, 0, 'darkgreen', [] );
     let newt = Object.assign({},item);
-    if( sd.childTags === null || sd.childTags === undefined ) {
-      sd.childTags = [];
+    let cTags = [];
+    if( sd.childTags !== null && sd.childTags !== undefined ) {
+      for( var ict=0; ict<sd.childTags.length; ict++ ) {
+        let pd = sd.childTags[ict];
+        let pts = [];
+        if( pd.misc === "P" ) {
+          let vtxList = pd.vtxList;
+          if( vtxList === null ) {
+            pts = pts.concat(pd.c1Lat+","+pd.c1Long);
+            pts = pts.concat("\n"+pd.c2Lat+","+pd.c2Long);
+          } else {
+            let sep = "";
+            for( var i=0; i<vtxList.length; i++ ) {
+//              let lpt = vtxList[i].split(",");
+              let plt = vtxList[i].latitude;
+              let plg = vtxList[i].longitude;
+              sep = "";
+              if( i > 0 ) { sep="\n"; }
+              pts = pts.concat(sep+plt+","+plg);
+            }
+          }
+        }
+        const p = new ChildValue(pd.id,pd.name,pd.description,pd.active
+                                ,pd.tagTypeCode,pd.tagTypeId,pd.misc
+                                ,pd.c1Lat,pd.c1Long,pd.c2Lat,pd.c2Long
+                                ,pd.parentId,pd.relTagId
+                                ,pd.inpTagId,pd.inpTagName,pd.inpValue,pd.inpType
+                                ,pd.inpRelTagId,pd.inpMax,pd.inpZero,pd.inpAlmColor
+                                ,pd.outTagId,pd.outTagName,pd.outValue,pd.outType
+                                ,pd.outRelTagId,pd.outMax,pd.outZero,pd.outAlmColor,pts);
+        cTags.push(p);
+      }
     }
-    sd.childTags.unshift(newt);
+    cTags.unshift(newt);
+    scm.childTags = cTags;
     this.setState({stage: "itemRetrieved", updateDisplay: true, schematic:scm, sco:item });
   }
   
@@ -174,9 +204,7 @@ class SchematicAdmin extends Component {
 
   
   handleSchematicSelect(event) {
-    let now = new Date();
     const id = event.z;
-    Log.info( "SchematicAdmin.SchematicSelect " + now.toISOString() );
     const myRequest=SERVERROOT + "/schematic/" + id;
     this.fetchFormData(myRequest); 
   }
@@ -197,7 +225,8 @@ class SchematicAdmin extends Component {
 
   updateSchematic(id) {
     const clsMthd = "SchematicAdmin.updateSchematic";
-    let newt = Object.assign({},this.state.schematic);
+    let newt = JSON.parse(JSON.stringify(this.state.schematic));
+//    let newt = Object.assign({},this.state.schematic);
     let method = "PUT";
     let url = SERVERROOT + "/schematic/update";
     if( id === 0 ) {
@@ -210,20 +239,47 @@ class SchematicAdmin extends Component {
     if( sco.name !== "New Item" ) {
       sct.unshift(sco);
     }
-    newt.childTags = sct;
+
+    var sctnew = [];
+    for( var nosco=0; nosco<sct.length; nosco++) {
+      sco = sct[nosco];
+      let pts = [];
+/* */
+      if( sco.misc === 'P' ) {
+        pts = [];
+        let vtl = sco.vtxList;
+        if( vtl.length > 0 ) {
+          if( "object" === typeof vtl ) { vtl = sco.vtxList.join(); }
+          let lpt = vtl.split(",");
+          for( var i=0; i<lpt.length; i=i+2 ) {
+            let px = lpt[i].replace(/\n/gi, "");
+            let py = lpt[i+1].replace(/\n/gi, "");
+            var vtx = new Vertex(0,id,i,px,py);
+            pts.push(vtx);
+          }
+        }
+        sco.vtxList = pts;
+      } else {
+        sco.vtxList = pts;
+      }
+/* */
+      sctnew.push(sco);
+    }
+
+    newt.childTags = sctnew;
+
     var b = JSON.stringify( newt );
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "update complete",clsMthd );
-      alert("Update/insert complete on "+newt.name)
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on "+newt.name)
+      } catch( error ) {
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" schematic id="+id; 
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      const emsg = "Problem "+(id===0?"inserting":"updating")+" schematic id="+id; 
-      alert(emsg+"\n"+error);
-      Log.error(emsg+" - " + error,clsMthd);
-    }
+    request();
   }
 
   handleSchematicUpdate(event) {
@@ -247,33 +303,36 @@ class SchematicAdmin extends Component {
   }
   
   componentDidMount() {
-    Log.info( "SchematicAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "SchematicAdmin.didUpdate: " + this.state.stage );
   }
 
   handleMouseUp(event) {
-      const e = event;
-      const t = e.evt;
-      var x = t.offsetX;
-      var y = t.offsetY;
+    const e = event;
+    const t = e.evt;
+    var x = t.offsetX;
+    var y = t.offsetY;
 
-      let sconew = Object.assign({},this.state.sco);
-      let nextCorner = this.state.nextCorner;
-      Log.info( "ProcessUnitAdmin.mouseUp("+nextCorner+"): "+x+","+y);
+    let sconew = Object.assign({},this.state.sco);
+    let nextCorner = this.state.nextCorner;
+    if( sconew.misc !== 'P' ) {
       if( nextCorner === 1 ) {
-        sconew.c1Lat = x;
-        sconew.c1Long = y;
+        sconew.c1Lat = y;
+        sconew.c1Long = x;
         nextCorner = 2;
       } else {
-        sconew.c2Lat = x;
-        sconew.c2Long = y;
+        sconew.c2Lat = y;
+        sconew.c2Long = x;
         nextCorner = 1;        
       }
-      this.setState( {sco: sconew, nextCorner:nextCorner} );
+    } else {
+      let sep = "";
+      if( sconew.vtxList.length > 0 ) { sep="\n"}
+      sconew.vtxList = sconew.vtxList.concat(sep+y+","+x);
+    }
+    this.setState( {sco: sconew, nextCorner:nextCorner} );
   }
   
   handleItemChange(id) {
@@ -282,6 +341,9 @@ class SchematicAdmin extends Component {
     cts.forEach( function( e ) {
         if( e.id === parseInt(id,10) ) {
           sco = e;
+          if( sco.vtxList === null || sco.vtxList === undefined ) {
+            sco.vtxList = [];
+          }
         }
     } );
     return sco;
@@ -295,52 +357,58 @@ class SchematicAdmin extends Component {
     let scmnew = Object.assign({},this.state.schematic);
     let sconew = Object.assign({},this.state.sco);
     if( np.length === 1 ) {
-        const field = np[0];
-        scmnew[field] = value;
+        let fld = np[0];
+        scmnew[fld] = value;
     } else {
-        const field = np[1];
-        if( field === "id" ) {
+        let fld = np[1];
+        if( fld === "id" ) {
           sconew = this.handleItemChange(value);
-        } else if( field === "c2Lat" ) {
-          let v = value;
-          const c1Lt = sconew.c1Lat;
+        } else if( fld === "c1Lat" ) {
+          let v = parseInt(value,10);
+          let v2 = v;
           switch(sconew.misc) { 
-            case "G" : v = value; break;
-            case "P" : v = value; break;
-            case "PB": v = c1Lt+10; break;
-            case "PL": v = c1Lt+15; break;
-            case "PR": v = c1Lt+15; break;
-            case "PT": v = c1Lt+10; break;
-            case "RU": v = c1Lt+68; break;
-            case "S" : v = c1Lt+100; break;
-            case "TK": v = value; break;
-            case "T" : v = value; break;
-            case "VH": v = c1Lt+12; break;
-            case "VV": v = c1Lt+24; break;
-            default:   v = value; break;
+            case "G" : v2 = v; break;
+            case "P" : v2 = v; break;
+            case "PB": v2 = v+10; break;
+            case "PL": v2 = v+15; break;
+            case "PR": v2 = v+15; break;
+            case "PT": v2 = v+10; break;
+            case "RU": v2 = v+68; break;
+            case "S" : v2 = v+100; break;
+            case "TK": v2 = v; break;
+            case "T" : v2 = v; break;
+            case "VH": v2 = v+12; break;
+            case "VV": v2 = v+24; break;
+            default:   v2 = v; break;
           }
-          sconew[field] = v;
-        } else if( field === "c2Long") {
-          let v = value;
-          const c1Lg = sconew.c1Long;
+          sconew[fld] = v;
+          if( v2 !== v ) { sconew['c2Lat'] = v2; }
+        } else if( fld === "c1Long") {
+          let v = parseInt(value,10);
+          let v2 = v;
           switch(sconew.misc)
-          { case "G" : v = value; break;
-            case "P" : v = value; break;
-            case "PB": v = c1Lg+15; break;
-            case "PL": v = c1Lg+10; break;
-            case "PR": v = c1Lg+10; break;
-            case "PT": v = c1Lg+15; break;
-            case "RU": v = c1Lg+36; break;
-            case "S" : v = c1Lg+100; break;
-            case "TK": v = value; break;
-            case "T" : v = value; break;
-            case "VH": v = c1Lg+24; break;
-            case "VV": v = c1Lg+12; break;
-            default:   v = value; break;
+          { case "G" : v2 = v; break;
+            case "P" : v2 = v; break;
+            case "PB": v2 = v+15; break;
+            case "PL": v2 = v+10; break;
+            case "PR": v2 = v+10; break;
+            case "PT": v2 = v+15; break;
+            case "RU": v2 = v+36; break;
+            case "S" : v2 = v+100; break;
+            case "TK": v2 = v; break;
+            case "T" : v2 = v; break;
+            case "VH": v2 = v+24; break;
+            case "VV": v2 = v+12; break;
+            default:   v2 = v; break;
           }
-          sconew[field] = v;
+          sconew[fld] = v;
+          if( v2 !== v ) { sconew['c2Long'] = v2; }
+        } else if( fld === 'c2Lat' || fld === 'c2Long' ) {
+          sconew[fld] = parseInt(value,10);
+        } else if( fld !== 'vtxList' ) {
+          sconew[fld] = value;
         } else {
-          sconew[field] = value;
+          sconew[fld] = value;
         }
     }
     this.setState({schematic: scmnew, sco: sconew } );
@@ -445,7 +513,8 @@ class SchematicAdmin extends Component {
       sco = { id:0, name:'New Item', description:'', active:'Y', misc:"", tagTypeCode:'SCO'
             , tagTypeId:0, c1Lat:0, c1Long:0, c2Lat:0, c2Long:0, parentId:scm.id, relTagId:0
             , inpRelTagId:0, inpTagId:0, inpType:"", inpTagName:"", inpValue:0, inpMax:0, inpZero:0
-            , outRelTagId:0, outTagId:0, outType:"", outTagName:"", outValue:0, outMax:0, outZero:0 };
+            , outRelTagId:0, outTagId:0, outType:"", outTagName:"", outValue:0, outMax:0, outZero:0
+            , vtxList:[] };
       this.setState( {returnedText: null, 
                       updateData: true, 
                       updateDisplay:true,
@@ -455,7 +524,7 @@ class SchematicAdmin extends Component {
     }
   }
 
-  handleEdit(event) {
+  handleModify(event) {
     event.preventDefault();
     let scm = Object.assign({},this.state.schematic);
     var sco = Object.assign({},this.state.sco);
@@ -476,6 +545,26 @@ class SchematicAdmin extends Component {
             sct[i].inpTagId = (sco.inpTagId===null?undefined:sco.inpTagId);
             sct[i].outTagId = (sco.outTagId===null?undefined:sco.outTagId);
             sct[i].misc = sco.misc;
+            sct[i].vtxList = sco.vtxList;
+            if( sco.misc === "P" ) {
+              let pts = [];
+              let vtxList = sco.vtxList;
+              if( "object" === typeof vtxList ) { vtxList = vtxList.join(); } 
+              let first = true;
+              let sep = "";
+              let vl = vtxList.replace( /\n/gi, ",");
+              vl = vl.replace(/,,/gi,",");
+              let lpt = vl.split(",");
+              for( var j=0; j<lpt.length; j=j+2 ) {
+//                var vtx = new Vertex(0,sct[i].id,j,lpt[0],lpt[2]);
+                pts.push(sep+lpt[j]+","+lpt[j+1]);
+                if( first ) { sep="\n"; first=false; }
+              }
+              sct[i].vtxList = pts;
+            } else {
+              sct[i].vtxList = [];
+            }
+
           }
         }
         this.setState( {returnedText: null, 
@@ -490,7 +579,6 @@ class SchematicAdmin extends Component {
 
 
   render() {
-    Log.info("SchematicAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -514,7 +602,7 @@ class SchematicAdmin extends Component {
                                 fieldChange   = {this.handleFieldChange}
                                 handleQuit    = {this.handleQuit}
                                 handleAdd     = {this.handleAdd}
-                                handleEdit    = {this.handleEdit}
+                                handleMod     = {this.handleModify}
                                 handleMouseUp = {this.handleMouseUp}
                  />
         }

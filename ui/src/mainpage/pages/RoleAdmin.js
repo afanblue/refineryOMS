@@ -1,6 +1,6 @@
 /*************************************************************************
  * RoleAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import {Role}          from './objects/Role.js';
 class RoleAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "RoleAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -58,9 +57,6 @@ class RoleAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "RoleAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -72,7 +68,6 @@ class RoleAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "RoleAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -109,8 +104,6 @@ class RoleAdmin extends Component {
   }
 
   handleRoleSelect(event) {
-    let now = new Date();
-    Log.info( "RoleAdmin.roleSelect " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -128,27 +121,24 @@ class RoleAdmin extends Component {
     var r = this.state.role;
     const b = JSON.stringify(r);
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "Role update complete",clsMthd );
-      alert("Update/insert complete on "+r.name)
-      this.fetchFormData(id);
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on "+r.name)
+        this.fetchFormData(id);
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" role "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      alert("Problem "+(id===0?"inserting":"updating")+" role "
-           +"id "+id+"\n"+error);
-      Log.error("Error - " + error,clsMthd);
-    }
+    request();
   }
   
   componentDidMount() {
-    Log.info( "RoleAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "RoleAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -191,24 +181,22 @@ class RoleAdmin extends Component {
   fetchList() {
     const clsMthd = "RoleAdmin.fetchList";
     const myRequest = SERVERROOT + "/role/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest, clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching role list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem fetching role list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
   
@@ -222,7 +210,6 @@ class RoleAdmin extends Component {
   }
 
   render() {
-    Log.info("RoleAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

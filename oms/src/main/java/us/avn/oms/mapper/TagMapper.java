@@ -28,6 +28,8 @@ import us.avn.oms.domain.Taglet;
 
 public interface TagMapper {
 	
+	Collection<Tag> getAllTags();
+	
 	Collection<Tag> getAllTagsByType(  String ttc );
 	
 	Collection<Taglet> getAllTagletsByType( String ttc );
@@ -42,13 +44,25 @@ public interface TagMapper {
 	
 	void deleteChildTags( Long id );
 	
+	void deleteChildTagsOfType( Long id, String code );
+
 	Collection<RelTagTag> getParentTags( Long id );
 	
 	Collection<RelTagTag> getChildTags( Long id );
 	
+	Collection<RelTagTag> getChildrenOfType( Long id, String code );
+	
+	Collection<TagType> getTagTypes( );
+	
 	Collection<TagType> getSchematicObjectTypes( );
 	
 	Collection<ChildValue> getSCMChildValues( Long id );
+	
+	Collection<ChildValue> getTransferTankLevelChild( Long id );
+	
+	Collection<ChildValue> getTransferChildValues( Long id, String code );
+	
+	Collection<ChildValue> getTransferSensorValues( Long id, String code );
 	
 	Collection<Taglet> getChildren( Long id );
 	
@@ -59,5 +73,5 @@ public interface TagMapper {
 	long insertTag( Tag t );
 
 	void insertRelationship( RelTagTag rtt );
-
+	
 }

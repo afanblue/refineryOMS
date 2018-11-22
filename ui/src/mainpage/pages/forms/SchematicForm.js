@@ -1,6 +1,6 @@
 /*************************************************************************
  * SchematicForm.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 import React, {Component} from 'react';
 import { Stage, Layer, Rect } from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import Log          from '../../requests/Log.js';
 import Scm3WayValve from '../objects/Scm3WayValve.js';
 import ScmGauge     from '../objects/ScmGauge.js';
 import ScmPump      from '../objects/ScmPump.js';
@@ -34,8 +33,70 @@ import ScmValve    from '../objects/ScmValve.js';
 class SchematicForm extends Component {
   constructor(props) {
     super(props);
-    Log.info( "SchematicForm: " + props.stage );
     this.state = {  };
+  }
+  
+  setPositionLocation( sco, fc ) {
+    if( sco.misc !== 'P' ) {
+       return (
+<div>
+  <tr>
+    <td>
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      NW Corner: 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      <input type="text" id="sco.c1Lat" name="sco.c1Lat" value={sco.c1Lat} 
+             className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
+             size="10" maxLength="5" onChange={fc} />
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      <input type="text" id="sco.c1Long" name="sco.c1Long" value={sco.c1Long} 
+             className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
+             size="10" maxLength="10" onChange={fc} />
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      SE Corner: 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      <input type="text" id="sco.c2Lat" name="sco.c2Lat" value={sco.c2Lat} 
+             className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
+             size="10" maxLength="10" onChange={fc} />
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      <input type="text" id="sco.c2Long" name="sco.c2Long" value={sco.c2Long} 
+             className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
+             size="10" maxLength="10" onChange={fc} />
+    </td>
+  </tr>
+</div>
+              );
+    } else {
+      return(
+<div>
+  <tr>
+    <th className="oms-spacing-180">
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      End Points: 
+    </th>
+  </tr>
+  <tr>
+    <td className="oms-spacing-180">
+      <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+      <textarea rows="5" cols="15" id="sco.vtxList" name="sco.vtxList" value={sco.vtxList}
+                onChange={fc} />
+    </td>
+  </tr>
+</div>
+      );
+    }
   }
 
   render() {
@@ -60,7 +121,7 @@ class SchematicForm extends Component {
     const fc     = this.props.fieldChange;
     const hq     = this.props.handleQuit;
     const ha     = this.props.handleAdd;
-    const he     = this.props.handleEdit;
+    const hm     = this.props.handleMod;
     const su     = this.props.schematicUpdate;
     const sc     = this.props.schematicCopy;
     const mu     = this.props.handleMouseUp;
@@ -70,6 +131,8 @@ class SchematicForm extends Component {
         (sco.misc === "SH") || (sco.misc === "TK") || (sco.misc === "TX")  ) {
       outSelect = "no output required";
     }    
+
+    let positionLocation = this.setPositionLocation(sco, fc);    
     
     return(
       <div className="oms-tabs">
@@ -129,14 +192,31 @@ class SchematicForm extends Component {
                               onMouseUp={mu} />
                         { scoList.map(
                           function(n,z) {
-                            let x = n.c1Lat;
-                            let y = n.c1Long;
-                            let width = n.c2Lat - n.c1Lat;
-                            let height = n.c2Long - n.c1Long;
+                            let y = n.c1Lat;
+                            let x = n.c1Long;
+                            let height = n.c2Lat - n.c1Lat;
+                            let width  = n.c2Long - n.c1Long;
+                            let pts = [];
+                            if( n.misc === 'P' ) {
+//                              pts = [0,0,width,height];
+                              if( n.vtxList===null || n.vtxList===undefined || n.vtxList.length===0 ) {
+                                pts = [x,y,n.c2Long,n.c2Lat];
+                              } else {
+                                let vtl = n.vtxList;
+                                if( "object" === typeof n.vtxList ) { vtl = vtl.join(""); }
+                                vtl = vtl.replace(",,",",");
+                                n.vtxList.map( function(nv,zv){
+                                  let vl = nv.replace( /\n/gi, "");
+                                  let lpt = vl.split(",");
+                                  pts = pts.concat([lpt[1],lpt[0]]);
+                                  return pts;
+                                } );
+                              }
+                            }
                             let cv = (n.childValue===undefined||n.childValue===null?0:n.childValue);
                             let tx = cv.toFixed(2).toString();
-                            let mx = n.childTagMax;
-                            let zero = n.childTagZero;
+                            let mx = (n.childTagMax===undefined||n.childTagMax===null)?100:n.childTagMax;
+                            let zero = (n.childTagZero===undefined||n.childTagZero===null)?0:n.childTagZero;
                             switch( n.misc ) {
                               case "3VB":
                                 return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
@@ -158,7 +238,7 @@ class SchematicForm extends Component {
                                 return <ScmGauge key={z} x={x} y={y} width={width} height={height} 
                                                  value={cv} max={mx} zero={zero} fill={"green"} />
                               case "P":
-                                return <ScmPipe key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmPipe key={z} x={x} y={y} points={pts} strokeWidth={3}
                                                 value={cv} max={mx} zero={zero}  />
                               case "PL":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height} 
@@ -201,9 +281,15 @@ class SchematicForm extends Component {
                         <td className="oms-top">
                           <table className="oms-top">
                             <tbody>
-                              <tr><td> Objects: </td></tr>
                               <tr>
                                 <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  Objects: 
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                   <select id="sco.id" name="sco.id" value={sco.id}
                                           onChange={fc} >
                                     { scoList.map( 
@@ -214,20 +300,37 @@ class SchematicForm extends Component {
                                   </select>
                                 </td>
                               </tr>
-                              <tr><td> Object Name: </td></tr>
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  Object Name: 
+                                </td>
+                              </tr>
                               <tr><td>
+                                <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                 <input type="hidden" name="id" value={sco.id} />
                                 <input type="text" id="sco.name" name="sco.name" value={sco.name} 
                                        className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                                        size="10" maxLength="10" onChange={fc} />
                               </td></tr>
-                              <tr><td> Description: </td></tr>
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  Description: 
+                                </td>
+                              </tr>
                               <tr><td>
+                                <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                 <input type="text" id="sco.description" name="sco.description" value={sco.description} 
                                        className={["oms-spacing-120","oms-fontsize-12"].join(' ')}
                                        size="20" maxLength="48" onChange={fc} />
                               </td></tr>
-                              <tr><td> Object Type: </td></tr>
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  Object Type: 
+                                </td>
+                              </tr>
                               <tr>
                                 <td>
                                   <select id="sco.misc" name="sco.misc" value={sco.misc}
@@ -240,9 +343,15 @@ class SchematicForm extends Component {
                                   </select>
                                 </td>
                               </tr>
-                              <tr><td> Input Tag: </td></tr>
                               <tr>
                                 <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  Input Tag: 
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                   <select id="sco.inpTagId" name="sco.inpTagId" value={sco.inpTagId}
                                           onChange={fc}>
                                     { inpTags.map( 
@@ -253,41 +362,30 @@ class SchematicForm extends Component {
                                   </select>
                                 </td>
                               </tr>
-                              <tr><td> Output Tag: </td></tr>
                               <tr>
-                                <td>{outSelect}
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  Output Tag: 
                                 </td>
                               </tr>
-                              <tr><td> NW Corner: </td></tr>
-                              <tr><td>
-                                <input type="text" id="sco.c1Lat" name="sco.c1Lat" value={sco.c1Lat} 
-                                       className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
-                                       size="10" maxLength="10" onChange={fc} />
-                              </td></tr>
-                              <tr><td>
-                                <input type="text" id="sco.c1Long" name="sco.c1Long" value={sco.c1Long} 
-                                       className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
-                                       size="10" maxLength="10" onChange={fc} />
-                              </td></tr>
-                              <tr><td> SE Corner: </td></tr>
-                              <tr><td>
-                                <input type="text" id="sco.c2Lat" name="sco.c2Lat" value={sco.c2Lat} 
-                                       className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
-                                       size="10" maxLength="10" onChange={fc} />
-                              </td></tr>
-                              <tr><td>
-                                <input type="text" id="sco.c2Long" name="sco.c2Long" value={sco.c2Long} 
-                                       className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
-                                       size="10" maxLength="10" onChange={fc} />
-                              </td></tr>
-                              <tr><td>
-                                <input type="submit" id="addItem"  name="addItem"  
-                                       value=" Add " className="oms-spacing"
-                                       onClick={(e) => {ha(e)}} />
-                                <input type="submit" id="modItem"  name="modItem"  
-                                       value=" Modify " className="oms-spacing"
-                                       onClick={(e) => {he(e)}} />
-                              </td></tr>
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
+                                  {outSelect}
+                                </td>
+                              </tr>
+                              {positionLocation}
+                              <tr>
+                                <td>
+                                  <img src="../../images/spacer.png" alt="" height="25px" width="20px"/>
+                                  <input type="submit" id="addItem"  name="addItem"  
+                                         value=" Add " className="oms-spacing"
+                                         onClick={(e) => {ha(e)}} />
+                                  <input type="submit" id="modItem"  name="modItem"  
+                                         value=" Modify " className="oms-spacing"
+                                         onClick={(e) => {hm(e)}} />
+                                </td>
+                              </tr>
                             </tbody>
                           </table>                          
                         </td>

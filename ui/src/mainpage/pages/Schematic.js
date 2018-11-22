@@ -1,6 +1,6 @@
 /*************************************************************************
  * Schematic.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import Waiting            from './Waiting.js';
 class Schematic extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Schematic " );
     this.state = {
       stage: props.stage,
       option: props.option,
@@ -51,7 +50,6 @@ class Schematic extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info("Schematic.willReceiveProps: "+this.state.option+" =? next "+ nextProps.option );
     clearInterval(this.state.itemTimer);
     if( nextProps.option !== this.state.option ) {
       this.setState({option: nextProps.option});
@@ -61,37 +59,35 @@ class Schematic extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "Schematic.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
 /* */ 
   reqOut( id ) {
+    const clsMthd = "Schematic.reqOut";
     const myRequest=SERVERROOT + "/tag/output/" + id;
-    var now = new Date();
-    Log.info( "Schematic.reqOut - Request: " + myRequest + " - " + now.toLocaleString() );
-    fetch(myRequest,  {
-      method: "PUT",
-      headers: {'Content-Type':'application/json'}
-    })
-      .then(this.handleErrors)
-      .catch(function(error) { 
-       alert("Problem selecting process unit id "+id+"\n"+error);
-       Log.error("Schematic.reqOut: Error - " + error);  
-    });
+    const request = async () => {
+      try {
+        await fetch(myRequest, {method:"PUT", headers:{'Content-Type':'application/json'} });
+        alert("Output complete on id "+id)
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" XXXX "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
+    }
+    request();
   }
 
   handleMouseup(event) {
-    let now = new Date();
     let x = event.evt.offsetX;
     let y = event.evt.offsetY;
-    Log.info( "Schematic.mouseUp " + now.toLocaleString()+" x="+x+", y="+y );
     let scm = this.state.returnedText;
     let scos = scm.childTags;
     for( var i=0; i<scos.length; i++) {
       let e = scos[i];
-      if(   (x >= e.c1Lat)  && (x <= e.c2Lat) 
-         && (y >= e.c1Long) && (y <= e.c2Long) ) {
+      if(   (y >= e.c1Lat)  && (y <= e.c2Lat) 
+         && (x >= e.c1Long) && (x <= e.c2Long) ) {
         let outTagId = (e.outTagId===null)?undefined:e.outTagId;
         if( (outTagId !== undefined) && (e.outTagId !== 0)) {
           this.reqOut(outTagId);
@@ -113,33 +109,30 @@ class Schematic extends Component {
     const myRequest = SERVERROOT + "/schematic/" + opt;
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching schematic list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem fetching schematic list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
-
+      request();
     }
   }
 
   componentDidMount() {
-    Log.info( "Schematic.didMount: " + this.state.stage );
     this.fetchList(this.state.option);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
     this.setState( {unitTimer: myTimerID } );
   }
   
   componentWillUnmount() {
-    Log.info( "Schematic.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -149,7 +142,6 @@ class Schematic extends Component {
   }
 
   render() {
-    Log.info("Schematic.render " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

@@ -54,9 +54,11 @@ Category is specified by the Horizontal Item ID
    
    1.  Get the record ID's for the roles you want to assign these privileges to.
    
-   1.  Add record(s) to the ROLE_PRIV table.
+   1.  Add record(s) to the ROLE_PRIV table. (```insert into role_priv(role_id,priv_id) values(1,41);```)
    
-   1.  Insert a record into the PAGE table.  The URI field is an artifact from the original PHP-based UI and can be ignored.
+   1.  Insert a record into the PAGE table.  The URI field is an artifact from the original PHP-based UI and can be ignored. (```insert into page(name,view_priv_id,exec_priv_id,active) values('Tag Admin',41,41,'Y'```)
+   
+   1.  Get the record ID for the page you just added.
    
    1.  Insert a record into the MENU table.
    
@@ -81,7 +83,6 @@ Category is specified by the Horizontal Item ID
 In the "config" table, there are a set of key-value pairs that define the behavior of the system (mostly).  The current set of values are
 
    ---
-   
    | Name | Value | Description |
    | ------------- | ------------ | --------------------- |
    | ```NORMCOLOR``` | ```darkgreen``` | ```Normal state "alarm" color``` |
@@ -130,7 +131,38 @@ In the "config" table, there are a set of key-value pairs that define the behavi
    | ```WEATHER_TYPE``` | ```API``` | ```The choices are ACU, API, CSV, and XML.  The default is XML.  This is because the NOAA API doesn't return the same values as the XML and the XML values look right.  If you have a personal weather station that returns the values in a CSV file, you can use this.  The type for the AcuRite 01036M is ACU.  In the case of CSV and ACU, the WEATHER_LOCATION becomes the location of the the file created/updated by the station, and the WEATHER_DELAY and WEATHER_INTERVAL need to be suitably adjusted.``` |
    ---
 
-   These names are defined as static values in the Config data element.    
+   These names are defined as static values in the Config data element.
+   
+### Tag Types
+
+I like to think of these as intuitively obvious, but there are some properties of some of these which can't easily be determined from the code.  Following this list are some descriptions of those properties.
+
+   ---
+   | Code | Name | Description |
+   | ------------- | ------------ | --------------------- |
+   | ```AI``` | ```AnalogInput``` | Field sensor analog |
+   | ```AO``` | ```AnalogOutput``` | Analog Output value |
+   | ```C```  | ```CalculatedVariable``` | Calculated Variable |
+   | ```CB``` | ```ControlBlock``` | Field control device |
+   | ```DI``` | ```DigitalInput``` | Field sensor digital |
+   | ```DK``` | ```Dock``` | DockNumber |
+   | ```DO``` | ```DigitalOutput``` | Digital output |
+   | ```FLD``` | ```Field``` | Refinery field |
+   | ```HS``` | ```Hot Spot``` | Hot spot (link to another page, not needed?) |
+   | ```P``` | ```Pipe``` | Field pipe |
+   | ```PG``` | ```PlotGroup``` | Group of tags for pre-defined plots |
+   | ```PMP``` | ```Pump``` | Pump |
+   | ```PU``` | ```ProcessUnit``` | Refinery Process Unit |
+   | ```RU``` | ```RefineryUnit``` | Refinery Unit |
+   | ```S``` | ```Ship``` | Ship |
+   | ```SCM``` | ```Schematic``` | Refinery Schematic |
+   | ```SCO``` | ```SchematicObject``` | Objects for Refinery Schematics |
+   | ```TC``` | ```TankCar``` | Railroad tank car |
+   | ```TK``` | ```Tank``` | Liquid container |
+   | ```TT``` | ```TankTruck``` | Tank truck |
+   | ```V``` | ```Valve``` | Valve |
+   | ```XFR``` | ```Transfer``` | Defines the exchange of material |
+   ---
    
 ### Analog Types
 
@@ -241,15 +273,29 @@ This is how the processing works:
 -   The simulation process (the ```sim``` process) writes the value in the XFER table for the output tag (```CO```) to the value in the XFER table for the related input tag.  The related input tag is defined in the SIM_IO table.
 -   The digital input processor (part of the ```pmc``` process) then gets the value from the XFER table for the ```PV```.
 
+### Fields
+
+Fields are graphical displays of areas of the refinery.  The size is determined by the area selected to be displayed.  The display is updated every minute.
+
+The items to be displayed, and right now, only tanks are worth showing, must be explicitly associated with the field via the Admin tab of the UI.  This association is defined with the REL_TAG_TAG table.  Since there is only a single list associated with a field, the REL_TAG_TAG code value is null. 
+
 ### Plot Groups
 
-Plot groups are groups of up to 4 different analog variables that allow a user to plot the values over the last two days.  In addition, all active transfers are displayed, though (currently) only the source and destination ID's are graphed.
+Plot groups are groups of up to 4 different analog variables that allow a user to plot the values over the last two days.  In addition, all active transfers are displayed, though (currently) only the source and destination ID's are graphed.  The display is updated every minute.
+
+### Process Units
+
+A process unit is a collection of variables which are displayed as a table.  The display is updated every minute.
+
+The items displayed must be explicitly associated with the process unit via the Admin tab of the UI.  This association is defined with the REL_TAG_TAG table.  Since there is only a single list associated with a field, the REL_TAG_TAG code value is null.
 
 ### Schematics
 
 Schematics are a graphical representation of the state of various objects which allow the ability to control various objects (pumps, valves) [```this is a future capability.  currently, it is being implemented as display only 2018/07/28```].
 
 Schematics (tag type SCM), like Process Units (PU), are defined as a TAG objects w/no separate table.  Fields (FLD) are similar, but there is an associated table.  Note that there are no positions (i.e., c1_lat, c1_long, c2_lat, c2_long) associated with a schematic.  Associated with a schematic is a list of Schematic Objects (tag type SCO), related via the REL_TAG_TAG table.  Schematic Objects require a position (c1_lat, etc), that that position is NOT a latitude/longitude, but an XY position within the schematic display.  Furthermore, also related to the schematic object is a tag (analog or digital) which is used to define various display characteristics for that object.  This tag is related to the schematic object via the REL_TAG_TAG table.
+
+Active transfers also show up in the schematic list.  Unlike a normal schematic, transfers are displayed on a field the size of the entire refinery.  Tanks are displayed scaled to the size of the field. 
 
 Object Sizes:
 Tanks, gauges, and pipes are scaled based on the values of the NW and SE corners.  Valves, refinery units, ships and pumps are not.  They are a fixed size, with the NW corner value used to specify the location.  Text field sizes depend more on the number of characters displayed than the size determined by the NW and SE corners.AAA
@@ -258,11 +304,51 @@ For convenience, there are views used to specify
 -   the types of tags that can be used as schematic objects (SCM_OBJECT_VW) and
 -   the "contents" of schematics, fields, process units (CHILD_VALUE_VW)
 
+### Tags
+
+Tags are the root definition object.  The meaning of most of the Tag fields is self-evident, but the "inTag", "outTag", "inTagList", and "outTagList" probably need some additional explanation.  The usage of these tags is dependent on the tag type.
+
+Refinery Units (RU) need 
+ - "status" tag (is unit ON (operating) or OFF)
+ - list of equipment (pipes, valves, pumps) coming INTO the unit from the Crude tanks
+ - list of equipment (pipes, values, pumps) going INTO the refined product tanks
+ 
+Tanks (TK) need
+ - level tag
+ - temperature tag
+ - equipment (pipes, valves, pumps) to refined unit (not implemented)
+ - equipment (pipes, valves, pumps) from docks (not implemented)
+ 
+Calculated (C) variables need
+ - variables used to calculate result (CODE = "1","2", etc)
+ 
+Fields (FLD) need
+ - list of items (Tanks) in field
+ 
+Process Units (PU) need
+ - list of items (Tanks, Analog Inputs, Digital Inputs) to display 
+ 
+Schematics (SCM) need
+ - list of schematic objects to display
+ 
+Schematic Objects (SCO) need
+ - MISC is used to specify the object type (see SCM_OBJECT_VW) 
+ - an input tag
+ - an output tag
+ 
+Pipes need
+ - MISC is used to specify the type of fluid (CONTENT_TYPE_VW)   
+ - an input tag to specify the state of the flow (ie, flowing/active or not)
+
+Transfers need
+ - MISC is used to specify the type of fluid being transferred (CONTENT_TYPE_VW)
+ - 
+
 ### Tanks
 
-Tanks currently are related to two tags, a temperature and a level tag, both are analog inputs.  This allows us to specify in process units and field displays a tank which automatically implies (supplies?) the temperature and level.
+Tanks currently are related to two tags, a temperature and a level tag, both are analog inputs.  This allows us to specify in process units and field displays a tank which automatically implies (supplies?) the temperature and level.  These tags are related to the tank through the REL_TAG_TAG table with a null CODE value.
 
-Other potential tags related to a tank would be a pump (output pump), valves 
+Other potential tags related to a tank would be a pump (output pump), valves, and pipes.  These items are also related to the tank through the REL_TAG_TAG table, but their CODE value is either "IN" or "OUT", depending on whether the tank is a transfer source or destination.
 
 Currently, there is no temperature compensation for volume so that the volumes are all compared at standard temperature.
 

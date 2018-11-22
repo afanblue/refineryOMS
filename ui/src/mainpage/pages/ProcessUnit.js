@@ -1,6 +1,6 @@
 /*************************************************************************
  * ProcessUnit.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ import {PlotDetails}      from './objects/PlotGroup.js';
 class ProcessUnit extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ProcessUnit " );
     this.state = {
       stage: props.stage,
       option: props.option,
@@ -63,7 +62,6 @@ class ProcessUnit extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info("ProcessUnit.willReceiveProps: "+this.state.option+" =? next "+ nextProps.option );
     clearInterval(this.state.itemTimer);
     if( nextProps.option !== this.state.option ) {
       this.setState({option: nextProps.option});
@@ -73,13 +71,10 @@ class ProcessUnit extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "ProcessUnit.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
   handleItemSelect(event) {
-    let now = new Date();
-    Log.info( "ProcessUnit.itemSelect " + now.toLocaleString() );
     const id = (event.z1 != null?event.z1:(event.z2 != null?event.z2:event.z3));
     this.fetchItemData(id);
     clearInterval(this.state.unitTimer);
@@ -93,31 +88,30 @@ class ProcessUnit extends Component {
     const myRequest=SERVERROOT + "/ai/history/" + id + "/" + noDays;
     const clsMthd = "ProcessUnit.fetchItemData";
     const request = async () => {
-      const response = await fetch(myRequest);
-      const json = await response.json();
-      let pdNew = Object.assign({},this.state.plotDetails);
-      if( this.state.plotDetails.max0 === Infinity ) {
-        let aiTag = json.aiTag;
-        pdNew.max0 = aiTag.maxValue;
-        pdNew.min0 = aiTag.zeroValue;
+      try {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        let pdNew = Object.assign({},this.state.plotDetails);
+        if( this.state.plotDetails.max0 === Infinity ) {
+          let aiTag = json.aiTag;
+          pdNew.max0 = aiTag.maxValue;
+          pdNew.min0 = aiTag.zeroValue;
+        }
+        this.setState( {returnedText: json,
+                        plotDetails: pdNew,
+                        updateData: false, 
+                        updateDisplay:true,
+                        stage: "itemRetrieved" } );
+      } catch( e ) {
+        const emsg = "Problem selecting process unit id "+id; 
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
       }
-      this.setState( {returnedText: json,
-                      plotDetails: pdNew,
-                      updateData: false, 
-                      updateDisplay:true,
-                      stage: "itemRetrieved" } );
     }
-    try {
-      request();
-    } catch( e ) {
-      const emsg = "Problem selecting process unit id "+id; 
-      alert(emsg+"\n"+e);
-      Log.error(emsg+" - " + e, clsMthd);        
-    }
+    request();
   }
   
   handleQuit() {
-    Log.info( "ProcessUnit: handleQuit" );
     this.fetchList(this.state.option);
     clearInterval(this.state.itemTimer);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
@@ -127,29 +121,26 @@ class ProcessUnit extends Component {
   fetchList(opt) {
     const clsMthd = "ProcessUnit.fetchList";
     const myRequest = SERVERROOT + "/processunit/values/" + opt;
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem selecting process unit list"; 
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem selecting process unit list"; 
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
-      }
+      request();
     }
   }
 
   componentDidMount() {
-    Log.info( "ProcessUnit.didMount: " + this.state.stage );
     let pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
     if( this.state.plotDetails !== null ) { pd = this.state.plotDetails; } 
     this.fetchList(this.state.option);
@@ -158,7 +149,6 @@ class ProcessUnit extends Component {
   }
   
   componentWillUnmount() {
-    Log.info( "ProcessUnit.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -179,7 +169,6 @@ class ProcessUnit extends Component {
 
 
   render() {
-    Log.info("ProcessUnit.render " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         return <Waiting />

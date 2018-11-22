@@ -1,6 +1,6 @@
 /*************************************************************************
  * ScheduledTransfers.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ import {Transfer} from './objects/Transfer.js';
 class ScheduledTransfers extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ScheduledTransfers: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -62,9 +61,6 @@ class ScheduledTransfers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "ScheduledTransfers.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -76,7 +72,6 @@ class ScheduledTransfers extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "ScheduledTransfers.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
   
@@ -85,28 +80,28 @@ class ScheduledTransfers extends Component {
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     const request = async () => {
-      const response = await fetch(myRequest);
-      const json = await response.json();
-      let ud = json;
-      var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                          ,ud.transferTypeId,ud.transferType
-                          ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                          ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                          ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-      this.setState({stage: "itemRetrieved",
-                     updateDisplay: true,
-                     updateData: false,
-                     returnedText: json,
-                     transfer: x
-                    });
+      try {
+        const response = await fetch(myRequest);
+        const json = await response.json();
+        let ud = json;
+        var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
+                            ,ud.transferTypeId,ud.transferType
+                            ,ud.sourceId,ud.source,ud.destinationId, ud.destination
+                            ,ud.expStartTime,ud.expEndTime,ud.expVolume
+                            ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
+        this.setState({stage: "itemRetrieved",
+                       updateDisplay: true,
+                       updateData: false,
+                       returnedText: json,
+                       transfer: x
+                      });
+      } catch( e ) {
+        const emsg = "Problem fetching transfer, id "+id;
+        alert(emsg+"\n"+e);
+        Log.error(emsg+" - " + e, clsMthd);        
+      }
     }
-    try {
-      request();
-    } catch( e ) {
-      const emsg = "Problem fetching transfer, id "+id;
-      alert(emsg+"\n"+e);
-      Log.error(emsg+" - " + e, clsMthd);        
-    }
+    request();
   }
 
   validateForm( x ) {
@@ -151,17 +146,16 @@ class ScheduledTransfers extends Component {
       }
       var b = JSON.stringify( xfer );
       const request = async () => {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        Log.info( "update complete",clsMthd );
-        alert("Update/insert complete on "+xfer.name)
+        try {
+          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          alert("Update/insert complete on "+xfer.name)
+        } catch( error ) {
+          const emsg = "Problem "+(id===0?"inserting":"updating")+" transfer, id="+id; 
+          alert(emsg+"\n"+error);
+          Log.error(emsg+" - " + error,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        const emsg = "Problem "+(id===0?"inserting":"updating")+" transfer, id="+id; 
-        alert(emsg+"\n"+error);
-        Log.error(emsg+" - " + error,clsMthd);
-      }
+      request();
     }
   }
   
@@ -198,20 +192,20 @@ class ScheduledTransfers extends Component {
     const myRequest = SERVERROOT + "/transfer/scheduled";
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching transfer list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - "+e,clsMthd);        
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "Problem fetching transfer list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - "+e,clsMthd);        
-      }
+      request();
     }
   }
 
@@ -226,7 +220,6 @@ class ScheduledTransfers extends Component {
   }
 
   render() {
-    Log.info("ScheduledTransfers (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

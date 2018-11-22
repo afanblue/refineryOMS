@@ -23,4 +23,5 @@ SCM,Schematic,Refinery Schematic,,Y
 C,CalculatedVariable,Calculated Variable,,Y
 SCO,SchematicObject,Objects for Refinery Schematics,,Y
 PG,PlotGroup,Group of tags for pre-defined plots,,Y
+PMP,Pump,Pump,,Y
 End

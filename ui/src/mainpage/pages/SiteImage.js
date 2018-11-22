@@ -1,6 +1,6 @@
 /*************************************************************************
  * SiteImage.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log                from '../requests/Log.js';
 
 import {Image}            from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
@@ -26,7 +25,6 @@ import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 class SiteImage extends Component {
   constructor(props) {
     super(props);
-    Log.info( "DefaultContents " );
     this.state = {
        img:null,
        onMouseUp: props.handleMouseUp
@@ -35,12 +33,11 @@ class SiteImage extends Component {
   
   componentDidMount() {
     const img = new window.Image();
-    img.src = "images/delcity.png";
+    img.src = "../../images/delcity.png";
     img.onload = () => { this.setState( {img:img} ); }
   }
   
   render () {
-    Log.info( "SiteImage.render:"  );
     return <Image image={this.state.img}
                   height={IMAGEHEIGHT}
                   width={IMAGEWIDTH} 

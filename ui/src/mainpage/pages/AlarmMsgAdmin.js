@@ -1,6 +1,6 @@
 /*************************************************************************
  * AlarmMsgAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import Waiting         from './Waiting.js';
 class AlarmMsgAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AlarmMsgAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -55,7 +54,6 @@ class AlarmMsgAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "AlarmMsgAdmin.willRcvProps: " + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -67,7 +65,6 @@ class AlarmMsgAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "AlarmMsgAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -92,16 +89,12 @@ class AlarmMsgAdmin extends Component {
     let req1 = new OMSRequest(loc, SERVERROOT + "/alarm/type/all",
                             "Problem retrieving alarm types", this.finishTypesFetch);
     req1.fetchData();
-//    Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
-//    Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
   }
 
   handleMsgUpdate(event) {
     event.preventDefault();
-//    Log.info("AlarmMsgAdmin.handleUpdate: "+event);
     const clsMthd = "AlarmMsgAdmin.handleUpdate";
     const id = this.state.msg.id;
-    Log.info("(data) id="+id+", abbr:"+this.state.msg.abbr,clsMthd);
     let method = "PUT";
     let url = "http://localhost:8080/oms/alarm/message/update";
     if( id === 0 ) {
@@ -110,26 +103,23 @@ class AlarmMsgAdmin extends Component {
     }
     const b = JSON.stringify(this.state.msg);
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      alert("Update/insert complete on message # "+id)
-      Log.info( "update complete",clsMthd );
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        alert("Update/insert complete on message # "+id)
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" transfer "
+             +"id "+id+"\n"+error);
+        Log.error("Error - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      alert("Problem "+(id===0?"inserting":"updating")+" transfer "
-           +"id "+id+"\n"+error);
-      Log.error("Error - " + error,clsMthd);
-    }
+    request();
   }
   
   componentDidMount() {
-    Log.info( "AlarmMsgAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "AlarmMsgAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -149,25 +139,23 @@ class AlarmMsgAdmin extends Component {
   
   fetchList() {
     const myRequest = SERVERROOT + "/alarm/message/all";
-    const now = new Date();
     let clsMthd = "AlarmMsgAdmin.fetchList";
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const resp = await fetch(myRequest);
-        const json = await resp.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const resp = await fetch(myRequest);
+          const json = await resp.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem getting selected alarm message list\n"+e);
+          const emsg = "Fetching msg list " + e;
+          Log.error(emsg,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        alert("Problem getting selected alarm message list\n"+e);
-        const emsg = "Fetching msg list " + e;
-        Log.error(emsg,clsMthd);
-      }
+      request();
     }
   }
   
@@ -182,7 +170,6 @@ class AlarmMsgAdmin extends Component {
   }
 
   render() {
-    Log.info("AlarmMsgAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
       case "begin":
         return <Waiting />;

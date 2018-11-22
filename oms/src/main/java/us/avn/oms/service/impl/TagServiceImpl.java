@@ -18,6 +18,7 @@ package us.avn.oms.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,9 +43,15 @@ public class TagServiceImpl implements TagService {
 		this.tagMapper = tm;
 	}
 	
+	
 	@Override
 	public Collection<Tag> getAllTagsByType( String ttc ) {
 		return tagMapper.getAllTagsByType(ttc);
+	}
+	
+	@Override
+	public Collection<Tag> getAllTags( ) {
+		return tagMapper.getAllTags();
 	}
 	
 	@Override
@@ -76,6 +83,12 @@ public class TagServiceImpl implements TagService {
 	public void deleteChildTags( Long id ) {
 		tagMapper.deleteChildTags(id);
 	}
+	
+	@Override
+	public void deleteChildTagsOfType( Long id, String code ) {
+		tagMapper.deleteChildTagsOfType(id,code);
+	}
+	
 	@Override
 	public Collection<RelTagTag> getParentTags( Long id ) {
 		return tagMapper.getParentTags(id);
@@ -85,12 +98,22 @@ public class TagServiceImpl implements TagService {
 	public Collection<RelTagTag> getChildTags( Long id ) {
 		return tagMapper.getChildTags(id);
 	}
-
+	
+	@Override
+	public Collection<RelTagTag> getChildrenOfType( Long id, String code ) {
+		return tagMapper.getChildrenOfType(id, code);
+	}
+	
 	@Override
 	public Collection<Taglet> getChildren( Long id ) {
 		return tagMapper.getChildren(id);
 	}
 	
+	@Override
+	public Collection<TagType> getTagTypes( ) {
+		return tagMapper.getTagTypes();
+	}
+
 	@Override
 	public Collection<TagType> getSchematicObjectTypes( ) {
 		return tagMapper.getSchematicObjectTypes();
@@ -101,6 +124,21 @@ public class TagServiceImpl implements TagService {
 		return tagMapper.getSCMChildValues(id);
 	}
 	
+	@Override
+	public Collection<ChildValue> getTransferTankLevelChild( Long id ) {
+		return tagMapper.getTransferTankLevelChild(id);
+	}
+	
+	@Override
+	public Collection<ChildValue> getTransferChildValues( Long id, String code ) {
+		return tagMapper.getTransferChildValues(id, code );
+	}
+
+	@Override
+	public Collection<ChildValue> getTransferSensorValues( Long id, String code ) {
+		return tagMapper.getTransferSensorValues(id, code);
+	}
+
 	@Override
 	public void updateTag( Tag t ) {
 		tagMapper.updateTag( t );

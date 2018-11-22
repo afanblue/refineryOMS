@@ -1,6 +1,6 @@
 /*************************************************************************
  * DigitalOutputAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ import {DigitalOutput}  from './objects/DO.js';
 class DigitalOutputAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "DigitalOutputAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -71,9 +70,6 @@ class DigitalOutputAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "DigitalOutputAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -85,7 +81,6 @@ class DigitalOutputAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "DigitalOutputAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -170,27 +165,24 @@ class DigitalOutputAdmin extends Component {
     if( this.validateForm( this.state.doObj ) ) {
       var b = JSON.stringify( this.state.doObj );
       const request = async () => {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        Log.info( "update complete",clsMthd );
-        alert("Update/insert complete on "+doObj.tag.name)
+        try {
+          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          alert("Update/insert complete on "+doObj.tag.name)
+        } catch( error ) {
+          alert("Problem "+(id===0?"inserting":"updating")+" digital output "
+               +"id "+id+"\n"+error);
+          Log.error("Error - " + error,clsMthd);
+        }
       }
-      try {
-        request();
-      } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" digital output "
-             +"id "+id+"\n"+error);
-        Log.error("Error - " + error,clsMthd);
-      }
+      request();
     }
   }
   
   componentDidMount() {
-    Log.info( "DigitalOutputAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
     
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "DigitalOutputAdmin.didUpdate: " + this.state.stage );
   }
 
   handleClick() {
@@ -221,8 +213,8 @@ class DigitalOutputAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "DigitalOutputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
-      Log.info( "DigitalOutputAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "DigitalOutputAdmin.mouseUp: siteLocation=(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]");
+//      Log.info( "DigitalOutputAdmin.mouseUp: "+lat+","+long);
       let donew = Object.assign({},this.state.doObj);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -238,30 +230,23 @@ class DigitalOutputAdmin extends Component {
   }
  
   fetchList() {
-    Log.info( "DigitalOutputAdmin.fetchList : " + this.state.stage );
+    let clsMthd = "DigitalOutputAdmin.fetchList";
     const myRequest = SERVERROOT + "/do/all";
-    const now = new Date();
-    Log.info( "DigitalOutputAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("DigitalOutputAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("DigitalOutputAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving analog output list\n"+e);
-           const emsg = "DigitalOutputAdmin.fetchList: Fetching do list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          alert("Problem fetching digital output list\n"+e);
+          Log.error("Problem fetching digital output list - " + e, clsMthd);        
+        }
+      }
+      request();
     }
   }
 
@@ -276,7 +261,6 @@ class DigitalOutputAdmin extends Component {
   }
 
   render() {
-    Log.info("DigitalOutputAdmin (render) - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

@@ -24,11 +24,13 @@ import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.AIValue;
@@ -64,6 +66,7 @@ public class ProcessUnitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public ProcessUnit getProcessUnit( @PathVariable Long id  ) {
 		log.debug("getting process unit " + id);
 		ProcessUnit pu = new ProcessUnit(id, "New process unit ...");
@@ -79,6 +82,7 @@ public class ProcessUnitRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/name/{nm}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public ProcessUnit getProcessUnitByName( @PathVariable String nm  ) {
 		log.debug("getting process unit " + nm);
 		ProcessUnit pu = new ProcessUnit(0L, "New process unit ...");
@@ -94,6 +98,7 @@ public class ProcessUnitRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<ProcessUnit> getAllProcessUnits( ) {
 		log.debug("getting all process units");
 		Collection<Tag> cts = ts.getAllTagsByType("PU");
@@ -106,6 +111,7 @@ public class ProcessUnitRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public Long insertProcessUnit(@RequestBody ProcessUnit pu) {
 		log.debug("Inserting process unit " + pu.toString());
 		Long id = ts.insertTag(pu);
@@ -117,6 +123,7 @@ public class ProcessUnitRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateProcessUnit(@RequestBody ProcessUnit pu ) {
 		log.debug("Updating process unit - "+pu.toString());
 		Long id = pu.getId();
@@ -129,6 +136,7 @@ public class ProcessUnitRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/values/{un}" )
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<AIValue> getProcUnitValues(@PathVariable String un ) {
 	   log.debug("retrieve tag values for ProcessUnit "+un);
 	   Collection<AIValue> puv = ais.getProcUnitValues(un);

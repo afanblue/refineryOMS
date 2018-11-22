@@ -61,7 +61,7 @@ public class Tag extends OMSObject implements Serializable {
 	public static final String TANK_TRUCK = "TT";
 	public static final String TRANSFER = "XFR";
 	public static final String VALVE = "V";
-	
+		
 	protected Long id;
 	protected String name;
 	protected String description;
@@ -73,6 +73,10 @@ public class Tag extends OMSObject implements Serializable {
 	protected Double c2Lat;
 	protected Double c2Long;
     protected String active;
+    protected Long   inTagId;
+    protected Long   outTagId;
+    protected Collection<Long> inTagList;
+    protected Collection<Long> outTagList;
     
     public Tag() { }
     
@@ -99,6 +103,10 @@ public class Tag extends OMSObject implements Serializable {
     	this.c2Lat = t.getC2Lat();
     	this.c2Long = t.getC2Long();
     	this.active = t.getActive();
+    	this.inTagId = t.getInTagId();
+    	this.outTagId = t.getOutTagId();
+    	this.inTagList = t.getInTagList();
+    	this.outTagList = t.getInTagList();
     }
     
 	public Long getId() {
@@ -197,6 +205,42 @@ public class Tag extends OMSObject implements Serializable {
 
 	public void setActive(String active) {
 		this.active = active;
+	}
+
+	
+	public Long getInTagId() {
+		return inTagId;
+	}
+
+	public void setInTagId(Long inTag) {
+		this.inTagId = inTag;
+	}
+	
+
+	public Long getOutTagId() {
+		return outTagId;
+	}
+
+	public void setOutTagId(Long outTag) {
+		this.outTagId = outTag;
+	}
+	
+
+	public Collection<Long> getInTagList() {
+		return inTagList;
+	}
+
+	public void setInTagList(Collection<Long> itl) {
+		this.inTagList = itl;
+	}
+
+	
+	public Collection<Long> getOutTagList() {
+		return outTagList;
+	}
+
+	public void setOutTagList(Collection<Long> otl ) {
+		this.outTagList = otl;
 	}
 
 

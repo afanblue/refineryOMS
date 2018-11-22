@@ -24,11 +24,13 @@ import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 //import us.avn.oms.domain.CalcOperand;
@@ -63,6 +65,7 @@ public class CalcVariableRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<CalcVariable> getAllCalcVariables( ) {
 		log.debug("getting all calc variables");
 		return cvs.getAllCalcVariables();
@@ -70,6 +73,7 @@ public class CalcVariableRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public CalcVariable getCalcVariable( @PathVariable Long id  ) {
 		CalcVariable cv = cvs.getCalcVariable(id);
 		ArrayList<String> tl = new ArrayList<>(Arrays.asList("AI", "DI", "C"));
@@ -91,12 +95,14 @@ public class CalcVariableRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/name/{name}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public CalcVariable getCalcVariable( @PathVariable String nm  ) {
 		CalcVariable cv = cvs.getCalcVariableByName(nm);
 		return cv;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
+    @ResponseStatus(HttpStatus.CREATED)
 	public Long insertCalcVariable(@RequestBody CalcVariable cv) {
 		log.debug("Inserting calcVariable "+cv.toString());
 		cvs.insertCalcVariable(cv);
@@ -106,6 +112,7 @@ public class CalcVariableRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
+    @ResponseStatus(HttpStatus.OK)
 	public void updateCalcVariable(@RequestBody CalcVariable cv) {
 		log.debug("Updating calc variable - "+cv.toString());
 		cvs.updateCalcVariable(cv); 

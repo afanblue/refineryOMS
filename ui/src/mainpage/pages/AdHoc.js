@@ -1,6 +1,6 @@
 /*************************************************************************
  * AdHoc.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,24 +46,101 @@ import {PlotGroup}     from './objects/PlotGroup.js';
 class AdHocForm extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AdHocForm: " + props.stage );
-    this.state = { aiList: props.ailist };
+    this.state = { 
+      aiList: props.ailist,
+      itl: props.itl,
+      imgLeft: null,
+      imgRight: null
+    };
+    this.moveLeft  = this.moveLeft.bind(this);
+    this.moveRight = this.moveRight.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "AdHocForm.willRcvProps " );
     this.setState({ plotGroup: nextProps.plotGroup,
                     aiList: nextProps.aiList,
                     updateData: true,
                     updateDisplay: false,
                     returnedText: null });
   }
+  
+  componentDidMount() {
+    let imgLeft  = new window.Image();
+    let imgRight = new window.Image();
+    imgLeft.src = "images/leftArrow.png";
+    imgLeft.onload = ()  => { this.setState( {imgLeft:imgLeft} ); }
+    imgRight.src = "images/rightArrow.png";
+    imgRight.onload = () => { this.setState( {imgRight:imgRight} ); }
+  }
+  
+  moveLeft(event) {
+    event.preventDefault();
+    let itl = this.props.rtl;
+    let ltl = this.props.ltl;
+    let aiList = this.props.aiList;
+    if( aiList.length < 4 ) {
+//    let lft = this.refs.inputTags;
+      let rit = this.refs.rtl;
+      var ndx = rit.selectedIndex;
+      if( ndx !== undefined ) {
+        var id = parseInt(rit[ndx].value,10);
+        var name = rit[ndx].text;
+        var option = {};
+        option.id = id;
+        option.name = name;
+        aiList.push(id);
+        ltl.push(option);
+        itl = itl.filter(n => n.id !== id);
+        this.props.requestRender(ltl, itl, aiList);
+      }
+    } else {
+      alert("A maximum of four (4) tags are graphed at once");
+    }  
+  }
+
+  moveRight(event) {
+    event.preventDefault();
+//    let cv = this.props.calcVar;
+//    let inpTagList = this.props.calcInpList;
+    let lft = this.refs.ltl;
+    let ltl = this.props.ltl;
+    let rtl = this.props.rtl;
+    let aiList = this.props.aiList;
+//    let rit = this.refs.inputTagList;
+    var ndx = lft.selectedIndex;
+    if( ndx !== undefined ) {
+      var id = parseInt(lft[ndx].value,10);
+      var name = lft[ndx].text;
+      var option = {};
+      option.id = id;
+      option.name = name;
+      aiList = aiList.filter(n => n !== id );
+      ltl = ltl.filter(n => n.id !== id);
+      rtl.unshift(option);
+      rtl.sort(function(a, b){return a.name > b.name});
+      this.props.requestRender(ltl, rtl, aiList);
+    }
+  }
+
 
   render() {
-    const pg = this.props.plotGroup;
+//    const pg = this.props.plotGroup;
     const handleUpdate = this.props.handleUpdate;
     const handleChange = this.props.handleChange;
-    const aiList = this.props.aiList;
+//    const handleClick  = this.props.handleClick;
+//    const aiList = this.props.aiList;
+    var   rtl    = this.props.rtl;
+    var   ltl    = this.props.ltl;
+    if( ltl === null ) { ltl = []; }
+
+    const moveLeft = this.moveLeft;
+    const moveRight = this.moveRight;
+    const imgLeft = "images/leftArrow.png";
+    const imgRight = "images/rightArrow.png";
+    
+    var midStyle   = { verticalAlign: 'middle'};
+    var leftStyle  = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
+    var rightStyle = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
     
     return(
       <div className="oms-tabs">
@@ -79,15 +156,37 @@ class AdHocForm extends Component {
           <tr>
             <th className="oms-spacing-120">Tags in Group:</th>
             <td>
-              <select multiple={true} name="aiList" id="aiList" value={pg.aiList} size={10}
-                     className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
-                     onChange={handleChange}>
-                {aiList.map(function(n,x) {
-                            return <option key={x} value={n.id}>{n.name}</option>
-                          } )
-                }
-              </select>
-            </td>
+              <table>
+                <tbody>
+                <tr>
+                  <td>
+                    <select name="ltl" id="ltl" ref="ltl" size={10}
+                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                           onChange={handleChange}>
+                      {ltl.map(function(n,x) {
+                          return <option key={x} value={n.id}>{n.name}</option>
+                        } )
+                      }
+                    </select>
+                  </td>
+                  <td style={midStyle}>
+                    <a onClick={moveLeft}><img src={imgLeft} alt="leftArrow" style={leftStyle} /></a>
+                    <p/>
+                    <a onClick={moveRight}><img src={imgRight} alt="rightArrow" style={rightStyle} /></a>
+                  </td>
+                  <td>
+                    <select name="rtl" id="rtl"  ref="rtl" size={10}
+                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} >
+                      {rtl.map(function(n,x) {
+                          return <option key={x} value={n.id}>{n.name}</option>
+                        } )
+                      }
+                    </select>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </td>            
           </tr>
           </tbody>
         </table>
@@ -115,10 +214,17 @@ class AdHocForm extends Component {
   
 }
 
+/**
+ * AdHocAdmin
+ * Description: manages the UI requesting an "ad hoc" set of AI tags to plot
+ *
+ * rtl = right tag list, ie, the original list of AI tags (id,name) to choose from
+ * ltl = left tag list, ie, the list of tags AI tags (id,name) chosen to plot
+ * aiList = list of ID's chosen to plot
+ */
 class AdHocAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AdHoc: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -129,14 +235,18 @@ class AdHocAdmin extends Component {
       d1: null,
       d2: null,
       d3: null,
-      aiList: null,
+      aiList: [],
+      rtl: null,
+      ltl: [],
       unitTimer: null
     }
     this.handleChange  = this.handleChange.bind(this);
+    this.handleClick   = this.handleClick.bind(this);
     this.handleUpdate  = this.handleUpdate.bind(this);
     this.handleQuit    = this.handleQuit.bind(this);
     this.finishPGFetch = this.finishPGFetch.bind(this);
     this.finishAIListFetch = this.finishAIListFetch.bind(this);
+    this.requestRender = this.requestRender.bind(this);
   }
   
   handleErrors(response) {
@@ -147,9 +257,6 @@ class AdHocAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "AdHoc.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -161,8 +268,11 @@ class AdHocAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "AdHoc.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
+  }
+  
+  requestRender(ltl, rtl, aiList) {
+    this.setState({ ltl:ltl, rtl:rtl, aiList:aiList });
   }
 
   finishPGFetch( req ) {
@@ -183,8 +293,7 @@ class AdHocAdmin extends Component {
   }
   
   finishAIListFetch(req) {
-    let aiList = req;
-    this.setState({stage: "itemRetrieved", updateDisplay: true, aiList: aiList });
+    this.setState({stage: "itemRetrieved", updateDisplay: true, rtl: req });
   }
   
   fetchFormData(id) {
@@ -199,10 +308,10 @@ class AdHocAdmin extends Component {
 
   handleUpdate(event) {
     event.preventDefault();
-    var id1 = this.state.plotGroup.aiList[0];
-    var id2 = this.state.plotGroup.aiList[1];
-    var id3 = this.state.plotGroup.aiList[2];
-    var id4 = this.state.plotGroup.aiList[3];
+    var id1 = this.state.aiList[0];
+    var id2 = this.state.aiList[1];
+    var id3 = this.state.aiList[2];
+    var id4 = this.state.aiList[3];
     var pg  = new PlotGroup(0,"","Y",id1,id2,id3,id4,"PG");
 /*    var myTimerID = setInterval(() => {this.fetchHistory(id1,1);
                                        this.fetchHistory(id2,2);
@@ -216,12 +325,10 @@ class AdHocAdmin extends Component {
   }
   
   componentDidMount() {
-    Log.info( "AdHoc.didMount: " + this.state.stage );
     this.fetchFormData(0);
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "AdHoc.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -233,7 +340,7 @@ class AdHocAdmin extends Component {
     const target = event.target;
     const value = target.value;
     let pgnew = Object.assign({},this.state.plotGroup);
-
+    Log.info("add value "+value+" to "+target.name,'AdHoc.change');
     if( target.value !== "" ) {
       let tv = parseInt(value,10);
       let f = -1;
@@ -241,7 +348,7 @@ class AdHocAdmin extends Component {
       let tLength = (pgnew.aiList===null?0:pgnew.aiList.length);
       for( var i=0; i<tLength; i++) {
         let v = pgnew.aiList.shift();
-        if( v === value ) { 
+        if( v === tv ) { 
           f = i;
         } else {
           tNew.push(v);
@@ -274,27 +381,33 @@ class AdHocAdmin extends Component {
   }
   
   componentWillUnmount() {
-    Log.info( "AdHoc.willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
   }
   
-
+  handleClick(event) {
+    event.preventDefault();
+    Log.info("",'AdHoc.click');
+  }
 
   render() {
-    Log.info("AdHoc.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
       case "itemRetrieved":
-        if( (this.state.plotGroup===null) || (this.state.aiList===null)) {
+        if( (this.state.plotGroup===null) || (this.state.rtl===null)) {
           return <Waiting />        
         } else {
+          let ltl = (this.state.ltl===null)?[]:this.state.ltl;
           return <AdHocForm plotGroup    = {this.state.plotGroup}
                             aiList       = {this.state.aiList}
+                            rtl          = {this.state.rtl}
+                            ltl          = {ltl}
                             handleUpdate = {this.handleUpdate}
                             handleChange = {this.handleChange}
+                            handleClick  = {this.handleClick}
+                            requestRender= {this.requestRender}
                />
          }
       case "generatePlot":

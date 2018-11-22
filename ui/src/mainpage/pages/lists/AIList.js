@@ -1,6 +1,6 @@
 /*************************************************************************
  * AIList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,14 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
+
 import {AnalogInput} from '../objects/AI.js';
-import Log    from '../../requests/Log.js';
 import {Tag}  from '../objects/Tag.js';
 
 
 class AIList extends Component {
   constructor(props) {
     super(props);
-    Log.info( "AIList: " + props.stage );
     this.state = {  };
   }
 
@@ -48,7 +47,7 @@ class AIList extends Component {
         return aiList.push( ai ); } );
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Analog Inputs</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Analog Inputs</div></h2>
         <table>
           <thead className="fixedHeader">
             <tr>

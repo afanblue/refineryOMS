@@ -21,11 +21,13 @@ import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.Field;
@@ -50,12 +52,14 @@ public class TankRestController {
 	TagService tagService;
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<Tank> getAllTanks( ) {
 		log.debug("get all tanks");
 		return tankService.getAllTanks();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/contentTypes")
+    @ResponseStatus(HttpStatus.OK)
 	public Collection<ReferenceCode> getAllContentTypes() {
 		log.debug("get content type list");
 		return tankService.getAllContentTypes();
@@ -63,6 +67,7 @@ public class TankRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public Tank getTank( @PathVariable Long id) {
 		log.debug("get tank w/id "+id);
 		return tankService.getTank(id);
@@ -70,6 +75,7 @@ public class TankRestController {
 
 	@RequestMapping(method = RequestMethod.PUT, produces="application/json", value="/update")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
 	public void updateTank(@RequestBody Tank tk ) {
 		log.debug("update tank w/id "+tk.getId());
 		if( tk.getId() != 0 ) {
@@ -85,6 +91,7 @@ public class TankRestController {
 
 	@RequestMapping(method = RequestMethod.POST, produces="application/json", value="/insert")
 	@ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
 	public void insertTank(@RequestBody Tank tk ) {
 		log.debug("update tank w/id "+tk.getId());
 		if( tk.getId() != 0 ) {

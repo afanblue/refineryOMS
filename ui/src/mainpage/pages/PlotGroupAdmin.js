@@ -1,6 +1,6 @@
 /*************************************************************************
  * PlotGroupAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import {PlotGroup}     from './objects/PlotGroup.js';
 class PlotGroupAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "PlotGroupAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -57,9 +56,6 @@ class PlotGroupAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "PlotGroupAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -71,7 +67,6 @@ class PlotGroupAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "PlotGroupAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -108,8 +103,6 @@ class PlotGroupAdmin extends Component {
   }
 
   handleSelect(event) {
-    let now = new Date();
-    Log.info( "PlotGroupAdmin.select " + now.toISOString() );
     const id = event.z;
     this.fetchFormData(id);
   }
@@ -150,12 +143,10 @@ class PlotGroupAdmin extends Component {
   }
   
   componentDidMount() {
-    Log.info( "PlotGroupAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "PlotGroupAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -197,30 +188,24 @@ class PlotGroupAdmin extends Component {
   }
   
   fetchList() {
-    Log.info( "PlotGroupAdmin.fetchList : " + this.state.stage );
+    const clsMthd = "PlotGroupAdmin.fetchList";
     const myRequest = SERVERROOT + "/plotGroup/all";
-    const now = new Date();
-    Log.info( "PlotGroupAdmin.fetchList " + now.toISOString() + " Request: " + myRequest );
     if( myRequest !== null ) {
-      fetch(myRequest)
-          .then(this.handleErrors)
-          .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-              return response.json();
-            }
-            throw new TypeError("PlotGroupAdmin(fetchList): response ("+contentType+") must be a JSON string");
-        }).then(json => {
-           Log.info("PlotGroupAdmin.fetchList: JSON retrieved - " + json);
-           this.setState( {returnedText: json, 
-                           updateData: false, 
-                           updateDisplay:true,
-                           stage: "dataFetched" } );
-        }).catch(function(e) { 
-           alert("Problem retrieving PlotGroup list\n"+e);
-           const emsg = "PlotGroupAdmin.fetchList: Fetching PlotGroup list " + e;
-           Log.error(emsg);
-      });
+      const request = async () => {
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "Problem fetching PlotGroup list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - " + e, clsMthd);        
+        }
+      }
+      request();
     }
   }
 
@@ -234,7 +219,6 @@ class PlotGroupAdmin extends Component {
   }
 
   render() {
-    Log.info("PlotGroupAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

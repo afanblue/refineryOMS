@@ -89,22 +89,30 @@
 
   <select id="getTag" resultMap="tagResultMap">
     select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
-         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
       from tag t join tag_type tt on t.tag_type_code = tt.code
      where t.id = #{parm1}
   </select>
   
+  <select id="getAllTags" resultMap="tagResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
+      from tag t join tag_type tt on t.tag_type_code = tt.code
+     order by t.name
+  </select>
+  
   <select id="getTagByName" resultMap="tagResultMap">
     select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
-         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
       from tag t join tag_type tt on t.tag_type_code = tt.code
      where t.name = #{param1} and t.tag_type_code = #{param2}
   </select>
 
   <select id="getAllTagsByType" resultMap="tagResultMap">
-    select t.id, t.name, t.description, t.tag_type_code
+    select t.id, t.name, t.description, t.tag_type_code, t.misc
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
-      from tag t
+         , tt.id tag_type_id
+      from tag t join tag_type tt on t.tag_type_code = tt.code
      where t.tag_type_code = #{parm1}
   </select>
   
@@ -137,21 +145,33 @@
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id
-     where rtt.child_tag_id = #{parm1}
+     where rtt.child_tag_id = #{param1}
   </select>
   
   <select id="getChildTags" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
-     where rtt.parent_tag_id = #{parm1}
+     where rtt.parent_tag_id = #{param1}
   </select>
   
   <select id="getChildren" resultMap="tagletResultMap" >
     select tc.id, tc.name, tc.description, tc.tag_type_code, tc.active
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
-     where rtt.parent_tag_id = #{parm1}
+     where rtt.parent_tag_id = #{param1}
+  </select>
+  
+  <select id="getChildrenOfType" resultMap="tagRelationMap" >
+    select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+      from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
+           join tag tc on rtt.child_tag_id = tc.id 
+     where rtt.parent_tag_id = #{param1}
+       and rtt.code = #{param2}
+  </select>
+  
+  <select id="getTagTypes" resultMap="tagTypeMap" >
+    select id, code, name from tag_type order by code
   </select>
   
   <select id="getSchematicObjectTypes" resultMap="tagTypeMap" >
@@ -173,13 +193,85 @@
       from tag tp join rel_tag_tag rtt on tp.id=rtt.parent_tag_id 
       join tag tc on rtt.child_tag_id=tc.id 
       join sco_ref_tag_vw srtv on tc.id = srtv.id 
-     where tp.id = #{parm1} 
+     where tp.id = #{param1} 
        and tc.tag_type_code = 'SCO' 
-     order by tc.name;
+     order by tc.name
+  </select>
+  
+  <!-- This query retrieves the level child for a given tank to be used as -->
+  <!-- a schematic object.                                                 -->
+  <!--                                                                     -->
+  <!-- It's suboptimal in that the tank/ not-tank show up as a union of    -->
+  <!-- two queries when we only expect to return one row, but it allows us -->
+  <!-- to use the same "query" to fetch both the source and destination    -->
+  <!-- w/o caring about what kind of tag it is.  I hope.                   -->
+  <!--                                                                     -->
+  <!-- One caveat: the source and destination must have an associated tag  -->
+  <!-- for the object, ie, like a tag signifying the state of the object   -->
+  <select id="getTransferTankLevelChild" resultMap="cvMap">
+    select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , av.tag_id inp_id, av.scan_value inp_value
+         , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
+      from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id 
+      join ad_value_vw av on rtt.child_tag_id=av.tag_id 
+      join analog_input aic on aic.tag_id=av.tag_id
+     where t.id = #{param1} 
+       and rtt.code is null 
+       and aic.analog_type_code='L'
+    union
+    select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , av.tag_id inp_id, av.scan_value inp_value
+         , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color
+      from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id 
+      join ad_value_vw av on rtt.child_tag_id=av.tag_id
+     where t.id = #{param1}
+       and t.tag_type_code != 'TK'
+       and rtt.code is null
+  </select>
+  
+  <!-- This query retrieves the children for the end points for a transfer -->
+  <!--                                                                     -->
+  <select id="getTransferChildValues" resultMap="cvMap">
+    select tc.id, tc.name, tc.description, tc.misc, tc.tag_type_code, tc.active
+         , tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long
+         , av.tag_id inp_id, av.scan_value inp_value
+         , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
+      from rel_tag_tag rtt join tag t on t.id=rtt.parent_tag_id
+      join tag tc on tc.id=rtt.child_tag_id 
+      join rel_tag_tag rttc on rtt.child_tag_id = rttc.parent_tag_id
+      join ad_value_vw av on rttc.child_tag_id=av.tag_id 
+     where rtt.parent_tag_id = #{param1} 
+       and rtt.code = #{param2}
+  </select>
+  
+  <!-- This query retrieves the children for the end points for a transfer -->
+  <!--                                                                     -->
+  <select id="getTransferSensorValues" resultMap="cvMap">
+    select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , av.tag_id inp_id, av.scan_value inp_value
+         , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
+      from rel_tag_tag rtt join tag t on t.id=rtt.parent_tag_id
+      join tag tc on tc.id=rtt.child_tag_id 
+      join ad_value_vw av on rtt.child_tag_id=av.tag_id 
+     where rtt.parent_tag_id = #{param1} 
+       and rtt.code = #{param2}
   </select>
   
   <delete id="deleteChildTags">
-    delete from rel_tag_tag where parent_tag_id = #{parm1}
+    delete from rel_tag_tag where parent_tag_id = #{param1}
+  </delete>
+  
+  <delete id="deleteChildTagsOfType">
+    delete from rel_tag_tag where parent_tag_id = #{param1}
+    <if test="param2 is null" >
+      and code is null
+    </if>
+    <if test="param2 is not null" >
+      and code=#{param2}
+    </if>
   </delete>
   
   <update id="updateTag" parameterType="Tag">

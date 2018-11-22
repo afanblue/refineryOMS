@@ -1,6 +1,6 @@
 /*************************************************************************
  * ConfigList.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log       from '../../requests/Log.js';
 
 
 class ConfigList extends Component {
@@ -27,14 +26,13 @@ class ConfigList extends Component {
   }
   
   render() {
-    Log.info("ConfigList.render ");
     var ci = this.props.configItems;
     let configUpdate = this.props.configUpdate;
     let fieldChange = this.props.fieldChange;
     let handleQuit  = this.props.handleQuit;
     return ( 
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="space" width="30px" height="2px"/>Configuration Items</div></h2>
+        <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Configuration Items</div></h2>
         <form id="configForm" onSubmit={(e) => {configUpdate(e)}} >
         <table>
           <thead className="fixedHeader">

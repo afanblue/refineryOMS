@@ -1,6 +1,6 @@
 /*************************************************************************
  * PlotManager.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,6 @@ cont FORM = "PlotManager";
 class PlotManager extends Component {
   constructor(props) {
     super(props);
-    Log.info( FORM+": " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -79,9 +78,6 @@ class PlotManager extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( FORM+".willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -93,7 +89,6 @@ class PlotManager extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( FORM+".shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -133,7 +128,6 @@ class PlotManager extends Component {
   fetchHistory(id,ndx) {
     if( id !== undefined) {
       const myRequest = SERVERROOT + "/ai/history/" + id + "/2";
-      Log.info( FORM+".fetchHistory - Request: " + myRequest );
       fetch(myRequest)
         .then(this.handleErrors)
         .then(response => {
@@ -172,12 +166,10 @@ class PlotManager extends Component {
   }
   
   componentDidMount() {
-    Log.info( FORM+".didMount: " + this.state.stage );
     this.fetchFormData(0);
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( FORM+".didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -230,7 +222,6 @@ class PlotManager extends Component {
   }
   
   componentWillUnmount() {
-    Log.info( FORM+".willUnmount "+this.state.unitTimer);
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
@@ -239,7 +230,6 @@ class PlotManager extends Component {
 
 
   render() {
-    Log.info(FORM+".render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

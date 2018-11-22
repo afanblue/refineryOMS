@@ -1,6 +1,6 @@
 /*************************************************************************
  * Contents.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 import React, {Component} from 'react';
 //import logo from './logo.svg';
-import Log                from './requests/Log.js';
 
 import ActiveAlarms       from './pages/ActiveAlarms.js';
 import ActiveTransfers    from './pages/ActiveTransfers.js';
@@ -38,6 +37,7 @@ import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
 import Last7DaysTransfers from './pages/Last7DaysTransfers.js';
 import ListSchematics     from './pages/ListSchematics.js';
+import PipeAdmin          from './pages/PipeAdmin.js';
 import PlotGroupVars      from './pages/PlotGroupVars.js';
 import PlotGroupAdmin     from './pages/PlotGroupAdmin.js';
 import ProcessUnit        from './pages/ProcessUnit.js';
@@ -49,6 +49,7 @@ import Schematic          from './pages/Schematic.js';
 import SchematicAdmin     from './pages/SchematicAdmin.js';
 import SiteOverview       from './pages/SiteOverview.js';
 import SiteStar           from './pages/SiteStar.js';
+import TagAdmin           from './pages/TagAdmin.js';
 import TankAdmin          from './pages/TankAdmin.js';
 import TransferAdmin      from './pages/TransferAdmin.js';
 import UserAdmin          from './pages/UserAdmin.js';
@@ -59,7 +60,6 @@ require('isomorphic-fetch');
 
 
 function fetchContents( category, option, stage, jsonData, menuSelect ) {
-  Log.info("Contents.fetchContents: category: "+category+", option="+option+", stage="+stage);
   switch ( category ) {
     case "Admin":
       option = (((option==="")||(option===null))?"Users":option);
@@ -82,12 +82,16 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <DigitalOutputAdmin stage={stage} />
         case "Fields":
           return <FieldAdmin stage={stage} />
+        case "Pipes":
+          return <PipeAdmin stage={stage} />
         case "ProcessUnits":
           return <ProcessUnitAdmin stage={stage} />
         case "Roles":
           return <RoleAdmin stage={stage} />
         case "SystemConfiguration":
           return <ConfigAdmin stage={stage} />
+        case "Tags":
+          return <TagAdmin stage={stage} />
         case "Tanks":
           return <TankAdmin stage={stage} />
         case "Users":
@@ -187,7 +191,6 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
 class Contents extends Component {
   constructor(props) {
     super(props);
-    Log.info( "Contents: " + props.selected + ":" + props.option + "/" + props.stage );
     this.state = {
       categorySelected: props.selected,
       pageSelected: props.option,
@@ -200,10 +203,6 @@ class Contents extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    Log.info( "Contents.willRcvProps: " + nextProps.selected +"=?"+this.state.categorySelected
-               + ":" + nextProps.page + "=?" + this.state.pageSelected + " -- " 
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.selected !== this.state.categorySelected
       || nextProps.option !== this.state.pageSelected ) {
       this.setState({ categorySelected: nextProps.selected,
@@ -217,20 +216,12 @@ class Contents extends Component {
   }
 
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "Contents.didUpdate: updated? " + (this.state.updated?"T":"F") );
   }
 
   shouldComponentUpdate(nextProps,nextState) {
-    Log.info( "Contents.shouldUpdate: " + nextProps.selected + ":" 
-               + nextProps.option + "/" + nextState.stage
-               + " - " + (nextState.updateDisplay?"T":"F") );
-    Log.info( "Contents.shouldUpdate: " 
-               + this.state.categorySelected + "/" + nextState.categorySelected + ":" 
-               + this.state.pageSelected + "/" + nextState.pageSelected );
     let sts = this.state.categorySelected !== nextProps.selected;
     sts = sts || this.state.pageSelected !== nextProps.option;
 //    sts = sts || nextState.updateDisplay;
-    Log.info( "Contents.shouldUpdate? : " + (sts?"T":"F") );
     return sts;
   }
   

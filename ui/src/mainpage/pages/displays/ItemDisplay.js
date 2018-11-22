@@ -1,6 +1,6 @@
 /*************************************************************************
  * ItemDisplay.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 
 import React, {Component} from 'react';
 
-import Log      from '../../requests/Log.js';
-//import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
 import moment   from 'moment';
 
@@ -46,7 +44,6 @@ class ItemDisplay extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-//    Log.info( ((nextProps.option===null)?"null":nextProps.option),"ItemDisplay.willRcvProps" );
     this.setState({ id: nextProps.id,
                     items: nextProps.items,
                     plotDetails: nextProps.plotDetails,
@@ -55,10 +52,10 @@ class ItemDisplay extends Component {
   
     getStyles() {
 //    const BLUE_COLOR = "#00a3de";
-    const RED_COLOR = "#7c270b";
+//    const RED_COLOR = "#7c270b";
     const WHITE_COLOR = "#C3C2B9";
-    const GREEN_COLOR = "darkgreen";
-    const YELLOW_COLOR = "yellow";
+//    const GREEN_COLOR = "darkgreen";
+//    const YELLOW_COLOR = "yellow";
 
     return {
       parent: {
@@ -165,10 +162,6 @@ class ItemDisplay extends Component {
  
     var n = new Date();
     var now = n.toLocaleString('en-US');
-    var bottom = zeroValue;
-    var left = this.state.left;
-    var right = this.state.right;
-    var top = maxValue;
 
     let LabelZero = "";
     let AxisZero = "";
@@ -177,7 +170,9 @@ class ItemDisplay extends Component {
 
     let minTime = it[0].x;
     let maxTime = it[it.length-1].x;
+
     let tickValues = this.getTickYValues(minTime,maxTime);
+    const tick0Values = this.getTickValues(zeroValue, maxValue);
 
     const lblZero = name + " - " + tag.description;
 
@@ -190,13 +185,12 @@ class ItemDisplay extends Component {
                              standalone={false} style={styles.lineZero} />
     AxisTwo  = <VictoryAxis domain={[zeroValue, maxValue]} orientation="right" 
                             standalone={false} style={styles.axisZero} tickValues={tick0Values} />;
-    const tick0Values = this.getTickValues(zeroValue, maxValue);
     
     return(
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="space" height="1px" width="100px"/>
+           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>
            {now}
         </div>
       <table>

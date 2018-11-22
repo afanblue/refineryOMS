@@ -151,6 +151,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.UserMapper" />
    </bean>
 
+   <bean id="vertexMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.VertexMapper" />
+   </bean>
+
    <bean id="vesselMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.VesselMapper" />
@@ -257,6 +262,10 @@
       <property name="roleMapper" ref="roleMapper" />
    </bean>
 
+   <bean id="vertexService" class="us.avn.oms.service.impl.VertexServiceImpl">
+      <property name="vertexMapper" ref="vertexMapper" />
+   </bean>
+   
    <bean id="vesselService" class="us.avn.oms.service.impl.VesselServiceImpl">
       <property name="vesselMapper"   ref="vesselMapper" />
    </bean>

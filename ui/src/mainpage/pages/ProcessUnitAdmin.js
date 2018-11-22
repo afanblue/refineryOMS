@@ -1,6 +1,6 @@
 /*************************************************************************
  * ProcessUnitAdmin.js
- * Copyright (C) 2018  A. E. Van Ness
+ * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import {ProcessUnit} from './objects/ProcessUnit.js';
 class ProcessUnitAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info( "ProcessUnitAdmin: " + props.stage );
     this.state = {
       stage: props.stage,
       updateData: false,
@@ -60,9 +59,6 @@ class ProcessUnitAdmin extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.info( "ProcessUnitAdmin.willRcvProps: " + nextProps.selected + ":"
-               + ((nextProps.option===null)?"null":nextProps.option)
-               + "/" + nextProps.stage );
     if( nextProps.stage !== this.state.stage )
     {
       this.setState({ stage: nextProps.stage,
@@ -74,7 +70,6 @@ class ProcessUnitAdmin extends Component {
   
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
-    Log.info( "ProcessUnitAdmin.shouldUpdate? : (" + nextState.stage + ") " + (sts?"T":"F") );
     return sts;
   }
 
@@ -99,7 +94,6 @@ class ProcessUnitAdmin extends Component {
   }
 
   fetchFormData(req) {
-    Log.info( "ProcessUnitAdmin.select - Request:" + req );
     const loc = "ProcessUnitAdmin.select";
     let req0 = new OMSRequest(loc, req, 
                             "Problem selecting process unit "+req, this.finishPUFetch);
@@ -114,8 +108,6 @@ class ProcessUnitAdmin extends Component {
   }    
     
   handleSelect(event) {
-    let now = new Date();
-    Log.info( "ProcessUnitAdmin.select " + now.toISOString() );
     const id = event.z;
     const myRequest = SERVERROOT + "/processunit/" + id;
     this.fetchFormData(myRequest); 
@@ -142,28 +134,25 @@ class ProcessUnitAdmin extends Component {
     const b = JSON.stringify(punew);
     const clsMthd = "ProcessUnitAdmin.update";
     const request = async () => {
-      await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-      Log.info( "update complete",clsMthd );
-      const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
-      this.fetchFormData(myRequest);
+      try {
+        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
+        this.fetchFormData(myRequest);
+      } catch( error ) {
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" XXXX "
+             +"id "+id;
+        alert(emsg+"\n"+error);
+        Log.error(emsg+" - " + error,clsMthd);
+      }
     }
-    try {
-      request();
-    } catch( error ) {
-      const emsg = "Problem "+(id===0?"inserting":"updating")+" XXXX "
-           +"id "+id;
-      alert(emsg+"\n"+error);
-      Log.error(emsg+" - " + error,clsMthd);
-    }
+    request();
   }
   
   componentDidMount() {
-    Log.info( "ProcessUnitAdmin.didMount: " + this.state.stage );
     this.fetchList();
   }
   
   componentDidUpdate( prevProps, prevState ) {
-    Log.info( "ProcessUnitAdmin.didUpdate: " + this.state.stage );
     switch (this.state.stage) {
       case "begin":
         break;
@@ -204,26 +193,23 @@ class ProcessUnitAdmin extends Component {
   }
   
   fetchList() {
-    const clsMthd = "ProcessUnitAdmin.fetchList";
     const myRequest = SERVERROOT + "/processunit/all";
-    const now = new Date();
-    Log.info( now.toISOString() + " Request: " + myRequest,clsMthd );
     if( myRequest !== null ) {
       const request = async () => {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
-                        updateDisplay:true,
-                        stage: "dataFetched" } );
+        try {
+          const response = await fetch(myRequest);
+          const json = await response.json();
+          this.setState( {returnedText: json, 
+                          updateData: false, 
+                          updateDisplay:true,
+                          stage: "dataFetched" } );
+        } catch( e ) {
+          const emsg = "ProcessUnitAdmin.fetchList: Fetching process unit list";
+          alert(emsg+"\n"+e);
+          Log.error(emsg+" - "+e);
+        }
       }
-      try {
-        request();
-      } catch( e ) {
-        const emsg = "ProcessUnitAdmin.fetchList: Fetching process unit list";
-        alert(emsg+"\n"+e);
-        Log.error(emsg+" - "+e);
-      }
+      request();
     }
   }
 
@@ -235,8 +221,8 @@ class ProcessUnitAdmin extends Component {
       var l = this.state.returnedText.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
-      Log.info( "ProcessUnitAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
-      Log.info( "ProcessUnitAdmin.mouseUp: "+lat+","+long);
+//      Log.info( "ProcessUnitAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
+//      Log.info( "ProcessUnitAdmin.mouseUp: "+lat+","+long);
       let punew = Object.assign({},this.state.processUnit);
       let nextCorner = this.state.nextCorner;
       if( nextCorner === 1 ) {
@@ -261,7 +247,6 @@ class ProcessUnitAdmin extends Component {
   }
 
   render() {
-    Log.info("ProcessUnitAdmin.render - stage: "+this.state.stage);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />

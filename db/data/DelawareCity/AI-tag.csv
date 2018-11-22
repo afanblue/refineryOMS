@@ -136,37 +136,37 @@ DCT-0000,External Temperature,AI,,,-75.625879,,-75.625140,Y
 DCP-0000,Barometric Pressure,AI,,,-75.625879,,-75.625140,Y
 DCR-0000,Wind Speed,AI,,,-75.625879,,-75.625140,Y
 DCM-0000,Wind Direction,AI,,,-75.625879,,-75.625140,Y
-DCT-0001,External Temperature – Tomorrow,AI,,,-75.625879,,-75.625140,Y
-DCP-0001,Barometric Pressure – Tomorrow,AI,,,-75.625879,,-75.625140,Y
-DCR-0001,Wind Speed – Tomorrow,AI,,,-75.625879,,-75.625140,Y
-DCM-0001,Wind Direction – Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCT-0001,External Temperature - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCP-0001,Barometric Pressure - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCR-0001,Wind Speed - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCM-0001,Wind Direction - Tomorrow,AI,,,-75.625879,,-75.625140,Y
 C-101,calculation test tag,AI,,,,,,Y
 CT-101,Calculation test 1,AI,,,,,,Y
 CTA-101,External Temperature - deg F,AI,,,,,,Y
 DCL-0000,Accumulated precipitation,AI,,,,,,Y
-RU1CP-SP,Setpoint Unit 1 Crude Pump,AI,,,,,,Y
-RU1GP-SP,Setpoint Unit 1 Gasoline Pump,AI,,,,,,Y
-RU1FOP-SP,Setpoint Unit 1 Fuel Oil Pump,AI,,,,,,Y
-RU1JP-SP,Setpoint Unit 1 Jet Fuel Pump,AI,,,,,,Y
-RU1RFP-SP,Setpoint Unit 1 RFO Pump,AI,,,,,,Y
-RU1LRP-SP,Setpoint Unit 1 LRG Pump,AI,,,,,,Y
-RU1AP-SP,Setpoint Unit 1 Asphalt Pump,AI,,,,,,Y
-RU1LP-SP,Setpoint Unit 1 Lubricant Pump,AI,,,,,,Y
-RU2CP-SP,Setpoint Unit 2 Crude Pump,AI,,,,,,Y
-RU2GP-SP,Setpoint Unit 2 Gasoline Pump,AI,,,,,,Y
-RU2FOP-SP,Setpoint Unit 2 Fuel Oil Pump,AI,,,,,,Y
-RU2JP-SP,Setpoint Unit 2 Jet Fuel Pump,AI,,,,,,Y
-RU2RFP-SP,Setpoint Unit 2 RFO Pump,AI,,,,,,Y
-RU2LRP-SP,Setpoint Unit 2 LRG Pump,AI,,,,,,Y
-RU2AP-SP,Setpoint Unit 2 Asphalt Pump,AI,,,,,,Y
-RU2LP-SP,Setpoint Unit 2 Lubricant Pump,AI,,,,,,Y
-SB1P2-SP,Setpoint for Slip 1 Pump 2,AI,,,,,,Y
-SB1P3-SP,Setpoint for Slip 1 Pump 3,AI,,,,,,Y
-SB1P4-SP,Setpoint for Slip 1 Pump 4,AI,,,,,,Y
-SB2P1-SP,Setpoint for Slip 2 Pump 1,AI,,,,,,Y
-SB2P2-SP,Setpoint for Slip 2 Pump 2,AI,,,,,,Y
-SB2P3-SP,Setpoint for Slip 2 Pump 3,AI,,,,,,Y
-SB2P4-SP,Setpoint for Slip 2 Pump 4,AI,,,,,,Y
+RU1CP-SP,Unit 1 Crude Pump setpoint,AI,,,,,,Y
+RU1GP-SP,Unit 1 Gasoline Pump setpoint,AI,,,,,,Y
+RU1FOP-SP,Unit 1 Fuel Oil Pump setpoint,AI,,,,,,Y
+RU1JP-SP,Unit 1 Jet Fuel Pump setpoint,AI,,,,,,Y
+RU1RFP-SP,Unit 1 RFO Pump setpoint,AI,,,,,,Y
+RU1LRP-SP,Unit 1 LRG Pump setpoint,AI,,,,,,Y
+RU1AP-SP,Unit 1 Asphalt Pump setpoint,AI,,,,,,Y
+RU1LP-SP,Unit 1 Lubricant Pump setpoint,AI,,,,,,Y
+RU2CP-SP,Unit 2 Crude Pump setpoint,AI,,,,,,Y
+RU2GP-SP,Unit 2 Gasoline Pump setpoint,AI,,,,,,Y
+RU2FOP-SP,Unit 2 Fuel Oil Pump setpoint,AI,,,,,,Y
+RU2JP-SP,Unit 2 Jet Fuel Pump setpoint,AI,,,,,,Y
+RU2RFP-SP,Unit 2 RFO Pump setpoint,AI,,,,,,Y
+RU2LRP-SP,Unit 2 LRG Pump setpoint,AI,,,,,,Y
+RU2AP-SP,Unit 2 Asphalt Pump setpoint,AI,,,,,,Y
+RU2LP-SP,Unit 2 Lubricant Pump setpoint,AI,,,,,,Y
+SB1P2-SP,for Slip 1 Pump 2 setpoint,AI,,,,,,Y
+SB1P3-SP,for Slip 1 Pump 3 setpoint,AI,,,,,,Y
+SB1P4-SP,for Slip 1 Pump 4 setpoint,AI,,,,,,Y
+SB2P1-SP,for Slip 2 Pump 1 setpoint,AI,,,,,,Y
+SB2P2-SP,for Slip 2 Pump 2 setpoint,AI,,,,,,Y
+SB2P3-SP,for Slip 2 Pump 3 setpoint,AI,,,,,,Y
+SB2P4-SP,for Slip 2 Pump 4 setpoint,AI,,,,,,Y
 RU1CP-PV,Process variable Unit 1 Crude Pump,AI,,,,,,Y
 RU1GP-PV,Process variable Unit 1 Gasoline Pump,AI,,,,,,Y
 RU1FOP-PV,Process variable Unit 1 Fuel Oil Pump,AI,,,,,,Y

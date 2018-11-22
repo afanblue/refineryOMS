@@ -36,6 +36,10 @@ public interface TagService {
 	Tag getTagByName( String name, String tagType );
 	
 	void deleteChildTags( Long id );
+
+	void deleteChildTagsOfType( Long id, String code );
+
+	Collection<Tag> getAllTags();
 	
 	Collection<Taglet> getAllTagletsByType( String ttc );
 	
@@ -47,12 +51,22 @@ public interface TagService {
 	
 	Collection<RelTagTag> getChildTags( Long id );
 	
+	Collection<RelTagTag> getChildrenOfType( Long id, String code );
+	
 	Collection<Taglet> getChildren( Long id );
 	
+	Collection<TagType> getTagTypes( );
+
 	Collection<TagType> getSchematicObjectTypes( );
 	
 	Collection<ChildValue> getSCMChildValues( Long id );
 	
+	Collection<ChildValue> getTransferTankLevelChild( Long id );
+	
+	Collection<ChildValue> getTransferChildValues( Long id, String code );
+	
+	Collection<ChildValue> getTransferSensorValues( Long id, String code );
+
 	void updateTag( Tag t );
 
 	void updateRelationship( RelTagTag rtt );

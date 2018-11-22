@@ -5,10 +5,22 @@ tag,id,name,output_tag_id
 Data,,,
 id,definition,output_tag_id
 CV-0001,x0 40 + 9 * 5 / 40 -,CTA-101
-Com011-CV,x0 x1 | x2 | x3 |,Com011-DI
-Com012-CV,x0 x1 | x2 | x3 |,Com012-DI
-Com013-CV,x0 x1 | x2 | x3 |,Com013-DI
-Com021-CV,x0 x1 | x2 | x3 |,Com021-DI
-Com023-CV,x0 x1 | x2 | x3 |,Com022-DI
-Com022-CV,x0 x1 | x2 | x3 |,Com023-DI
+Com011-CV,x0 x1 | ,Com011-DI
+Com013-CV,x0 x1 |,Com013-DI
+Com015-CV,x0 x1 |,Com015-DI
+Com021-CV,x0 x1 |,Com021-DI
+Com023-CV,x0 x1 |,Com023-DI
+Com025-CV,x0 x1 |,Com025-DI
+Com012-CV,x0 x1 |,Com012-DI
+Com014-CV,x0 x1 |,Com014-DI
+Com016-CV,x0 x1 |,Com016-DI
+Com022-CV,x0 x1 |,Com022-DI
+Com024-CV,x0 x1 |,Com024-DI
+Com026-CV,x0 x1 |,Com026-DI
+RU1-3-CV,x0 x1 x2 | |,RU1-3-DI
+RU1-4-CV,x0 x1 x2 | |,RU1-4-DI
+RU2-3-CV,x0 x1 x2 | |,RU2-3-DI
+RU2-4-CV,x0 x1 x2 | |,RU2-4-DI
+RU1-2-CV,x0 x1 |,RU1-2-DI
+RU2-2-CV,x0 x1 | ,RU2-2-DI
 End
