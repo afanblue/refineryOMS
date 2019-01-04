@@ -13,4 +13,5 @@ DataCollectionAO,Y
 DataCollectionDO,Y
 CalculatedVariable,Y
 ControlBlock,Y
+PseudoRandomEvents,N
 End

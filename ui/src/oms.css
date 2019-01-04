@@ -107,6 +107,18 @@ element {
   width: 240px;
 }
 
+.oms-spacing-480 {
+  display: table-cell;
+  padding:2px;
+  width: 480px;
+}
+
+.oms-spacing-540 {
+  display: table-cell;
+  padding:2px;
+  width: 540px;
+}
+
 .oms-left-menu {
   background-color: var(--main-bg-color); 
   color:#d4e6f4; 
@@ -119,7 +131,7 @@ element {
 .oms-menu-text {
   background-color: var(--main-bg-color);
   color:rgb(195,194,185);
-  font-size: 12px;
+  font-size: 10px;
   text-align: left;
   font-weight: bold;
   padding: 0px 0px 5px 0px;
@@ -127,6 +139,17 @@ element {
   vertical-align: top;
   cursor: pointer;
 }
+
+.oms-menu-text a.selected {
+  background-color: #ffffff !important;
+  box-shadow: inset 2px 0 0 #f05451;
+  padding: 0 1.0em 0 1.0em;
+  width: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: #29324e;
+}
+
 
 .oms-padded-menu-text {
   background-color: var(--main-bg-color);
@@ -526,6 +549,7 @@ html>body tbody.scrollContent-medium {
 	vertical-align:top;
 }
 
+/* make TD elements pretty. Provide alternating classes for striping the table */
 html>body tbody.scrollContent-narrow {
 	display: block;
 	height: 360px;
@@ -534,7 +558,14 @@ html>body tbody.scrollContent-narrow {
 	vertical-align:top;
 }
 
-/* make TD elements pretty. Provide alternating classes for striping the table */
+html>body tbody.scrollContent-thin {
+	display: block;
+	height: 360px;
+	overflow: auto;
+	width: 150px;
+	vertical-align:top;
+}
+
 /* http://www.alistapart.com/articles/zebratables/                             */
 tbody.scrollContent td, tbody.scrollContent tr.normalRow td {
 	background: var(--main-bg-color);

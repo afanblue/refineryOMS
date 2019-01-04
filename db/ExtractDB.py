@@ -156,15 +156,6 @@ qry = "select name from privilege"
 addData( crsr, tbl, qry, hdr )
 
 
-''' vessel_type '''
-tbl = "vessel_type"
-hdr = ( "Table,"+tbl+",,",
-        "ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
-        "Data,,,")
-qry = "select name,code,quantity from vessel_type"
-addData( crsr, tbl, qry, hdr )
-
-
 ''' webpage '''
 tbl = "page"
 hdr = ( "Table,tbl",
@@ -477,16 +468,14 @@ qry = ("select t.name id, api, density, height, diameter, units, content_type_co
 addData( crsr, tbl, qry, hdr )
 
 
-''' vessel '''
-tbl = "vessel"
+''' container '''
+tbl = "container"
 hdr = ( "Table,"+tbl+",,",
         "ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
         "tag,id,name,id",
-        "customer,id,name,customer_id",
         "Data")
-qry = ("select t.name id, v.name, v.quantity, c.name customer_id "
-       "from vessel v join tag t on v.id=t.id "
-      "join customer c on v.customer_id = c.id")
+qry = ("select t.name id, v.name, v.quantity "
+       "from container v join tag t on v.id=t.id")
 addData( crsr, tbl, qry, hdr )
 
 

@@ -71,6 +71,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.ConfigMapper" />
    </bean>
 
+   <bean id="carrierMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CarrierMapper" />
+   </bean>
+
    <bean id="controlBlockMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.ControlBlockMapper" />
@@ -106,6 +111,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.MenuMapper" />
    </bean>
 
+   <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
+   </bean>
+
    <bean id="plotGroupMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.PlotGroupMapper" />
@@ -126,6 +136,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.RoleMapper" />
    </bean>
 
+   <bean id="shipMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ShipMapper" />
+   </bean>
+
    <bean id="tagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.TagMapper" />
@@ -134,6 +149,11 @@
    <bean id="tankMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
       <property name="mapperInterface"   value="us.avn.oms.mapper.TankMapper" />
+   </bean>
+
+   <bean id="trainMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TrainMapper" />
    </bean>
 
    <bean id="transferMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
@@ -154,11 +174,6 @@
    <bean id="vertexMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.VertexMapper" />
-   </bean>
-
-   <bean id="vesselMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface"   value="us.avn.oms.mapper.VesselMapper" />
    </bean>
 
 <!-- Define service beans -->
@@ -185,7 +200,12 @@
    </bean>
    
    <bean id="configService" class="us.avn.oms.service.impl.ConfigServiceImpl">
-      <property name="configMapper" ref="configMapper" />
+      <property name="configMapper"     ref="configMapper" />
+   </bean>
+   
+   <bean id="carrierService" class="us.avn.oms.service.impl.CarrierServiceImpl">
+      <property name="carrierMapper"   ref="carrierMapper" />
+      <property name="tagMapper"       ref="tagMapper" />
    </bean>
    
    <bean id="controlBlockService" class="us.avn.oms.service.impl.ControlBlockServiceImpl">
@@ -208,9 +228,9 @@
    </bean>
    
    <bean id="fieldService" class="us.avn.oms.service.impl.FieldServiceImpl">
-      <property name="configMapper" ref="configMapper" />
-      <property name="fieldMapper"  ref="fieldMapper" />
-      <property name="tagMapper"    ref="tagMapper" />
+      <property name="configMapper"  ref="configMapper" />
+      <property name="fieldMapper"   ref="fieldMapper" />
+      <property name="tagMapper"     ref="tagMapper" />
    </bean>
    
    <bean id="historyService" class="us.avn.oms.service.impl.HistoryServiceImpl">
@@ -218,7 +238,11 @@
    </bean>
    
    <bean id="menuService" class="us.avn.oms.service.impl.MenuServiceImpl">
-      <property name="menuMapper" ref="menuMapper" />
+      <property name="menuMapper"    ref="menuMapper" />
+   </bean>
+   
+   <bean id="orderService" class="us.avn.oms.service.impl.OrderServiceImpl">
+      <property name="orderMapper"   ref="orderMapper" />
    </bean>
    
    <bean id="plotGroupService" class="us.avn.oms.service.impl.PlotGroupServiceImpl">
@@ -237,6 +261,11 @@
       <property name="roleMapper" ref="roleMapper" />
    </bean>
    
+   <bean id="shipService" class="us.avn.oms.service.impl.ShipServiceImpl">
+      <property name="shipMapper"        ref="shipMapper" />
+      <property name="tagMapper"         ref="tagMapper" />
+   </bean>
+   
    <bean id="tagService" class="us.avn.oms.service.impl.TagServiceImpl">
       <property name="tagMapper" ref="tagMapper" />
    </bean>
@@ -245,6 +274,11 @@
       <property name="tankMapper"        ref="tankMapper" />
       <property name="configMapper"      ref="configMapper" />
       <property name="analogInputMapper" ref="analogInputMapper" />
+   </bean>
+   
+   <bean id="trainService" class="us.avn.oms.service.impl.TrainServiceImpl">
+      <property name="trainMapper"       ref="trainMapper" />
+      <property name="tagMapper"         ref="tagMapper" />
    </bean>
    
    <bean id="transferService" class="us.avn.oms.service.impl.TransferServiceImpl">
@@ -264,10 +298,6 @@
 
    <bean id="vertexService" class="us.avn.oms.service.impl.VertexServiceImpl">
       <property name="vertexMapper" ref="vertexMapper" />
-   </bean>
-   
-   <bean id="vesselService" class="us.avn.oms.service.impl.VesselServiceImpl">
-      <property name="vesselMapper"   ref="vesselMapper" />
    </bean>
    
 </beans>

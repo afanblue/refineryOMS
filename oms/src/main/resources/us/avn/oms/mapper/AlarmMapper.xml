@@ -151,6 +151,13 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
                 , acknowledged, active, alarm_msg_id ) 
     values ( #{alarmTypeId}, #{tagTypeId}, #{tagId}, #{almOccurred}
            , #{acknowledged}, #{active}, #{alarmMsgId} )
+    on duplicate key update
+             tag_type_id = #{tagTypeId}
+           , tag_id = #{tagId}
+           , alm_occurred = #{almOccurred}
+           , acknowledged = #{acknowledged}
+           , act = #{active}
+           , alarm_msg_id = #{alarmMsgId}
   </insert>
 
   <insert id="insertAlarmMessage">

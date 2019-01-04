@@ -28,6 +28,7 @@ import AnalogInputAdmin   from './pages/AnalogInputAdmin.js';
 import AnalogOutputAdmin  from './pages/AnalogOutputAdmin.js';
 import CalcVarAdmin       from './pages/CalcVarAdmin.js';
 import ConfigAdmin        from './pages/ConfigAdmin.js';
+import CarrierAdmin       from './pages/CarrierAdmin.js';
 import ControlBlockAdmin  from './pages/ControlBlockAdmin.js';
 import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
@@ -37,6 +38,7 @@ import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
 import Last7DaysTransfers from './pages/Last7DaysTransfers.js';
 import ListSchematics     from './pages/ListSchematics.js';
+import OrderAdmin         from './pages/OrderAdmin.js';
 import PipeAdmin          from './pages/PipeAdmin.js';
 import PlotGroupVars      from './pages/PlotGroupVars.js';
 import PlotGroupAdmin     from './pages/PlotGroupAdmin.js';
@@ -53,13 +55,13 @@ import TagAdmin           from './pages/TagAdmin.js';
 import TankAdmin          from './pages/TankAdmin.js';
 import TransferAdmin      from './pages/TransferAdmin.js';
 import UserAdmin          from './pages/UserAdmin.js';
-import VesselAdmin        from './pages/VesselAdmin.js';
 //require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 
 
 function fetchContents( category, option, stage, jsonData, menuSelect ) {
+  let pageName = category + "." + option;
   switch ( category ) {
     case "Admin":
       option = (((option==="")||(option===null))?"Users":option);
@@ -74,6 +76,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <AnalogOutputAdmin stage={stage} />
         case "CalcVariables":
           return <CalcVarAdmin stage={stage} />
+        case "Carriers":
+          return <CarrierAdmin stage={stage} />
         case "ControlBlocks":
           return <ControlBlockAdmin stage={stage} />
         case "DigitalInputs":
@@ -96,20 +100,34 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <TankAdmin stage={stage} />
         case "Users":
           return <UserAdmin stage={stage} />
-        case "Vessels":
-          return <VesselAdmin stage={stage} />
         default:
-          return <DefaultContents />    
+          return <DefaultContents pageName={pageName}/>    
       }     
+    case "Orders" :
+      option = (((option==="")||(option===null))?"Active":option);
+      switch ( option ) {
+        case "Active":
+          return <OrderAdmin stage={stage} />
+        case "LastWeeksOrders":
+          return <DefaultContents pageName={pageName} />
+        case "LastMonthsOrders":
+          return <DefaultContents pageName={pageName} />
+        case "Purchases":
+          return <DefaultContents pageName={pageName} />
+        case "Sales":
+          return <DefaultContents pageName={pageName} />
+        default:
+          return <DefaultContents pageName={pageName} />
+      }
     case "Alarms" :
       option = (((option==="")||(option===null))?"ActiveAlarms":option);
       switch ( option ) {
         case "AlarmsList":
-          return <DefaultContents />
+          return <DefaultContents pageName={pageName} />
         case "ActiveAlarms":
           return <ActiveAlarms stage={stage} />
         default:
-          return <DefaultContents />    
+          return <DefaultContents pageName={pageName} />
       }
     case "FieldDisplays":
       option = (((option==="")||(option===null))?"SiteOverview":option);
@@ -136,7 +154,7 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <AdHoc stage={stage} />
         default:
           if( typeof option === 'string' ) {
-            return <DefaultContents />
+            return <DefaultContents pageName={pageName} />
           } else {
             return <PlotGroupVars stage={stage}
                               id={option}
@@ -180,10 +198,10 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
         case "ScheduledTransfers":
           return <ScheduledTransfers stage={stage}/>
         default:
-          return <DefaultContents />    
+          return <DefaultContents pageName={pageName} />
       }
     default:
-      return <DefaultContents />
+      return <DefaultContents pageName={pageName} />
   }
 
 }

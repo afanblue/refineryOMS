@@ -21,6 +21,7 @@ import React, { Component } from 'react';
 
 import './reset.css';
 import './oms.css';
+import './react-datetime.css';
 
 import Log          from './mainpage/requests/Log.js';
 import ClassificationMenu from './frames/ClassificationMenu.js';
@@ -40,6 +41,16 @@ function AppDisplay(props) {
   let selected = props.selected;
   let catSelect = props.handleCatSelect;
   let menuSelect = props.handleMenuSelect;
+  if( option === "" || option === undefined || option === null ) {
+    if(      selected === "Admin" )         { option = "Users"; }
+    else if( selected === "Alarms" )        { option = "ActiveAlarms"; }
+    else if( selected === "FieldDisplays" ) { option = "SiteOverview"; }
+    else if( selected === "Orders" )        { option = "Active"; }
+    else if( selected === "PlotGroups" )    { option = "SiteStarPlot"; }
+    else if( selected === "ProcessUnits" )  { option = "ProcessUnits"; }
+    else if( selected === "Schematics" )    { option = "ListSchematics"; }
+    else if( selected === "Transfers" )     { option = "ActiveTransfers"; }
+  }
   return (
     <table className="oms-table" width="100%">
       <tbody>
@@ -55,6 +66,7 @@ function AppDisplay(props) {
         <td className='oms-menu' width="20%">
           <MenuList menus={menus}
                     selected={selected}
+                    option={option}
                     handleMenuSelect={menuSelect}
           />
         </td>

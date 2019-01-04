@@ -47,6 +47,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.ConfigMapper" />
    </bean>
 
+   <bean id="carrierMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CarrierMapper" />
+   </bean>
+
    <bean id="controlBlockMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.ControlBlockMapper" />
@@ -67,6 +72,16 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.DigitalOutputMapper" />
    </bean>
 
+   <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
+   </bean>
+
+   <bean id="referenceCodeMapper"  class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ReferenceCodeMapper" />
+   </bean>
+   
    <bean id="simioMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.SimIOMapper" />
@@ -87,14 +102,14 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.TransferMapper" />
    </bean>
 
+   <bean id="trainMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TrainMapper" />
+   </bean>
+
    <bean id="unitMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.UnitMapper" />
-   </bean>
-
-   <bean id="vesselMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface"   value="us.avn.oms.mapper.VesselMapper" />
    </bean>
 
    <bean id="wdogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
@@ -128,6 +143,11 @@
       <property name="configMapper"        ref="configMapper" />
    </bean>
    
+   <bean id="carrierService" class="us.avn.oms.service.impl.CarrierServiceImpl">
+      <property name="carrierMapper"       ref="carrierMapper" />
+      <property name="tagMapper"           ref="tagMapper" />
+   </bean>
+   
    <bean id="controlBlockService" class="us.avn.oms.service.impl.ControlBlockServiceImpl">
       <property name="controlBlockMapper"  ref="controlBlockMapper" />
    </bean>
@@ -147,6 +167,14 @@
       <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
+   <bean id="orderService" class="us.avn.oms.service.impl.OrderServiceImpl">
+      <property name="orderMapper"         ref="orderMapper" />
+   </bean>
+   
+   <bean id="refCodeService" class="us.avn.oms.service.impl.ReferenceCodeServiceImpl">
+      <property name="referenceCodeMapper" ref="referenceCodeMapper" />
+   </bean>
+   
    <bean id="simioService" class="us.avn.oms.service.impl.SimIOServiceImpl">
       <property name="simIoMapper"         ref="simioMapper" />
    </bean>
@@ -162,6 +190,11 @@
       <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
+   <bean id="trainService" class="us.avn.oms.service.impl.TrainServiceImpl">
+      <property name="trainMapper"       ref="trainMapper" />
+      <property name="tagMapper"         ref="tagMapper" />
+   </bean>
+   
    <bean id="transferService" class="us.avn.oms.service.impl.TransferServiceImpl">
       <property name="transferMapper"      ref="transferMapper" />
       <property name="tagMapper"           ref="tagMapper" />
@@ -169,12 +202,6 @@
    
    <bean id="unitService" class="us.avn.oms.service.impl.UnitServiceImpl">
       <property name="unitMapper"          ref="unitMapper" />
-   </bean>
-   
-   <bean id="vesselService" class="us.avn.oms.service.impl.VesselServiceImpl">
-      <property name="vesselMapper"        ref="vesselMapper" />
-      <property name="customerMapper"      ref="customerMapper" />
-      <property name="tagMapper"           ref="tagMapper" />
    </bean>
    
    <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">

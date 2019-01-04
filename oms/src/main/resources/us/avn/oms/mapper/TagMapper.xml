@@ -114,6 +114,7 @@
          , tt.id tag_type_id
       from tag t join tag_type tt on t.tag_type_code = tt.code
      where t.tag_type_code = #{parm1}
+     order by t.name
   </select>
   
   <select id="getAllTagletsByType" resultMap="tagletResultMap">
@@ -212,10 +213,12 @@
     select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
          , av.tag_id inp_id, av.scan_value inp_value
+         , tc.name inp_tag, tc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
       from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id 
       join ad_value_vw av on rtt.child_tag_id=av.tag_id 
       join analog_input aic on aic.tag_id=av.tag_id
+      join tag tc on aic.tag_id=tc.id
      where t.id = #{param1} 
        and rtt.code is null 
        and aic.analog_type_code='L'
@@ -223,9 +226,11 @@
     select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
          , av.tag_id inp_id, av.scan_value inp_value
+         , tc.name inp_tag, tc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color
       from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id 
       join ad_value_vw av on rtt.child_tag_id=av.tag_id
+      join tag tc on rtt.child_tag_id=tc.id
      where t.id = #{param1}
        and t.tag_type_code != 'TK'
        and rtt.code is null
@@ -237,11 +242,13 @@
     select tc.id, tc.name, tc.description, tc.misc, tc.tag_type_code, tc.active
          , tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long
          , av.tag_id inp_id, av.scan_value inp_value
+         , tgc.name inp_tag, tgc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
       from rel_tag_tag rtt join tag t on t.id=rtt.parent_tag_id
       join tag tc on tc.id=rtt.child_tag_id 
       join rel_tag_tag rttc on rtt.child_tag_id = rttc.parent_tag_id
-      join ad_value_vw av on rttc.child_tag_id=av.tag_id 
+      join ad_value_vw av on rttc.child_tag_id=av.tag_id
+      join tag tgc on rttc.child_tag_id=tgc.id 
      where rtt.parent_tag_id = #{param1} 
        and rtt.code = #{param2}
   </select>
@@ -252,6 +259,7 @@
     select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
          , av.tag_id inp_id, av.scan_value inp_value
+         , tc.name inp_tag, tc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
       from rel_tag_tag rtt join tag t on t.id=rtt.parent_tag_id
       join tag tc on tc.id=rtt.child_tag_id 
@@ -299,10 +307,14 @@
   <insert id="insertTag" parameterType="Tag" useGeneratedKeys="true"
           keyProperty="id" keyColumn="ID">
     insert tag
-           ( name, description, tag_type_code, misc
-           , c1_lat, c1_long, c2_lat, c2_long, active )
+          ( name, description, tag_type_code, misc
+          , c1_lat, c1_long, c2_lat, c2_long, active )
     values( #{name}, #{description}, #{tagTypeCode}, #{misc}
           , #{c1Lat}, #{c1Long}, #{c2Lat}, #{c2Long}, #{active})
+    on duplicate key update
+            tag_type_code = #{tagTypeCode}, misc = #{misc}
+          , c1_lat = #{c1Lat}, c1_long = #{c1Long}
+          , c2_lat = #{c2Lat}, c2_long = #{c2Long}, active = #{active}
     <selectKey keyProperty="id" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID();
     </selectKey>

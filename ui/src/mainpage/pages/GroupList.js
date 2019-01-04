@@ -20,8 +20,9 @@ import React, {Component} from 'react';
 import {SERVERROOT}  from '../../Parameters.js';
 //import {ProcessUnit} from './objects/ProcessUnit.js';
 //import {Tag}         from './objects/Tag.js';
-import {CE, IL3}     from './objects/ListObjects.js';
+//import {CE, IL3}     from './objects/ListObjects.js';
 import Log           from '../requests/Log.js';
+import PlotGroupVars from './PlotGroupVars.js';
 import SiteOverview  from './SiteOverview.js';
 import Waiting       from './Waiting.js';
 
@@ -35,8 +36,10 @@ class GroupList extends Component {
       updateData: false,
       updateDisplay: true,
       returnedText: null,
-      menuSelect: props.menuSelect
+      option: null,
+      activity: null
     };
+    this.menuSelect = this.menuSelect.bind(this);
   }
   
   handleErrors(response) {
@@ -71,14 +74,24 @@ class GroupList extends Component {
     this.fetchList();
   }
   
+  menuSelect(event) {
+    let z = event.z;
+    if( z === undefined ) {z=event.z1;}
+    if( z === undefined ) {z=event.z2;}
+    if( z === undefined ) {z=event.z3;}    
+    this.setState({option:z,activity:"begin" });
+  }
+  
   generateList() {
-    let menuSelect = this.state.menuSelect;
+    let menuSelect = this.menuSelect;
     let data = this.state.returnedText;
-    let puColumns = [];
+//    let puColumns = [];
     if( data[0].id === 0) {
       data.shift(1);
     }
-    data.forEach((i,x) => {
+    let option = (this.state.option===null)?data[0].id:this.state.option;
+    let activity = (this.state.activity===null)?"begin":this.state.activity;
+/*    data.forEach((i,x) => {
       if( !((x+1) % 3) ) {
         let CE0 = new CE(data[x-2].id,data[x-2].name);
         let CE1 = new CE(data[x-1].id,data[x-1].name);
@@ -100,7 +113,7 @@ class GroupList extends Component {
       let il = new IL3(CE0,CE1,CE2);
       puColumns.push(il);
     }
-    
+*/    
     return(
       <div>
       <h2>
@@ -108,35 +121,38 @@ class GroupList extends Component {
            <img src="./images/spacer.png" alt="" height="1px" width="100px"/>Process Units
         </div>
       </h2>
-      <table className={"scrollTable"}>
-        <thead className={"fixedHeader"}>
+      <table>
+        <tbody>
           <tr>
-	        <td className={"oms-spacing-180"}>Group Name</td>
-	        <td className={"oms-spacing-180"}>Group Name</td>
-            <td className={"oms-spacing-180"}>Group Name</td>
+            <td>
+              <table>
+                <thead className={"fixedHeader"}>
+                  <tr>
+      	            <td className={"oms-spacing-180"}>Group Name</td>
+                  </tr>
+                </thead>
+                <tbody className={"scrollContent-thin"}>
+                  {data.map( 
+                    function(n,x) {
+                      const z1 = n.id;
+                      return (
+                        <tr key={x}>
+                          <td className={"oms-spacing-150"}>
+                            <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{n.name}</a>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
+            </td>
+            <td className={"oms-spacing-480"}>
+              <PlotGroupVars stage={activity}
+                             id={option}
+                             source={"id"} />
+            </td>
           </tr>
-        </thead>
-        <tbody className={"scrollContent"}>
-          {puColumns.map( 
-            function(n,x) {
-              const z1 = n.i1.id;
-              const z2 = n.i2.id;
-              const z3 = n.i3.id;
-              return (
-                <tr key={x}>
-                  <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{n.i1.name}</a>
-                  </td>
-                  <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z2} onClick={() => {menuSelect({z2})}} >{n.i2.name}</a>
-                  </td>
-                  <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z3} onClick={() => {menuSelect({z3})}} >{n.i3.name}</a>
-                  </td>
-                </tr>
-              )
-            })
-          }
         </tbody>
       </table>
       </div>
@@ -156,3 +172,27 @@ class GroupList extends Component {
 }
 
 export default GroupList;
+
+/*
+          {puColumns.map(
+            function(n,x) {
+              const z1 = n.i1.id;
+              const z2 = n.i2.id;
+              const z3 = n.i3.id;
+              return (
+                <tr key={x}>
+                  <td className={"oms-spacing-180"}>
+                    <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{n.i1.name}</a>
+                  </td>
+                  <td className={"oms-spacing-180"}>
+                    <a className={"oms-menu-text"} id={z2} onClick={() => {menuSelect({z2})}} >{n.i2.name}</a>
+                  </td>
+                  <td className={"oms-spacing-180"}>
+                    <a className={"oms-menu-text"} id={z3} onClick={() => {menuSelect({z3})}} >{n.i3.name}</a>
+                  </td>
+
+                </tr>
+              )
+            })
+          }
+*/

@@ -92,8 +92,11 @@
   
   <insert id="insertField" parameterType="Field">
     insert Field
-         ( id, satellite_image, road_image )
-   values( #{id}, #{satelliteImage}, #{roadImage})
+          ( id, satellite_image, road_image )
+    values( #{id}, #{satelliteImage}, #{roadImage})
+    on duplicate key update
+            satellite_image = #{satelliteImage}
+          , road_image = #{roadImage}
   </insert>
   
 </mapper>

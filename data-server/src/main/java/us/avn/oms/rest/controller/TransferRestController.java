@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.IdName;
+import us.avn.oms.domain.Tag;
 import us.avn.oms.domain.Transfer;
+import us.avn.oms.service.TagService;
 import us.avn.oms.service.TransferService;
 
 @RestController
@@ -43,6 +45,9 @@ public class TransferRestController {
     private Logger log = LogManager.getLogger(this.getClass().getName());
 
 	@Autowired 
+	TagService tagService;
+	
+	@Autowired
 	TransferService transferService;
 	
 	
@@ -94,6 +99,14 @@ public class TransferRestController {
 		if( x.getId() != 0 ) {
 			transferService.updateTransfer(x);
 		} else {
+			if( "T".equals(x.getTransferType())) {
+				Tag t = new Tag(0L,x.getName().substring(0,10));
+				t.setActive("Y");
+				t.setDescription("Transfer from "+x.getSource()+" to "+x.getDestination());
+				t.setTagTypeCode(Tag.TRANSFER);
+				Long tagId = tagService.insertTag(t);
+				x.setTagId(tagId);
+			}
 			transferService.insertTransfer(x);
 		}
 	}

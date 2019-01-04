@@ -1,0 +1,4 @@
+Table,container,,
+ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+tag,id,name,id
+Data

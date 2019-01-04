@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -224,13 +224,13 @@ public class AIDataSimulator {
 	 *      | refinery unit ->            |  FAST * fraction      |
 	 *      |    refined tank             |    defined in CONFIG  |
 	 *      +-----------------------------+-----------------------+
-	 *      | ship -> crude tank          |     FAST bbl /min     |
+	 *      | ship/dock -> crude tank     |     FAST bbl /min     |
 	 *      +-----------------------------+-----------------------+
 	 *      | refined tank -> tank truck  |     SLOW bbl /min     |
 	 *      +-----------------------------+-----------------------+
-	 *      | refined tank -> tank car    |     SLOW bbl /min     |
+	 *      | refined tank -> tank car    |     FAST bbl /min     |
 	 *      +-----------------------------+-----------------------+
-	 *      | refined tank -> ship        |     FAST bbl / min    |
+	 *      | refined tank -> ship/dock   |     FAST bbl / min    |
 	 *      +-----------------------------+-----------------------+
 	 *      | anything else               |     0 (no transfer)   |
 	 *      +-----------------------------+-----------------------+
@@ -268,9 +268,13 @@ public class AIDataSimulator {
 						if ( Tag.SHIP.equals(dest.getTagTypeCode())) {
 							delta = FAST;
 						} else if ( Tag.TANK_CAR.equals(dest.getTagTypeCode())) {
-							delta = SLOW;
+							delta = FAST;
 						} else if ( Tag.TANK_TRUCK.equals(dest.getTagTypeCode())) {
 							delta = SLOW;
+						} else if ( Tag.SHIP.equals(dest.getTagTypeCode())) {
+							delta = FAST;
+						} else if ( Tag.DOCK.equals(dest.getTagTypeCode())) {
+							delta = FAST;
 						} else {
 							delta = 0D;
 						}
@@ -287,6 +291,7 @@ public class AIDataSimulator {
 				delta = FAST * f / 100D;
 				break;
 			case Tag.SHIP :
+			case Tag.DOCK :
 				Tank dstTk = tks.getTank(x.getDestinationId());
 				if( Tag.TANK.equals(dest.getTagTypeCode())) {
 					if( Tank.CRUDE.equals(dstTk.getContentTypeCode())) {

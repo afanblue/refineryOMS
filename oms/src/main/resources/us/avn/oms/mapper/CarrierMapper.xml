@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.CarrierMapper">
+
+  <!-- cache / -->
+<!-- 
+	Collection<Carrier> getAllCarriers( );
+	
+	Carrier getCarrier( String key);
+	
+	Integer updateCarrier( Carrier c );
+
+	Integer insertCarrier( Carrier c );
+-->  
+
+  <resultMap id="carrierResultMap" type="Carrier">
+     <result property="id"              column="id" />
+     <result property="name"            column="name" />
+     <result property="description"     column="description" />
+     <result property="tagTypeCode"     column="tag_type_code" />
+     <result property="misc"            column="misc" />
+     <result property="active"          column="active" />
+     <result property="quantity"        column="quantity"/>
+  </resultMap>
+
+
+  <select id="getAllCarriers" resultMap="carrierResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, t.misc, t.active, s.quantity
+      from tag t
+      join (select carrier_id id, sum(no_duplicates * volume) quantity 
+              from hold group by carrier_id) s on t.id=s.id
+     where t.tag_type_code in ('S','TT','TR')
+       and t.active = 'Y'
+     order by 2
+  </select>
+
+  <select id="getCarrier" resultMap="carrierResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, t.misc, t.active, coalesce(s.quantity,0) quantity
+      from tag t
+      left outer join (select carrier_id id, sum(no_duplicates * volume) quantity 
+              from hold group by carrier_id) s on t.id=s.id
+   	 where t.id = #{parm1}
+  </select>
+
+</mapper>

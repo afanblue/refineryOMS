@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 
 
@@ -37,10 +35,10 @@ public class Transfer extends OMSObject implements Serializable {
 	public static final String PENDING = "P";
 	public static final String SCHEDULED = "S";
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	protected Long    id;
 	protected Long    tagId;
 	protected String  name;
+	protected String  contentsCode;
 	protected Long    statusId;
 	protected String  status;
 	protected Long    transferTypeId;
@@ -80,6 +78,7 @@ public class Transfer extends OMSObject implements Serializable {
     	id = x.id;
     	tagId = x.tagId;
     	name = x.name;
+    	contentsCode = x.contentsCode;
     	statusId = x.statusId;
     	transferTypeId = x.transferTypeId;
     	sourceId = x.sourceId;
@@ -124,6 +123,15 @@ public class Transfer extends OMSObject implements Serializable {
 	
 	public void setName(String n) {
 		this.name = n;
+	}
+	
+
+	public String getContentsCode() {
+		return contentsCode;
+	}
+
+	public void setContentsCode(String contentsCode) {
+		this.contentsCode = contentsCode;
 	}
 	
 

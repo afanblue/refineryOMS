@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.ShipMapper">
+
+  <!-- cache / -->
+    
+  <resultMap id="srm" type="Ship">
+    <result property="id"              column="id" />
+    <result property="fullName"        column="full_name" />
+    <result property="ownerId"         column="owner_id" />
+    <result property="owner"           column="owner" />
+    <result property="name"            column="name" />
+    <result property="description"     column="description" />
+    <result property="tagTypeCode"     column="tag_type_code" />
+    <result property="active"          column="active" />
+  </resultMap>
+  
+  
+  <select id="getAllShips" resultMap="srm">
+    select s.id, s.full_name, c.id owner_id, c.name owner
+      from ship s join customer c on s.owner_id = c.id
+     order by s.full_name
+  </select>
+
+  <select id="getShip" resultMap="srm">
+    select s.id, t.name, s.full_name, c.id owner_id, c.name owner 
+         , t.description, t.tag_type_code, t.active
+	  from ship s join tag t on s.id = t.id
+	  join customer c on s.owner_id=c.id
+	 where s.id = #{parm1} 
+  </select>
+  
+  <select id="getShipByName" resultMap="srm">
+    select s.id, t.name, s.full_name, c.id owner_id, c.name owner
+         , t.description, t.tag_type_code, t.active
+	  from ship s join tag t on s.id = t.id
+	  join customer c on s.owner_id = c.id
+	 where t.name = #{parm1} 
+  </select>
+  
+  <update id="updateShip" parameterType="Ship">
+    update ship
+       set full_name = #{fullName}
+         , ownerId = #{ownerId}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertShip" parameterType="Ship">
+    insert ship
+         ( id, full_name, owner_id )
+   values( #{id}, #{fullName}, #{ownerId})
+  </insert>
+  
+</mapper>

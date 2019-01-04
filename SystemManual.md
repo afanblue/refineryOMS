@@ -157,6 +157,7 @@ I like to think of these as intuitively obvious, but there are some properties o
    | ```S``` | ```Ship``` | Ship |
    | ```SCM``` | ```Schematic``` | Refinery Schematic |
    | ```SCO``` | ```SchematicObject``` | Objects for Refinery Schematics |
+   | ```T``` | ```Train``` | Train, e.g., collection of tank cars |
    | ```TC``` | ```TankCar``` | Railroad tank car |
    | ```TK``` | ```Tank``` | Liquid container |
    | ```TT``` | ```TankTruck``` | Tank truck |
@@ -304,11 +305,24 @@ For convenience, there are views used to specify
 -   the types of tags that can be used as schematic objects (SCM_OBJECT_VW) and
 -   the "contents" of schematics, fields, process units (CHILD_VALUE_VW)
 
+### Shipping Vessels
+
+The following are used to receive crude or ship product
+-   Trucks
+-   Trains, composed of multiples of Tank Cars
+-   Ships, composed of multiple holds 
+
+Here, we make the simplifying assumption that all shipping vessels contain the same product.  This is undoubtedly incorrect.
+
+Containers specify the discrete holds in a ship or a train (the tank cars).  As such a container has only 
+
+Ships tie up at docks at which they are unloaded or loaded.  Also, a ship has multiple holds from which/to which product is transferred.   
+
 ### Tags
 
 Tags are the root definition object.  The meaning of most of the Tag fields is self-evident, but the "inTag", "outTag", "inTagList", and "outTagList" probably need some additional explanation.  The usage of these tags is dependent on the tag type.
 
-Refinery Units (RU) need 
+Refinery Units (RU) (probably a bad name) need 
  - "status" tag (is unit ON (operating) or OFF)
  - list of equipment (pipes, valves, pumps) coming INTO the unit from the Crude tanks
  - list of equipment (pipes, values, pumps) going INTO the refined product tanks
@@ -344,13 +358,16 @@ Transfers need
  - MISC is used to specify the type of fluid being transferred (CONTENT_TYPE_VW)
  - 
 
+
 ### Tanks
 
 Tanks currently are related to two tags, a temperature and a level tag, both are analog inputs.  This allows us to specify in process units and field displays a tank which automatically implies (supplies?) the temperature and level.  These tags are related to the tank through the REL_TAG_TAG table with a null CODE value.
 
 Other potential tags related to a tank would be a pump (output pump), valves, and pipes.  These items are also related to the tank through the REL_TAG_TAG table, but their CODE value is either "IN" or "OUT", depending on whether the tank is a transfer source or destination.
 
-Currently, there is no temperature compensation for volume so that the volumes are all compared at standard temperature.
+Currently, there is no temperature compensation for volume so that the volumes are all compared at standard temperature. 
+
+The volume is computed using interpolations with the VOLUME table.  The units are bbl, barrels.
 
 ### Transfers
 
@@ -360,8 +377,28 @@ Transfers exist as either a template or as an executable transfer.  Templates ar
 
 Transfers are somewhat different from other objects, e.g., Analog Inputs or Digital Inputs, in that only templates or ad hoc transfers have a record in the TAG table.  All scheduled transfers assume the tag ID of the template that they were created from.  This is implemented with a TAG_ID field in the TRANSFER table.
 
-The simulation processor adjusts the volumes and levels of the tanks involved in a transfer.  Currently, there is no temperature compensation for volume.
+When a transfer is started or stopped, the ```transfer``` program starts or stops pumps and opens or closes the valves related to that transfer.  The dilemma for tanks that have separate pumps, valves, or pipes for different destinations, e.g., from the docks to the crude tanks, from the refined product tanks to the docks, from the crude tanks to the refinery units is to correctly identify the objects that ought to be opened/closed, started/stopped.  Another way to say this is, does this source/destination pump/valve/pipe affect the given destination/source ?  Example: we don't want to open a valve to refinery unit 2 if the tank is supplying refinery unit 1. 
 
+The following methods were considered.  They fall into two categories, explicit association or implicit association.  Explicit associations would be a linked list for a parent (e.g., a tank) and the associated pumps, valves, and pipes.  An implicit association would be a naming convention for the tag which would indicate both the source and destination.  One problem w/explicit associations is that they have to be explicitly managed; one problem w/implicit associations is generalizing the naming convention so that different instantiations can use different naming conventions.
+
+One caveat: this is only necessary for actual objects, not for the "schematic objects" used to display schematics.  They have their own problems.
+
+So, here's how I'm gonna try to do it:
+
+-  Add a boatload of records (well, ok, 3) to the config table which provide the necessary definitions for the naming conventions
+-  Add the code to the ```transfer``` program in UpdateTransfer.changeTransferState.
+
+My naming convention is for pumps, valves, and pipes.  If there's any other tag type that needs this ability, I may need to update this.  Also, I only need a pattern for multiple source/destination objects, so if it doesn't match the pattern. For now, the naming convention will be something like
+
+-  Pipe:  NAME-PATTERN-PIPE  - T2RU[0-9]+-P
+-  Valve: NAME-PATTERN-VALVE - T[0-9]{3,3}-V{o|i}
+-  Pump:  NAME-PATTERN_PUMP  - T[0-9]{3,3}-Pmp
+
+so the idea is that I do a regex on the name.  If there's no match, then the refinery unit isn't coded in the name and i can safely execute the action, i.e., start/stop/open/close/on/off.  If there is a match, then i have to figure out the tank (first two digits, for valves and pumps) and the refinery unit (third digit).  Except for pipes, where if it matches, the digit determines the refinery unit.  Also, the ACTUAL regex pattern used has to include the tank's contents code, which means I append the pattern to the contents code from the tank or pipe.  (note the assumption: all pumps and valves w/this problem are associated w/a tank.  Pipes use the **misc** field to specify what's being transferred in this pipe)
+
+For valves the {o|i} is an indicator whether the valve is input or output, though that's mostly for uniqueness and user "friendliness".  Uniqueness because valves are present for both input and output.
+
+### 
 ### Watchdogs
 
 The OMS comes with the following "watchdogs".
@@ -380,6 +417,7 @@ The OMS comes with the following "watchdogs".
    | ```DataCollectionDI``` | The digital input simulator.  Part of the **simulate** process (SimulateDIData) |
    | ```DataCollectionDO``` | The digital output processor.  Part of the **simulate** process (SimulateDOData) |
    | ```Transfer``` | The **transfer** processor |
+   | ```PSE``` | Pseudo-Random Events, i.e., ships, trucks, trains arriving.  Part of the **simulate** process |
    ---
 
 The watchdog process checks all of the active watchdogs and sends an email if it detects that the process is not updating.  If the process continues to fail to update, it sends an email every hour.

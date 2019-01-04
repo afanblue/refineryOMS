@@ -1,9 +1,3 @@
 Table,vessel_type,,
 ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-Data
-name,code,quantity
-TankerTruck,TT,275
-TankCar,TC,820
-AFRAMax,SHP,750000
-SuezMax,SHS,1000000
-End
+Data,,,

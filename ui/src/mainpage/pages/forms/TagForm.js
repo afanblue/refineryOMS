@@ -51,7 +51,7 @@ class TagForm extends Component {
     let fc  = this.props.fieldChange;
     let mu  = this.props.handleMouseUp
     let hq  = this.props.handleQuit;
-    let na  = this.noAction;
+//    let na  = this.noAction;
 
     var inListLabel = <div></div>
     var inListSelect = <div></div>

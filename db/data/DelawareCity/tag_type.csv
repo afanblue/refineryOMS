@@ -2,26 +2,28 @@ Table,tag_type,,
 ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
 Data,,,
 code,name,description,js_draw_file,active
-AI,AnalogInput,Field sensor analog,,Y
-AO,AnalogOutput,Analog Output value,,Y
-CB,ControlBlock,Field control device,,Y
-DI,DigitalInput,Field sensor digital,,Y
-DO,DigitalOutput,Digital output,,Y
-FLD,Field,Refinery field,,Y
-P,Pipe,Field pipe,,Y
-TK,Tank,Liquid container,,Y
-V,Valve,Valve,,Y
-XFR,Transfer,Defines the exchange of material,,Y
-TC,TankCar,Railroad tank car,,Y
-PU,ProcessUnit,Refinery Process Unit,,Y
-S,Ship,Ship,,Y
-TT,TankTruck,Tank truck,,Y
-HS,Hot Spot,Hot spot (link to another page),,Y
-DK,Dock,DockNumber,,Y
-RU,RefineryUnit,Refinery Unit,,Y
-SCM,Schematic,Refinery Schematic,,Y
-C,CalculatedVariable,Calculated Variable,,Y
-SCO,SchematicObject,Objects for Refinery Schematics,,Y
-PG,PlotGroup,Group of tags for pre-defined plots,,Y
-PMP,Pump,Pump,,Y
+AI,AnalogInput,Field sensor analog,None,Y
+AO,AnalogOutput,Analog Output value,None,Y
+CB,ControlBlock,Field control device,None,Y
+DI,DigitalInput,Field sensor digital,None,Y
+DO,DigitalOutput,Digital output,None,Y
+FLD,Field,Refinery field,None,Y
+P,Pipe,Field pipe,None,Y
+TK,Tank,Liquid container,None,Y
+V,Valve,Valve,None,Y
+XFR,Transfer,Defines the exchange of material,None,Y
+TC,TankCar,Railroad tank car,None,Y
+PU,ProcessUnit,Refinery Process Unit,None,Y
+S,Ship,Ship,None,Y
+TT,TankTruck,Tank truck,None,Y
+HS,Hot Spot,Hot spot (link to another page),None,Y
+DK,Dock,DockNumber,None,Y
+RU,RefineryUnit,Refinery Unit,None,Y
+SCM,Schematic,Refinery Schematic,None,Y
+C,CalculatedVariable,Calculated Variable,None,Y
+SCO,SchematicObject,Objects for Refinery Schematics,None,Y
+PG,PlotGroup,Group of tags for pre-defined plots,None,Y
+PMP,Pump,Pump,None,Y
+T,Train,Railroad train,None,Y
+CT,Container,Shipping Container,None,Y
 End

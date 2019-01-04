@@ -130,12 +130,22 @@
   
   <insert id="insertDigitalOutput" parameterType="DigitalOutput">
     insert digital_output
-         ( tag_id, hist_type_code, is_new, scan_value, scan_time
-         , prev_value, prev_time, last_hist_value, last_hist_time
-         , value_view )
-   values( #{tagId}, #{histTypeCode}, 0, null, null
-         , null,       null,      null,            null
-         , #{valueView} )
+          ( tag_id, hist_type_code, is_new, scan_value, scan_time
+          , prev_value, prev_time, last_hist_value, last_hist_time
+          , value_view )
+    values( #{tagId}, #{histTypeCode}, 0, null, null
+          , null,       null,      null,            null
+          , #{valueView} )
+    on duplicate key update
+            hist_type_code = #{histTypeCode}
+          , is_new = #{isNew}
+          , scan_value = #{scanValue}
+          , scan_time = #{scanTime}
+          , prev_value = #{prevValue}
+          , prev_time = #{prevTime}
+          , last_hist_value = #{lastHistValue}
+          , last_hist_time = #{lastHistTime}
+          , value_view = #{valueView}
   </insert>
   
 </mapper>

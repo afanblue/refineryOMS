@@ -17,7 +17,7 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import {Stage, Layer, Image, Circle} from 'react-konva';
+import {Stage, Layer, Image, Text} from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 
 
@@ -37,17 +37,20 @@ class DefaultContents extends Component {
   }
   
   render () {
+    let pageName = this.props.pageName;
     return (
-       <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
+       <Stage height={IMAGEHEIGHT+20} width={IMAGEWIDTH}>
          <Layer>
+           <Text text={pageName} 
+                 fontSize={12}
+                 x={80}
+                 y={1}
+                 stroke={"#C3C2B9"}
+                 strokeWidth={1} />
            <Image image={this.state.img}
+                  y={20}
                   height={IMAGEHEIGHT}
                   width={IMAGEWIDTH} />
-           <Circle radius={2}
-                   stroke={"white"}
-                   fill={"white"}
-                   x={IMAGEWIDTH/2}
-                   y={IMAGEHEIGHT/2} />
          </Layer>
        </Stage>
     );

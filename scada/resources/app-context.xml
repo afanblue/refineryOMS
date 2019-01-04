@@ -73,6 +73,11 @@
       <property name="mapperInterface" value="us.avn.oms.mapper.HistoryMapper" />
    </bean>
 
+   <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
+   </bean>
+
    <bean id="tagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface" value="us.avn.oms.mapper.TagMapper" />
@@ -137,6 +142,10 @@
    
    <bean id="historyService" class="us.avn.oms.service.impl.HistoryServiceImpl">
       <property name="historyMapper" ref="historyMapper" />
+   </bean>
+   
+   <bean id="orderService" class="us.avn.oms.service.impl.OrderServiceImpl">
+      <property name="orderMapper"         ref="orderMapper" />
    </bean>
    
    <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">

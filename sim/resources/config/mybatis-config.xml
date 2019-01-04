@@ -17,6 +17,7 @@
      	<typeAlias alias="Category"       type="us.avn.oms.domain.Category" />
         <typeAlias alias="ChildValue"     type="us.avn.oms.domain.ChildValue" />
         <typeAlias alias="Config"         type="us.avn.oms.domain.Config"/>
+        <typeAlias alias="Carrier"        type="us.avn.oms.domain.Carrier"/>
         <typeAlias alias="ControlBlock"   type="us.avn.oms.domain.ControlBlock"/>
         <typeAlias alias="Customer"       type="us.avn.oms.domain.Customer"/>
      	<typeAlias alias="DigitalInput"   type="us.avn.oms.domain.DigitalInput"/>
@@ -25,20 +26,25 @@
      	<typeAlias alias="History"        type="us.avn.oms.domain.History" />
      	<typeAlias alias="HistoryData"    type="us.avn.oms.domain.HistoryData" />
      	<typeAlias alias="HistoryRequest" type="us.avn.oms.domain.HistoryRequest" />
+     	<typeAlias alias="Hold"           type="us.avn.oms.domain.Hold" />
      	<typeAlias alias="IdName"         type="us.avn.oms.domain.IdName" />
+     	<typeAlias alias="Item"           type="us.avn.oms.domain.Item" />
      	<typeAlias alias="Menu"           type="us.avn.oms.domain.Menu" />
+     	<typeAlias alias="Order"          type="us.avn.oms.domain.Order" />
      	<typeAlias alias="PlotGroup"      type="us.avn.oms.domain.PlotGroup" />
      	<typeAlias alias="ProcessUnit"    type="us.avn.oms.domain.ProcessUnit" />
         <typeAlias alias="ReferenceCode"  type="us.avn.oms.domain.ReferenceCode" />
         <typeAlias alias="RelTagTag"      type="us.avn.oms.domain.RelTagTag" />
         <typeAlias alias="Role"           type="us.avn.oms.domain.Role" />
         <typeAlias alias="RolePriv"       type="us.avn.oms.domain.RolePriv" />
+        <typeAlias alias="Ship"           type="us.avn.oms.domain.Ship"/>
         <typeAlias alias="SimIO"          type="us.avn.oms.domain.SimIO" />
         <typeAlias alias="Tag"            type="us.avn.oms.domain.Tag"/>
         <typeAlias alias="Taglet"         type="us.avn.oms.domain.Taglet"/>
         <typeAlias alias="TagType"        type="us.avn.oms.domain.TagType"/>
         <typeAlias alias="Tank"           type="us.avn.oms.domain.Tank"/>
         <typeAlias alias="TankData"       type="us.avn.oms.domain.TankData"/>
+        <typeAlias alias="Train"          type="us.avn.oms.domain.Train"/>
         <typeAlias alias="Transfer"       type="us.avn.oms.domain.Transfer"/>
      	<typeAlias alias="Unit"           type="us.avn.oms.domain.Unit"/>
      	<typeAlias alias="UnitConversion" type="us.avn.oms.domain.UnitConversion"/>
@@ -46,8 +52,8 @@
         <typeAlias alias="User"           type="us.avn.oms.domain.User"/>
         <typeAlias alias="UserPriv"       type="us.avn.oms.domain.UserPriv"/>
         <typeAlias alias="Validation"     type="us.avn.oms.domain.Validation"/>
+        <typeAlias alias="Value"          type="us.avn.oms.domain.Value"/>
         <typeAlias alias="Vertex"         type="us.avn.oms.domain.Vertex"/>
-        <typeAlias alias="Vessel"         type="us.avn.oms.domain.Vessel"/>
         <typeAlias alias="Volume"         type="us.avn.oms.domain.Volume" />
         <typeAlias alias="Watchdog"       type="us.avn.oms.domain.Watchdog" />
         <typeAlias alias="Xfer"           type="us.avn.oms.domain.Xfer" />

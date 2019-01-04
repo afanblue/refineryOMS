@@ -99,6 +99,10 @@
   <insert id="insertUnit" parameterType="Unit">
     insert unit( name, code, unit_type_id ) 
     values ( #{name}, #{code}, #{unitTypeId} )
+    on duplicate key update
+            name = #{name}
+         , code = #{code}
+         , unit_type_id = #{unitTypeId}
   </insert>
 
 <!-- -->

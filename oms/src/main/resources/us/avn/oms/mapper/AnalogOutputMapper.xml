@@ -164,9 +164,18 @@
          , hist_type_code, percent, slope, scan_value, scan_time
          , prev_value, prev_time, last_hist_value, last_hist_time
          , unit_id )
-   values( #{tagId}, #{zeroValue}, #{maxValue}, 0
+    values( #{tagId}, #{zeroValue}, #{maxValue}, 0
          , #{histTypeCode}, #{percent}, null, null, null
          , null, null, null, null, #{unitId} )
+    on duplicate key update
+           zero_value = #{zeroValue}
+         , max_value = #{maxValue}, is_new = #{isNew}
+         , hist_type_code = #{histTypeCode}, percent = #{percent}
+         , slope = #{slope}, scan_value = #{scanValue}
+         , scan_time = #{scanTime}
+         , prev_value = #{prevValue}, prev_time = #{prevTime}
+         , last_hist_value = #{lastHistValue}, last_hist_time = #{lastHistTime}
+         , unit_id = #{unitId}
   </insert>
   
 </mapper>

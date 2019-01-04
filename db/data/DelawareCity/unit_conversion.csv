@@ -4,22 +4,23 @@ unit,id,name,from_id
 unit,id,name,to_id
 Data,,,
 from_id,to_id,offset,factor
-,,0,1
-,meter,0,0.3048
-meter,meter,0,1
-meter,,0,3.28084
-deg F,deg C,32,1.8
-deg F,deg F,0,1
-deg C,deg F,-32,0.555555555555
-deg C,deg C,0,1
-gallons,gallons,0,1
-gallons,cubic feet,0,0.133681
-gallons,barrels,0,0.0238095
-barrels,barrels,0,1
-barrels,gallons,0,42
-barrels,cubic feet,0,5.61458
-cubic feet,cubic feet,0,1
-cubic feet,gallons,0,7.48052
-cubic feet,barrels,0,0.178108
-bbl/min,bbl/min,0,1
+,,0.0,1.0
+meter,meter,0.0,1.0
+meter,foot,0.0,3.28084
+deg F,deg C,32.0,1.8
+deg F,deg F,0.0,1.0
+deg C,deg F,-32.0,0.555555555555
+deg C,deg C,0.0,1.0
+gallons,gallons,0.0,1.0
+gallons,cubic feet,0.0,0.133681
+gallons,barrels,0.0,0.0238095
+barrels,barrels,0.0,1.0
+barrels,gallons,0.0,42.0
+barrels,cubic feet,0.0,5.61458
+cubic feet,cubic feet,0.0,1.0
+cubic feet,gallons,0.0,7.48052
+cubic feet,barrels,0.0,0.178108
+degrees,degrees,0.0,1.0
+foot,meter,0.0,0.3048
+bbl/min,bbl/min,0.0,1.0
 End

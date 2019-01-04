@@ -4,8 +4,8 @@ tag,id,name,id
 customer,id,name,customer_id
 Data
 id,name,quantity,customer_id
-TC314,TankCar1,820,Customer 1
-TT315,Tanker1,275,Customer 1
-S316,AFRAMax1,750000,Customer 1
-S317,SuezMax2,1000000,Customer 1
+TC314,TankCar1,820.0,Customer 1
+TT315,Tanker1,275.0,Customer 1
+S316,AFRAMax1,750000.0,Customer 1
+S317,SuezMax2,1000000.0,Customer 1
 End

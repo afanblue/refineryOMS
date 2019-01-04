@@ -28,6 +28,7 @@ class MenuList extends Component {
   render() {
     var menuList = this.props.menus;
     var selected = this.props.selected;
+    var option   = this.props.option;
     var menuSelect = this.props.handleMenuSelect;
     return (
       <div className="oms-left-menu">
@@ -35,7 +36,7 @@ class MenuList extends Component {
           <tbody>
             <tr>
               <td className="oms-menu-text">
-                <img src="./images/spacer.png" alt="" height="15px" width="120px" />
+                <img src="./images/spacer.png" alt="" height="15px" width="180px" />
               </td>
             </tr>
             {menuList.map(
@@ -43,13 +44,23 @@ class MenuList extends Component {
               let t=n.category.replace(" ","");
               let z=n.menuname;
               if( selected.localeCompare(t) === 0 ) {
-                return(
-                  <tr key={x}>
-                    <td className="oms-menu-text">
-                      <img src="./images/spacer.png" alt="" height="5px" width="10px" />
-                      <a id={z} onClick={() => {menuSelect({z})}} >{n.text}</a>
-                    </td>
-                  </tr> );
+                if( typeof option === "string" && option.localeCompare(z) === 0 ) {
+                  return(
+                    <tr key={x}>
+                      <td className="oms-menu-text">
+                        <img src="./images/spacer.png" alt="" height="5px" width="10px" />
+                        <a id={z} onClick={() => {menuSelect({z})}} className="selected">{n.text}</a>
+                      </td>
+                    </tr> );
+                } else {
+                  return(
+                    <tr key={x}>
+                      <td className="oms-menu-text">
+                        <img src="./images/spacer.png" alt="" height="5px" width="10px" />
+                        <a id={z} onClick={() => {menuSelect({z})}} >{n.text}</a>
+                      </td>
+                    </tr> );
+                }
               }
               return null;
             } 

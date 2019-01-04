@@ -13,12 +13,25 @@
 	Integer insertReferenceCode( ReferenceCode rc );
 -->  
 
+  <resultMap id="idNameMap" type="IdName">
+    <result property="id"          column="id" />
+    <result property="name"        column="code" />
+  </resultMap>
+
      
   <select id="getAllForCategory" resultType="ReferenceCode">
     select id, category, name, code, value, description, active
       from reference_code
      where category = #{parm1}
      order by code
+  </select>
+  
+  <select id="getDigitalValue" parameterType="IdName" resultType="Double">
+    select value
+      from digital_output do 
+      join off_on_vw vv 
+     where do.tag_id = #{id}
+       and vv.name = #{name}
   </select>
      
   <update id="updateReferenceCode" parameterType="ReferenceCode">
@@ -34,6 +47,13 @@
   <insert id="insertReferenceCode" parameterType="ReferenceCode">
     insert reference_code(category, name, code, value, description, active) 
     values (#{category}, #{name}, #{code}, #{value}, #{description}, #{active})
+    on duplicate key update
+             category = #{category}
+           , name = #{name}
+           , code = #{code}
+           , value = #{value}
+           , description = #{description}
+           , active = #{active}
   </insert>
   
 </mapper>

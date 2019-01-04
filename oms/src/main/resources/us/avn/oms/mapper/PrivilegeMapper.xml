@@ -42,6 +42,7 @@
 
   <insert id="insertPrivilege" parameterType="IdName" >
     insert into role( name ) values( #{name} )
+    on duplicate key update name = #{name}
   </insert>
 
 </mapper>

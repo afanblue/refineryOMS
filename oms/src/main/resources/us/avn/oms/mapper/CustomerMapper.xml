@@ -57,6 +57,10 @@
   <insert id="insertCustomerurationItem">
     insert customer( name, active, etherkey ) 
     values (#{name}, #{active}, #{etherkey})
+    on duplicate key update
+             name = #{name}
+           , active = #{active}
+           , etherkey = #{etherkey}
   </insert>
   
 </mapper>

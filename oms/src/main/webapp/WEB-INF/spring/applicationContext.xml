@@ -71,6 +71,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.MenuMapper" />
    </bean>
 
+   <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
+   </bean>
+
    <bean id="roleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.RoleMapper" />
@@ -134,8 +139,17 @@
       <property name="menuMapper" ref="menuMapper" />
    </bean>
    
+   <bean id="orderService" class="us.avn.oms.service.impl.OrderServiceImpl">
+      <property name="orderMapper"         ref="orderMapper" />
+   </bean>
+   
    <bean id="roleService" class="us.avn.oms.service.impl.RoleServiceImpl">
       <property name="roleMapper" ref="roleMapper" />
+   </bean>
+   
+   <bean id="shipService" class="us.avn.oms.service.impl.ShipServiceImpl">
+      <property name="shipMapper"        ref="shipMapper" />
+      <property name="tagMapper"         ref="tagMapper" />
    </bean>
    
    <bean id="tagService" class="us.avn.oms.service.impl.TagServiceImpl">
@@ -146,6 +160,11 @@
       <property name="tankMapper"        ref="tankMapper" />
       <property name="configMapper"      ref="configMapper" />
       <property name="analogInputMapper" ref="analogInputMapper" />
+   </bean>
+   
+   <bean id="trainService" class="us.avn.oms.service.impl.TrainServiceImpl">
+      <property name="trainMapper"       ref="trainMapper" />
+      <property name="tagMapper"         ref="tagMapper" />
    </bean>
    
    <bean id="transferService" class="us.avn.oms.service.impl.TransferServiceImpl">

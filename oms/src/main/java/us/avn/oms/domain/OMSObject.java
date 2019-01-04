@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,8 @@ public abstract class OMSObject implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 20180831131012L;
+	protected SimpleDateFormat sdf = new SimpleDateFormat("y-MM-dd HH:mm:ss");
+	protected SimpleDateFormat sdfd = new SimpleDateFormat("y-MM-dd");
 
 	/**
 	 * 
@@ -50,7 +52,6 @@ public abstract class OMSObject implements Serializable {
         
         String json;
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			mapper.setDateFormat(sdf);
 			json = mapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {

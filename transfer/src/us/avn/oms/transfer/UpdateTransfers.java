@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,20 +23,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import us.avn.oms.domain.ChildValue;
+import us.avn.oms.domain.Config;
 import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.Tag;
 import us.avn.oms.domain.Transfer;
 import us.avn.oms.domain.Watchdog;
+import us.avn.oms.domain.Xfer;
+import us.avn.oms.service.ConfigService;
+import us.avn.oms.service.ReferenceCodeService;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
+import us.avn.oms.service.VertexService;
 import us.avn.oms.service.WatchdogService;
+import us.avn.oms.service.XferService;
 import us.avn.oms.transfer.domain.TransferX;
 
 public class UpdateTransfers extends TimerTask {
@@ -45,13 +53,18 @@ public class UpdateTransfers extends TimerTask {
     private Logger log = LogManager.getLogger(this.getClass());
 
     private ApplicationContext context = null;
+    private ConfigService cfgs = null;
+    private ReferenceCodeService rcs = null;
     private TagService tgs = null;
     private TankService tks = null;
     private WatchdogService wds = null;
     private TransferService xs = null;
+    private VertexService vtxs = null;
+    private XferService xfs = null;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+    private Collection<Config> nameTemplates;
     private Integer newTransferHour;
     private Integer newTransferMinute;
     private Integer newTransferInterval;
@@ -89,15 +102,20 @@ public class UpdateTransfers extends TimerTask {
 		Calendar cal = Calendar.getInstance();
 		/*  */
 		if( context == null) { context = new ClassPathXmlApplicationContext("app-context.xml"); }
-		if( xs  == null ) { xs  = (TransferService) context.getBean("transferService"); }
-		if( tgs == null ) { tgs  = (TagService) context.getBean("tagService"); }
-		if( tks == null ) { tks = (TankService) context.getBean("tankService"); }
-		if( wds == null ) { wds = (WatchdogService) context.getBean("watchdogService"); }
+		if( cfgs == null ) { cfgs = (ConfigService) context.getBean("configService"); }
+		if( rcs  == null ) { rcs  = (ReferenceCodeService) context.getBean("referenceCodeService"); }
+		if( xs   == null ) { xs   = (TransferService) context.getBean("transferService"); }
+		if( tgs  == null ) { tgs  = (TagService) context.getBean("tagService"); }
+		if( tks  == null ) { tks  = (TankService) context.getBean("tankService"); }
+		if( wds  == null ) { wds  = (WatchdogService) context.getBean("watchdogService"); }
+		if( vtxs == null ) { vtxs = (VertexService) context.getBean("vertexService"); }
+		if( xfs  == null ) { xfs  = (XferService) context.getBean("xferService" ); }
 		
 		wds.updateWatchdog(Watchdog.TRANSFER);
 		
 		types = getTransferTypes();
 		statuses = getTransferStatuses();
+		nameTemplates = cfgs.getAllConfigurationItems();
 		
 		/* complete transfers that are active whose completion time */
 		/* has elapsed                                              */
@@ -107,9 +125,11 @@ public class UpdateTransfers extends TimerTask {
 			log.debug("Check active transfer: "+x.toString());
 			if( x.getEndDiff() <= 0 ) {
 				log.debug("Complete transfer (time) "+x.getName() + "/" + x.getId());
+				changeTransferState(x,"OFF");
 				x.completeTransfer(xs);
 			} else if( x.getActVolume() >= x.getExpVolume() ) {
 				log.debug("Complete transfer (vol) "+x.getName() + "/" + x.getId());
+				changeTransferState(x,"OFF");
 				x.completeTransfer(xs);
 			}
 		}
@@ -123,12 +143,13 @@ public class UpdateTransfers extends TimerTask {
 			if( x.getStartDiff() <= 0 && x.getEndDiff() > 0 ) {
 				log.debug("Start transfer "+x.getName() + "/" + x.getId());
 				x.startTransfer(xs);
+				changeTransferState(x,"ON");
 			}
 		}
 		
-		/* schedule pending templates ONLY at 23:30      */
-		/* if you check the SQL, note that the expected  */
-		/* start & end time calculations ignore the time */
+		/* schedule pending templates ONLY at (default) 23:30 */
+		/* if you check the SQL, note that the expected       */
+		/* start & end time calculations ignore the time      */
 		Integer hr = cal.get(Calendar.HOUR_OF_DAY);
 		Integer min = cal.get(Calendar.MINUTE);
 		log.debug( "Time: @"+hr+":"+min+" check? "+newTransferHour+":"+newTransferMinute+" / "+newTransferInterval);
@@ -158,6 +179,12 @@ public class UpdateTransfers extends TimerTask {
 				} else if( 0 != newX.getDelta() ) {
 					insertNewTransfer(x, newX);
 				}
+			} else if( "S".equals(src.getTagTypeCode()) ) {   //|| "RU".equals(dest.getTagTypeCode())) {
+				if(  checkOnce || checkMulti ) {
+					insertNewTransfer(x, newX);
+				} else if( 0 != newX.getDelta() ) {
+					insertNewTransfer(x, newX);
+				}
 			} else if ( 0 == min%5 ) {
 				if( (newX.getStartDiff() >= 0) && (newX.getStartDiff() < 60)) {
 					insertNewTransfer(x,newX);
@@ -170,7 +197,7 @@ public class UpdateTransfers extends TimerTask {
 	
 	private void insertNewTransfer( Transfer x, TransferX newX ) {
 		/* ensure that tag ID points to transfer */
-		newX.setTagId(x.getId());
+		newX.setTagId(x.getTagId());
 		/* Change transfer type id & status id */
 		newX.setName(newX.getName()+sdf.format(tomorrow));
 		newX.setTransferTypeId(types.get("X"));
@@ -203,6 +230,54 @@ public class UpdateTransfers extends TimerTask {
 			xt.put(in.getName(), in.getId());
 		}
 		return xt;
+	}
+
+	private void changeTransferState( Transfer x, String newState ) {
+		Iterator<ChildValue> xin = getChildTags(x.getDestinationId(),"INL").iterator();
+		while( xin.hasNext() ) {
+			ChildValue cv = xin.next();
+			if( outputAllowed(cv) ) {
+				Double outval = getValue(cv.getInpTagId(), newState );
+				Xfer xfr = new Xfer(cv.getInpTagId(),outval);
+				log.debug("Transfer "+newState+" output: "+cv.getInpTagId()+" - "+xfr);
+				xfs.updateXfer(xfr);
+			}
+		}
+		
+		// The problem w/multi-use of objects and queries is that sometimes things get labeled wrong.
+		// Even though we're dealing w/the outputs, they're getting stuffed into the input fields.
+		// (sigh)
+		Iterator<ChildValue> xout = getChildTags(x.getSourceId(),"OUTL").iterator();
+		while( xout.hasNext() ) {
+			ChildValue cv = xout.next();
+			if( outputAllowed(cv) ) {
+				Double outval = getValue(cv.getInpTagId(), newState );
+				Xfer xfr = new Xfer(cv.getInpTagId(),outval);
+				log.debug("Transfer "+newState+" output: "+cv.getInpTagId()+" - "+xfr);
+				xfs.updateXfer(xfr);
+			}
+		}
+		
+	}
+	
+	private boolean outputAllowed( ChildValue cv ) {
+		boolean oa = false;
+		oa = "DO".equals(cv.getInpType());
+		return oa;
+	}
+	
+	private Collection<ChildValue> getChildTags(Long id, String code) {
+		Collection<ChildValue> cvn = new Vector<ChildValue>();
+		
+		cvn.addAll(tgs.getTransferTankLevelChild(id));
+		cvn.addAll(tgs.getTransferChildValues(id, code));
+		return cvn;
+	}
+	
+	private Double getValue( Long id, String state ) {
+		IdName idn = new IdName(id,state);
+		Double outv = rcs.getDigitalValue(idn);
+		return outv;
 	}
 
 }

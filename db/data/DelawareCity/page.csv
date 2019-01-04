@@ -1,8 +1,8 @@
-Table,page
+Table,tbl
 ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-privilege,id,name,exec_priv_id
 privilege,id,name,view_priv_id
-Data
+privilege,id,name,exec_priv_id
+Data,,,
 name,uri,view_priv_id,exec_priv_id,active
 Configuration,configuration.php,Configuration,Configuration,Y
 Alarm Message Admin,admin_alarm_message_list.php,Alarm Message Admin,Alarm Message Admin,Y
@@ -24,17 +24,22 @@ Active Transfers (crude),active_transfers.php?field=crude,View Transfer,Execute 
 Process Unit,admin_process_unit.php,Admin Process Units,Admin Process Units,Y
 Process Unit List,process_units.php,View Process Units,View Process Units,Y
 Transfer Admin,admin_transfers.php,View Transfer,View Transfer,Y
-Vessel Admin,admin_vessel.php,View Vessels,Admin Vessels,Y
-Site Star Plot,,View Plot Groups,View Plot Groups,Y
-Plots,,View Plot Groups,View Plot Groups,Y
-Manage Plots,,Admin Plot Groups,Admin Plot Groups,Y
-Ad Hoc Plot,,View Plot Groups,View Plot Groups,Y
-List Schematics,,Access Schematics,Access Schematics,Y
-Manage Schematics,,Schematic Admin,Schematic Admin,Y
-Calc Var Admin,,Calc Admin,Calc Admin,Y
-Digital Out,,DO Admin,DO Admin,Y
-Analog Out,,AO Admin,AO Admin,Y
-Control Block,,ControlBlock Admin,ControlBlock Admin,Y
-Tag Admin,,Tag Admin,Tag Admin,Y
-Pipe,,AdminPipes,AdminPipes,Y
+Container Admin,None,View Carriers,Admin Carriers,Y
+Site Star Plot,None,View Plot Groups,View Plot Groups,Y
+Plots,None,View Plot Groups,View Plot Groups,Y
+Manage Plots,None,Admin Plot Groups,Admin Plot Groups,Y
+Ad Hoc Plot,None,View Plot Groups,View Plot Groups,Y
+List Schematics,None,Access Schematics,Access Schematics,Y
+Manage Schematics,None,Schematic Admin,Schematic Admin,Y
+Calc Var Admin,None,Calc Admin,Calc Admin,Y
+Digital Out,None,DO Admin,DO Admin,Y
+Analog Out,None,AO Admin,AO Admin,Y
+Control Block,None,ControlBlock Admin,ControlBlock Admin,Y
+Tag Admin,None,Tag Admin,Tag Admin,Y
+Pipe,None,AdminPipes,AdminPipes,Y
+Active Orders,None,View Orders,OrderAdmin,Y
+Purchases,None,OrderAdmin,OrderAdmin,Y
+Sales,None,OrderAdmin,OrderAdmin,Y
+Last Weeks Orders,None,OrderAdmin,View Orders,Y
+Last Months Orders,None,OrderAdmin,View Orders,Y
 End

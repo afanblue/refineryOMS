@@ -228,9 +228,11 @@ class SchematicAdmin extends Component {
     let newt = JSON.parse(JSON.stringify(this.state.schematic));
 //    let newt = Object.assign({},this.state.schematic);
     let method = "PUT";
+    let action = "update";
     let url = SERVERROOT + "/schematic/update";
     if( id === 0 ) {
       newt.id = 0;
+      action = "insert";
       method = "POST";
       url = SERVERROOT + "/schematic/insert";
     }
@@ -271,10 +273,16 @@ class SchematicAdmin extends Component {
     var b = JSON.stringify( newt );
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on "+newt.name)
-      } catch( error ) {
-        const emsg = "Problem "+(id===0?"inserting":"updating")+" schematic id="+id; 
+        let response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.status !== 200 ) {
+          let es = "Response status is "+response.status; 
+          throw es;
+        }        
+        alert("Update/insert complete on "+newt.name);
+        const myRequest=SERVERROOT + "/schematic/" + id;
+        this.fetchFormData(myRequest); 
+     } catch( error ) {
+        const emsg = "Problem "+action+" schematic id="+id; 
         alert(emsg+"\n"+error);
         Log.error(emsg+" - " + error,clsMthd);
       }
@@ -482,17 +490,26 @@ class SchematicAdmin extends Component {
         delim = ", ";
       }
     }
-    if( (sco.c1Lat ===null?true:parseInt(sco.c1Lat,10)===0) || 
-        (sco.c1Long===null?true:parseInt(sco.c1Long,10)===0) ) {
-      doSubmit = false;
-      msg += delim + " NW Corner";
-      delim = ", ";
-    }
-    if( (sco.c2Lat ===null?true:parseInt(sco.c2Lat,10)===0) || 
-        (sco.c2Long===null?true:parseInt(sco.c2Long,10)===0) ) {
-      doSubmit = false;
-      msg += delim + " SE Corner";
-      delim = ", ";
+    
+    if( sco.misc !== 'P' ) {
+      if( (sco.c1Lat ===null?true:parseInt(sco.c1Lat,10)===0) || 
+          (sco.c1Long===null?true:parseInt(sco.c1Long,10)===0) ) {
+        doSubmit = false;
+        msg += delim + " NW Corner";
+        delim = ", ";
+      }
+      if( (sco.c2Lat ===null?true:parseInt(sco.c2Lat,10)===0) || 
+          (sco.c2Long===null?true:parseInt(sco.c2Long,10)===0) ) {
+        doSubmit = false;
+        msg += delim + " SE Corner";
+        delim = ", ";
+      }
+    } else {
+      if( sco.vtxList === null || sco.vtxList === undefined ) {
+        doSubmit = false;
+        msg += delim + " end points";
+        delim = ", ";
+      }
     }
     if( ! doSubmit ) {
       msg += " must be initialized/selected!";

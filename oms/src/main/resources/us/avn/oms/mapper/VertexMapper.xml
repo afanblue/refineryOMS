@@ -51,6 +51,11 @@
   <insert id="insertVertex">
     insert vertex( tag_id, seq_no, latitude, longitude) 
     values (#{tagId}, #{seqNo}, #{latitude}, #{longitude})
+    on duplicate key update
+           tag_id = #{tagId}
+         , seq_no = #{seqNo}
+         , latitude = #{latitude}
+         , longitude = #{longitude}
   </insert>
   
 </mapper>

@@ -107,6 +107,10 @@
   <insert id="insertControlBlock" parameterType="ControlBlock">
     insert control_block( id, pv_id, sp_id, block_type )
     values( #{id}, #{pvId}, #{spId}, #{blockType} )
+    on duplicate key update
+            pv_id = #{pvId}
+          , sp_id = #{spId}
+          , block_type = #{blockType}
   </insert>
   
 </mapper>

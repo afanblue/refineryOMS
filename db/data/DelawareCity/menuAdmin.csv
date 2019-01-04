@@ -1,4 +1,4 @@
-Table,menu,,
+Table,menuAdmin,,
 ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
 page,id,name,page_id
 menu_type_vw,id,code,menu_type_id
@@ -11,4 +11,5 @@ HT,Transfers,15,Y
 HT,Process Units,2,Y
 HT,Plot Groups,10,Y
 HT,Schematics,12,Y
+HT,Orders,18,Y
 End

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import java.util.Collection;
 import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.ReferenceCode;
 import us.avn.oms.domain.Tank;
+import us.avn.oms.domain.Value;
 import us.avn.oms.domain.Volume;
 
 public interface TankMapper {
@@ -29,9 +30,21 @@ public interface TankMapper {
 	
 	Collection<Tank> getAllTanksInField( Long id );
 	
-	Collection<ReferenceCode> getAllContentTypes();
+	Value getEstTankVolume( Long id );
 	
-	Collection<AIValue> getTankVolumesForUnit( String n);
+	Value getEmptiestTankForContent( String t );
+	
+	Value getFullestTankForContent( String t );
+	
+	Collection<Value> getTotalTankCapacitiesForContents();
+
+	Collection<Value> getTotalTankVolumesForContents();
+
+	Collection<Value> getTankCapacitiesForContents( String t );
+	
+	Collection<Value> getTankVolumesForContents( String t );
+	
+	Collection<Value> getTankVolumesForUnit( String n);
 	
 	Collection<Volume> getLevelVolumesForTank( Long id );
 	

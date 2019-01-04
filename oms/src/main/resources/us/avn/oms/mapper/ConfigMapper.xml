@@ -63,6 +63,9 @@
   <insert id="insertConfigurationItem">
     insert config( item_name, item_value) 
     values (#{key}, #{value})
+    on duplicate key update
+             item_name = #{key}
+           , item_value = #{value} 
   </insert>
   
 </mapper>

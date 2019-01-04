@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.ReferenceCode;
 import us.avn.oms.domain.Tank;
+import us.avn.oms.domain.Value;
 import us.avn.oms.domain.Volume;
 import us.avn.oms.mapper.AnalogInputMapper;
 import us.avn.oms.mapper.ConfigMapper;
@@ -65,9 +66,44 @@ public class TankServiceImpl implements TankService {
 	public Collection<Tank> getAllTanksInField( Long id ) {
 		return tankMapper.getAllTanksInField( id );
 	}
+
+	@Override
+	public Value getEstTankVolume( Long id ) {
+		return tankMapper.getEstTankVolume(id);
+	}
 	
 	@Override
-	public Collection<AIValue> getTankVolumesForUnit( String n) {
+	public Value getEmptiestTankForContent( String t ) {
+		return tankMapper.getEmptiestTankForContent(t);
+	}
+	
+	@Override
+	public Value getFullestTankForContent( String t ) {
+		return tankMapper.getFullestTankForContent(t);
+	}
+	
+	@Override
+	public Collection<Value> getTotalTankCapacitiesForContents() {
+		return tankMapper.getTotalTankCapacitiesForContents();
+	}
+
+	@Override
+	public Collection<Value> getTotalTankVolumesForContents() {
+		return tankMapper.getTotalTankVolumesForContents();
+	}
+
+	@Override
+	public Collection<Value> getTankCapacitiesForContents( String t ) {
+		return tankMapper.getTankCapacitiesForContents(t);
+	}
+	
+	@Override
+	public Collection<Value> getTankVolumesForContents( String t ) {
+		return tankMapper.getTankVolumesForContents(t);
+	}
+	
+	@Override
+	public Collection<Value> getTankVolumesForUnit( String n) {
 		return tankMapper.getTankVolumesForUnit(n);
 	}
 	
@@ -95,11 +131,6 @@ public class TankServiceImpl implements TankService {
 	@Override
 	public void insertTank( Tank tk ) {
 		tankMapper.insertTank(tk);
-	}
-
-	@Override
-	public Collection<ReferenceCode> getAllContentTypes() {
-		return tankMapper.getAllContentTypes();
 	}
 
 }

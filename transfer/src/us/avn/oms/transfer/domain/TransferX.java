@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.Tag;
 import us.avn.oms.domain.Transfer;
+import us.avn.oms.domain.Value;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
@@ -63,13 +64,13 @@ public class TransferX extends Transfer {
 	public void checkSource( TagService ts, TankService tks ) {
 		Tag src = ts.getTag(sourceId);
 		if( Tag.PROCESS_UNIT.equals(src.getTagTypeCode())) {
-			Iterator<AIValue> is = tks.getTankVolumesForUnit(src.getName()).iterator();
+			Iterator<Value> is = tks.getTankVolumesForUnit(src.getName()).iterator();
 			Double maxVolume = 0.0;
 			while( is.hasNext() ) {
-				AIValue aiv = is.next();
+				Value aiv = is.next();
 				if( aiv.getValue() > maxVolume ) {
 					maxVolume = aiv.getValue();
-					this.sourceId = aiv.getTagId();
+					this.sourceId = aiv.getId();
 				}
 			}
 		}
@@ -78,13 +79,13 @@ public class TransferX extends Transfer {
 	public void checkDestination( TagService ts, TankService tks ) {
 		Tag dest = ts.getTag(destinationId);
 		if( Tag.PROCESS_UNIT.equals(dest.getTagTypeCode())) {
-			Iterator<AIValue> is = tks.getTankVolumesForUnit(dest.getName()).iterator();
+			Iterator<Value> is = tks.getTankVolumesForUnit(dest.getName()).iterator();
 			Double minVolume = Double.MAX_VALUE;
 			while( is.hasNext() ) {
-				AIValue aiv = is.next();
+				Value aiv = is.next();
 				if( aiv.getValue() < minVolume ) {
 					minVolume = aiv.getValue();
-					this.destinationId = aiv.getTagId();
+					this.destinationId = aiv.getId();
 				}
 			}
 		}

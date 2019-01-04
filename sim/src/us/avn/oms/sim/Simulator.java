@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,17 +49,24 @@ public class Simulator {
 	public void execute(String[]args) {
         TimerTask aitt = new AnalogDataSimulator();
         TimerTask ditt = new DigitalDataSimulator();
+        TimerTask prett = new PseudoRandomEventSimulator();
         Timer aiTimer = new Timer(true);
         Timer diTimer = new Timer(true);
+        Timer preTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
 //		wait until 40 seconds after (20 seconds before) the minute
         int start = 40;
         if( cal.get(Calendar.SECOND) > 40 ) { start = 60 + 50; }
         int delay = start * 1000 - 1000 * cal.get(Calendar.SECOND) - cal.get(Calendar.MILLISECOND);
+//		run Analog and Digital simulations every 10 seconds
         aiTimer.scheduleAtFixedRate(aitt, delay, 10*1000);
         log.debug("Analog scan started");
         diTimer.scheduleAtFixedRate(ditt, delay, 10*1000);
         log.debug("Digital scan started");
+//		run the pseudo random event simulator every hour on the hour
+        int pseDelay = 1000 * ((60 - cal.get(Calendar.MINUTE)) * 60 + (60 - cal.get(Calendar.SECOND)));
+        preTimer.scheduleAtFixedRate(prett, pseDelay, 3600*1000);
+        log.debug("PSE scan started");
         while( 1 == 1 ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);

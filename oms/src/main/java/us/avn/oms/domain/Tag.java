@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,19 +78,41 @@ public class Tag extends OMSObject implements Serializable {
     protected Collection<Long> inTagList;
     protected Collection<Long> outTagList;
     
+    /**
+     * Contructor
+     * Description: create an empty tag object
+     */
     public Tag() { }
     
+    /**
+     * Constructor
+     * Description:  Create a new tag w/the given ID and name
+     * @param i
+     * @param n
+     */
     public Tag( Long i, String n ) {
     	this.id = i;
     	this.name = n;
     }
 
+    /**
+     * Constructor
+     * Description: Create a new tag with the given ID, name, and tag type
+     * @param i - id
+     * @param n - name
+     * @param c - Tag Type Code
+     */
     public Tag( Long i, String n, String c ) {
     	this.id = i;
     	this.name = n;
     	this.tagTypeCode = c;
     }
 
+    /**
+     * Constructor
+     * Description: copy contents of existing tag to a new Tag object
+     * @param t
+     */
     public Tag( Tag t ) {
     	this.id = t.getId();
     	this.name = t.getName();

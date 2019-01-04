@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.ReferenceCode;
 import us.avn.oms.mapper.ReferenceCodeMapper;
 import us.avn.oms.service.ReferenceCodeService;
@@ -29,25 +30,36 @@ import us.avn.oms.service.ReferenceCodeService;
 public class ReferenceCodeServiceImpl implements ReferenceCodeService {
 
 
-	private ReferenceCodeMapper referenceCodeMapper;
+	private ReferenceCodeMapper rcm;
 	
 	public void setReferenceCodeMapper( ReferenceCodeMapper rcm ) {
-		this.referenceCodeMapper = rcm;
+		this.rcm = rcm;
 	}
 	
 	@Override
 	public Collection<ReferenceCode> getAllForCategory( String cat ) {
-		return referenceCodeMapper.getAllForCategory( cat );
+		return rcm.getAllForCategory( cat );
+	}
+
+	@Override
+	public Collection<ReferenceCode> getAllContentTypes( ) {
+		return rcm.getAllForCategory("content-type-vw");
 	}
 	
 	@Override
+	public Double getDigitalValue( IdName idn ) {
+		return rcm.getDigitalValue(idn);
+	}
+	
+
+	@Override
 	public void updateReferenceCode( ReferenceCode cfg ) {
-		referenceCodeMapper.updateReferenceCode( cfg );
+		rcm.updateReferenceCode( cfg );
 	}
 
 	@Override
 	public void insertReferenceCode( ReferenceCode cfg ) {
-		referenceCodeMapper.insertReferenceCode(cfg);
+		rcm.insertReferenceCode(cfg);
 	}
 
 }

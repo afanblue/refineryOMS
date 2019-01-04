@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.TrainMapper">
+
+  <!-- cache / -->
+    
+  <resultMap id="trm" type="Train">
+    <result property="id"              column="id" />
+    <result property="ownerId"         column="owner_id" />
+    <result property="owner"           column="owner" />
+    <result property="noCars"          column="no_cars" />
+    <result property="contentCode"     column="content_type_code" />
+    <result property="arrival_dt"      column="arrival_dt" />
+    <result property="name"            column="name" />
+    <result property="description"     column="description" />
+    <result property="tagTypeCode"     column="tag_type_code" />
+    <result property="active"          column="active" />
+  </resultMap>
+  
+  
+  <select id="getAllTrains" resultMap="trm">
+    select tr.id, c.id owner_id, c.name owner, tr.content_code
+         , tr.no_cars, tr.arrival_dt 
+      from train tr join customer c on tr.owner_id = c.id
+     order by tr.id
+  </select>
+
+  <select id="getTrain" resultMap="trm">
+    select tr.id, t.name, c.id owner_id, c.name owner, tr.content_code
+         , tr.no_cars, tr.arrival_dt 
+         , t.description, t.tag_type_code, t.active
+	  from train tr join tag t on tr.id = t.id
+	  join customer c on tr.owner_id=c.id
+	 where s.id = #{parm1} 
+  </select>
+  
+  <update id="updateTrain" parameterType="Train">
+    update train
+       set owner_id = #{ownerId}
+         , no_cars = #{noCars}
+         , content_code = #{contentCode}
+         , arrival_dt = #{arrivalDt}
+     where id = #{id}
+  </update>
+  
+  <insert id="insertTrain" parameterType="Train">
+    insert train
+         ( id, owner_id, no_cars, content_code, arrival_dt )
+   values( #{id}, #{ownerId}, #{noCars}, #{contentCode}, #{arrivalDt} )
+  </insert>
+  
+</mapper>

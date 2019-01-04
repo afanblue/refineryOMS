@@ -88,6 +88,7 @@ class TransferAdmin extends Component {
       || (nextProps.type  !== this.state.type ) )
     {
 //      this.fetchList();
+      Log.info("willReceiveProps - type: "+this.state.type+"/"+nextProps.type);
       this.setState({ stage: nextProps.stage,
                       type: nextProps.type,
                       updateData: true,
@@ -98,9 +99,10 @@ class TransferAdmin extends Component {
 /* */
 
   shouldComponentUpdate(nextProps,nextState) {
+    Log.info("shouldComponentUpdate - type: "+this.state.type+"/"+nextProps.type);
     let sts = nextState.updateDisplay;
     if( nextState.stage !== this.state.stage ) { sts = true; }
-    if( nextState.type  !== this.state.type  ) { sts = true;         }
+    if( nextState.type  !== this.state.type  ) { sts = true; }
     if( nextProps.type !== this.state.type ) {
       this.fetchList();
     }
@@ -259,6 +261,7 @@ class TransferAdmin extends Component {
   fetchList() {
     const clsMthd = "TransferAdmin.fetchList";
     const myRequest = SERVERROOT + "/transfer/all/"+this.state.type;
+    Log.info("fetchList - type: "+this.state.type);
     if( myRequest !== null ) {
       const request = async () => {
         try {
@@ -289,6 +292,7 @@ class TransferAdmin extends Component {
   }
 
   render() {
+    Log.info("render - type: "+this.state.type);
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
@@ -298,8 +302,8 @@ class TransferAdmin extends Component {
                              handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.transfer === null)  || (this.state.transferTypes === null) || 
-            (this.state.sources === null)   || (this.state.statuses === null)    ) {
+        if( (this.state.transfer === null) || (this.state.transferTypes === null) || 
+            (this.state.sources  === null) || (this.state.statuses === null)    ) {
           return <Waiting />
         } else {
           return <TransferForm transfer     = {this.state.transfer}

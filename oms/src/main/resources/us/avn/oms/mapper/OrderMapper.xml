@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.OrderMapper">
+
+  <!-- cache / -->
+    
+  <resultMap id="ordmap" type="Order">
+    <result property="shipmentId"     column="shipment_id" />
+    <result property="customerId"     column="customer_id" />
+    <result property="customer"       column="customer" />
+    <result property="carrierId"      column="carrier_id" />
+    <result property="carrier"        column="carrier" />
+    <result property="active"         column="active" />
+    <result property="purchase"       column="purchase" />
+    <result property="expDate"        column="exp_date" />
+    <result property="actDate"        column="act_date" />
+    <result property="expVolume"      column="exp_volume" />
+    <result property="actVolume"      column="act_volume" />
+  </resultMap>
+  
+  <resultMap id="itemMap" type="Item">
+    <result property="shipmentId"     column="shipment_id"/>
+    <result property="itemNo"         column="item_no" />
+    <result property="newItem"        column="new_item" />
+    <result property="contentCd"      column="content_cd" />
+    <result property="expVolumeMin"   column="min_vol" />
+    <result property="expVolumeMax"   column="max_vol" />
+    <result property="actVolume"      column="act_vol" />
+  </resultMap>
+
+  <select id="getOrder" resultMap="ordmap">
+    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier, s.active
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+      from shipment s join customer c on s.customer_id = c.id
+      join tag t on s.carrier_id = t.id
+      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
+     where s.shipment_id = #{parm1}
+     order by s.exp_date desc
+  </select>
+  
+  <select id="getOrderItems" resultMap="itemMap">
+select s.shipment_id, i.item_no, coalesce(i.content_cd,'') content_cd
+     , coalesce(i.content_cd,'N') new_item
+     , coalesce(i.exp_volume_min,0) min_vol, coalesce(i.exp_volume_max,100000) max_vol
+     , coalesce(i.act_volume,0) act_vol
+  from shipment s join item i on s.shipment_id=i.shipment_id
+ where s.shipment_id = #{parm1}
+union 
+select s.shipment_id, h.hold_no, '' content_cd, 'Y'
+     , 0 min_vol, coalesce(h.volume*h.no_duplicates,100000) max_vol
+     , 0 act_vol
+  from shipment s 
+ right outer join hold h on s.carrier_id=h.carrier_id
+ where s.shipment_id= #{parm1}
+   and h.hold_no not in (select item_no from item where shipment_id=s.shipment_id)
+     order by item_no
+  </select>
+  
+  <select id="getActiveOrders" resultMap="ordmap">
+    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier, s.active
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+      from shipment s join customer c on s.customer_id = c.id
+      join tag t on s.carrier_id = t.id
+      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
+     where s.active != "C"
+     order by s.exp_date desc
+  </select>
+
+  <select id="getOrdersByType" resultMap="ordmap">
+    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier, s.active
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+      from shipment s join customer c on s.customer_id = c.id
+      join tag t on s.carrier_id = t.id
+      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
+     where s.purchase = #{parm1}
+       and s.exp_date > current_date()-interval 3 month
+     order by s.exp_date desc
+  </select>
+
+  <select id="getLastWeeksOrders" resultMap="ordmap">
+    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier, s.active
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+      from shipment s join customer c on s.customer_id = c.id
+      join tag t on s.carrier_id = t.id
+      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
+     where s.exp_date > current_date()-interval 1 week 
+     order by s.exp_date desc
+  </select>
+  
+  <select id="getLastMonthsOrders" resultMap="ordmap">
+    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier, s.active
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+      from shipment s join customer c on s.customer_id = c.id
+      join tag t on s.carrier_id = t.id
+      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
+     where s.exp_date > current_date()-interval 1 month 
+     order by s.exp_date desc
+  </select>
+    
+  <update id="updateOrder" parameterType="Order">
+    update shipment
+       set customer_id = #{customerId}
+         , carrier_id = #{carrierId}
+         , active = #{active}
+         , purchase = #{purchase}
+         , exp_date = #{expDate}
+         , act_date = #{actDate}
+     where shipment_id = #{shipmentId}
+  </update>
+  
+  <update id="updateItem" parameterType="Item">
+    update item
+          ( content_cd,   exp_volume_min,  exp_volume_max,  act_volume )
+    values( #{contentCd}, #{expVolumeMin}, #{expVolumeMax}, #{actVolume} )
+  </update>
+  
+  <insert id="insertOrder" parameterType="Order">
+    insert shipment
+          ( customer_id,   carrier_id,    active,   purchase,    exp_date,   act_date )
+    values( #{customerId}, #{carrierId}, #{active}, #{purchase}, #{expDate}, #{actDate} )
+    <selectKey keyProperty="shipmentId" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+  </insert>
+  
+  <insert id="insertItem" parameterType="Item">
+    insert item
+          ( shipment_id,   item_no,   content_cd,  exp_volume_min,  exp_volume_max,  act_volume )
+    values( #{shipmentId}, #{itemNo}, #{contentCd}, #{expVolumeMin}, #{expVolumeMax}, #{actVolume} )
+    on duplicate key update
+            content_cd = #{contentCd}
+          , exp_volume_min = #{expVolumeMin}
+          , exp_volume_max = #{expVolumeMax}
+          , act_volume = #{actVolume}
+  </insert>
+  
+</mapper>

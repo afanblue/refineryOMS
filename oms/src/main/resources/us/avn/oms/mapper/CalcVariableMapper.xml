@@ -77,8 +77,11 @@
   
   <insert id="insertCalcVariable" parameterType="CalcVariable">
     insert calculated
-         ( id, definition, output_tag_id )
-   values( #{id}, #{definition}, #{outputTagId} )
+          ( id, definition, output_tag_id )
+    values( #{id}, #{definition}, #{outputTagId} )
+    on duplicate key update
+            definition = #{definition}
+          , output_tag_id = #{outputTagId}
   </insert>
   
 </mapper>

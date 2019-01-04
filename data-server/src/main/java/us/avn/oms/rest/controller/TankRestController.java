@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import us.avn.oms.domain.Field;
 import us.avn.oms.domain.ReferenceCode;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Tank;
+import us.avn.oms.service.ReferenceCodeService;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 
@@ -50,6 +51,9 @@ public class TankRestController {
 	
 	@Autowired
 	TagService tagService;
+	
+	@Autowired 
+	ReferenceCodeService refCodeService;
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
     @ResponseStatus(HttpStatus.OK)
@@ -62,7 +66,7 @@ public class TankRestController {
     @ResponseStatus(HttpStatus.OK)
 	public Collection<ReferenceCode> getAllContentTypes() {
 		log.debug("get content type list");
-		return tankService.getAllContentTypes();
+		return refCodeService.getAllContentTypes();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")

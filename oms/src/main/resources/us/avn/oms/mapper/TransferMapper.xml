@@ -29,6 +29,7 @@
     <result property="id"              column="id"/>
     <result property="tagId"           column="tag_id"/>
     <result property="name"            column="name"/>
+    <result property="contentsCode"    column="contents_code"/>
     <result property="statusId"        column="status_id"/>
     <result property="status"          column="status" />
     <result property="transferTypeId"  column="transfer_type_id"/>
@@ -57,13 +58,15 @@
   </resultMap>
 
   <select id="getAllTransfers" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta 
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id=tx.id 
+           join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -74,13 +77,15 @@
   </select>
 
   <select id="getActiveTransfers" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id=tx.id 
+           join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -89,13 +94,15 @@
   </select>
   
   <select id="getLastTransfers" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id=tx.id 
+           join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -105,13 +112,15 @@
   </select>
 
   <select id="getScheduledTransfers" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id=tx.id 
+           join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -120,16 +129,18 @@
   </select>
 
   <select id="getTransfer" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, x.transfer_type_id
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, x.transfer_type_id
          , x.source_id, x.destination_id
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta 
-      from transfer x 
+      from transfer x join tag tx on x.tag_id=tx.id 
      where x.id = #{parm1}
   </select>
 
   <select id="getEndingTransfers" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -137,7 +148,8 @@
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta
          , coalesce(UNIX_TIMESTAMP(exp_end_time) 
            - UNIX_TIMESTAMP(CURRENT_TIMESTAMP), 300) end_diff
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id = tx.id
+           join tag ts on x.tag_id=ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -147,7 +159,8 @@
   </select>
 
   <select id="getStartingTransfers" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -157,7 +170,8 @@
            - UNIX_TIMESTAMP(CURRENT_TIMESTAMP), 300) start_diff
          , coalesce(UNIX_TIMESTAMP(exp_end_time) 
            - UNIX_TIMESTAMP(CURRENT_TIMESTAMP), 300) end_diff
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id=tx.id
+           join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -167,7 +181,8 @@
   </select>
 
   <select id="getPendingTemplates" resultMap="transferResultMap">
-    select x.id, x.tag_id, x.name, x.status_id, tsv.name status
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, tsv.name status
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
@@ -183,7 +198,8 @@
          , date_format(from_unixtime(if(delta!=0,d.today,d.tmorrow) + unix_timestamp(x.exp_end_time) 
                    + if(delta=0,0,60*x.delta*floor( 1+(d.cmin-x1.smin)/delta) )
                    - d.bot),'%Y-%m-%d %H:%i:%s') new_end_time
-      from transfer x  join tag ts on x.source_id = ts.id
+      from transfer x join tag tx on x.tag_id=tx.id
+           join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
@@ -240,16 +256,20 @@
      where id = #{parm1}
   </update>
   
-  <insert id="insertTransfer" parameterType="Transfer">
+  <insert id="insertTransfer" parameterType="Transfer" useGeneratedKeys="true"
+          keyProperty="id" keyColumn="ID">
     insert transfer
-         ( tag_id, name, status_id, transfer_type_id
-         , source_id, destination_id, delta
-         , exp_start_time, exp_end_time, exp_volume 
-         , act_start_time, act_end_time, act_volume )
-   values( #{tagId}, #{name}, #{statusId}, #{transferTypeId}
-         , #{sourceId}, #{destinationId}, #{delta}
-         , #{expStartTime}, #{expEndTime}, #{expVolume} 
-         , #{actStartTime}, #{actEndTime}, #{actVolume} )
+          ( tag_id, name, status_id, transfer_type_id
+          , source_id, destination_id, delta
+          , exp_start_time, exp_end_time, exp_volume 
+          , act_start_time, act_end_time, act_volume )
+    values( #{tagId}, #{name}, #{statusId}, #{transferTypeId}
+          , #{sourceId}, #{destinationId}, #{delta}
+          , #{expStartTime}, #{expEndTime}, #{expVolume} 
+          , #{actStartTime}, #{actEndTime}, #{actVolume} )
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
   </insert>
   
 </mapper>

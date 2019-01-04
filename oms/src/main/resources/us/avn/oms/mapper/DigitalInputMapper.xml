@@ -142,20 +142,7 @@
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id 
       join tag tc on rtt.child_tag_id = tc.id 
       join digital_input di on di.tag_id = tc.id 
-      <choose>
-        <when test="value_view = 'off_on_vw' ">
-          join off_on_vw vv on coalesce(di.scan_value,0) = value
-        </when>
-        <when test="value_view = 'on_off_vw' ">
-          join on_off_vw vv on coalesce(di.scan_value,0) = value
-        </when>
-        <when test="value_view = 'tf_vw' ">
-          join tf_vw vv on coalesce(di.scan_value,0) = value
-        </when>
-        <otherwise>
-          join off_on_vw vv on coalesce(di.scan_value,0) = value
-        </otherwise>
-      </choose>
+      join off_on_vw vv on coalesce(di.scan_value,0) = value
       left outer join alarm_info alm on di.tag_id = alm.tag_id  
       left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name 
      where tp.name = #{parm1}
@@ -186,13 +173,27 @@
   
   <insert id="insertDigitalInput" parameterType="DigitalInput">
     insert digital_input
-         ( tag_id, scan_int, scan_offset, current_scan, hist_type_code
-         , scan_value, scan_time, alarm_state, alarm_code
-         , prev_value, prev_scan_time, last_hist_value, last_hist_time
-         , value_view )
-   values( #{tagId}, #{scanInt}, #{scanOffset}, 0, #{histTypeCode}
-         , null, null, #{alarmState}, #{alarmCode}
-         , null, null, null, null, #{valueView} )
+          ( tag_id, scan_int, scan_offset, current_scan, hist_type_code
+          , scan_value, scan_time, alarm_state, alarm_code
+          , prev_value, prev_scan_time, last_hist_value, last_hist_time
+          , value_view )
+    values( #{tagId}, #{scanInt}, #{scanOffset}, 0, #{histTypeCode}
+          , null, null, #{alarmState}, #{alarmCode}
+          , null, null, null, null, #{valueView} )
+    on duplicate key update
+            scan_int = #{scanInt}
+          , scan_offset = #{scanOffset}
+          , current_scan = #{currentScan}
+          , hist_type_code = #{histTypeCode}
+          , scan_value = #{scanValue}
+          , scan_time = #{scanTime}
+          , alarm_state = #{alarmState}
+          , alarm_code = #{alarmCode}
+          , prev_value = #{prevValue}
+          , prev_scan_time = #{prevScanTime}
+          , last_hist_value = #{lastHistValue}
+          , last_hist_time
+          , value_view
   </insert>
   
 </mapper>

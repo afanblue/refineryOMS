@@ -1,5 +1,5 @@
 /*************************************************************************
- * PlotGroup.js
+ * PlotGroupVars.js
  * Copyright (C) 2018  Laboratorio de Lobo Azul
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,17 +60,15 @@ class PlotGroupVars extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
+    if( nextProps.stage !== this.state.stage && nextProps.stage === "begin")
     {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
+      if( this.state.unitTimer !== null ) { clearInterval(this.state.unitTimer); }
+      this.fetchData(nextProps.id);
     }
   }
   
   shouldComponentUpdate(nextProps,nextState) {
-    let sts = nextState.updateDisplay;
+    let sts = nextState.updateDisplay || nextState.updateData;
     return sts;
   }
 
@@ -175,6 +173,8 @@ class PlotGroupVars extends Component {
   }
     
   componentDidUpdate( prevProps, prevState ) {
+//    let i = this.state.id;
+//    let s = this.state.stage;
   }
 
   componentWillUnmount() {
@@ -189,9 +189,10 @@ class PlotGroupVars extends Component {
   handleFieldChange(event) {
     event.preventDefault();
     const target = event.target;
-    const value = target.value;
+    let value = target.value;
     const name = target.name;
     let pdNew = Object.assign({},this.state.plotDetails);
+    if( value === "" ) { value="0"; }
     pdNew[name] = parseInt(value,10);
     this.setState( {plotDetails: pdNew} );
   }

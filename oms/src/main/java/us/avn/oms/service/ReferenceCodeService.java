@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,17 @@ package us.avn.oms.service;
 
 import java.util.Collection;
 
+import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.ReferenceCode;
 
 
 public interface ReferenceCodeService {
 	
 	public Collection<ReferenceCode> getAllForCategory( String cat );
+	
+	public Collection<ReferenceCode> getAllContentTypes( );
+	
+	public Double getDigitalValue( IdName idn );
 	
 	public void updateReferenceCode( ReferenceCode cfg );
 

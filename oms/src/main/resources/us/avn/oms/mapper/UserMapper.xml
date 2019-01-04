@@ -60,6 +60,15 @@
          , email, password, state, status ) 
     values (#{alias}, #{firstName}, #{middleName}, #{lastName}
          , #{email}, #{password}, #{state}, #{status})
+    on duplicate key update
+           alias = #{alias}
+         , first_name = #{firstName}
+         , middle_name = #{middleName}
+         , last_name = #{lastName}
+         , email = #{email}
+         , password = #{password}
+         , state = #{state}
+         , status = #{status}
   </insert>
   
   <select id="getUserRole" resultType="UserPriv">

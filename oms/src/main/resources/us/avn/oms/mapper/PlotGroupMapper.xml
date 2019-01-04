@@ -56,6 +56,12 @@
     insert into plot_group
           ( name, id1, id2, id3, id4 )
     values( #{name}, #{id1}, #{id2}, #{id3}, #{id4} )
+    on duplicate key update
+            name = #{name}
+          , id1 = #{id1}
+          , id2 = #{id2}
+          , id3 = #{id3}
+          , id4 = #{id4}
   </insert>
   
 </mapper>

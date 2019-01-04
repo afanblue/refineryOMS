@@ -205,7 +205,9 @@ class SchematicForm extends Component {
                                 let vtl = n.vtxList;
                                 if( "object" === typeof n.vtxList ) { vtl = vtl.join(""); }
                                 vtl = vtl.replace(",,",",");
-                                n.vtxList.map( function(nv,zv){
+                                let vtx = vtl;
+                                if( "string" === typeof vtl ) { vtx = vtl.split(/\n/) }
+                                vtx.map( function(nv,zv){
                                   let vl = nv.replace( /\n/gi, "");
                                   let lpt = vl.split(",");
                                   pts = pts.concat([lpt[1],lpt[0]]);

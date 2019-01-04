@@ -7,7 +7,7 @@ role_id,priv_id
 Admin,Acknowledge Alarms
 Admin,Admin Links
 Admin,Admin Process Units
-Admin,Admin Vessels
+Admin,Admin Carriers
 Admin,AI Admin
 Admin,Alarm Message Admin
 Admin,Alarm Type Admin
@@ -35,7 +35,7 @@ Admin,View Tanks
 Admin,View Transfer
 Admin,View Transfer Tab
 Admin,View Users
-Admin,View Vessels
+Admin,View Carriers
 Admin,Admin Plot Groups
 Admin,View Plot Groups
 Admin,Access Schematics
@@ -46,6 +46,7 @@ Admin,DO Admin
 Admin,ControlBlock Admin
 Admin,Tag Admin
 Admin,AdminPipes
+Admin,OrderAdmin
 Operator,Access Schematics
 Operator,Acknowledge Alarms
 Operator,Execute Crude Field
@@ -65,5 +66,6 @@ Operator,View Tanks
 Operator,View Transfer
 Operator,View Transfer Tab
 Operator,View Users
-Operator,View Vessels
+Operator,View Carriers
+Operator,View Orders
 End

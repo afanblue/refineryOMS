@@ -29,6 +29,7 @@ class ClassificationMenu extends Component {
     var classList = this.props.classifications;
     var selected = this.props.selected;
     var catSelected = this.props.handleCatSelect;
+    var lineStyle = { margin:0, border:0, height:3 };
     return ( 
       <div className="oms-tabs">
         <nav>
@@ -45,6 +46,7 @@ class ClassificationMenu extends Component {
             }
           </ul>
         </nav>
+        <hr color="white" size="3 px" width="1000 px" align="left" style={lineStyle} />
       </div>
     )
   }

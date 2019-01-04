@@ -23,4 +23,7 @@ RU2-3-CV,x0 x1 x2 | |,RU2-3-DI
 RU2-4-CV,x0 x1 x2 | |,RU2-4-DI
 RU1-2-CV,x0 x1 |,RU1-2-DI
 RU2-2-CV,x0 x1 | ,RU2-2-DI
+D12-CV,x0 x1 |,D12-DI
+D123-CV,x0 x1 x2 | |,D123-DI
+D1234-CV,x0 x1 x2 x3 | | |,D1234-DI
 End

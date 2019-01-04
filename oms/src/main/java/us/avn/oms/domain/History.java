@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 A. E. Van Ness
+ * Copyright (C) 2018 Laboratorio de Lobo Azul
  *  
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,8 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class History extends OMSObject implements Serializable {
 	
