@@ -125,13 +125,22 @@ class ListSchematics extends Component {
               return (
                 <tr key={x}>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{nm1}</a>
+                    <button type="button" className="link-button"
+                            onClick={() => {menuSelect({z1})}} >
+                      {nm1}
+                    </button>
                   </td>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z2} onClick={() => {menuSelect({z2})}} >{nm2}</a>
+                    <button type="button" className="link-button"
+                            onClick={() => {menuSelect({z2})}} >
+                      {nm2}
+                    </button>
                   </td>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z3} onClick={() => {menuSelect({z3})}} >{nm3}</a>
+                    <button type="button" className="link-button"
+                            onClick={() => {menuSelect({z3})}} >
+                      {nm3}
+                    </button>
                   </td>
                 </tr>
               )

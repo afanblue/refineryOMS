@@ -6,6 +6,7 @@ public class Item extends OMSObject {
 	
     private Long    shipmentId;
     private Long    itemNo;
+	private String  active;       // Active 'A', Pending 'P', Complete 'C'
     private String  contentCd;
     private String  newItem;
     private Double  expVolumeMin;
@@ -32,6 +33,15 @@ public class Item extends OMSObject {
 	}
 	
 
+	public String getActive() {
+		return active;
+	}
+	
+	public void setActive(String active) {
+		this.active = active;
+	}
+	
+	
 	public String getContentCd() {
 		return contentCd;
 	}

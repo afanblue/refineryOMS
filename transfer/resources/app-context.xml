@@ -47,6 +47,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.CustomerMapper" />
    </bean>
 
+   <bean id="digitalInputMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.DigitalInputMapper" />
+   </bean>
+
    <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
@@ -112,6 +117,10 @@
       <property name="customerMapper"    ref="customerMapper" />
    </bean>
    
+   <bean id="digitalInputService" class="us.avn.oms.service.impl.DigitalInputServiceImpl">
+      <property name="digitalInputMapper"    ref="digitalInputMapper" />
+   </bean>
+   
    <bean id="orderService" class="us.avn.oms.service.impl.OrderServiceImpl">
       <property name="orderMapper"         ref="orderMapper" />
    </bean>
@@ -131,9 +140,6 @@
    
    <bean id="tankService" class="us.avn.oms.service.impl.TankServiceImpl">
       <property name="tankMapper"        ref="tankMapper" />
-      <property name="analogInputMapper" ref="analogInputMapper" />
-      <property name="configMapper"      ref="configMapper" />
-      <property name="tagMapper"         ref="tagMapper" />
    </bean>
    
    <bean id="trainService" class="us.avn.oms.service.impl.TrainServiceImpl">

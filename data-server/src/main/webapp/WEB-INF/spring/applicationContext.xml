@@ -272,8 +272,6 @@
    
    <bean id="tankService" class="us.avn.oms.service.impl.TankServiceImpl">
       <property name="tankMapper"        ref="tankMapper" />
-      <property name="configMapper"      ref="configMapper" />
-      <property name="analogInputMapper" ref="analogInputMapper" />
    </bean>
    
    <bean id="trainService" class="us.avn.oms.service.impl.TrainServiceImpl">
@@ -283,7 +281,6 @@
    
    <bean id="transferService" class="us.avn.oms.service.impl.TransferServiceImpl">
       <property name="transferMapper" ref="transferMapper" />
-      <property name="tagMapper"      ref="tagMapper" />
    </bean>
 
    <bean id="unitService" class="us.avn.oms.service.impl.UnitServiceImpl">

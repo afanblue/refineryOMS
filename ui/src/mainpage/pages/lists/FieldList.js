@@ -54,9 +54,9 @@ class FieldList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {fieldSelect({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {fieldSelect({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-120">{n.parent}</td>
                      </tr>; 

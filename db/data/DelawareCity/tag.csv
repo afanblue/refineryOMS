@@ -574,4 +574,12 @@ GDP-RUGT14,Pipe to gas tank 14,SCO,P,None,None,None,None,Y
 GDP-RUGT15,Pipe to gas tank 15,SCO,P,None,None,None,None,Y
 GDP-RUGT09,Pipe to gas tank  9,SCO,P,None,None,None,None,Y
 GDP-RUGT08,Pipe to gas tank  8,SCO,P,None,None,None,None,Y
+Dock1,Ship Dock 1, northernmost,DK,S,None,None,None,None,Y
+Dock2,Ship Dock 2,DK,S,None,None,None,None,Y
+Dock3,Ship Dock 3,DK,S,None,None,None,None,Y
+Dock4,Ship Dock 4, southernmost,DK,S,None,None,None,None,Y
+DK1toC,Dock 1 to Crude tanks,XFR,C,None,None,None,None,Y
+DK2toC,Dock 2 to Crude tanks,XFR,C,None,None,None,None,Y
+DK3toC,Dock 3 to Crude tanks,XFR,C,None,None,None,None,Y
+DK4toC,Dock 4 to Crude tanks,XFR,C,None,None,None,None,Y
 End

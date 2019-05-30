@@ -45,9 +45,9 @@ class AlarmMsgList extends Component {
           <tbody className="scrollContent">
             <tr>
               <td className={["oms-spacing-90","oms-cursor-pointer","oms-fontsize-12"].join(' ')} colSpan="2">
-                <a id="0" onClick={() => {msgSelect(0)}} >
-                  Create New Message
-                </a>
+                <button type="button" className="link-button"
+                        onClick={() => {msgSelect(0)}} >Create New Message
+                </button>
               </td>
             </tr>
           {msgList.map(
@@ -55,14 +55,14 @@ class AlarmMsgList extends Component {
               const z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-90","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {msgSelect({z})}} >
-                           {n.abbr}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {msgSelect({z})}} >{n.abbr}
+                         </button>
                        </td>
                        <td className={["oms-spacing-240","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {msgSelect({z})}} >
-                           {n.message}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {msgSelect({z})}} >{n.message}
+                         </button>
                        </td>
                      </tr>; 
               } 

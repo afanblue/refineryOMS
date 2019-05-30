@@ -183,9 +183,13 @@ class CalcVarForm extends Component {
                     </select>
                   </td>
                   <td style={midStyle}>
-                    <a onClick={moveLeft}><img src={imgLeft} alt="leftArrow" style={leftStyle} /></a>
+                    <button type="button" className="link-button" onClick={moveLeft} >
+                      <img src={imgLeft} alt="leftArrow" style={leftStyle} />
+                    </button>
                     <p/>
-                    <a onClick={moveRight}><img src={imgRight} alt="rightArrow" style={rightStyle} /></a>
+                    <button type="button" className="link-button" onClick={moveRight} >
+                      <img src={imgRight} alt="rightArrow" style={rightStyle} />
+                    </button>
                   </td>
                   <td>
                     <select name="inputTags" id="inputTags"  ref="inputTagList" size={10}

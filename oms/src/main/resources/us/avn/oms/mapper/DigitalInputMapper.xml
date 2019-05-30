@@ -127,7 +127,7 @@
          , di.prev_scan_time, di.last_hist_value, di.last_hist_time
          , di.value_view, di.alarm_state, di.alarm_code
       from digital_input di join tag t on di.tag_id = t.id
-     where di.tag_id = #{parm1}
+     where di.tag_id = #{param1}
   </select>
   
   <select id="getAllHistoryTypes" resultType="ReferenceCode" >
@@ -145,10 +145,23 @@
       join off_on_vw vv on coalesce(di.scan_value,0) = value
       left outer join alarm_info alm on di.tag_id = alm.tag_id  
       left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name 
-     where tp.name = #{parm1}
+     where tp.name = #{param1}
      order by name
   </select>
 
+  <select id="getCarrierPresentTags" resultMap="digitalInputResultMap">
+    select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
+         , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
+         , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
+         , di.last_hist_time, coalesce(x.float_value,0) sim_value
+         , x.updated
+      from digital_input di join tag t on di.tag_id = t.id
+           join xfer x on t.id = x.id
+     where t.active = 'Y'
+       and t.name like #{param1}
+     order by 2
+  </select>
+  
   <update id="updateDigitalInput" parameterType="DigitalInput">
     update digital_input
        set scan_value = #{scanValue}

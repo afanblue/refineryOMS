@@ -55,9 +55,9 @@ class CarrierList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {carrierSelect({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {carrierSelect({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-180">{n.description}</td>
                        <td className="oms-spacing-90" >{n.active}</td>

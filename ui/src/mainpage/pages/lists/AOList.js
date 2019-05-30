@@ -61,9 +61,9 @@ class AOList extends Component {
               let z = n.tagId;
               return <tr key={x}>
                        <td className={["oms-spacing-90","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {aoSelect({z})}} >
-                           {n.tag.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {aoSelect({z})}} >{n.tag.name}
+                         </button>
                        </td>
                        <td className={["oms-spacing-50","oms-fontsize-12"].join(' ')}>{n.tag.active}</td>
                        <td className={["oms-spacing-240","oms-fontsize-12"].join(' ')}>{n.tag.description}</td>

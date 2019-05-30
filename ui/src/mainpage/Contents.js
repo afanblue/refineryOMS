@@ -33,6 +33,7 @@ import ControlBlockAdmin  from './pages/ControlBlockAdmin.js';
 import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
 import DigitalOutputAdmin from './pages/DigitalOutputAdmin.js';
+import DockAdmin          from './pages/DockAdmin.js';
 import FieldAdmin         from './pages/FieldAdmin.js';
 import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
@@ -49,6 +50,7 @@ import RoleAdmin          from './pages/RoleAdmin.js';
 import ScheduledTransfers from './pages/ScheduledTransfers.js';
 import Schematic          from './pages/Schematic.js';
 import SchematicAdmin     from './pages/SchematicAdmin.js';
+import ShipAdmin          from './pages/ShipAdmin.js';
 import SiteOverview       from './pages/SiteOverview.js';
 import SiteStar           from './pages/SiteStar.js';
 import TagAdmin           from './pages/TagAdmin.js';
@@ -84,6 +86,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <DigitalInputAdmin stage={stage} />
         case "DigitalOutputs":
           return <DigitalOutputAdmin stage={stage} />
+        case "Docks":
+          return <DockAdmin stage={stage} />
         case "Fields":
           return <FieldAdmin stage={stage} />
         case "Pipes":
@@ -94,6 +98,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <RoleAdmin stage={stage} />
         case "SystemConfiguration":
           return <ConfigAdmin stage={stage} />
+        case "Ships":
+          return <ShipAdmin stage={stage} />
         case "Tags":
           return <TagAdmin stage={stage} />
         case "Tanks":

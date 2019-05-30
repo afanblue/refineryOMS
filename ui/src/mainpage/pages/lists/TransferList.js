@@ -64,9 +64,9 @@ class TransferList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {transferSelect({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {transferSelect({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-50">{n.status}</td>
                        <td className="oms-spacing-90">{n.transferType}</td>

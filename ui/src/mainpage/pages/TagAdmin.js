@@ -45,9 +45,11 @@ class TagAdmin extends Component {
       siteLocation: null,
       tagTypes: null,
       equipList: null,
-      sensorList: null
+      sensorList: null,
+      contentsList: null
     };
     this.finishEqpFetch    = this.finishEqpFetch.bind(this);
+    this.finishCntntsFetch = this.finishCntntsFetch.bind(this);
     this.finishListFetch   = this.finishListFetch.bind(this);
     this.finishSensorFetch = this.finishSensorFetch.bind(this);
     this.finishSiteFetch   = this.finishSiteFetch.bind(this);
@@ -109,32 +111,43 @@ class TagAdmin extends Component {
     this.setState({stage: "tagRetrieved", updateDisplay: true, sensorList: req });
   }
   
+  finishCntntsFetch(req) {
+    var cList = [];
+    var mt = {};
+    mt["id"] = null;
+    mt["name"] = "---";
+    cList.push(mt);
+    req.map( function(n,x){
+               var c = {};
+               c["id"] = n.code;
+               c["name"] = n.description;
+               return cList.push(c);
+             } )
+    this.setState({stage: "tagRetrieved", updateDisplay: true, contentsList:cList });
+  }
+  
   handleTagSelect(event) {
     const id = event.z;
     const loc = "TagAdmin.tagSelect";
     let req0 = new OMSRequest(loc, SERVERROOT + "/tag/" + id,
                              "Problem selecting tag id "+id, this.finishTagFetch);
     req0.fetchData();
-//    if( this.state.tagTypes===null ) {
-      let req1 = new OMSRequest(loc, SERVERROOT + "/tag/types",
-                               "Problem retrieving roles", this.finishTypesFetch);
-      req1.fetchData();
-//    }
-//    if( this.state.siteLocation===null) {
-      let req2 = new OMSRequest(loc, SERVERROOT + "/config/site",
-                               "Problem retrieving site location ", this.finishSiteFetch);
-      req2.fetchData();
-//    }
-//    if( this.state.equipList === null ) {
-      let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/P,PMP,V",
-                            "Problem retrieving roles", this.finishEqpFetch);
-      req3.fetchData();
-//    }
-//    if( this.state.sensorList === null ) {
-      let req4 = new OMSRequest(loc, SERVERROOT + "/tag/types/AI,AO,DI,DO,C",
-                            "Problem retrieving roles", this.finishSensorFetch);
-      req4.fetchData();
-//    }
+    let req1 = new OMSRequest(loc, SERVERROOT + "/tag/types",
+                             "Problem retrieving roles", this.finishTypesFetch);
+    req1.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/config/site",
+                             "Problem retrieving site location ", this.finishSiteFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/P,PMP,V",
+                             "Problem retrieving roles", this.finishEqpFetch);
+    req3.fetchData();
+    let req4 = new OMSRequest(loc, SERVERROOT + "/tag/types/AI,AO,DI,DO,C",
+                             "Problem retrieving roles", this.finishSensorFetch);
+    req4.fetchData();
+    let req5 = new OMSRequest(loc, SERVERROOT + "/referencecode/category/content-type",
+                             "Problem retrieving contents list ", this.finishCntntsFetch);
+    req5.fetchData();
+    
   }
 
   handleTagUpdate(event) {
@@ -180,6 +193,7 @@ class TagAdmin extends Component {
     const name = target.name;
     if( name === "type" ) {
       this.fetchList(value);
+      this.setState({type:value} );
     } else {
       let tnew = Object.assign({},this.state.tag);
       let val = value;
@@ -192,6 +206,7 @@ class TagAdmin extends Component {
         case "name":
         case "description":
         case "active":
+        case "misc":
           tnew[name] = value;
           break;
         case "c1Lat":
@@ -299,9 +314,10 @@ class TagAdmin extends Component {
                           tagSelect    = {this.handleTagSelect} />
         }
       case "tagRetrieved":
-        if( (this.state.tag === null)     || (this.state.tagTypes === null) ||
-            (this.state.equipList===null) || (this.state.sensorList === null) ||
-            (this.state.siteLocation===null) ) {
+        if( (this.state.tag === null)        || (this.state.tagTypes === null) ||
+            (this.state.equipList===null)    || (this.state.sensorList === null) ||
+            (this.state.siteLocation===null) || (this.state.contentsList === null) ) 
+        {
           return <Waiting />
         } else {
           return <TagForm tag           = {this.state.tag}
@@ -309,6 +325,7 @@ class TagAdmin extends Component {
                           siteLoc       = {this.state.siteLocation}
                           equipList     = {this.state.equipList}
                           sensorList    = {this.state.sensorList}
+                          contentsList  = {this.state.contentsList}
                           tagUpdate     = {this.handleTagUpdate}
                           fieldChange   = {this.handleFieldChange}
                           handleMouseUp = {this.handleMouseUp}

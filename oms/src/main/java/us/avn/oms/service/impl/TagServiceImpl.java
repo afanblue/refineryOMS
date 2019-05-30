@@ -105,7 +105,12 @@ public class TagServiceImpl implements TagService {
 	}
 	
 	@Override
-	public Collection<Taglet> getChildren( Long id ) {
+	public Collection<RelTagTag> getParentOfType( Long id, String code ) {
+		return tagMapper.getParentOfType(id, code);
+	}
+	
+	@Override
+	public Collection<RelTagTag> getChildren( Long id ) {
 		return tagMapper.getChildren(id);
 	}
 	

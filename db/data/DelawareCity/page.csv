@@ -42,4 +42,6 @@ Purchases,None,OrderAdmin,OrderAdmin,Y
 Sales,None,OrderAdmin,OrderAdmin,Y
 Last Weeks Orders,None,OrderAdmin,View Orders,Y
 Last Months Orders,None,OrderAdmin,View Orders,Y
+ShipAdmin,None,Admin Ship,Admin Ship,Y
+Docks,None,Admin Docks,Admin Docks,Y
 End

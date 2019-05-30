@@ -33,7 +33,7 @@
          , t.description, t.tag_type_code, t.active
 	  from train tr join tag t on tr.id = t.id
 	  join customer c on tr.owner_id=c.id
-	 where s.id = #{parm1} 
+	 where s.id = #{param1} 
   </select>
   
   <update id="updateTrain" parameterType="Train">

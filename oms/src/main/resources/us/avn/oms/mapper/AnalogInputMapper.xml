@@ -141,7 +141,7 @@
   <select id="getAllAIIdNameByType" resultMap="idNameMap">
     select t.id, t.name
       from analog_input ai join tag t on ai.tag_id = t.id
-     where ai.analog_type_code = #{parm1}
+     where ai.analog_type_code = #{param1}
      order by 2
   </select>
   
@@ -153,7 +153,7 @@
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
          , ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id
       from analog_input ai join tag t on ai.tag_id = t.id
-     where ai.analog_type_code = #{parm1}
+     where ai.analog_type_code = #{param1}
      order by 2
   </select>
 
@@ -169,7 +169,7 @@
 		 , coalesce(TIMESTAMPDIFF(MINUTE,ai.last_hist_time,ai.scan_time),0) int_scan_time
       from analog_input ai join tag t on ai.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
-     where t.id = #{parm1}
+     where t.id = #{param1}
   </select>
   
   <select id="getCurrentAIValues" resultMap="aiValueMap" >
@@ -264,7 +264,7 @@
       join unit u on ai.unit_id = u.id
       left outer join alarm_info alm on ai.tag_id = alm.tag_id
       left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name          
-     where tp.name = #{parm1}
+     where tp.name = #{param1}
     union
     select tc.id, tc.name, ai.scan_value value
          , concat(format(ai.scan_value,2)," ",u.code) value
@@ -278,7 +278,7 @@
       join unit u on ai.unit_id = u.id
       left outer join alarm_info alm on ai.tag_id = alm.tag_id
       left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name
-     where tp.name = #{parm1}      
+     where tp.name = #{param1}      
      order by 2
   </select>
   

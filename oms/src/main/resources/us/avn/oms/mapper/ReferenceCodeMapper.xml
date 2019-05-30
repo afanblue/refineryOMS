@@ -22,7 +22,7 @@
   <select id="getAllForCategory" resultType="ReferenceCode">
     select id, category, name, code, value, description, active
       from reference_code
-     where category = #{parm1}
+     where category = #{param1}
      order by code
   </select>
   

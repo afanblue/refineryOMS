@@ -53,9 +53,9 @@ class RoleList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {roleSelect({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {roleSelect({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-90">{n.active}</td>
                      </tr>; 

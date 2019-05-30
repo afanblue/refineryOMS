@@ -19,7 +19,7 @@
     update xfer
        set updated = 1
          , float_value = #{floatValue}
-         , scan_time = current_timestamp
+         , scan_time = coalesce(#{scanTime},current_timestamp)
      where id = #{id}
   </update>
   

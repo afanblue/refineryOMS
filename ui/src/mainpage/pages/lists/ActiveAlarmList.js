@@ -69,7 +69,9 @@ class ActiveAlarmList extends Component {
                 <tr key={x}>
                   <td className={["oms-spacing-90","oms-cursor-pointer"].join(' ')} 
                       style={{"color":color}}>
-                    <a onClick={() => {handleSelect({z})}}>{n.tagId.name}</a>
+                    <button type="button" className="link-button"
+                            onClick={() => {handleSelect({z})}} >{n.tagId.name}
+                    </button>
                   </td>
                   <td className="oms-spacing-120" style={{"color":color}}>
                     {occ}

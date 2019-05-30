@@ -66,9 +66,9 @@ class AIList extends Component {
               let z = n.tagId;
               return <tr key={x}>
                        <td className={["oms-spacing-90","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {aiSelect({z})}} >
-                           {n.tag.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {aiSelect({z})}} >{n.tag.name}
+                         </button>
                        </td>
                        <td className={["oms-spacing-50","oms-fontsize-12"].join(' ')}>{n.tag.active}</td>
                        <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>{n.tag.description}</td>

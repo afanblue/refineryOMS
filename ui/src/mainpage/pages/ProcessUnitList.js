@@ -123,13 +123,19 @@ class ProcessUnitList extends Component {
               return (
                 <tr key={x}>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{z1}</a>
+                    <button type="button" className={["oms-menu-text","link-button"].join(' ')}
+                            onClick={() => {menuSelect({z1})}} >{z1}
+                    </button>
+                  </td>
+                  <td className={"oms-spacing-180"}>                 
+                    <button type="button" className={["oms-menu-text","link-button"].join(' ')}
+                            onClick={() => {menuSelect({z2})}} >{z2}
+                    </button>
                   </td>
                   <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z2} onClick={() => {menuSelect({z2})}} >{z2}</a>
-                  </td>
-                  <td className={"oms-spacing-180"}>
-                    <a className={"oms-menu-text"} id={z3} onClick={() => {menuSelect({z3})}} >{z3}</a>
+                    <button type="button" className={["oms-menu-text","link-button"].join(' ')}
+                            onClick={() => {menuSelect({z3})}} >{z3}
+                    </button>
                   </td>
                 </tr>
               )

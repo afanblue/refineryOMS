@@ -41,6 +41,8 @@ public interface DigitalInputService {
 	
 	public Collection<ReferenceCode> getAllHistoryTypes();
 	
+	public Collection<DigitalInput> getCarrierPresentTags( String ptn );
+	
 	public void updateDigitalInput( DigitalInput di );
 
 	public void updateDigitalInputStatic( DigitalInput di );

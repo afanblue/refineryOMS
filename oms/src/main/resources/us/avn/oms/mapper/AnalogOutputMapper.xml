@@ -116,7 +116,7 @@
       from analog_output ao join tag t on ao.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
            join unit u on ao.unit_id = u.id
-     where t.id = #{parm1}
+     where t.id = #{param1}
   </select>
   
   <update id="updateAOvalue" parameterType="AnalogOutput">

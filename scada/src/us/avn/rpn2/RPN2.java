@@ -151,11 +151,12 @@ public class RPN2 {
     }
 
     /**
-     * Method: evaluate
-     * Description: scan the input string, evaluate the arguments,
-     *              calculate the results
-     * Parameters: String RPNstring w/x0, x1, x2, x3 for argument values
-     *             Double[] values  values required for evaluation 
+     * Scan the input string (expr), evaluate the arguments (values), 
+     * return the calculated results
+     *              
+     * @param expr String RPNstring w/x0, x1, x2, x3 for argument values
+     * @param values Double[] values required for evaluation 
+     * @return Long 
      */
     public double evaluate(String expr, Double[] values ) 
             throws NumberFormatException {
@@ -191,17 +192,20 @@ public class RPN2 {
     }
     
     /**
-     * Method: execControl
-     * Parameters: token (if, else, then)
-     *             nops  - number of operators to consume
-     *             c     - current state (starts as "B")
-     * Returns: B => "then" found => control block complete (restore to starting condition)
-     *          e => "if" found, result was false, 
-     *               => look for "else" (i.e., skip everything until "else" found)
-     *          E => "else" found, state was "e" => can compute now until "then" found 
-     *          I => "if" found, result was true
-     *               process stuff until else found, then skip to end
-     *          T => "else" found, state was "c" => skip everything until "then" found
+     * Execute the control tokens (if, else, then, ... )
+     * 
+     * @param token String, to evaluate
+     * @param nops Integer, number of operators to consume
+     * @param c String, current state
+     * @return new state
+     * {@code B => "then" found => control block complete (restore to starting condition)
+     *        e => "if" found, result was false, 
+     *             => look for "else" (i.e., skip everything until "else" found)
+     *        E => "else" found, state was "e" => can compute now until "then" found 
+     *        I => "if" found, result was true
+     *             process stuff until else found, then skip to end
+     *        T => "else" found, state was "c" => skip everything until "then" found
+     * }
      */
     public String execControl( String token, Integer nops, String c ) {
     	Double op1 = 0D;
@@ -226,10 +230,9 @@ public class RPN2 {
     }
 
     /**
-     * Method: evaluate
-     * Description: scan the input string, evaluate the arguments,
-     *              calculate the results
-     * Parameters: RPN string
+     * Evaluate the input string as a floating point (double) number
+     * @param expr String, value to evalute
+     * @return number
      */
     public double evaluate(String expr) 
             throws NumberFormatException {
@@ -239,27 +242,33 @@ public class RPN2 {
     }
 
     /**
-     * Method: isOperator
-     * Description: validates that this is an operator and returns the number
-     *              of arguments used.  Returns null if this is not an 
-     *              operator
+     * Validates that this is an operator and returns the number
+     * of arguments used.  Returns null if this is not an operator
+     * @param token String, potential token string to evaluate
+     * @return number of operands used for this operation (token)
      */
     private Integer isOperator(String token) {
         return ( operatorList.get(token) );
     }
 
     /**
-     * Method: isControl
-     * Description: validates that this is an control token and returns the number
-     *              of arguments used.  Returns null if this is not a control
+     * Validates that this is an control token and returns the number
+     * of arguments used.  Returns null if this is not a control
+     * 
+     * @param token String 
+     * @param Integer, number of operands for this token
      */
     private Integer isControl(String token) {
         return ( controlList.get(token) );
     }
 
     /**
-     * Method: evaluateSingleOperator
-     * Description: actually executes the operation requested
+     * Actually executes the operation requested
+     * 
+     * @param operation (String), to evaluate
+     * @param op1 (double) operand one
+     * @param op2 (double) operand two
+     * @return double, results of operation
      */
     private double evaluateSingleOperator(String operation, double op1, double op2) {
         double result = 0;

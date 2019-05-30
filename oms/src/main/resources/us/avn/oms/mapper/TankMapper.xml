@@ -86,38 +86,30 @@
       from tank tk join tag t on tk.id = t.id
            join content_type_vw ct on ct.code = tk.content_type_code
            left outer join tank_ref_tag_vw trt on t.id = trt.id
-     where tk.id = #{parm1}
+     where tk.id = #{param1}
   </select>
 
   <select id="getEstTankVolume" resultMap="valueMap">
     select tk.id, tk.content_type_code code
          , round(0.17811*pi()*tk.diameter*tk.diameter*(tk.height-1)/4,4) value 
       from tank tk
-     where tk.id = #{parm1} 
+     where tk.id = #{param1} 
   </select>
   
   <select id="getEmptiestTankForContent" resultMap="valueMap">
-    select t.id, x.content_type_code code, x.value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id
-        join analog_input ai on ai.tag_id=tlv.level_id
-        join (select content_type_code, min( round(0.17811*pi()*diameter*diameter*scan_value/4,0) ) value
-                from tank t join tank_level_vw tlv on t.id=tlv.tank_id
-                join analog_input ai on ai.tag_id=tlv.level_id
-               where t.content_type_code= #{parm1}
-               group by content_type_code) x
-          on x.value = round(0.17811*pi()*t.diameter*t.diameter*ai.scan_value/4,0)
+    select t.id, content_type_code, round(0.17811*pi()*diameter*diameter*max(height-scan_value)/4,0) value
+      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
+      join analog_input ai on ai.tag_id=tlv.level_id 
+     where t.content_type_code= #{param1}    
+     group by content_type_code
   </select>
   
   <select id="getFullestTankForContent" resultMap="valueMap">
-    select t.id, x.content_type_code code, x.value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id
-        join analog_input ai on ai.tag_id=tlv.level_id
-        join (select content_type_code, max( round(0.17811*pi()*diameter*diameter*scan_value/4,0) ) value
-                from tank t join tank_level_vw tlv on t.id=tlv.tank_id
-                join analog_input ai on ai.tag_id=tlv.level_id
-               where t.content_type_code= #{parm1}
-               group by content_type_code) x
-          on x.value = round(0.17811*pi()*t.diameter*t.diameter*ai.scan_value/4,0)
+    select t.id, content_type_code, round(0.17811*pi()*diameter*diameter*min(height-scan_value)/4,0) value
+      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
+      join analog_input ai on ai.tag_id=tlv.level_id 
+     where t.content_type_code= #{param1}   
+     group by content_type_code
   </select>
   
   <select id="getTotalTankCapacitiesForContents" resultMap="valueMap">
@@ -137,7 +129,7 @@
     select tank_id id, round( 0.17811*pi()*diameter*diameter*height/4,0) value
       from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     where t.content_type_code=#{parm1}
+     where t.content_type_code=#{param1}
   </select>
   
   <select id="getTankVolumesForContents" resultMap="valueMap">
@@ -145,7 +137,7 @@
          , round(  0.17811*pi()*diameter*diameter*scan_value/4, 0) value 
       from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     where t.content_type_code=#{parm1}
+     where t.content_type_code=#{param1}
   </select>
   
   <select id="getTankVolumesForUnit" resultMap="valueMap">
@@ -156,7 +148,7 @@
            join tank_ref_tag_vw trt on rtt.child_tag_id = trt.id
            join tank tk on tk.id = rtt.child_tag_id
            join analog_input ai on ai.tag_id = trt.level_tag_id
-     where t.name = #{parm1}
+     where t.name = #{param1}
        and tk.id not in (select source_id from transfer where status_id=3)
        and tk.id not in (select destination_id from transfer where status_id=3)
   </select>
@@ -164,7 +156,7 @@
   <select id="getLevelVolumesForTank" resultMap="volumeMap" >
     select tank_id, level, volume
       from volume
-     where tank_id = #{parm1}
+     where tank_id = #{param1}
      order by level asc
   </select>
   

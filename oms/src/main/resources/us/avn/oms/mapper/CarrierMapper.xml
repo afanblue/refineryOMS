@@ -41,7 +41,7 @@
       from tag t
       left outer join (select carrier_id id, sum(no_duplicates * volume) quantity 
               from hold group by carrier_id) s on t.id=s.id
-   	 where t.id = #{parm1}
+   	 where t.id = #{param1}
   </select>
 
 </mapper>

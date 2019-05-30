@@ -33,7 +33,7 @@
     select id, alias, first_name, middle_name, last_name, email
          , password, state, status, role_id
       from user u join user_role ur on u.id = ur.user_id
-     where id = #{parm1}
+     where id = #{param1}
   </select>
 
   <select id="getAllUsers" resultMap="userResultMap">

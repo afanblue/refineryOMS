@@ -38,12 +38,12 @@
 
   <select id="getCustomer" resultMap="customerResultMap">
     select id, name, active, etherkey from customer
-	 where id = #{parm1}
+	 where id = #{param1}
   </select>
   
   <select id="getCustomerByName" resultMap="customerResultMap">
     select id, name, active, etherkey from customer
-	 where name = #{parm1}
+	 where name = #{param1}
   </select>
   
   <update id="updateCustomer" parameterType="Customer">

@@ -19,6 +19,7 @@ package us.avn.oms.sim;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -105,6 +106,10 @@ public class AIDataSimulator {
 				cc = ws.getCurrentConditions();
 			}
 
+		Date currentScanTime = new Date();
+		if(null != cc.get(WeatherStation.WS_TIME)) {
+			currentScanTime = new Date(new Long(cc.get(WeatherStation.WS_TIME).longValue()));
+		}
 		Double currentTemp = (Double)cc.get(WeatherStation.WS_TEMPERATURE); 
 		Double currentPressure = (Double)cc.get(WeatherStation.WS_PRESSURE);
 		Double currentWindSpeed = (Double)cc.get(WeatherStation.WS_WIND_SPEED);
@@ -142,6 +147,7 @@ public class AIDataSimulator {
 					log.debug(aiName+"-"+currentValue);
 					if( null != currentValue ) {
 						x.setFloatValue(currentValue);
+						x.setScanTime(currentScanTime);
 						xs.updateXfer(x);
 					}
 				} else if( "T".equals(ai.getAnalogTypeCode())) {
@@ -150,6 +156,7 @@ public class AIDataSimulator {
 					log.debug("Recorded scan value (id="+x.getId()+"): "+nv+", from web: "+ct);
 					nv += 0.002 * (ct - nv);
 					x.setFloatValue(nv);
+					x.setScanTime(currentScanTime);
 //					Updated simulated data
 					xs.updateXfer(x);
 				}
@@ -160,6 +167,7 @@ public class AIDataSimulator {
 //						set the value to its current value
 //						(this will be overwritten by transfer levels)
 						x.setFloatValue(ai.getScanValue());
+						x.setScanTime(currentScanTime);
 						xs.updateXfer(x);
 					}
 				}
@@ -198,8 +206,6 @@ public class AIDataSimulator {
 		}
 	}
 
-	private static Double FAST = 40D;
-	private static Double SLOW = 20D;
 
 	/**
 	 * Method: computeChange
@@ -252,29 +258,29 @@ public class AIDataSimulator {
 					Tank destTk = tks.getTank(x.getDestinationId());
 					if( srcTk.getContentTypeCode().equals(destTk.getContentTypeCode())) {
 						if( Tank.CRUDE.equals(srcTk.getContentTypeCode())) {
-							delta = FAST;
+							delta = Transfer.FAST;
 						} else {
-							delta = SLOW;
+							delta = Transfer.SLOW;
 						}
 					} else {
 						delta = 0D;
 					}
 				} else if( Tag.REFINERY_UNIT.equals(dest.getTagTypeCode())) {
-					delta = FAST;
+					delta = Transfer.FAST;
 				} else {
 					if ( Tank.CRUDE.equals(srcTk.getContentTypeCode()) ) {
 						delta = 0D;
 					} else {
 						if ( Tag.SHIP.equals(dest.getTagTypeCode())) {
-							delta = FAST;
+							delta = Transfer.FAST;
 						} else if ( Tag.TANK_CAR.equals(dest.getTagTypeCode())) {
-							delta = FAST;
+							delta = Transfer.FAST;
 						} else if ( Tag.TANK_TRUCK.equals(dest.getTagTypeCode())) {
-							delta = SLOW;
+							delta = Transfer.SLOW;
 						} else if ( Tag.SHIP.equals(dest.getTagTypeCode())) {
-							delta = FAST;
+							delta = Transfer.FAST;
 						} else if ( Tag.DOCK.equals(dest.getTagTypeCode())) {
-							delta = FAST;
+							delta = Transfer.FAST;
 						} else {
 							delta = 0D;
 						}
@@ -288,14 +294,14 @@ public class AIDataSimulator {
 				fString = (fString==null?"0":fString);
 				log.debug("Fraction: "+destTk.getContentTypeCode()+" = "+fString);
 				Double f = new Double( fString );
-				delta = FAST * f / 100D;
+				delta = Transfer.FAST * f / 100D;
 				break;
 			case Tag.SHIP :
 			case Tag.DOCK :
 				Tank dstTk = tks.getTank(x.getDestinationId());
 				if( Tag.TANK.equals(dest.getTagTypeCode())) {
 					if( Tank.CRUDE.equals(dstTk.getContentTypeCode())) {
-						delta = FAST;
+						delta = Transfer.FAST;
 					} else {
 						delta = 0D;
 					}

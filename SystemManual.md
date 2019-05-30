@@ -129,6 +129,10 @@ In the "config" table, there are a set of key-value pairs that define the behavi
    | ```WEATHER_INTERVAL``` | ```60``` | ```The interval (in minutes) that the weather values are requested and updated.``` |
    | ```WEATHER_LOCATION``` | ```KTME``` | ```NOAA weather location (see WEATHER_TYPE, below).``` |
    | ```WEATHER_TYPE``` | ```API``` | ```The choices are ACU, API, CSV, and XML.  The default is XML.  This is because the NOAA API doesn't return the same values as the XML and the XML values look right.  If you have a personal weather station that returns the values in a CSV file, you can use this.  The type for the AcuRite 01036M is ACU.  In the case of CSV and ACU, the WEATHER_LOCATION becomes the location of the the file created/updated by the station, and the WEATHER_DELAY and WEATHER_INTERVAL need to be suitably adjusted.``` |
+   | ```Dock 1``` | ```DK1toC``` | ```Map for Ship Dock 1 to required template``` |
+   | ```Dock 2``` | ```DK2toC``` | ```Map for Ship Dock 2 to required template``` |
+   | ```Dock 3``` | ```DK3toC``` | ```Map for Ship Dock 3 to required template``` |
+   | ```Dock 4``` | ```DK4toC``` | ```Map for Ship Dock 4 to required template``` |
    ---
 
    These names are defined as static values in the Config data element.
@@ -274,6 +278,13 @@ This is how the processing works:
 -   The simulation process (the ```sim``` process) writes the value in the XFER table for the output tag (```CO```) to the value in the XFER table for the related input tag.  The related input tag is defined in the SIM_IO table.
 -   The digital input processor (part of the ```pmc``` process) then gets the value from the XFER table for the ```PV```.
 
+### Docks
+
+Docks are the stationary locations for ships.  Ships must be defined entities and can be related to them via a REL_TAG_TAG record when they are docked.  Under "real" circumstances, this would be a manual process.  An operator would assign a dock to a ship and a sensor would trip when the ship had actually docked.  In the meantime, the simulator creates the relationship and sets the ship present indicator.  The transfer is then created and processed.  When the transfer is complete, the simulator deletes the relationship and clears the ship present flag.
+
+Docks are implemented as a special usage of a Tag.  For a dock the input tag is the ID of the digital input which specifies that a carrier (ship, train, truck) is present at the dock.  The "output" tag is the ID of the carrier present at the dock.
+N.B., trains are problematic because they actually consist of multiple tank cars which must be treated individually.
+
 ### Fields
 
 Fields are graphical displays of areas of the refinery.  The size is determined by the area selected to be displayed.  The display is updated every minute.
@@ -320,8 +331,21 @@ Ships tie up at docks at which they are unloaded or loaded.  Also, a ship has mu
 
 ### Tags
 
-Tags are the root definition object.  The meaning of most of the Tag fields is self-evident, but the "inTag", "outTag", "inTagList", and "outTagList" probably need some additional explanation.  The usage of these tags is dependent on the tag type.
+Tags are the root definition object.  The meaning of most of the Tag fields is self-evident, but the "inTag" (inTagId), "outTag" (outTagId), "inTagList", and "outTagList" probably need some additional explanation.  The usage of these tags is dependent on the tag type.  The names also originate in Control Blocks (CB) which needed an input tag for the process variable and an output tag for the output.  All of these relationships are defined in the REL_TAG_TAG table and (mostly) require codes to discriminate between their usage. 
 
+Calculated (C) variables need
+ - variables used to calculate result (CODE = "1","2", etc)
+
+Docks (DK) need
+ - inputTag - specifies the digital input that indicates the presence of a carrier docked.
+ - outputTag - specifies the ID of the carrier docked at this location. 
+
+Fields (FLD) need
+ - list of items (Tanks) in field
+ 
+Process Units (PU) need
+ - list of items (Tanks, Analog Inputs, Digital Inputs) to display 
+ 
 Refinery Units (RU) (probably a bad name) need 
  - "status" tag (is unit ON (operating) or OFF)
  - list of equipment (pipes, valves, pumps) coming INTO the unit from the Crude tanks
@@ -332,15 +356,6 @@ Tanks (TK) need
  - temperature tag
  - equipment (pipes, valves, pumps) to refined unit (not implemented)
  - equipment (pipes, valves, pumps) from docks (not implemented)
- 
-Calculated (C) variables need
- - variables used to calculate result (CODE = "1","2", etc)
- 
-Fields (FLD) need
- - list of items (Tanks) in field
- 
-Process Units (PU) need
- - list of items (Tanks, Analog Inputs, Digital Inputs) to display 
  
 Schematics (SCM) need
  - list of schematic objects to display

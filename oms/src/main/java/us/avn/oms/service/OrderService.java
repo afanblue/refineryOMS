@@ -25,24 +25,86 @@ import us.avn.oms.domain.Order;
 
 public interface OrderService {
 	
+	/**
+	 * Get the order (shipment) record for the specified ID
+	 * @param id ID of shipment to retrieve
+	 * @return Order record only (no items)
+	 */
 	Order getOrder( Long id );
 	
+	/**
+	 * Get order items (shipment_item records) for a given order (shipment)
+	 * @param id ID of shipment
+	 * @return all items for specified order
+	 */
 	Collection<Item> getOrderItems( Long id );
 	
+	/**
+	 * Get all of the active orders, i.e., those that have some items with
+	 * active = 'A'
+	 * @return all active orders 
+	 */
 	Collection<Order> getActiveOrders( );
 	
+	/**
+	 * Get all of the pending orders, i.e., those that have some 
+	 * items with active = 'P'
+	 * @return All pending orders
+	 */
+	Collection<Order> getPendingOrders( );
+
+	/**
+	 * Get all the pending shipment items for a given shipment (order)
+	 * @param id ID of order to get the itesm for
+	 * @return pending shipment items
+	 */
+	Collection<Item> getPendingOrderItems( Long id );
+	
+	/**
+	 * Get all the orders of type (Purchase or Sale)
+	 * @param type P(urchase) or S(ale)
+	 * @return collection of specified orders
+	 */
 	Collection<Order> getOrdersByType( String type );
 	
+	/**
+	 * Get the last week's orders, i.e., all the orders from the current
+	 * day minus one week
+	 * @return collection of last weeks orders
+	 */
 	Collection<Order> getLastWeeksOrders( );
 	
+	/**
+	 * Get the last month's orders, i.e., all the orders from the current
+	 * day minus one month
+	 * @return collection of the last month's orders
+	 */
 	Collection<Order> getLastMonthsOrders( );
 	
+	/**
+	 * Insert a DB record for the given Order
+	 * @param o Order to be inserted
+	 * @return ID of order inserted
+	 */
 	Long insertOrder( Order o );
 	
+	/**
+	 * Insert a DB record for the given item
+	 * @param i Item to be inserted
+	 */
 	void insertItem( Item i );
 	
+	/**
+	 * Update the DB record for the given order
+	 * @param o Order to be updated
+	 * @return ID of record updated
+	 */
 	Long updateOrder( Order o );
 	
+	/**
+	 * Update the DB record for the given item
+	 * @param i Item to be updated
+	 */
 	void updateItem( Item i );
 	
 }

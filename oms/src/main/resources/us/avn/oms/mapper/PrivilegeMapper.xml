@@ -19,7 +19,7 @@
 
   <select id="getPrivilegeById" resultMap="privResultMap">
     select p.id, p.name from privilege p
-     where p.id = #{parm1}
+     where p.id = #{param1}
   </select>
 
   <select id="getAllPrivileges" resultMap="privResultMap">
@@ -31,7 +31,7 @@
       from privilege p 
       join role_priv rp on p.id = rp.priv_id 
       join role r on r.id = rp.role_id 
-     where r.id = #{parm1}
+     where r.id = #{param1}
      order by 2
   </select>
   

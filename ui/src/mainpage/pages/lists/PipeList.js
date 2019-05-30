@@ -59,9 +59,9 @@ class PipeList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {ps({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {ps({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-240">{n.description}</td>
                        <td className="oms-spacing-50">{n.active}</td>

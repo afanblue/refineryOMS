@@ -70,9 +70,9 @@ class TankList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-100","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {tankSelect({z})}} >
-                           {n.tag.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {tankSelect({z})}} >{n.tag.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-50">{n.tag.active}</td>
                        <td className="oms-spacing-70">{n.height}</td>

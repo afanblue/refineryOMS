@@ -16,7 +16,11 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+
+import us.avn.oms.service.HistoryService;
 
 
 public class History extends OMSObject implements Serializable {
@@ -69,5 +73,78 @@ public class History extends OMSObject implements Serializable {
 		this.x = st;
 	}
 	
+	/**
+	 * Compute slope of current trend of values
+	 * 
+	 * @param ai analog input for which to compute the slope
+	 * @return slope
+	 * 
+	 */
+	public Double computeSlope( AnalogInput ai ) {
+		
+		Double slope = 0D;
+//		log.debug("("+ai.getTagId()+") - scanValue: "+ai.getScanValue()
+//		         +", lastHistValue: "+ai.getLastHistValue()
+//		         +", intSinceLhs: "+ai.getIntSinceLhs());
+		Long intScanTime = (ai.getIntScanTime()==null?0:ai.getIntScanTime());
+		if( intScanTime == 0 ) {
+			slope = 0.0;
+		} else {
+			try {
+				slope = (ai.getScanValue() - ai.getLastHistValue())
+						/ ai.getIntSinceLhs();
+			} catch( Exception e ) {
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				String eas = sw.toString();
+//				log.error( eas );
+				slope = 0D;
+			}
+		}
+//		log.debug("slope ("+ai.getTagId()+"): "+slope);
+		return slope;
+	}
+	
+	public AnalogInput doBoxcarCheck( AnalogInput ai, HistoryService hs ) {
+		AnalogInput nai = null;
+		Double scale = ai.getMaxValue() - ai.getZeroValue();
+		Double pcDelta = Math.abs(100D * (ai.getScanValue() - ai.getLastHistValue()) 
+				                  / scale );
+		if( pcDelta > ai.getPercent() ) {
+			nai = ai;
+			History h = new History();
+			h.setTagId(ai.getTagId());
+			h.setX(ai.getScanTime().getTime()/1000L);
+			h.setY(ai.getScanValue());
+//			log.debug("Insert history record tag "+ai.getTag().getName()+"/"+ai.getTagId());
+			hs.insertHistoryRecord(h);
+			nai.setLastHistTime(ai.getScanTime());
+			nai.setLastHistValue(ai.getLastHistValue());
+		}
+		return nai;
+	}
+	
+	public AnalogInput doLinearCheck( AnalogInput ai, HistoryService hs ) {
+		AnalogInput nai = null;
+		Double predictedValue = ai.getLastHistValue() +
+				ai.getSlope() * ai.getIntSinceLhs();
+//		log.debug("Predicted value ("+ai.getTagId()+") = "+predictedValue
+//				 +", intsinceLhs: "+ai.getIntSinceLhs());
+		Double scale = ai.getMaxValue() - ai.getZeroValue();
+		Double pcDelta = Math.abs(100.0 * (ai.getScanValue() - predictedValue)/scale); 
+//		log.debug("New change: "+pcDelta+", percentAllowed: "+ai.getPercent());
+		if( pcDelta > ai.getPercent()) {
+			nai = ai;
+			History h = new History();
+			h.setTagId(ai.getTagId());
+			h.setX(ai.getScanTime().getTime()/1000L);
+			h.setY(ai.getScanValue());
+//			log.debug("Insert history record tag "+ai.getTag().getName()+"/"+ai.getTagId());
+			hs.insertHistoryRecord(h);
+			nai.setLastHistTime(ai.getScanTime());
+			nai.setLastHistValue(ai.getLastHistValue());			
+		}
+		return nai;
+	}
 	
 }

@@ -10,6 +10,8 @@
 	
 	Transfer getTransfer( Long id );
 	
+	Transfer getTemplate( String nm );
+	
 	Collection<Transfer> getEndingTransfers( );
 	
 	Collection<Transfer> getStartingTransfers( );
@@ -47,7 +49,6 @@
     <result property="delta"           column="delta"/>
     <result property="startDiff"       column="start_diff" />
     <result property="endDiff"         column="end_diff" />
-    <result property="bot"             column="bot" />
     <result property="newStartTime"    column="new_start_time" />
     <result property="newEndTime"      column="new_end_time" />
   </resultMap>
@@ -70,7 +71,7 @@
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
-     where ttv.code = #{parm1}
+     where ttv.code = #{param1}
        and (x.act_start_time is null 
            or x.act_start_time > date_sub(curdate(), interval 5 day))
      order by x.exp_start_time desc, x.name
@@ -107,7 +108,7 @@
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
      where ttv.code = 'X'
-       and date(act_end_time) > date(date_sub(current_date, interval #{parm1} day))
+       and date(act_end_time) > date(date_sub(current_date, interval #{param1} day))
      order by x.act_end_time desc
   </select>
 
@@ -135,7 +136,19 @@
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta 
       from transfer x join tag tx on x.tag_id=tx.id 
-     where x.id = #{parm1}
+     where x.id = #{param1}
+  </select>
+
+  <select id="getTemplate" resultMap="transferResultMap">
+    select x.id, x.tag_id, x.name, tx.misc contents_code
+         , x.status_id, x.transfer_type_id
+         , x.source_id, x.destination_id
+         , x.exp_start_time, x.exp_end_time, x.exp_volume 
+         , x.act_start_time, x.act_end_time, x.act_volume, x.delta 
+      from transfer x join tag tx on x.tag_id=tx.id
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.id 
+     where ttv.code = 'T'
+      and x.name = #{param1}
   </select>
 
   <select id="getEndingTransfers" resultMap="transferResultMap">
@@ -153,8 +166,8 @@
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
-     where tsv.name = 'Active'
-       and ttv.name != 'Template'
+     where tsv.code = 'A'
+       and ttv.code != 'T'
      order by 8, 2
   </select>
 
@@ -176,7 +189,7 @@
            join transfer_status_vw tsv on x.status_id = tsv.id
            join transfer_type_vw ttv on x.transfer_type_id = ttv.id
      where tsv.code in ('P','S')
-       and ttv.name != 'Template'
+       and ttv.code != 'T'
      order by 8, 2
   </select>
 
@@ -212,7 +225,7 @@
                       , 60*hour(now())+minute(now()) cmin
                    from dual) d
      where tsv.code not in ('C','I')
-       and ttv.name = 'Template'
+       and ttv.code = 'T'
        and if(delta=0,true,not exists (select id from transfer x1 where status_id in (1,3) and x1.name like concat(x.name,'%')))
      order by 8, 2
   </select>
@@ -221,8 +234,16 @@
     select tt.id, tt.code name from transfer_type_vw tt
   </select>
   
+  <select id="getTransferTypeId" resultType="Long">
+    select tt.id from transfer_type_vw tt where tt.code = #{param1}
+  </select>
+  
   <select id="getTransferStatuses" resultMap="idNameResultMap">
     select ts.id, ts.code name from transfer_status_vw ts
+  </select>
+  
+  <select id="getTransferStatusId" resultType="Long">
+    select ts.id from transfer_status_vw ts where ts.code = #{param1}
   </select>
   
   <update id="updateTransfer" parameterType="Transfer">
@@ -246,14 +267,14 @@
     update transfer
        set status_id = (select id from transfer_status_vw where code = 'C')
          , act_end_time = CURRENT_TIMESTAMP
-     where id = #{parm1}
+     where id = #{param1}
   </update>
   
   <update id="startTransfer" >
     update transfer
        set status_id = (select id from transfer_status_vw where code = 'A')
          , act_start_time = CURRENT_TIMESTAMP
-     where id = #{parm1}
+     where id = #{param1}
   </update>
   
   <insert id="insertTransfer" parameterType="Transfer" useGeneratedKeys="true"

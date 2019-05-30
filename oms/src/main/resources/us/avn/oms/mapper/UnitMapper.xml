@@ -59,7 +59,7 @@
   <select id="getUnitType" resultMap="UnitTypeMap">
     select ut.id, ut.name, ut.code
       from unit_type ut
-	 where ut.id = #{parm1}
+	 where ut.id = #{param1}
   </select>
   
   <insert id="insertUnitType" parameterType="UnitType">
@@ -85,7 +85,7 @@
   <select id="getUnit" resultMap="UnitMap">
     select u.id, u.name, u.code, unit_type_id, ut.name unit_type
       from unit u join unit_type ut on u.unit_type_id = ut.id
-     where u.id = #{parm1}
+     where u.id = #{param1}
   </select>
 
   <update id="updateUnit" parameterType="Unit">
@@ -111,7 +111,7 @@
     select uc.id, from_id, uf.name fromName, to_id, ut.name toName, offset, factor 
       from unit_conversion uc join unit uf on uc.from_id = uf.id
       join unit ut on uc.to_id = ut.id
-	 where uc.id = #{parm1}
+	 where uc.id = #{param1}
   </select>
   
   <select id="getAllUnitConversions" resultMap="UnitConversionMap">

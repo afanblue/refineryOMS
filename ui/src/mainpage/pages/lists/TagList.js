@@ -62,9 +62,10 @@ class TagList extends Component {
             <tr>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> Tag name </th>
               <th className={["oms-spacing-240","oms-underline"].join(' ')}> Description </th>
-              <th className={["oms-spacing-90","oms-underline"].join(' ')}> Tag Type </th>
-              <th className={["oms-spacing-180","oms-underline"].join(' ')}> NW Corner </th>
-              <th className={["oms-spacing-180","oms-underline"].join(' ')}> SE Corner </th>
+              <th className={["oms-spacing-60","oms-underline"].join(' ')}> Tag Type </th>
+              <th className={["oms-spacing-80","oms-underline"].join(' ')}>"Misc"</th>
+              <th className={["oms-spacing-150","oms-underline"].join(' ')}> NW Corner </th>
+              <th className={["oms-spacing-150","oms-underline"].join(' ')}> SE Corner </th>
               <th className={["oms-spacing-50","oms-underline"].join(' ')}> Active </th>
             </tr>
           </thead>
@@ -74,14 +75,15 @@ class TagList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {ts({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {ts({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-240">{n.description}</td>
-                       <td className="oms-spacing-90">{n.tagTypeCode}</td>
-                       <td className="oms-spacing-180">{n.c1Lat},{n.c1Long}</td>
-                       <td className="oms-spacing-180">{n.c2Lat},{n.c2Long}</td>
+                       <td className="oms-spacing-60">{n.tagTypeCode}</td>
+                       <td className="oms-spacing-80">{n.misc}</td>
+                       <td className="oms-spacing-150">{n.c1Lat},{n.c1Long}</td>
+                       <td className="oms-spacing-150">{n.c2Lat},{n.c2Long}</td>
                        <td className="oms-spacing-50">{n.active}</td>
                      </tr>; 
             } )

@@ -34,8 +34,12 @@ public interface TransferMapper {
 	Collection<Transfer> getAllTransfersInField( Long id );
 	
 	Collection<IdName> getTransferStatuses();
+	
+	Long getTransferStatusId( String code );
 
 	Collection<IdName> getTransferTypes();
+	
+	Long getTransferTypeId( String code );
 	
 	Collection<Transfer> getEndingTransfers( );
 	
@@ -48,6 +52,8 @@ public interface TransferMapper {
 	void startTransfer( Long id );
 
 	Transfer getTransfer( Long id);
+	
+	Transfer getTemplate( String nm );
 	
 	Integer updateTransfer( Transfer x );
 

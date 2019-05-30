@@ -81,6 +81,11 @@ public class DigitalInputServiceImpl implements DigitalInputService {
 	}
 	
 	@Override
+	public Collection<DigitalInput> getCarrierPresentTags( String ptn ) {
+		return diMapper.getCarrierPresentTags(ptn);
+	}
+
+	@Override
 	public DigitalInput getDigitalInput( Long id) {
 		
 		DigitalInput di = new DigitalInput();

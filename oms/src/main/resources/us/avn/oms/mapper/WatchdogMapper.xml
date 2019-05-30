@@ -26,7 +26,7 @@
   <update id="updateWatchdog" parameterType="String">
     update watchdog
        set updated = updated + 1
-     where name = #{parm1}
+     where name = #{param1}
   </update>
     
 </mapper>

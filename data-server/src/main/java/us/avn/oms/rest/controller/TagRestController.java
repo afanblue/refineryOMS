@@ -63,10 +63,12 @@ public class TagRestController {
 	 * Method: getTagTypes
 	 * Description: get list of all tag types, i.e., process the /oms/tag/types request
 	 *              e.g., /oms/tag/types
+	 *
+	 * @return Collection of TagType records
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/types")
     @ResponseStatus(HttpStatus.OK)
-	public Collection<TagType> getTagTypes(  ) {
+	public Collection<TagType> getTagTypes( ) {
 		log.debug("get all tag types");
 		return tagService.getTagTypes();
 	}
@@ -76,7 +78,7 @@ public class TagRestController {
 	 * Description: return all tags, i.e., process the
 	 *              /oms/tag/type/all request
 	 *              e.g., /oms/tag/type/all (all tag)
-	 * @param type
+	 *
 	 * @return List of all tags as Tag objects 
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/ALL")
@@ -92,7 +94,8 @@ public class TagRestController {
 	 * Description: return all tags of type "type", i.e., process the
 	 *              /oms/tag/type/{type} request
 	 *              e.g., /oms/tag/type/TK (all tanks)
-	 * @param type
+	 *
+	 * @param type (String) type of tag to get list for
 	 * @return List of all tags as Tag objects 
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/{type}")
@@ -107,7 +110,8 @@ public class TagRestController {
 	 * Description: return all tags contained in type list, i.e., process the
 	 *              /oms/tag/types/{types} request
 	 *              e.g., /oms/tag/types/TK,SCM,AI (all tanks, schematics, analog inputs)
-	 * @param types
+	 *
+	 * @param types ArrayList of string of types to retrieve
 	 * @return List of tags by IDname, ie, just the tag ID and tag name
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/types/{types}")
@@ -123,7 +127,8 @@ public class TagRestController {
 	 * Method: getTag
 	 * Description: return tag for id, i.e., process the /oms/tag/{id} request
 	 *              e.g., /oms/tag/1 (return tag w/id=1)
-	 * @param types
+	 *
+	 * @param id (Long) ID of tag to retrieve
 	 * @return Tag definition 
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
@@ -149,7 +154,12 @@ public class TagRestController {
 	}
 	
 	private Collection<Long> getChildTagIdList( Long id, String code ) {
-		Iterator<RelTagTag> irtt = tagService.getChildrenOfType(id, code).iterator();
+		Iterator<RelTagTag> irtt;
+		if( "IN".equals(code) ) {
+			irtt = tagService.getChildrenOfType(id, code).iterator();
+		} else {
+			irtt = tagService.getChildren(id).iterator();
+		}
 		Vector<Long> tl = new Vector<Long>();
 		while( irtt.hasNext() ) {
 			RelTagTag rtt = irtt.next();
@@ -157,6 +167,7 @@ public class TagRestController {
 		}
 		return tl;
 	}
+	
 	
 	private Long getChildTagId( Long id, String code ) {
 		Iterator<Long> il = getChildTagIdList(id, code ).iterator();
@@ -167,12 +178,13 @@ public class TagRestController {
 		return l;
 	}
 	/**
-	 * Method: getAllIdNamesByTypeList
+	 * Method: getChildTags
 	 * Description: return all tags contained in type list, i.e., process the
-	 *              /oms/tag/types/{types} request
-	 *              e.g., /oms/tag/types/TK,SCM,AI (all tanks, schematics, analog inputs)
-	 * @param types
-	 * @return
+	 *              /oms/tag/children/{id}
+	 *              e.g., /oms/tag/children/3 
+	 *
+	 * @param id (Long) ID of parent for which to retrieve child tags
+	 * @return Collection of RelTagTag objects children associated w/tag of ID
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/children/{id}")
 	@ResponseBody
@@ -257,7 +269,7 @@ public class TagRestController {
 	
 	@RequestMapping(method = RequestMethod.POST, value= "/insert/children")
     @ResponseStatus(HttpStatus.CREATED)
-	public void insertRelationship( @RequestBody Collection<RelTagTag> crtt ) {
+	public void insertRelationships( @RequestBody Collection<RelTagTag> crtt ) {
 		Iterator<RelTagTag> icrtt = crtt.iterator();
 		while( icrtt.hasNext() ) {
 			RelTagTag rtt = icrtt.next();
@@ -265,11 +277,17 @@ public class TagRestController {
 		}
 	}
 
+	@RequestMapping(method = RequestMethod.POST, value= "/insert/child")
+    @ResponseStatus(HttpStatus.CREATED)
+	public void insertRelationship( @RequestBody RelTagTag rtt ) {
+		tagService.insertRelationship(rtt);
+	}
+
 	private void updateRelationships( Tag t ) {
 		Long id = t.getId();
 		RelTagTag rtt = new RelTagTag(0L,id,0L);
 		rtt.setParentTagId(id);
-		tagService.deleteChildTagsOfType(id, null);
+		tagService.deleteChildTags(id);
 		if( (null != t.getInTagId()) && (t.getInTagId() != 0L) ) {
 			rtt.setCode(null);
 			rtt.setChildTagId(t.getInTagId());

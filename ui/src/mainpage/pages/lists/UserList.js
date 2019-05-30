@@ -56,9 +56,9 @@ class UserList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {userSelect({z})}} >
-                           {n.firstName} {n.lastName}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {userSelect({z})}} >{n.lastName}
+                         </button>
                        </td>
                        <td className="oms-spacing-240">{n.email}</td>
                        <td className="oms-spacing-90">{n.alias}</td>

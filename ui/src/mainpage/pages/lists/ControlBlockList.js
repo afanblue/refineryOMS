@@ -54,9 +54,9 @@ class ControlBlockList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {ctrlBlkSelect({z})}} >
-                           {n.co}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {ctrlBlkSelect({z})}} >{n.co}
+                         </button>
                        </td>
                        <td className={["oms-spacing-120","oms-fontsize-12"].join(' ')}>{n.pv}</td>
                        <td className={["oms-spacing-120","oms-fontsize-12"].join(' ')}>{n.sp}</td>

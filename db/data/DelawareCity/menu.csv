@@ -11,7 +11,7 @@ VT,Admin,Alarm Types,21,Y,Alarm Type Admin
 VT,Admin,Analog Inputs,24,Y,AI Admin
 VT,Admin,Digital Inputs,67,Y,DI Admin
 VT,Admin,Fields,86,Y,Field Admin
-VT,Admin,Links,97,Y,Page Link Admin
+VT,Admin,Links,97,N,Page Link Admin
 VT,Admin,Process Units,117,Y,Process Unit
 VT,Admin,Tanks,147,Y,Tank Admin
 VT,Admin,Roles,127,Y,Role Admin
@@ -42,4 +42,6 @@ VT,Orders,Sales,20,Y,Sales
 VT,Orders,Active,2,Y,Active Orders
 VT,Orders,Last Weeks Orders,30,Y,Last Weeks Orders
 VT,Orders,Last Months Orders,40,Y,Last Months Orders
+VT,Admin,Ships,145,Y,ShipAdmin
+VT,Admin,Docks,82,Y,Docks
 End

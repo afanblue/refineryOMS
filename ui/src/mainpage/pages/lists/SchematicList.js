@@ -58,9 +58,9 @@ class SchematicList extends Component {
               let z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {schematicSelect({z})}} >
-                           {n.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {schematicSelect({z})}} >{n.name}
+                         </button>
                        </td>
                        <td className={["oms-spacing-240","oms-cursor-pointer"].join(' ')}>{n.description}</td>
                        <td className={["oms-spacing-80","oms-cursor-pointer"].join(' ')}>{n.active}</td>

@@ -34,7 +34,11 @@ public interface TransferService {
 	
 	Collection<IdName> getTransferStatuses();
 
+	Long getTransferStatusId( String code );
+	
 	Collection<IdName> getTransferTypes();
+	
+	Long getTransferTypeId( String code );
 	
 	Collection<Transfer> getEndingTransfers( );
 	
@@ -46,7 +50,9 @@ public interface TransferService {
 
 	void startTransfer( Long id );
 
-	public Transfer getTransfer( Long id);
+	Transfer getTransfer( Long id);
+	
+	Transfer getTemplate( String nm );
 	
 	void updateTransfer( Transfer t );
 

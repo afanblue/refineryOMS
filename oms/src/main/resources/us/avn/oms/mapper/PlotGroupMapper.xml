@@ -22,14 +22,14 @@
   <select id="getPlotGroupDefinition" resultMap="plotGroupMap">
     select pg.id, pg.name, pg.id1, pg.id2, pg.id3, pg.id4, pg.active, 'PG' source
       from plot_group pg
-     where pg.id = #{parm1}
+     where pg.id = #{param1}
     union
     select x.id, x.name, trts.level_tag_id id1, trts.temp_tag_id id2
          , trtd.level_tag_id id3, trtd.temp_tag_id id4, 'Y' active, 'X' source
       from transfer x 
       left outer join tank_ref_tag_vw trts on x.source_id=trts.id 
       left outer join tank_ref_tag_vw trtd on x.destination_id = trtd.id 
-     where x.status_id = 1 and x.id = #{parm1}
+     where x.status_id = 1 and x.id = #{param1}
   </select>
 
   <select id="getAllPlotGroups" resultMap="plotGroupMap">

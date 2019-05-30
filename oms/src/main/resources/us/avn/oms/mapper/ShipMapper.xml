@@ -29,7 +29,7 @@
          , t.description, t.tag_type_code, t.active
 	  from ship s join tag t on s.id = t.id
 	  join customer c on s.owner_id=c.id
-	 where s.id = #{parm1} 
+	 where s.id = #{param1} 
   </select>
   
   <select id="getShipByName" resultMap="srm">
@@ -37,7 +37,7 @@
          , t.description, t.tag_type_code, t.active
 	  from ship s join tag t on s.id = t.id
 	  join customer c on s.owner_id = c.id
-	 where t.name = #{parm1} 
+	 where t.name = #{param1} 
   </select>
   
   <update id="updateShip" parameterType="Ship">

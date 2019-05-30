@@ -53,11 +53,7 @@ public class AODataSimulator {
     }
     
     /**
-     * Method: execute
-     * Description: get all analog outputs that need to be updated
-     * @param sios
-     * @param wds
-     * @param xs
+     * get all analog outputs that need to be updated
      */
 	public static void execute(  )
 	{

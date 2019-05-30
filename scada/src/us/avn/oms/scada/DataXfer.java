@@ -41,7 +41,6 @@ import us.avn.oms.domain.DigitalInput;
 import us.avn.oms.domain.DigitalOutput;
 import us.avn.oms.domain.Watchdog;
 import us.avn.oms.domain.Xfer;
-import us.avn.oms.scada.domain.AIX;
 import us.avn.oms.service.AlarmService;
 import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.AnalogOutputService;
@@ -124,7 +123,7 @@ public class DataXfer extends TimerTask {
 //		Update the analog inputs (check the xfer table, get and process the values)
 		Iterator<AnalogInput> iai = ais.getAllUpdatedAItags().iterator();
 		while( iai.hasNext() ) {
-			AIX ai = new AIX(iai.next());
+			AnalogInput ai = iai.next();
 			log.debug("AnalogInput: "+ai.toString());
 			log.debug("Processing AI tag "+ai.getTag().getName() + "/" + ai.getTagId());
 			processAIValue( ai, ai.getSimValue(), ai.getSimScanTime());
@@ -173,7 +172,7 @@ public class DataXfer extends TimerTask {
 			Date now = new Date();
 			AnalogInput ai = ais.getAnalogInput(cv.getOutputTagId());
 			if( null != ai ) {
-				AIX aix = new AIX(ai);
+				AnalogInput aix = new AnalogInput(ai);
 				processAIValue( aix, result, now );
 			} else {
 				DigitalInput di = dis.getDigitalInput(cv.getOutputTagId());
@@ -184,9 +183,7 @@ public class DataXfer extends TimerTask {
 	}
 	
 	/**
-	 * Method: processControlBlocks
-	 * Parameters: none
-	 * Description: the getAllAOs retrieves all the control blocks for which the PV != SP
+	 * Retrieves all the control blocks for which the PV != SP
 	 */
 	private void processControlBlocks() {
 		wds.updateWatchdog(Watchdog.CB);
@@ -236,18 +233,16 @@ public class DataXfer extends TimerTask {
 	}
 	
 	/**
-	 * Method: correctScanValue
-	 * Description: provide any needed corrections for the raw scan value
-	 *              based on the analog type.
-	 *              Currently the only modification is for Accumulator analogs
-	 *              which increase the value based on the amount for the current
-	 *              rain event.  NB, this may only be applicable for AcuRite
-	 *              rain values.
-	 * @param ai
-	 * @param scanValue
-	 * @return newScanValue 
+	 * Provide any needed corrections for the raw scan value
+	 * based on the analog type.  Currently the only modification is 
+	 * for Accumulator analogs which increase the value based on the 
+	 * amount for the current rain event.  NB, this may only be applicable
+	 * for AcuRite rain values.
+	 * @param ai Analog Input to process
+	 * @param scanValue current scan value
+	 * @return newScanValue  new scan value
 	 */
-	private Double correctScanValue( AIX ai, Double scanValue ) {
+	private Double correctScanValue( AnalogInput ai, Double scanValue ) {
 		Double newScanValue = scanValue;
 		if( "A".equals(ai.getAnalogTypeCode()) ) {
 			Double rawValue = ai.getRawValue();
@@ -262,13 +257,15 @@ public class DataXfer extends TimerTask {
 	}
 	
 	/**
-	 * Method: processAIValue
-	 * Description: 
-	 * @param ai
+	 * Process analog input value.  This entails some scan value correction,
+	 * setting raw and previous values, checking for alarms, determining if
+	 * a history value needs to be written, and updating the DB record for the
+	 * AI.
+	 * @param ai analog input to modify
 	 * @param scanValue
 	 * @param scanTime
 	 */
-	private void processAIValue( AIX ai, Double scanValue, Date scanTime ) {
+	private void processAIValue( AnalogInput ai, Double scanValue, Date scanTime ) {
 		try {
 			Double newScanValue = correctScanValue( ai, scanValue );
 			ai.setRawValue(scanValue);

@@ -158,8 +158,6 @@
    
    <bean id="tankService" class="us.avn.oms.service.impl.TankServiceImpl">
       <property name="tankMapper"        ref="tankMapper" />
-      <property name="configMapper"      ref="configMapper" />
-      <property name="analogInputMapper" ref="analogInputMapper" />
    </bean>
    
    <bean id="trainService" class="us.avn.oms.service.impl.TrainServiceImpl">

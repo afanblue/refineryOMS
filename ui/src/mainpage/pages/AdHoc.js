@@ -170,9 +170,13 @@ class AdHocForm extends Component {
                     </select>
                   </td>
                   <td style={midStyle}>
-                    <a onClick={moveLeft}><img src={imgLeft} alt="leftArrow" style={leftStyle} /></a>
+                    <button type="button" className="link-button" onClick={moveLeft}>
+                      <img src={imgLeft} alt="leftArrow" style={leftStyle} />
+                    </button>
                     <p/>
-                    <a onClick={moveRight}><img src={imgRight} alt="rightArrow" style={rightStyle} /></a>
+                    <button type="button" className="link-button" onClick={moveRight}>
+                      <img src={imgRight} alt="righttArrow" style={rightStyle} />
+                    </button>
                   </td>
                   <td>
                     <select name="rtl" id="rtl"  ref="rtl" size={10}

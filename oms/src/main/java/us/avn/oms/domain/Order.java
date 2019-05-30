@@ -37,8 +37,8 @@ public class Order extends OMSObject implements Serializable {
 	private String  customer;
 	private Long    carrierId;
 	private String  carrier;
-	private String  active;       // 'A','P','C'
-	private String  purchase;     // 'P','S'
+	private String  purchase;     // Purchase 'P', Sale 'S'
+	private String  contents;     // based on: 
 	private Date    expDate;
 	private Date    actDate;
 	private Double  expVolume;
@@ -51,7 +51,6 @@ public class Order extends OMSObject implements Serializable {
 		shipmentId = id;
 		customerId = 0L;
 		carrierId = 0L;
-		active = PENDING;
 		purchase = PURCHASE;
 		Date d = new Date();
 		expDate = d;
@@ -102,15 +101,6 @@ public class Order extends OMSObject implements Serializable {
 		this.carrier = carrier;
 	}
 
-	
-	public String getActive() {
-		return active;
-	}
-	
-	public void setActive(String active) {
-		this.active = active;
-	}
-	
 	
 	public String getPurchase() {
 		return purchase;

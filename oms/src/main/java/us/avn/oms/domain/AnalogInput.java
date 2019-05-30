@@ -19,6 +19,12 @@ package us.avn.oms.domain;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
+
+import us.avn.oms.service.AlarmService;
+import us.avn.oms.service.HistoryService;
 
 
 /*
@@ -77,8 +83,8 @@ public class AnalogInput extends OMSObject implements Serializable {
  	protected Double  hi;
  	protected Double  lo;
  	protected Double  ll;
- 	protected Integer intSinceLhs;
-    protected Integer intScanTime;
+ 	protected Long    intSinceLhs;
+    protected Long    intScanTime;
  	protected Double  simValue;
  	protected Date    simScanTime;
  	protected Integer updated;
@@ -330,20 +336,20 @@ public class AnalogInput extends OMSObject implements Serializable {
 	}
 
 	
- 	public Integer getIntSinceLhs() {
+ 	public Long getIntSinceLhs() {
 		return intSinceLhs;
 	}
 
-	public void setIntSinceLhs(Integer intSinceLhs) {
+	public void setIntSinceLhs(Long intSinceLhs) {
 		this.intSinceLhs = intSinceLhs;
 	}
 
 	
-	public Integer getIntScanTime() {
+	public Long getIntScanTime() {
 		return intScanTime;
 	}
 
-	public void setIntScanTime(Integer intScanTime) {
+	public void setIntScanTime(Long intScanTime) {
 		this.intScanTime = intScanTime;
 	}
 
@@ -390,6 +396,162 @@ public class AnalogInput extends OMSObject implements Serializable {
 
 	public void setCalm(Collection<Alarm> calm) {
 		this.calm = calm;
+	}
+
+	/**
+	 * Check for an alarm state and update the alarm table as needed
+	 * 
+	 * @param as (AlarmService)
+	 * @param almTypes collection of alarm types
+	 * {@code
+	 * Note 1: we use the class variable as (AlarmService) 
+	 * Note 2: we assume only one existing alarm for the given AI
+	 * Note 3: the handling of the existing alarm 
+	 * 
+	 *    set createAlarm false
+	 *    IF there's no alarm active
+	 *    .. IF there's a new alarm
+	 *    .. .. set createAlarm true
+	 *    .. END IF
+	 *    ELSE
+	 *    .. IF this state has returned to normal
+	 *    .. .. set active & acknowledged to N and Y
+	 *    .. .. update alarm
+	 *    .. ELSE IF this is not the same alarm state
+	 *    .. .. set active to N
+	 *    .. .. update alarm
+	 *    .. .. set createAlarm true
+	 *    .. END IF
+	 *    END IF
+	 * }
+	 */
+	public void checkForAlarm( AlarmService as, HashMap<String,AlarmType> almTypes ) {
+		/* Note: there should only be one alarm, but in the future */
+		/*       we can implement a rate of change alarm           */
+		Alarm alm = new Alarm();
+		alm.setTagId(tagId);
+		alm.setTagTypeId(tag.getTagTypeId());
+		String almCode = "NORM";
+		if( scanValue != null ) { 
+			if( scanValue <= (ll==null?Long.MIN_VALUE:ll) ) {
+				almCode = "LL";
+			} else if( scanValue <= (lo==null?Long.MIN_VALUE:lo) ) {
+				almCode = "LO";
+			} else if( scanValue >= (hh==null?Long.MAX_VALUE:hh) ) {
+				almCode = "HH";
+			} else if( scanValue >= (hi==null?Long.MAX_VALUE:hi) ) {
+				almCode = "HI";
+			}
+			boolean createAlarm = false;
+//			log.debug("Alarm found for "+tagId+" ? "+almCode);
+			Collection<Alarm> calm = as.getTagAlarms( tagId );
+			if( calm == null ) { calm = new Vector<Alarm>(); }
+//			log.debug(calm.size()+" alarms for "+tagId);
+			if( calm.isEmpty() ) {
+				if(! "NORM".equals(almCode) ) {
+					createAlarm = true;
+				}
+			} else {
+				Iterator<Alarm> ialm = calm.iterator();
+				Alarm xa = new Alarm();
+				while( ialm.hasNext()) { xa = ialm.next(); }
+//				log.debug(xa.toString());
+//				log.debug("Alarm exists for "+xa.getTagId()+"? "+almCode+" = "+xa.getAlarmCode());
+				if( "NORM".equals(almCode) ) {
+					xa.setActive("N");
+					xa.setAcknowledged("Y");
+					as.updateAlarm(xa);
+				} else if( ! almCode.equals(xa.getAlarmCode())) {
+					xa.setActive("N");
+					xa.setAcknowledged("Y");
+					as.updateAlarm(xa);
+					createAlarm = true;
+				}
+			}
+			if( createAlarm ) {	
+				alm.setTagId(tagId);
+				alm.setAlarmTypeId(almTypes.get(almCode).getId());
+				alm.setAlarmMsgId(almTypes.get(almCode).getAlarmMsgId());
+				alm.setAcknowledged("N");
+				alm.setActive("Y");
+				alm.setAlmOccurred(simScanTime);
+				as.insertAlarm(alm);
+			}
+		}
+	}
+	
+	/**
+	 * Check the current history and update as needed
+	 * 
+	 * @param hs HistoryService
+	 * 
+	 * Notes:
+	 * {@code
+	 *		IF there's a value
+	 *		..	IF there's no history (no last history value) or it's been an hour
+	 *		..	..	save history record
+	 *		..	..	compute slope
+	 *		..	..	update AI record (set last history values)
+	 *		..	ELSE IF there's no slope (probly means second hist check)
+	 *		..	..	save history record
+	 *		..	..	compute slope
+	 *		..	..	update AI record
+	 *		..	ELSE
+	 *		..	..	IF linear
+	 *		..	..	..	do linear checks
+	 *		..	..	ELSE IF boxcar
+	 *		..	..	..	do boxcar checks
+	 *		..	..	END IF
+	 *		..	END IF
+	 *		END IF
+	 *}
+	 *<br>
+	 *	 The interval since the last time stored, ie, 3600-60-15, is due to
+	 *   the delay between the query retrieving the last time scanned, which
+	 *   is always (nominally) 60 seconds behind the update occurring.  Since
+	 *   we have the "correct" data here, we could do the math here, but it's
+	 *   easier to just compensate for that by subtracting a minute from the 
+	 *   interval.  The 15 seconds is just to allow for elapsed time in the 
+	 *   processing (PMC) or the routine doing the data scan.
+	 */
+	public void updateHistory( HistoryService hs ) {
+//		log.debug("History update needed? "+this.toString());
+		if( (scanValue != null) && (scanTime != null) 
+				&& (scanTime != prevTime) ) {
+			History h = new History();
+			h.setTagId(tagId);
+			h.setX(scanTime.getTime()/1000L);
+			
+//			intSinceLhs = (intSinceLhs==null)?0:intSinceLhs;
+			intSinceLhs = (scanTime.getTime()-lastHistTime.getTime())/1000L;
+//			log.debug("Hourly update flag: "+tagId+" - intSinceLhs "+intSinceLhs);
+			if( (lastHistValue == null) 
+					|| (intSinceLhs >= (3600-60-15))  ) {
+//				log.debug("Hourly update ("+tagId+")");
+				h.setY(scanValue);
+				hs.insertHistoryRecord(h);
+				slope = h.computeSlope(this);
+				lastHistValue = scanValue;
+				lastHistTime = scanTime;
+			} else if( slope == null ) {
+				h.setY(scanValue);
+				slope = h.computeSlope(this);
+				lastHistValue = scanValue;
+				lastHistTime = scanTime;
+			} else {
+				AnalogInput nai = null;
+				if( "L".equals(histTypeCode) ) {
+					nai = h.doLinearCheck( this, hs );				
+				} else if( "B".equals(histTypeCode) ) {
+					nai = h.doBoxcarCheck( this, hs );
+				}
+				if( nai != null ) {
+					slope = h.computeSlope(this);
+					lastHistValue = nai.getScanValue();
+					lastHistTime = nai.getScanTime();					
+				}
+			}
+		}
 	}
 
 }

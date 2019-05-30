@@ -36,7 +36,7 @@
 
   <select id="getConfigurationItem" resultMap="configResultMap">
     select id, item_name, item_value from config
-	 where item_name = #{parm1}
+	 where item_name = #{param1}
   </select>
   
   <select id="getSiteLocation" resultMap="locationMap">
@@ -50,7 +50,7 @@
     select 1 id, table_name item_name, table_name item_value 
       from information_schema.views 
      where table_schema='oms'
-     order by 2;
+     order by 2
   </select>
   
   <update id="updateConfigurationItem" parameterType="Config">

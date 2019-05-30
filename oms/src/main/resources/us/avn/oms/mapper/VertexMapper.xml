@@ -27,17 +27,17 @@
   <select id="getAllVertices" resultMap="vertexResultMap">
     select v.id, v.tag_id, v.seq_no, v.latitude, v.longitude
       from vertex v
-     where tag_id = #{parm1}
+     where tag_id = #{param1}
      order by 2
   </select>
 
   <select id="getVertex" resultMap="vertexResultMap">
     select v.tag_id, v.seq_no, v.latitude, v.longitude from vertex v
-	 where v.id = #{parm1}
+	 where v.id = #{param1}
   </select>
   
   <delete id="clearVertices" parameterType="Long">
-    delete from vertex where tag_id = #{parm1}
+    delete from vertex where tag_id = #{param1}
   </delete>
   
   <update id="updateVertex" parameterType="Vertex">

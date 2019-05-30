@@ -91,7 +91,7 @@
     select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
       from tag t join tag_type tt on t.tag_type_code = tt.code
-     where t.id = #{parm1}
+     where t.id = #{param1}
   </select>
   
   <select id="getAllTags" resultMap="tagResultMap">
@@ -113,21 +113,21 @@
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
          , tt.id tag_type_id
       from tag t join tag_type tt on t.tag_type_code = tt.code
-     where t.tag_type_code = #{parm1}
+     where t.tag_type_code = #{param1}
      order by t.name
   </select>
   
   <select id="getAllTagletsByType" resultMap="tagletResultMap">
     select t.id, t.name, t.description, t.tag_type_code, t.active
       from tag t
-     where t.tag_type_code = #{parm1}
+     where t.tag_type_code = #{param1}
      order by 2
   </select>  
   
   <select id="getAllIdNamesByType" resultMap="idNameResultMap">
     select t.id, t.name
       from tag t
-     where t.tag_type_code = #{parm1}
+     where t.tag_type_code = #{param1}
      order by 2
   </select>  
   
@@ -148,6 +148,14 @@
            join tag tc on rtt.child_tag_id = tc.id
      where rtt.child_tag_id = #{param1}
   </select>
+
+  <select id="getParentTagsOfType" resultMap="tagResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
+      from tag t join tag_type tt on t.tag_type_code = tt.code
+      join rel_tag_tag rtt on rtt.parent_tag_id = t.id
+     where rtt.childTag_id = #{param1} and t.tag_type_code = #{param2}
+  </select>
   
   <select id="getChildTags" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
@@ -156,19 +164,27 @@
      where rtt.parent_tag_id = #{param1}
   </select>
   
-  <select id="getChildren" resultMap="tagletResultMap" >
-    select tc.id, tc.name, tc.description, tc.tag_type_code, tc.active
+  <select id="getChildren" resultMap="tagRelationMap" >
+    select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
      where rtt.parent_tag_id = #{param1}
+       and (code = 'IN' or code is null)
+     order by code
   </select>
   
   <select id="getChildrenOfType" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
-     where rtt.parent_tag_id = #{param1}
-       and rtt.code = #{param2}
+     where rtt.parent_tag_id = #{param1} and rtt.code=#{param2}
+  </select>
+  
+  <select id="getParentOfType" resultMap="tagRelationMap" >
+    select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+      from rel_tag_tag rtt join tag tc on rtt.child_tag_id = tc.id
+           join tag tp on rtt.parent_tag_id = tp.id 
+     where rtt.child_tag_id = #{param1} and rtt.code=#{param2}
   </select>
   
   <select id="getTagTypes" resultMap="tagTypeMap" >
@@ -269,17 +285,13 @@
   </select>
   
   <delete id="deleteChildTags">
-    delete from rel_tag_tag where parent_tag_id = #{param1}
+    delete from rel_tag_tag where parent_tag_id = #{param1} and code is null
   </delete>
   
   <delete id="deleteChildTagsOfType">
-    delete from rel_tag_tag where parent_tag_id = #{param1}
-    <if test="param2 is null" >
-      and code is null
-    </if>
-    <if test="param2 is not null" >
-      and code=#{param2}
-    </if>
+    delete from rel_tag_tag 
+     where parent_tag_id = #{param1}
+       and code=#{param2}
   </delete>
   
   <update id="updateTag" parameterType="Tag">

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
+  <local-check-config name="complexity" location="internal_config_1552695044903.xml" type="internal" description=""/>
+  <fileset name="all" enabled="true" check-config-name="complexity" local="true">
+    <file-match-pattern match-pattern="." include-pattern="true"/>
+  </fileset>
+  <filter name="DerivedFiles" enabled="true"/>
+  <filter name="FilesFromPackage" enabled="true"/>
+</fileset-config>

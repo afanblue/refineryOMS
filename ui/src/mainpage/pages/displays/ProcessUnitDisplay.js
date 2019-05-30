@@ -130,29 +130,28 @@ class ProcessUnitDisplay extends Component {
               return (
                 <tr key={x}>
                   <td className={"oms-spacing-120"}>
-                    <a className={"oms-menu-text"} 
-                       id={z1} onClick={() => {itemSelect({z1})}} >
+                    <button type="button" className="link-button"
+                            onClick={() => {itemSelect({z1})}} >
                       <div style={{"color":ztc}}>{zx1.name}</div>
-                    </a>
+                    </button>
                   </td>
                   <td className={"oms-spacing-90"}>
                     <div style={{"color":zx1c}}>{zx1.valueText}</div>
                   </td>
                   <td className={"oms-spacing-120"}>
-                    <a className={"oms-menu-text"} 
-                       id={z2} onClick={() => {itemSelect({z2})}} >
+                    <button type="button" className="link-button"
+                            onClick={() => {itemSelect({z2})}} >
                       <div style={{"color":ztc}}>{zx2.name}</div>
-                    </a>
+                    </button>
                   </td>
                   <td className={"oms-spacing-90"}>
                     <div style={{"color":zx2c}}>{zx2.valueText}</div>
                   </td>
                   <td className={"oms-spacing-120"}>
-
-                      <a className={"oms-menu-text"}
-                         id={z3} onClick={() => {itemSelect({z3})}} >
-                        {zx3.name}
-                      </a>
+                    <button type="button" className="link-button"
+                            onClick={() => {itemSelect({z3})}} >
+                      <div style={{"color":ztc}}>{zx3.name}</div>
+                    </button>
                   </td>
                   <td className={"oms-spacing-90"}>
                       <div style={{"color":zx3c}}>{zx3.valueText}</div>

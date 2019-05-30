@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (C) 2018 Laboratorio de Lobo Azul
- *  
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -13,30 +13,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *******************************************************************************/
+ ******************************************************************************/
 package us.avn.oms.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.Transfer;
-import us.avn.oms.mapper.TagMapper;
 import us.avn.oms.mapper.TransferMapper;
 import us.avn.oms.service.TransferService;
 
+/**
+ * Class:  TransferServiceImpl
+ * Description: implementation of the TransferService methods
+ *
+ * @author Allan
+ *
+ */
 public class TransferServiceImpl implements TransferService {
 
 
-	private TagMapper tagMapper;
 	private TransferMapper transferMapper;
-	
-	public void setTagMapper( TagMapper tm ) {
-		this.tagMapper = tm;
-	}
 	
 	public void setTransferMapper( TransferMapper tm ) {
 		this.transferMapper = tm;
@@ -69,21 +67,21 @@ public class TransferServiceImpl implements TransferService {
 		if( x == null ) {
 			x = new Transfer(0L, "New Transfer");
 		}
-/*
-		String[] tagList = {"TK","RU","S","TC","TT","PU"};
-		ArrayList<String> al = new ArrayList<String>(
-				Arrays.asList(tagList));
-		
-		Collection<IdName> sd = tagMapper.getAllIdNamesByTypeList(al);
-		
-		x.setSources(sd);
-		x.setDestinations(sd);
-		x.setStatuses(transferMapper.getTransferStatuses());
-		x.setTransferTypes(transferMapper.getTransferTypes());
-*/
+		return x;
+	}
+
+	/**
+	 * Retrieve the transfer object by name
+	 * @param {@link String} nm name of transfer to retrieve
+	 * @return {@link Transfer} object, null if none found
+	 */
+	@Override
+	public Transfer getTemplate( String nm ) {
+		Transfer x = transferMapper.getTemplate(nm);
 		return x;
 	}
 	
+
 	@Override
 	public void updateTransfer( Transfer x ) {
 		transferMapper.updateTransfer( x );
@@ -101,8 +99,18 @@ public class TransferServiceImpl implements TransferService {
 	}
 
 	@Override
+	public Long getTransferStatusId( String code ) {
+		return transferMapper.getTransferStatusId(code);
+	}
+	
+	@Override
 	public Collection<IdName> getTransferTypes() {
 		return transferMapper.getTransferTypes();
+	}
+	
+	@Override
+	public Long getTransferTypeId( String code ) {
+		return transferMapper.getTransferTypeId(code);
 	}
 
 	@Override

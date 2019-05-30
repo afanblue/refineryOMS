@@ -138,7 +138,10 @@ class GroupList extends Component {
                       return (
                         <tr key={x}>
                           <td className={"oms-spacing-150"}>
-                            <a className={"oms-menu-text"} id={z1} onClick={() => {menuSelect({z1})}} >{n.name}</a>
+                            <button type="button"
+                                    className={["oms-spacing-70","link-button","oms-fontsize-12"].join(' ')}
+                                    onClick={() => {menuSelect({z1})}} >{n.name}
+                            </button>
                           </td>
                         </tr>
                       )

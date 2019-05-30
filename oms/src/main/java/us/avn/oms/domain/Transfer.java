@@ -18,8 +18,17 @@ package us.avn.oms.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Iterator;
 
+import us.avn.oms.service.TagService;
+import us.avn.oms.service.TankService;
+import us.avn.oms.service.TransferService;
 
+/**
+ * Transfer object defines properties and methods for moving product from
+ * a source to a destination
+ * @author Allan
+ */
 public class Transfer extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
@@ -35,30 +44,74 @@ public class Transfer extends OMSObject implements Serializable {
 	public static final String PENDING = "P";
 	public static final String SCHEDULED = "S";
 	
+	/* Transfer Speeds */
+	public static final Double FAST = 40D;
+	public static final Double SLOW = 20D;
+
+	
+	/** The {@link Long} instance for the transfer ID */
 	protected Long    id;
+	/** The {@link Long} instance for the transfer template ID */
 	protected Long    tagId;
+	/** The {@link String} instance for the particular transfer name */
 	protected String  name;
+	/** The {@link String} instance for the content code (C=Crude, etc) */
 	protected String  contentsCode;
+	/** The {@link Long} instance for the status ID.  See the TRANSFER_STATUS_VW */
 	protected Long    statusId;
+	/** The {@link String} instance for the status.  See the TRANSFER_STATUS_VW */
 	protected String  status;
+	/** The {@link Long} instance for the transfer type ID.  See the TRANSFER_TYPE_VW */
 	protected Long    transferTypeId;
+	/** The {@link String} instance for the transfer type.  See the TRANSFER_TYPE_VW */
 	protected String  transferType;
+	/** The {@link Long} instance for the source tag ID */
 	protected Long    sourceId;
+	/** The {@link String} instance for the source name (in TAG, not in TRANSFER DB record) */
 	protected String  source;
+	/** The {@link Long} instance for the destination tag ID */
 	protected Long    destinationId;
+	/** The {@link String} instance for the destination name (in TAG, not in TRANSFER DB record) */
 	protected String  destination;
+	/** The {@link Date} instance for the expected start time */
 	protected Date    expStartTime;
+	/** The {@link Date} instance for the expected end time */
 	protected Date    expEndTime;
+	/** The {@link Double} instance for the expected volume (in bbls) */
     protected Double  expVolume;
+    /** The {@link Integer} instance for the repeat interval (in minutes) */
     protected Integer delta;
+    /** The {@link Date} instance for the actual start time */
     protected Date    actStartTime;
+    /** The {@link Date} instance for the actual end time */
     protected Date    actEndTime;
+    /** The {@link Double} instance for the actuall volume transferred (in bbls) */
     protected Double  actVolume;
+    /** The {@link Long} difference in time (seconds) between the current time and the expected start time (computed in query) */
     protected Long    startDiff;
+    /** The {@link Long} difference in time (seconds) between the current time and the expected end time (computed in query) */
     protected Long    endDiff;
-    protected Long    bot;                /* beginning of time 1970-01-01 0:00:00 */
-    protected Long    midnight;           /* Today 0:00:00, not 24:00:00          */
+    /** The {@link Date} new start time, computed in the query using the formula:
+     * {@code 
+     * IF repeat interval is not zero, set newStartTime = today
+     * ELSE set newStartTime = tomorrow
+     * Add expected start time to newStartTime
+     * If repeat interval IS zero, add zero to newStartTime
+     * ELSE add repeat interval to newStartTime
+     * Subtract beginning of time (1/1/1970, 0:00:00) from newStartTime
+     * }
+     */
     protected Date    newStartTime;
+    /** The {@link Date} new start time, computed in the query using the formula:
+     * {@code 
+     * IF repeat interval is not zero, set newEndTime = today
+     * ELSE set newEndTime = tomorrow
+     * Add expected end time to newEndTime
+     * If repeat interval IS zero, add zero to newEndTime
+     * ELSE add repeat interval to newEndTime
+     * Subtract beginning of time (1/1/1970, 0:00:00) from newEndTime
+     * }
+     */
     protected Date    newEndTime;
     
 //    private Collection<IdName> statuses;
@@ -89,8 +142,6 @@ public class Transfer extends OMSObject implements Serializable {
     	actStartTime = x.actStartTime;
     	actEndTime = x.actEndTime;
     	actVolume = x.actVolume;
-    	bot = x.bot;
-    	midnight = x.midnight;
     	startDiff = x.startDiff;
     	endDiff = x.endDiff;
     	newStartTime = x.newStartTime;
@@ -315,16 +366,7 @@ public class Transfer extends OMSObject implements Serializable {
 		this.endDiff = ed;
 	}
 	
-	
-	public Long getMidnight() {
-		return this.midnight;
-	}
-	
-	public void setMidnight( Long m ) {
-		this.midnight = m;
-	}
-	
-	
+		
 	public String getNewStartTime() {
 		if( newStartTime != null ) {
 			return sdf.format(newStartTime);
@@ -356,40 +398,89 @@ public class Transfer extends OMSObject implements Serializable {
 		}
 	}
 	
-/*
-	public Collection<IdName> getStatuses() {
-		return statuses;
+	/**
+	 * Method: startTransfer
+	 * Description: Start the transfer, i.e., set the status to Active
+	 * 
+	 * @param xs - TransferService
+	 */
+	public void startTransfer( TransferService xs ) {
+		xs.startTransfer(id);
 	}
-
-	public void setStatuses(Collection<IdName> statuses) {
-		this.statuses = statuses;
+	
+	/**
+	 * Method: completeTransfer
+	 * Description: Complete the transfer, i.e., set the status to Complete
+	 * 
+	 * @param xs - TransferService
+	 */
+	public void completeTransfer( TransferService xs ) {
+		xs.completeTransfer(id);
 	}
 
 	
-	public Collection<IdName> getTransferTypes() {
-		return transferTypes;
+	/**
+	 * check the source for this transfer.  If it's a process unit, find the tank
+	 * with the most volume and set the source ID to that tank.
+	 *
+	 * @param ts  - tagService
+	 * @param tks - tankService
+	 *
+	 * Notes:
+	 * {@code
+	 * 		get source tag
+	 * 		IF source tag is a process unit
+	 * 		.. get the (rough) tank volumes of this unit
+	 * 		.. WHILE there are tanks left to check
+	 * 		.. .. IF this is the greatest volume
+	 * 		.. .. .. save the tagID as the source ID
+	 * }
+	 */
+	public void checkSource( TagService ts, TankService tks ) {
+		Tag src = ts.getTag(sourceId);
+		if( Tag.PROCESS_UNIT.equals(src.getTagTypeCode())) {
+			Iterator<Value> is = tks.getTankVolumesForUnit(src.getName()).iterator();
+			Double maxVolume = 0.0;
+			while( is.hasNext() ) {
+				Value aiv = is.next();
+				if( aiv.getValue() > maxVolume ) {
+					maxVolume = aiv.getValue();
+					this.sourceId = aiv.getId();
+				}
+			}
+		}
 	}
-
-	public void setTransferTypes(Collection<IdName> transferTypes) {
-		this.transferTypes = transferTypes;
-	}
-
 	
-	public Collection<IdName> getSources() {
-		return sources;
+	/**
+	 * check the destination for a transfer.  If it's a process unit, find the tank
+	 * with the least volume and set the source ID to that tank. 
+	 * 				
+	 * @param ts  TagService
+	 * @param tks TankService
+	 * 
+	 * Notes:
+	 * {@code
+	 * 		get destination tag
+	 * 		IF destination tag is a process unit
+	 * 		.. get the (rough) tank volumes of this unit
+	 * 		.. WHILE there are tanks left to check
+	 * 		.. .. IF this has the least volume
+	 * 		.. .. .. save the tagID as the source ID
+	 * }
+	 */
+	public void checkDestination( TagService ts, TankService tks ) {
+		Tag dest = ts.getTag(destinationId);
+		if( Tag.PROCESS_UNIT.equals(dest.getTagTypeCode())) {
+			Iterator<Value> is = tks.getTankVolumesForUnit(dest.getName()).iterator();
+			Double minVolume = Double.MAX_VALUE;
+			while( is.hasNext() ) {
+				Value aiv = is.next();
+				if( aiv.getValue() < minVolume ) {
+					minVolume = aiv.getValue();
+					this.destinationId = aiv.getId();
+				}
+			}
+		}
 	}
 
-	public void setSources(Collection<IdName> sources) {
-		this.sources = sources;
-	}
-
-	
-	public Collection<IdName> getDestinations() {
-		return destinations;
-	}
-
-	public void setDestinations(Collection<IdName> destinations) {
-		this.destinations = destinations;
-	}
-*/
 }

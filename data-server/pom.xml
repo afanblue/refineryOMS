@@ -13,7 +13,7 @@
     <tiles.version>3.0.8</tiles.version>
     <mybatis.version>3.4.5</mybatis.version>
     <mysql.connector.version>5.1.30</mysql.connector.version>
-    <fasterxml.jackson.version>2.9.8</fasterxml.jackson.version>
+    <fasterxml.jackson.version>2.9.9</fasterxml.jackson.version>
   </properties>
   
   <dependencies>
@@ -147,6 +147,14 @@
         <configuration>
           <warSourceDirectory>src/main/webapp</warSourceDirectory>
           <failOnMissingWebXml>true</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <excludePackageNames> *.impl </excludePackageNames>
         </configuration>
       </plugin>
     </plugins>

@@ -65,9 +65,9 @@ class OrderList extends Component {
               sid = sid.substring(sid.length-6);
               return <tr key={x}>
                        <td className={["oms-spacing-60","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {orderSelect({z})}} >
-                           {sid}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {orderSelect({z})}} >{sid}
+                         </button>
                        </td>
                        <td className="oms-spacing-120">{n.customer}</td>
                        <td className="oms-spacing-90">{n.carrier}</td>

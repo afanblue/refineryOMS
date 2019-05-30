@@ -120,7 +120,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
          , a.acknowledged, a.active, a.alarm_msg_id, am.message
       from alarm a join alarm_type at on a.alarm_type_id = at.id
            join alarm_message am on a.alarm_msg_id = am.id
-     where a.tag_id = #{parm1}
+     where a.tag_id = #{param1}
        and a.active = 'Y'
      order by abbr
   </select>
@@ -129,7 +129,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
   <select id="getAlarmMessage" resultMap="alarmMessageMap">
     select id, abbr, message
       from alarm_message
-	 where id = #{parm1}
+	 where id = #{param1}
   </select>
   
   <update id="updateAlarm" parameterType="Alarm">
@@ -156,7 +156,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
            , tag_id = #{tagId}
            , alm_occurred = #{almOccurred}
            , acknowledged = #{acknowledged}
-           , act = #{active}
+           , active = #{active}
            , alarm_msg_id = #{alarmMsgId}
   </insert>
 
@@ -170,7 +170,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
   <select id="getAlarmType" resultMap="alarmTypeMap">
     select at.id, priority, code, alarm_msg_id, message
       from alarm_type at join alarm_message am on at.alarm_msg_id = am.id
-	 where at.id = #{parm1}
+	 where at.id = #{param1}
   </select>
   
   <update id="updateAlarmType" parameterType="AlarmType">

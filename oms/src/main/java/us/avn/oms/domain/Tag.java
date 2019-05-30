@@ -43,7 +43,8 @@ public class Tag extends OMSObject implements Serializable {
 	public static final String ANALOG_INPUT = "AI";
 	public static final String ANALOG_OUTPUT = "AO";
 	public static final String CALCULATED = "C";
-	public static final String CONTROL_BLOCK = "CB";
+    public static final String CONTROL_BLOCK = "CB";
+	public static final String CONTAINER = "CT";
 	public static final String DIGITAL_INPUT = "DI";
 	public static final String DIGITAL_OUTPUT = "DO";
 	public static final String DOCK = "DK";
@@ -51,6 +52,7 @@ public class Tag extends OMSObject implements Serializable {
 	public static final String HOT_SPOT = "HS";
 	public static final String PIPE = "P";
 	public static final String PLOT_GROUP = "PG";
+	public static final String PUMP = "PMP";
 	public static final String PROCESS_UNIT = "PU";
 	public static final String REFINERY_UNIT = "RU";
 	public static final String SCHEMATIC = "SCM";
@@ -59,6 +61,7 @@ public class Tag extends OMSObject implements Serializable {
 	public static final String TANK = "TK";
 	public static final String TANK_CAR = "TC";
 	public static final String TANK_TRUCK = "TT";
+	public static final String TRAIN = "T";
 	public static final String TRANSFER = "XFR";
 	public static final String VALVE = "V";
 		
@@ -87,12 +90,15 @@ public class Tag extends OMSObject implements Serializable {
     /**
      * Constructor
      * Description:  Create a new tag w/the given ID and name
-     * @param i
-     * @param n
+     *
+     * @param i Long DB record ID
+     * @param n String name of Tag
      */
     public Tag( Long i, String n ) {
     	this.id = i;
     	this.name = n;
+    	this.inTagId = 0L;
+    	this.outTagId = 0L;
     }
 
     /**
@@ -106,12 +112,14 @@ public class Tag extends OMSObject implements Serializable {
     	this.id = i;
     	this.name = n;
     	this.tagTypeCode = c;
+    	this.inTagId = 0L;
+    	this.outTagId = 0L;
     }
 
     /**
      * Constructor
      * Description: copy contents of existing tag to a new Tag object
-     * @param t
+     * @param t Tag object to copy
      */
     public Tag( Tag t ) {
     	this.id = t.getId();

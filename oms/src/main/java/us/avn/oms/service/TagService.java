@@ -53,7 +53,9 @@ public interface TagService {
 	
 	Collection<RelTagTag> getChildrenOfType( Long id, String code );
 	
-	Collection<Taglet> getChildren( Long id );
+	Collection<RelTagTag> getParentOfType( Long id, String code );
+	
+	Collection<RelTagTag> getChildren( Long id );
 	
 	Collection<TagType> getTagTypes( );
 

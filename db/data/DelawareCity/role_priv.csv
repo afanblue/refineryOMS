@@ -47,6 +47,7 @@ Admin,ControlBlock Admin
 Admin,Tag Admin
 Admin,AdminPipes
 Admin,OrderAdmin
+Admin,Admin Ship
 Operator,Access Schematics
 Operator,Acknowledge Alarms
 Operator,Execute Crude Field
@@ -68,4 +69,5 @@ Operator,View Transfer Tab
 Operator,View Users
 Operator,View Carriers
 Operator,View Orders
+Operator,Admin Docks
 End

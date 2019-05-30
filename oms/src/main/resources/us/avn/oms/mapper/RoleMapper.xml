@@ -30,7 +30,7 @@
   <select id="getRoleById" resultMap="roleResultMap">
     select r.id, r.name, r.active
       from role r 
-     where r.id = #{parm1}
+     where r.id = #{param1}
   </select>
 
   <select id="getAllRoles" resultMap="roleResultMap">
@@ -52,7 +52,7 @@
   
   <delete id="deleteRolePrivs" >
     delete from role_priv
-     where role_id = #{parm1}
+     where role_id = #{param1}
   </delete>
   
   <insert id="insertRolePriv" parameterType="RolePriv">

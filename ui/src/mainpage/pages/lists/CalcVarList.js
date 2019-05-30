@@ -59,9 +59,9 @@ class CalcVarList extends Component {
               let descr = n.tag.description;
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
-                         <a id={z} onClick={() => {handleSelect({z})}} >
-                           {n.tag.name}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {handleSelect({z})}} >{n.tag.name}
+                         </button>
                        </td>
                        <td className="oms-spacing-180">{descr}</td>
                        <td className="oms-spacing-120">{defn}</td>

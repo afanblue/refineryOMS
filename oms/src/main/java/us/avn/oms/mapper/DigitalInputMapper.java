@@ -39,6 +39,8 @@ public interface DigitalInputMapper {
 	
 	Collection<ReferenceCode> getAllHistoryTypes();
 	
+	Collection<DigitalInput> getCarrierPresentTags( String ptn );
+	
 	void updateDigitalInput( DigitalInput di );
 
 	void updateDigitalInputStatic( DigitalInput di );

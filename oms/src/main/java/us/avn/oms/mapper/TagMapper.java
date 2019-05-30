@@ -52,6 +52,8 @@ public interface TagMapper {
 	
 	Collection<RelTagTag> getChildrenOfType( Long id, String code );
 	
+	Collection<RelTagTag> getParentOfType( Long id, String code );
+	
 	Collection<TagType> getTagTypes( );
 	
 	Collection<TagType> getSchematicObjectTypes( );
@@ -64,7 +66,7 @@ public interface TagMapper {
 	
 	Collection<ChildValue> getTransferSensorValues( Long id, String code );
 	
-	Collection<Taglet> getChildren( Long id );
+	Collection<RelTagTag> getChildren( Long id );
 	
 	void updateTag( Tag t );
 	

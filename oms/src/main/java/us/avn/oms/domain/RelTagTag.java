@@ -48,6 +48,13 @@ public class RelTagTag implements Serializable {
 		this.childTagId = cid;
 	}
 	
+	public RelTagTag( Long pid, Long cid, String cd ) {
+		this.id = 0L;
+		this.parentTagId = pid;
+		this.childTagId = cid;
+		this.code = cd;
+	}
+	
 	public Long getId() {
 		return id;
 	}

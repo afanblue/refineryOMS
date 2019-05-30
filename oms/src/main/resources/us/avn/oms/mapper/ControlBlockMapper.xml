@@ -84,7 +84,7 @@
       join digital_output do on cb.id=do.tag_id
       join tag t on cb.id=t.id
       join tag tpv on cb.pv_id = tpv.id
-     where cb.id = #{parm1}
+     where cb.id = #{param1}
     union
     select cb.id, cb.pv_id, cb.sp_id, coalesce(cb.block_type,t.tag_type_code) block_type
          , t.name co, tsp.name sp, tpv.name pv, ao.scan_value output
@@ -93,7 +93,7 @@
       join tag t on cb.id=t.id
       join tag tpv on cb.pv_id = tpv.id
       left outer join tag tsp on cb.sp_id = tsp.id
-     where cb.id = #{parm1}    
+     where cb.id = #{param1}    
   </select>
   
   <update id="updateControlBlock" parameterType="ControlBlock">

@@ -32,53 +32,124 @@ public class OrderServiceImpl implements OrderService {
 		this.orderMapper = om;
 	}
 	
+	/**
+	 * Get the order (shipment) record for the specified ID
+	 * @param id ID of shipment to retrieve
+	 * @return Order record only (no items)
+	 */
 	@Override
 	public Order getOrder( Long id ) {
-		return orderMapper.getOrder(id);
+		Order o = orderMapper.getOrder(id);
+		o.setItems(orderMapper.getOrderItems(id));
+		return o;
 	}
 	
+	/**
+	 * Get order items (shipment_item records) for a given order (shipment)
+	 * @param id ID of shipment
+	 * @return all items for specified order
+	 */
 	@Override
 	public Collection<Item> getOrderItems( Long id ) {
 		return orderMapper.getOrderItems(id);
 	}
 	
+	/**
+	 * Get all of the active orders, i.e., those that have some items with
+	 * active = 'A'
+	 * @return all active orders 
+	 */
 	@Override
 	public Collection<Order> getActiveOrders( ) {
 		return orderMapper.getActiveOrders();
 	}
 	
+	/**
+	 * Get all of the pending orders, i.e., those that have some 
+	 * items with active = 'P'
+	 * @param id 
+	 * @return All pending orders
+	 */
+	@Override
+	public Collection<Order> getPendingOrders( ) {
+		return orderMapper.getPendingOrders();
+	}
+	
+	/**
+	 * Get all the pending shipment items for a given shipment (order)
+	 * @param id ID of order to get the itesm for
+	 * @return pending shipment items
+	 */
+	@Override
+	public Collection<Item> getPendingOrderItems( Long id ) {
+		return orderMapper.getPendingOrderItems(id);
+	}
+	
+	/**
+	 * Get all the orders of type (Purchase or Sale)
+	 * @param type P(urchase) or S(ale)
+	 * @return collection of specified orders
+	 */
 	@Override
 	public Collection<Order> getOrdersByType( String type ) {
 		return orderMapper.getOrdersByType(type);
 	}
 	
+	/**
+	 * Get the last week's orders, i.e., all the orders from the current
+	 * day minus one week
+	 * @return
+	 */
 	@Override
 	public Collection<Order> getLastWeeksOrders( ) {
 		return orderMapper.getLastWeeksOrders();
 	}
 	
+	/**
+	 * Get the last month's orders, i.e., all the orders from the current
+	 * day minus one month
+	 * @return collection of the last month's orders
+	 */
 	@Override
 	public Collection<Order> getLastMonthsOrders( ) {
 		return orderMapper.getLastMonthsOrders();
 	}
 	
+	/**
+	 * Insert a DB record for the given Order
+	 * @param o Order to be inserted
+	 * @return ID of order inserted
+	 */
 	@Override
 	public Long insertOrder( Order o ) {
 		orderMapper.insertOrder(o);
 		return o.getShipmentId();
 	}
 	
+	/**
+	 * Insert a DB record for the given item
+	 * @param i Item to be inserted
+	 */
 	@Override
 	public void insertItem( Item i ) {
 		orderMapper.insertItem(i);
 	}
 	
+	/**
+	 * Update the DB record for the given order
+	 * @param o Order to be updated
+	 * @return ID of record updated
+	 */
 	@Override
 	public Long updateOrder( Order o ) {
 		orderMapper.updateOrder(o);
 		return o.getShipmentId();
 	}
 	
+	/**
+	 * Update the DB record for the given item
+	 * @param i Item to be updated
+	 */
 	@Override
 	public 	void updateItem( Item i ) {
 		orderMapper.updateItem(i);

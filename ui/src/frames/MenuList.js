@@ -49,7 +49,9 @@ class MenuList extends Component {
                     <tr key={x}>
                       <td className="oms-menu-text">
                         <img src="./images/spacer.png" alt="" height="5px" width="10px" />
-                        <a id={z} onClick={() => {menuSelect({z})}} className="selected">{n.text}</a>
+                        <button type="button" className="link-button-selected" onClick={() => {menuSelect({z})}} >
+                          {n.text}
+                        </button>
                       </td>
                     </tr> );
                 } else {
@@ -57,7 +59,9 @@ class MenuList extends Component {
                     <tr key={x}>
                       <td className="oms-menu-text">
                         <img src="./images/spacer.png" alt="" height="5px" width="10px" />
-                        <a id={z} onClick={() => {menuSelect({z})}} >{n.text}</a>
+                        <button type="button" className="link-button" onClick={() => {menuSelect({z})}} >
+                          {n.text}
+                        </button>
                       </td>
                     </tr> );
                 }

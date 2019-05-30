@@ -38,9 +38,17 @@ class ClassificationMenu extends Component {
               function(n,x){
                 let t=n.text.replace(" ","");
                 if( selected.localeCompare(t) !== 0 ) {
-                  return <li key={x}><a data-content={t} onClick={() => {catSelected({t})}} >{n.text}</a></li>;
+                  return <li key={x}>
+                           <button type="button" className="cat-button" onClick={() => {catSelected({t})}} >
+                             {n.text}
+                           </button>
+                         </li>
                 }
-                return <li key={x}><a data-content={t} className="selected" onClick={() => {catSelected({t})}} >{n.text}</a></li>; 
+                return <li key={x}>
+                         <button type="button" className="cat-button-selected" onClick={() => {catSelected({t})}} >
+                           {n.text}
+                         </button>
+                       </li>; 
                 } 
               )
             }

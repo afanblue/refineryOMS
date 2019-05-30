@@ -50,25 +50,24 @@ import us.avn.oms.service.WatchdogService;
 import us.avn.oms.service.XferService;
 
 /**
- * Class: PseudoRandomEventSimulator (PRE simulator)
- * Description: This generates the appearance (!) of tank trucks, tank cars and 
- *        ships which, in real life, aren't really random events but are highly
- *        scheduled.  So, the assumptions here are<ol>
- *        <li>all deliveries of crude are done via ship</li>
- *        <li>no deliveries of crude are done via tank car or tank truck (given the
- *            current state of the Keystone XL pipeline, this would not likely be true
- *            for all refineries)</li>
- *        <li>shipments of refined products are done by tank car and tank truck</li></ol>
- *        What this does is <ul>
- *        <li>Ships<br/>
- *          compute how much crude is currently available.  When we get down to less than 
- *          one week's usage, we schedule a ship for the next day.
- *        </li>
- *        <li>Trucks and Tank Cars<br/>
- *          when there's less than a week's worth of space in the product tank, schedule
- *          a truck or tank for it.
- *        </li>
- *        </ul>
+ * This generates the appearance (!) of tank trucks, tank cars and 
+ * ships which, in real life, aren't really random events but are highly
+ * scheduled.  So, the assumptions here are<ol>
+ * <li>all deliveries of crude are done via ship</li>
+ * <li>no deliveries of crude are done via tank car or tank truck (given the
+ *     current state of the Keystone XL pipeline, this would not likely be true
+ *     for all refineries)</li>
+ * <li>shipments of refined products are done by tank car and tank truck</li></ol>
+ * What this does is <ul>
+ * <li>Ships<br>
+ *   compute how much crude is currently available.  When we get down to less than 
+ *   one week's usage, we schedule a ship for the next day.
+ * </li>
+ * <li>Trucks and Tank Cars<br>
+ *   when there's less than a week's worth of space in the product tank, schedule
+ *   a truck or tank for it.
+ * </li>
+ * </ul>
  *         
  * @author Allan
  *

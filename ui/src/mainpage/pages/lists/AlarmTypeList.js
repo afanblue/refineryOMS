@@ -49,19 +49,19 @@ class AlarmTypeList extends Component {
               var z = n.id;
               return <tr key={x}>
                        <td className={["oms-spacing-70","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {typeSelect({z})}} >
-                           {n.priority}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {typeSelect({z})}} >{n.priority}
+                         </button>
                        </td>
                        <td className={["oms-spacing-70","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {typeSelect({z})}} >
-                           {n.code}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {typeSelect({z})}} >{n.code}
+                         </button>
                        </td>
                        <td className={["oms-spacing-180","oms-cursor-pointer","oms-fontsize-12"].join(' ')}>
-                         <a id={z} onClick={() => {typeSelect({z})}} >
-                           {n.alarmMsg}
-                         </a>
+                         <button type="button" className="link-button"
+                                 onClick={() => {typeSelect({z})}} >{n.alarmMsg}
+                         </button>
                        </td>
                      </tr>
               } 

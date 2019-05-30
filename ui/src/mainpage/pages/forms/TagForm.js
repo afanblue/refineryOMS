@@ -40,10 +40,11 @@ class TagForm extends Component {
   
   render() {
     let t = this.props.tag;
-    let types = this.props.tagTypes;
-    let site = this.props.siteLoc;
-    let equipList = this.props.equipList;
-    let sensorList = this.props.sensorList;
+    let types        = this.props.tagTypes;
+    let site         = this.props.siteLoc;
+    let equipList    = this.props.equipList;
+    let sensorList   = this.props.sensorList;
+    let contentsList = this.props.contentsList;
 //    let tagList = (this.props.tagList===null)?[]:this.props.tagList;
 //    let inTagId = (this.props.inTagId===null)?0:this.props.inTagId;
 //    let outTagId = (this.props.outTagId===null)?0:this.props.outTagId;
@@ -53,6 +54,8 @@ class TagForm extends Component {
     let hq  = this.props.handleQuit;
 //    let na  = this.noAction;
 
+    var miscLabel = <div></div>
+    var miscListSelect = <div></div>
     var inListLabel = <div></div>
     var inListSelect = <div></div>
     var outListLabel = <div></div>
@@ -72,9 +75,20 @@ class TagForm extends Component {
       inTagLabel = <div>State Input : </div>
       inTagSelect = <select id="inTagId" name="inTagId" value={t.inTagId} onChange={fc} >{sensorList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
     }
+
+/* specify select options for list of outputs */
     if( (t.tagTypeCode === 'V') || (t.tagTypeCode === 'PMP') || (t.tagTypeCode === 'P') ) {
       outTagLabel = <div>State Output : </div>
       outTagSelect = <select id="outTagId" name="outTagId" value={t.outTagId} onChange={fc} >{sensorList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
+    }
+
+/* specify select options for MISC field */
+    if( (t.tagTypeCode === 'P') || (t.tagTypeCode === 'XFR' ) ) {
+      miscLabel = <div>Contents</div>
+      miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} > { contentsList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } ) } </select>
+    } else if( t.tagTypeCode === 'DK' ) {
+      miscLabel = <div>Carrier</div>
+      miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} ><option value="">---</option> <option value="S">S</option><option value="TR">Train</option><option value="TT">TankTruck</option></select>
     }
 
     var xDivisor = site.c2Long-site.c1Long;
@@ -133,6 +147,10 @@ class TagForm extends Component {
                 }
               </select>
             </td>
+          </tr>
+          <tr>
+            <th className="oms-spacing-180">{miscLabel}</th>
+            <td className="oms-spacing">{miscListSelect}</td>
           </tr>
           <tr>
             <th className="oms-spacing-90">Corners (NW)</th>

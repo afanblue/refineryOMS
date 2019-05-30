@@ -58,7 +58,7 @@ public class TransferMgr {
 	 * 				If 2 args: args[0] = hour, args[1] is the minute 
 	 */
 	public void execute(String[]args) {
-        TimerTask updx = new UpdateTransfers(args);
+        TimerTask updx = new TransferUpdate(args);
         Timer xTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
 //		wait until 45 seconds after (15 seconds before) the minute
@@ -67,7 +67,7 @@ public class TransferMgr {
         int delay = start * 1000 - 1000 * cal.get(Calendar.SECOND) - cal.get(Calendar.MILLISECOND);
         xTimer.scheduleAtFixedRate(updx, delay, 60*1000);
         log.debug("TransferMgr update thread started");
-        while( 1 == 1 ) {
+        while( true ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);
         	} catch (Exception e) {

@@ -54,7 +54,7 @@
          , af.parent_id, af.parent
 	  from field f join tag t on f.id = t.id
 	       join all_fields af on f.id = af.id
-	 where f.id = #{parm1} 
+	 where f.id = #{param1} 
   </select>
   
   <select id="getFieldByName" resultMap="frm">
@@ -62,7 +62,7 @@
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
          , t.description, t.tag_type_code, t.active
 	  from field f join tag t on f.id = t.id
-	 where t.name = #{parm1} 
+	 where t.name = #{param1} 
   </select>
   
   <select id="getFieldObjects" resultMap="tankDataMap">
@@ -80,7 +80,7 @@
       join analog_input ail on trt.level_tag_id = ail.tag_id
       left outer join alarm_info anl on trt.level_tag_id = anl.tag_id
       left outer join alarm_info ant on trt.temp_tag_id = ant.tag_id
-     where tf.name = #{parm1}
+     where tf.name = #{param1}
   </select>
   
   <update id="updateField" parameterType="Field">

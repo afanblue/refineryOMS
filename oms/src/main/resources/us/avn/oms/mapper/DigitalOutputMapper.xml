@@ -88,7 +88,7 @@
          , tt.id tag_type_id
       from digital_output d join tag t on d.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
-     where t.id = #{parm1}
+     where t.id = #{param1}
   </select>
   
   <select id="getDigitalOutputsToUpdate" resultMap="digitalOutputResultMap">
@@ -125,7 +125,7 @@
   
   
   <update id="clearDOupdate" parameterType="Long">
-    update digital_output set is_new = 0 where tag_id = #{parm1}
+    update digital_output set is_new = 0 where tag_id = #{param1}
   </update>
   
   <insert id="insertDigitalOutput" parameterType="DigitalOutput">

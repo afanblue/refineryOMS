@@ -38,6 +38,7 @@ public class Config implements Serializable {
 	public static final String LAST_HOUR_PRECIP = "LAST_HOUR_PRECIP";
 	public static final String LOGGER_LEVEL = "LOGGER_LEVEL";
 	public static final String UI_LOG_DIRECTORY = "UI_LOG_DIRECTORY";
+	public static final String WEATHER_LOCATION = "WEATHER_LOCATION";
 	public static final String GASOLINE_PERCENT = "GASOLINE-PERCENT";
 	public static final String FUEL_OIL_PERCENT = "FUEL-OIL-PERCENT";
 	public static final String JET_FUEL_PERCENT = "JET-FUEL-PERCENT";
@@ -47,9 +48,21 @@ public class Config implements Serializable {
 	public static final String COKE_PERCENT = "COKE_PERCENT";
 	public static final String ASPHALT_PERCENT = "ASPHALT-PERCENT";
 	public static final String STILLGAS_PERCENT = "STILLGAS-PERCENT";
+	public static final String EMAIL_FROM = "EMAIL_FROM";
+	public static final String EMAIL_PWD = "EMAIL_PWD";
+	public static final String EMAIL_USER = "EMAIL_USER";
+	public static final String NUMBER_DOCKS = "NUMBER-DOCKS";
+	public static final String NUMBER_TANKCARS = "NUMBER-TANKCARS";
+	public static final String NUMBER_TANKTRUCKS = "NUMBER-TANKTRUCKS";
+	public static final String SHIP_PRESENT_NAME = "SHIP-PRESENT-NAME";
+	public static final String SMTP_HOST = "SMTP_HOST";
+	public static final String SMTP_PORT = "SMTP_PORT";
+	public static final String TANKCAR_PRESENT_NAME = "TANKCAR-PRESENT-NAME";
+	public static final String TANKTRUCK_PRESENT_NAME = "TANKTRUCK-PRESENT-NAME";
+	public static final String TRAIN_PRESENT_NAME = "TRAIN-PRESENT-NAME";
+	public static final String WATCHDOG_EMAIL = "WATCHDOG_EMAIL";
 	public static final String WEATHER_DELAY = "WEATHER_DELAY";
 	public static final String WEATHER_INTERVAL = "WEATHER_INTERVAL";
-	public static final String WEATHER_LOCATION = "WEATHER_LOCATION";
 	public static final String WEATHER_TYPE = "WEATHER_TYPE";
 
 	private static final long serialVersionUID = 8751282105532159742L;
