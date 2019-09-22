@@ -17,6 +17,7 @@
 package us.avn.oms.service;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import us.avn.oms.domain.Config;
 import us.avn.oms.domain.Tag;
@@ -25,6 +26,8 @@ import us.avn.oms.domain.Tag;
 public interface ConfigService {
 	
 	public Collection<Config> getAllConfigurationItems( );
+	
+	public HashMap<String, String> getAllConfigItems();
 	
 	public Collection<String> getOmsViews();
 	

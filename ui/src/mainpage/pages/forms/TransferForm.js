@@ -45,12 +45,12 @@ class TransferForm extends Component {
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
-                <th className="oms-spacing-90">&nbsp;</th>
+                <th className="oms-spacing-120">&nbsp;</th>
                 <td className="oms-spacing"><img src="images/spacer.png" 
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
-                <th className="oms-spacing-90">Transfer name:</th>
+                <th className="oms-spacing-120">Transfer name:</th>
                 <td className="oms-spacing">
                   <input type="hidden" name="id" value={x.id} />
                   <input type="text" id="name" name="name" value={x.name} 
@@ -59,7 +59,7 @@ class TransferForm extends Component {
                 </td>
               </tr>            
               <tr>
-                <th className="oms-spacing-90">Status:</th>
+                <th className="oms-spacing-120">Status:</th>
                 <td className="oms-spacing">
                   <select id="statusId" name="statusId" value={x.statusId} onChange={fc} >
                     { st.map( 
@@ -71,7 +71,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-90">Transfer Type:</th>
+                <th className="oms-spacing-120">Transfer Type:</th>
                 <td className="oms-spacing">
                   <select id="transferTypeId" name="transferTypeId" value={x.transferTypeId} 
                           onChange={fc} >
@@ -84,7 +84,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-90">Source:</th>
+                <th className="oms-spacing-120">Source:</th>
                 <td className="oms-spacing">
                   <select id="sourceId" name="sourceId" value={x.sourceId} 
                           onChange={fc} >
@@ -97,7 +97,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-90">Destination:</th>
+                <th className="oms-spacing-120">Destination:</th>
                 <td className="oms-spacing">
                   <select id="destinationId" name="destinationId" value={x.destinationId} 
                           onChange={fc} >
@@ -110,7 +110,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-90">Expected Start:</th>
+                <th className="oms-spacing-120">Expected Start:</th>
                 <td className="oms-spacing">
                   <input type="text" id="expStartTime" name="expStartTime" value={x.expStartTime}
                          className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
@@ -118,7 +118,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-90">Expected End:</th>
+                <th className="oms-spacing-120">Expected End:</th>
                 <td className="oms-spacing">
                   <input type="text" id="expEndTime" name="expEndTime" value={x.expEndTime}
                          className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
@@ -126,7 +126,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <td className="oms-spacing-90">Expected Volume:</td>
+                <td className="oms-spacing-120">Expected Volume:</td>
                 <td className="oms-spacing">
                   <input type="text" id="expVolume" name="expVolume" value={x.expVolume}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
@@ -134,7 +134,7 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <td className="oms-spacing-90">Repeat Interval:</td>
+                <td className="oms-spacing-120">Repeat Interval:</td>
                 <td className="oms-spacing">
                   <select id="delta" name="delta" value={x.delta} onChange={fc} >
                     <option value="0">0</option>
@@ -152,19 +152,19 @@ class TransferForm extends Component {
                 </td>
               </tr>
               <tr>
-                <td className="oms-spacing-90">Actual Start Time:</td>
+                <td className="oms-spacing-120">Actual Start Time:</td>
                 <td className="oms-spacing">
                   {x.actStartTime} 
                 </td>
               </tr>
               <tr>
-                <td className="oms-spacing-90">Actual End Time:</td>
+                <td className="oms-spacing-120">Actual End Time:</td>
                 <td className="oms-spacing">
                   {x.actEndTime}
                </td>
               </tr>
               <tr>
-                <td className="oms-spacing-90">Actual Volume:</td>
+                <td className="oms-spacing-120">Actual Volume:</td>
                 <td className="oms-spacing">
                   {x.actVolume}
      	  		</td>

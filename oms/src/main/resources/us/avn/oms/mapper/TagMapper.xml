@@ -117,6 +117,15 @@
      order by t.name
   </select>
   
+  <select id="getTagsByTypeRandom" resultMap="tagResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, t.misc
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active
+         , tt.id tag_type_id
+      from tag t join tag_type tt on t.tag_type_code = tt.code
+     where t.tag_type_code = #{param1}
+     order by rand()
+  </select>
+  
   <select id="getAllTagletsByType" resultMap="tagletResultMap">
     select t.id, t.name, t.description, t.tag_type_code, t.active
       from tag t
@@ -149,12 +158,12 @@
      where rtt.child_tag_id = #{param1}
   </select>
 
-  <select id="getParentTagsOfType" resultMap="tagResultMap">
+  <select id="getParentTagsWCode" resultMap="tagResultMap">
     select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
       from tag t join tag_type tt on t.tag_type_code = tt.code
       join rel_tag_tag rtt on rtt.parent_tag_id = t.id
-     where rtt.childTag_id = #{param1} and t.tag_type_code = #{param2}
+     where rtt.child_tag_id = #{param1} and rtt.code = #{param2}
   </select>
   
   <select id="getChildTags" resultMap="tagRelationMap" >
@@ -335,6 +344,9 @@
   <insert id="insertRelationship" parameterType="RelTagTag">
     insert rel_tag_tag( parent_tag_id, child_tag_id, code )
     values( #{parentTagId}, #{childTagId}, #{code} )
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
   </insert>
   
 </mapper>

@@ -28,16 +28,14 @@ import us.avn.oms.domain.Xfer;
 public interface XferService {
 
 	/**
-	 * Method: clearUpdated
-	 * Description: clear the updated flag in the given XFER record
+	 * clear the updated flag in the given XFER record
 	 *
 	 * @param id - Long - ID for the specified XFER record
 	 */
 	void clearUpdated( Long id );
 
 	/**
-	 * Method: updateXfer
-	 * Description: update the XFER w/the specified object values
+	 * update the XFER w/the specified object values
 	 *
 	 * @param x Xfer object to update
 	 */

@@ -1,8 +1,8 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Vector;
 
 
@@ -13,7 +13,7 @@ public class Train extends Tag implements Serializable {
 	private Long ownerId;
 	private Long noCars;
 	private String contentCode;
-	private Date arrivalDt;
+	private Instant arrivalDt;
 	
 	
 	public Train() {
@@ -73,11 +73,11 @@ public class Train extends Tag implements Serializable {
 	}
 
 	
-	public Date getArrivalDt() {
+	public Instant getArrivalDt() {
 		return arrivalDt;
 	}
 
-	public void setArrivalDt(Date arrivalDt) {
+	public void setArrivalDt(Instant arrivalDt) {
 		this.arrivalDt = arrivalDt;
 	}
 	

@@ -17,8 +17,8 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 
 
 /*
@@ -41,25 +41,25 @@ public class DigitalInput extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
-	protected Long    tagId;
-	protected Tag     tag;
-	protected Integer scanInt;
-	protected Integer scanOffset;
-	protected Integer currentScan;
-	protected String  histTypeCode;
-	protected Double  alarmState;
-	protected Double  alarmCode;
-	protected Double  scanValue;
-	protected Date    scanTime;
- 	protected Double  prevValue;
-	protected Date    prevScanTime;
- 	protected Date    lastHistValue;
- 	protected Date    lastHistTime;
- 	protected String  valueView;
- 	protected Integer simValue;
- 	protected Date    simScanTime;
- 	protected Integer updated;
- 	protected Tag     siteLocation;
+	protected Long     tagId;
+	protected Tag      tag;
+	protected Integer  scanInt;
+	protected Integer  scanOffset;
+	protected Integer  currentScan;
+	protected String   histTypeCode;
+	protected Double   alarmState;
+	protected Double   alarmCode;
+	protected Double   scanValue;
+	protected Instant  scanTime;
+ 	protected Double   prevValue;
+	protected Instant  prevScanTime;
+ 	protected Instant  lastHistValue;
+ 	protected Instant  lastHistTime;
+ 	protected String   valueView;
+ 	protected Integer  simValue;
+ 	protected Instant  simScanTime;
+ 	protected Integer  updated;
+ 	protected Tag      siteLocation;
  	protected Collection<ReferenceCode> histTypes;
  	protected Collection<String>views;
 	
@@ -146,11 +146,11 @@ public class DigitalInput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getScanTime() {
+	public Instant getScanTime() {
 		return scanTime;
 	}
 
-	public void setScanTime(Date scanTime) {
+	public void setScanTime(Instant scanTime) {
 		this.scanTime = scanTime;
 	}
 
@@ -164,29 +164,29 @@ public class DigitalInput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getPrevScanTime() {
+	public Instant getPrevScanTime() {
 		return prevScanTime;
 	}
 
-	public void setPrevScanTime(Date prevTime) {
+	public void setPrevScanTime(Instant prevTime) {
 		this.prevScanTime = prevTime;
 	}
 
 
-	public Date getLastHistValue() {
+	public Instant getLastHistValue() {
 		return lastHistValue;
 	}
 
-	public void setLastHistValue(Date lastHistValue) {
+	public void setLastHistValue(Instant lastHistValue) {
 		this.lastHistValue = lastHistValue;
 	}
 
 
-	public Date getLastHistTime() {
+	public Instant getLastHistTime() {
 		return lastHistTime;
 	}
 
-	public void setLastHistTime(Date lastHistTime) {
+	public void setLastHistTime(Instant lastHistTime) {
 		this.lastHistTime = lastHistTime;
 	}
 
@@ -209,11 +209,11 @@ public class DigitalInput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getSimScanTime() {
+	public Instant getSimScanTime() {
 		return simScanTime;
 	}
 
-	public void setSimScanTime(Date pst) {
+	public void setSimScanTime(Instant pst) {
 		this.simScanTime = pst;
 	}
 

@@ -17,7 +17,10 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /*
  *           tag_id: 24
@@ -34,14 +37,14 @@ public class AIValue extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 
-	private Long   tagId;
-	private String name;
-	private Double value;
-	private String aiType;
-	private String valueText;
-	private Date   scanTime;
-	private String alarmCode;
-	private String alarmColor;
+	private Long     tagId;
+	private String   name;
+	private Double   value;
+	private String   aiType;
+	private String   valueText;
+	private Instant  scanTime;
+	private String   alarmCode;
+	private String   alarmColor;
 	private Location location;
 	
 
@@ -106,7 +109,10 @@ public class AIValue extends OMSObject implements Serializable {
 
 	public void setScanTime(String scanTime) {
 		try {
-			this.scanTime = sdf.parse(scanTime);
+			String tz = java.util.TimeZone.getDefault().getID();
+			LocalDateTime ld = LocalDateTime.parse(scanTime, sdf );
+			ZonedDateTime d = ZonedDateTime.of(ld, ZoneId.of(tz));
+			this.scanTime = d.toInstant();
 		} catch( Exception e ) {
 			this.scanTime = null;
 		}

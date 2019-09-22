@@ -19,7 +19,6 @@ package us.avn.oms.sim;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,11 +36,9 @@ public class Simulator {
 		try {
 			sim.execute(args);
 		} catch( Exception e) {
-//			Date now = new Date();
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			String eas = sw.toString();
-//			System.out.println(sdf.format(now) + eas.toString());	
 			slog.error(eas);
 		}
 	}
@@ -58,20 +55,22 @@ public class Simulator {
         int start = 40;
         if( cal.get(Calendar.SECOND) > 40 ) { start = 60 + 50; }
         int delay = start * 1000 - 1000 * cal.get(Calendar.SECOND) - cal.get(Calendar.MILLISECOND);
+        if( delay < 0 ) { delay += 60000; }
 //		run Analog and Digital simulations every 10 seconds
+        log.debug("Delay: "+delay);
         aiTimer.scheduleAtFixedRate(aitt, delay, 10*1000);
         log.debug("Analog scan started");
         diTimer.scheduleAtFixedRate(ditt, delay, 10*1000);
         log.debug("Digital scan started");
 //		run the pseudo random event simulator every hour on the hour
         int pseDelay = 1000 * ((60 - cal.get(Calendar.MINUTE)) * 60 + (60 - cal.get(Calendar.SECOND)));
-        preTimer.scheduleAtFixedRate(prett, pseDelay, 3600*1000);
+//        preTimer.scheduleAtFixedRate(prett, pseDelay, 3600*1000);
         log.debug("PSE scan started");
-        while( 1 == 1 ) {
+        int x = 1;
+        while( x == 1 ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);
         	} catch (Exception e) {
-//    			Date now = new Date();
     			StringWriter sw = new StringWriter();
     			e.printStackTrace(new PrintWriter(sw));
     			String eas = sw.toString();

@@ -17,13 +17,20 @@
 package us.avn.ws;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+//import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+//import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+//import java.util.Date;
 import java.util.HashMap;
 
 import javax.json.Json;
@@ -44,7 +51,7 @@ public class NoaaApi extends WeatherStation {
 	private static String apiWeatherUrl = "https://api.weather.gov/stations/XXXX/observations/current";
     private static String[] apiConditionNames= {"timestamp","temperature","barometricPressure","windSpeed","windDirection","precipitationLastHour"};
 
-	public NoaaApi() {
+    public NoaaApi() {
 		super();
 		weatherUrl = apiWeatherUrl;
 		setWsConditionNames(apiConditionNames);
@@ -91,6 +98,8 @@ public class NoaaApi extends WeatherStation {
 				final Event event = parser.next();
 				switch (event) {
 				case START_OBJECT: 
+				case VALUE_FALSE:
+				case VALUE_TRUE:
 					//		        	System.out.print("\t");
 					break;
 				case END_OBJECT:
@@ -127,14 +136,20 @@ public class NoaaApi extends WeatherStation {
 							saveValue = true;
 						}
 					}
+					log.debug("KEY_NAME: "+key+" ("+saveKey+")");
 					//		            System.out.print(key);
 					break;
 				case VALUE_STRING:
 					value = parser.getString();
+					log.debug("VALUE_STRING: "+saveKey+": "+value);
 					if( "time".equals(saveKey)) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssXXX");
-						Date d = sdf.parse(parser.getString());
-						valnum = new Double(d.getTime());
+					//	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx");
+						DateTimeFormatter dtf = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+						ZonedDateTime d = ZonedDateTime.parse(value, dtf );
+						
+						Instant id = d.toInstant();
+
+						valnum = new Double(id.getEpochSecond());
 						cc.put(saveKey, valnum);
 						saveKey = null;
 						saveValue = false;
@@ -143,6 +158,7 @@ public class NoaaApi extends WeatherStation {
 					break;
 				case VALUE_NUMBER:
 					valnum = parser.getBigDecimal().doubleValue();
+					log.debug("VALUE_NUMBER: "+saveKey+": "+valnum);
 					if( saveValue ) {
 						cc.put(saveKey, valnum);
 						saveKey = null;

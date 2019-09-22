@@ -17,7 +17,7 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 
 /*
@@ -29,20 +29,20 @@ public class Alarm extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
-	private Long   id;
-	private Long   alarmTypeId;
-	private String alarmCode;
-	private Long   tagTypeId;
-	private Long   tagId;
-	private Tag    alarmTag;
-	private Date   almOccurred;
-	private String acknowledged;
-	private String active;
-	private Long   alarmMsgId;
-	private String message;
-	private String color;
-	private String priority;
-	private Double value;
+	private Long     id;
+	private Long     alarmTypeId;
+	private String   alarmCode;
+	private Long     tagTypeId;
+	private Long     tagId;
+	private Tag      alarmTag;
+	private Instant  almOccurred;
+	private String  acknowledged;
+	private String  active;
+	private Long    alarmMsgId;
+	private String  message;
+	private String  color;
+	private String  priority;
+	private Double  value;
 	
 	public Alarm() {
 		this.alarmTag = new Tag();
@@ -102,11 +102,11 @@ public class Alarm extends OMSObject implements Serializable {
 	}
 
 	
-	public Date getAlmOccurred() {
+	public Instant getAlmOccurred() {
 		return almOccurred;
 	}
 
-	public void setAlmOccurred(Date almOccurred) {
+	public void setAlmOccurred(Instant almOccurred) {
 		this.almOccurred = almOccurred;
 	}
 

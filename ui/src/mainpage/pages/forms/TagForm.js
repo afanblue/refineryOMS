@@ -84,11 +84,14 @@ class TagForm extends Component {
 
 /* specify select options for MISC field */
     if( (t.tagTypeCode === 'P') || (t.tagTypeCode === 'XFR' ) ) {
-      miscLabel = <div>Contents</div>
+      miscLabel = <div>Contents:</div>
       miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} > { contentsList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } ) } </select>
     } else if( t.tagTypeCode === 'DK' ) {
-      miscLabel = <div>Carrier</div>
+      miscLabel = <div>Carrier:</div>
       miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} ><option value="">---</option> <option value="S">S</option><option value="TR">Train</option><option value="TT">TankTruck</option></select>
+    } else if( t.tagTypeCode === 'STN' ) {
+      miscLabel = <div>Parent Type:</div>
+      miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} >{ types.map( function(n,x){ return <option key={x} value={n.code}>{n.name}</option> } ) } </select>
     }
 
     var xDivisor = site.c2Long-site.c1Long;

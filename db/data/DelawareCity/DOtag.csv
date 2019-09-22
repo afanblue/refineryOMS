@@ -1,0 +1,242 @@
+Table,tag,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+Data,,,
+name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
+RU1CP-DO,On/Off switch RU1 Crude Pump,DO,,,-75.625879,,-75.625140,Y
+RU1GP-DO,On/Off switch RU1 Gasoline Pump,DO,,,-75.625879,,-75.625140,Y
+RU1FOP-DO,On/Off switch RU1 Fuel Oil Pump,DO,,,-75.625879,,-75.625140,Y
+RU1JP-DO,On/Off switch RU1 Jet Fuel Pump,DO,,,-75.625879,,-75.625140,Y
+RU1RFP-DO,On/Off switch RU1 RFO Pump,DO,,,-75.625879,,-75.625140,Y
+RU1LRP-DO,On/Off switch RU1 LRG Pump,DO,,,-75.625879,,-75.625140,Y
+RU1AP-DO,On/Off switch RU1 Asphalt Pump,DO,,,-75.625879,,-75.625140,Y
+RU1LP-DO,On/Off switch RU1 Lubricant Pump,DO,,,-75.625879,,-75.625140,Y
+RU2CP-DO,On/Off switch RU2 Crude Pump,DO,,,-75.625879,,-75.625140,Y
+RU2GP-DO,On/Off switch RU2 Gasoline Pump,DO,,,-75.625879,,-75.625140,Y
+RU2FOP-DO,On/Off switch RU2 Fuel Oil Pump,DO,,,-75.625879,,-75.625140,Y
+RU2JP-DO,On/Off switch RU2 Jet Fuel Pump,DO,,,-75.625879,,-75.625140,Y
+RU2RFP-DO,On/Off switch RU2 RFO Pump,DO,,,-75.625879,,-75.625140,Y
+RU2LRP-DO,On/Off switch RU2 LRG Pump,DO,,,-75.625879,,-75.625140,Y
+RU2AP-DO,On/Off switch RU2 Asphalt Pump,DO,,,-75.625879,,-75.625140,Y
+RU2LP-DO,On/Off switch RU2 Lube Pump,DO,,,-75.625879,,-75.625140,Y
+SB1P2-DO,On/Off switch for Slip 1 Pump 2,DO,,,-75.625879,,-75.625140,Y
+SB1P3-DO,On/Off switch for Slip 1 Pump 3,DO,,,-75.625879,,-75.625140,Y
+SB1P4-DO,On/Off switch for Slip 1 Pump 4,DO,,,-75.625879,,-75.625140,Y
+SB2P1-DO,On/Off switch for Slip 2 Pump 1,DO,,,-75.625879,,-75.625140,Y
+SB2P2-DO,On/Off switch for Slip 2 Pump 2,DO,,,-75.625879,,-75.625140,Y
+SB2P3-DO,On/Off switch for Slip 2 Pump 3,DO,,,-75.625879,,-75.625140,Y
+SB2P4-DO,On/Off switch for Slip 2 Pump 4,DO,,,-75.625879,,-75.625140,Y
+SB1P1-DO,On/Off switch for Slip 1 Pump 1,DO,,,,,,Y
+CT01-PoDO,On/Off switch Crude Tk 1 Pump,DO,,,,,,Y
+CT02-PoDO,On/Off switch Crude Tk 2 Pump,DO,,,,,,Y
+CT03-PoDO,On/Off switch Crude Tk 3 Pump,DO,,,,,,Y
+CT04-PoDO,On/Off switch Crude Tk 4 Pump,DO,,,,,,Y
+CT05-PoDO,On/Off switch Crude Tk 5 Pump,DO,,,,,,Y
+CT06-PoDO,On/Off switch Crude Tk 6 Pump,DO,,,,,,Y
+CT07-PoDO,On/Off switch Crude Tk 7 Pump,DO,,,,,,Y
+CT08-PoDO,On/Off switch Crude Tk 8 Pump,DO,,,,,,Y
+CT09-PoDO,On/Off switch Crude Tk 9 Pump,DO,,,,,,Y
+CT10-PoDO,On/Off switch Crude Tk 10 Pump,DO,,,,,,Y
+CT11-PoDO,On/Off switch Crude Tk 11 Pump,DO,,,,,,Y
+CT12-PoDO,On/Off switch Crude Tk 12 Pump,DO,,,,,,Y
+CT011-VoDO,Crude Tank 1 Valve,DO,,,,,,Y
+CT021-VoDO,Crude Tank 2 Valve,DO,,,,,,Y
+CT031-VoDO,Crude Tank 3 Valve,DO,,,,,,Y
+CT041-VoDO,Crude Tank 4 Valve,DO,,,,,,Y
+CT051-VoDO,Crude Tank 5 Valve,DO,,,,,,Y
+CT061-VoDO,Crude Tank 6 Valve,DO,,,,,,Y
+CT071-VoDO,Crude Tank 7 Valve,DO,,,,,,Y
+CT081-VoDO,Crude Tank 8 Valve,DO,,,,,,Y
+CT091-VoDO,Crude Tank 9 Valve,DO,,,,,,Y
+CT101-VoDO,Crude Tank 10 Valve,DO,,,,,,Y
+CT111-VoDO,Crude Tank 11 Valve,DO,,,,,,Y
+CT121-VoDO,Crude Tank 12 Valve,DO,,,,,,Y
+PV11-DO,Pipe Valve-RU1 Tanks 1-4,DO,,,,,,Y
+PV21-DO,Pipe Valve-RU2 Tanks 1-4,DO,,,,,,Y
+PV12-DO,Pipe Valve-RU1 Tanks 5-8,DO,,,,,,Y
+PV22-DO,Pipe Valve-RU2 Tanks 5-8,DO,,,,,,Y
+PV13-DO,Pipe Valve-RU1 Tanks 9-12,DO,,,,,,Y
+PV23-DO,Pipe Valve-RU2 Tanks 9-12,DO,,,,,,Y
+CT012-VoDO,Crude Tank 1 RU2 Valve,DO,,,,,,Y
+CT022-VoDO,Crude Tank 2 RU2 Valve,DO,,,,,,Y
+CT032-VoDO,Crude Tank 3 RU2 Valve,DO,,,,,,Y
+CT042-VoDO,Crude Tank 4 RU2 Valve,DO,,,,,,Y
+CT052-VoDO,Crude Tank 5 RU2 Valve,DO,,,,,,Y
+CT062-VoDO,Crude Tank 6 RU2 Valve,DO,,,,,,Y
+CT072-VoDO,Crude Tank 7 RU2 Valve,DO,,,,,,Y
+CT082-VoDO,Crude Tank 8 RU2 Valve,DO,,,,,,Y
+CT092-VoDO,Crude Tank 9 RU2 Valve,DO,,,,,,Y
+CT102-VoDO,Crude Tank 10 RU2 Valve,DO,,,,,,Y
+CT112-VoDO,Crude Tank 11 RU2 Valve,DO,,,,,,Y
+CT122-VoDO,Crude Tank 12 RU2 Valve,DO,,,,,,Y
+FOT01-PoDO,On/Off switch Fuel Oil Tk 1 Pump,DO,,,,,,Y
+FOT02-PoDO,On/Off switch Fuel Oil Tk 2 Pump,DO,,,,,,Y
+FOT03-PoDO,On/Off switch Fuel Oil Tk 3 Pump,DO,,,,,,Y
+FOT04-PoDO,On/Off switch Fuel Oil Tk 4 Pump,DO,,,,,,Y
+FOT05-PoDO,On/Off switch Fuel Oil Tk 5 Pump,DO,,,,,,Y
+FOT06-PoDO,On/Off switch Fuel Oil Tk 6 Pump,DO,,,,,,Y
+FOT07-PoDO,On/Off switch Fuel Oil Tk 7 Pump,DO,,,,,,Y
+FOT08-PoDO,On/Off switch Fuel Oil Tk 8 Pump,DO,,,,,,Y
+FOT09-PoDO,On/Off switch Fuel Oil Tk 9 Pump,DO,,,,,,Y
+FOT10-PoDO,On/Off switch Fuel Oil Tk 10 Pump,DO,,,,,,Y
+FOT11-PoDO,On/Off switch Fuel Oil Tk 11 Pump,DO,,,,,,Y
+FOT01-ViDO,Opn/Cls switch Fuel Oil Tk 1 Inp Valve,DO,,,,,,Y
+FOT02-ViDO,Opn/Cls switch Fuel Oil Tk 2 Inp Valve,DO,,,,,,Y
+FOT03-ViDO,Opn/Cls switch Fuel Oil Tk 3 Inp Valve,DO,,,,,,Y
+FOT04-ViDO,Opn/Cls switch Fuel Oil Tk 4 Inp Valve,DO,,,,,,Y
+FOT05-ViDO,Opn/Cls switch Fuel Oil Tk 5 Inp Valve,DO,,,,,,Y
+FOT06-ViDO,Opn/Cls switch Fuel Oil Tk 6 Inp Valve,DO,,,,,,Y
+FOT07-ViDO,Opn/Cls switch Fuel Oil Tk 7 Inp Valve,DO,,,,,,Y
+FOT08-ViDO,Opn/Cls switch Fuel Oil Tk 8 Inp Valve,DO,,,,,,Y
+FOT09-ViDO,Opn/Cls switch Fuel Oil Tk 9 Inp Valve,DO,,,,,,Y
+FOT10-ViDO,Opn/Cls switch Fuel Oil Tk 10 Inp Valve,DO,,,,,,Y
+FOT11-ViDO,Opn/Cls switch Fuel Oil Tk 11 Inp Valve,DO,,,,,,Y
+FOT01-VoDO,Opn/Cls switch Fuel Oil Tk 1 Out Valve,DO,,,,,,Y
+FOT02-VoDO,Opn/Cls switch Fuel Oil Tk 2 Out Valve,DO,,,,,,Y
+FOT03-VoDO,Opn/Cls switch Fuel Oil Tk 3 Out Valve,DO,,,,,,Y
+FOT04-VoDO,Opn/Cls switch Fuel Oil Tk 4 Out Valve,DO,,,,,,Y
+FOT05-VoDO,Opn/Cls switch Fuel Oil Tk 5 Out Valve,DO,,,,,,Y
+FOT06-VoDO,Opn/Cls switch Fuel Oil Tk 6 Out Valve,DO,,,,,,Y
+FOT07-VoDO,Opn/Cls switch Fuel Oil Tk 7 Out Valve,DO,,,,,,Y
+FOT08-VoDO,Opn/Cls switch Fuel Oil Tk 8 Out Valve,DO,,,,,,Y
+FOT09-VoDO,Opn/Cls switch Fuel Oil Tk 9 Out Valve,DO,,,,,,Y
+FOT10-VoDO,Opn/Cls switch Fuel Oil Tk 10 Out Valve,DO,,,,,,Y
+FOT11-VoDO,Opn/Cls switch Fuel Oil Tk 11 Out Valve,DO,,,,,,Y
+AT01-PoDO,On/Off switch Asphalt Tk 1 Pump,DO,,,,,,Y
+AT02-PoDO,On/Off switch Asphalt Tk 2 Pump,DO,,,,,,Y
+AT03-PoDO,On/Off switch Asphalt Tk 3 Pump,DO,,,,,,Y
+AT04-PoDO,On/Off switch Asphalt Tk 4 Pump,DO,,,,,,Y
+GT01-PoDO,On/Off switch Gasoline Tk 1 Pump,DO,,,,,,Y
+GT02-PoDO,On/Off switch Gasoline Tk 2 Pump,DO,,,,,,Y
+GT03-PoDO,On/Off switch Gasoline Tk 3 Pump,DO,,,,,,Y
+GT04-PoDO,On/Off switch Gasoline Tk 4 Pump,DO,,,,,,Y
+GT05-PoDO,On/Off switch Gasoline Tk 5 Pump,DO,,,,,,Y
+GT06-PoDO,On/Off switch Gasoline Tk 6 Pump,DO,,,,,,Y
+GT07-PoDO,On/Off switch Gasoline Tk 7 Pump,DO,,,,,,Y
+GT08-PoDO,On/Off switch Gasoline Tk 8 Pump,DO,,,,,,Y
+GT09-PoDO,On/Off switch Gasoline Tk 9 Pump,DO,,,,,,Y
+GT10-PoDO,On/Off switch Gasoline Tk 10 Pump,DO,,,,,,Y
+GT11-PoDO,On/Off switch Gasoline Tk 11 Pump,DO,,,,,,Y
+GT12-PoDO,On/Off switch Gasoline Tk 12 Pump,DO,,,,,,Y
+GT13-PoDO,On/Off switch Gasoline Tk 13 Pump,DO,,,,,,Y
+GT14-PoDO,On/Off switch Gasoline Tk 14 Pump,DO,,,,,,Y
+GT15-PoDO,On/Off switch Gasoline Tk 15 Pump,DO,,,,,,Y
+JT01-PoDO,On/Off switch Jet Fuel Tk 1 Pump,DO,,,,,,Y
+JT02-PoDO,On/Off switch Jet Fuel Tk 2 Pump,DO,,,,,,Y
+JT03-PoDO,On/Off switch Jet Fuel Tk 3 Pump,DO,,,,,,Y
+JT04-PoDO,On/Off switch Jet Fuel Tk 4 Pump,DO,,,,,,Y
+JT05-PoDO,On/Off switch Jet Fuel Tk 5 Pump,DO,,,,,,Y
+JT06-PoDO,On/Off switch Jet Fuel Tk 6 Pump,DO,,,,,,Y
+JT07-PoDO,On/Off switch Jet Fuel Tk 7 Pump,DO,,,,,,Y
+JT08-PoDO,On/Off switch Jet Fuel Tk 8 Pump,DO,,,,,,Y
+JT09-PoDO,On/Off switch Jet Fuel Tk 9 Pump,DO,,,,,,Y
+JT10-PoDO,On/Off switch Jet Fuel Tk 10 Pump,DO,,,,,,Y
+JT11-PoDO,On/Off switch Jet Fuel Tk 11 Pump,DO,,,,,,Y
+JT12-PoDO,On/Off switch Jet Fuel Tk 12 Pump,DO,,,,,,Y
+LT01-PoDO,On/Off switch Lube Tk 1 Pump,DO,,,,,,Y
+LT02-PoDO,On/Off switch Lube Tk 2 Pump,DO,,,,,,Y
+LT03-PoDO,On/Off switch Lube Tk 3 Pump,DO,,,,,,Y
+LT04-PoDO,On/Off switch Lube Tk 4 Pump,DO,,,,,,Y
+NT01-PoDO,On/Off switch Naptha Tk 1 Pump,DO,,,,,,Y
+NT02-PoDO,On/Off switch Naptha Tk 2 Pump,DO,,,,,,Y
+NT03-PoDO,On/Off switch Naptha Tk 3 Pump,DO,,,,,,Y
+NT04-PoDO,On/Off switch Naptha Tk 4 Pump,DO,,,,,,Y
+WT01-PoDO,On/Off switch Wax Tk 1 Pump,DO,,,,,,Y
+WT02-PoDO,On/Off switch Wax Tk 2 Pump,DO,,,,,,Y
+WT03-PoDO,On/Off switch Wax Tk 3 Pump,DO,,,,,,Y
+AT01-ViDO,Opn/Cls switch Asphalt Tk 1 Inp Valve,DO,,,,,,Y
+AT02-ViDO,Opn/Cls switch Asphalt Tk 2 Inp Valve,DO,,,,,,Y
+AT03-ViDO,Opn/Cls switch Asphalt Tk 3 Inp Valve,DO,,,,,,Y
+AT04-ViDO,Opn/Cls switch Asphalt Tk 4 Inp Valve,DO,,,,,,Y
+CT01-ViDO,Opn/Cls switch Crude Tk 1 Inp Valve,DO,,,,,,Y
+CT02-ViDO,Opn/Cls switch Crude Tk 2 Inp Valve,DO,,,,,,Y
+CT03-ViDO,Opn/Cls switch Crude Tk 3 Inp Valve,DO,,,,,,Y
+CT04-ViDO,Opn/Cls switch Crude Tk 4 Inp Valve,DO,,,,,,Y
+CT05-ViDO,Opn/Cls switch Crude Tk 5 Inp Valve,DO,,,,,,Y
+CT06-ViDO,Opn/Cls switch Crude Tk 6 Inp Valve,DO,,,,,,Y
+CT07-ViDO,Opn/Cls switch Crude Tk 7 Inp Valve,DO,,,,,,Y
+CT08-ViDO,Opn/Cls switch Crude Tk 8 Inp Valve,DO,,,,,,Y
+CT09-ViDO,Opn/Cls switch Crude Tk 9 Inp Valve,DO,,,,,,Y
+CT10-ViDO,Opn/Cls switch Crude Tk 10 Inp Valve,DO,,,,,,Y
+CT11-ViDO,Opn/Cls switch Crude Tk 11 Inp Valve,DO,,,,,,Y
+CT12-ViDO,Opn/Cls switch Crude Tk 12 Inp Valve,DO,,,,,,Y
+GT01-ViDO,Opn/Cls switch Gasoline Tk 1 Inp Valve,DO,,,,,,Y
+GT02-ViDO,Opn/Cls switch Gasoline Tk 2 Inp Valve,DO,,,,,,Y
+GT03-ViDO,Opn/Cls switch Gasoline Tk 3 Inp Valve,DO,,,,,,Y,Opn/Cls switch Gasoline Tk 12 Inp Valve,DO,,,,,,Y
+GT04-ViDO,Opn/Cls switch Gasoline Tk 4 Inp Valve,DO,,,,,,Y
+GT05-ViDO,Opn/Cls switch Gasoline Tk 5 Inp Valve,DO,,,,,,Y
+GT06-ViDO,Opn/Cls switch Gasoline Tk 6 Inp Valve,DO,,,,,,Y
+GT07-ViDO,Opn/Cls switch Gasoline Tk 7 Inp Valve,DO,,,,,,Y
+GT08-ViDO,Opn/Cls switch Gasoline Tk 8 Inp Valve,DO,,,,,,Y
+GT09-ViDO,Opn/Cls switch Gasoline Tk 9 Inp Valve,DO,,,,,,Y
+GT10-ViDO,Opn/Cls switch Gasoline Tk 10 Inp Valve,DO,,,,,,Y
+GT11-ViDO,Opn/Cls switch Gasoline Tk 11 Inp Valve,DO,,,,,,Y
+GT12-ViDO,Opn/Cls switch Gasoline Tk 12 Inp Valve,DO,,,,,,Y
+GT13-ViDO,Opn/Cls switch Gasoline Tk 13 Inp Valve,DO,,,,,,Y
+GT14-ViDO,Opn/Cls switch Gasoline Tk 14 Inp Valve,DO,,,,,,Y
+GT15-ViDO,Opn/Cls switch Gasoline Tk 15 Inp Valve,DO,,,,,,Y
+JT01-ViDO,Opn/Cls switch Jet Fuel Tk 1 Inp Valve,DO,,,,,,Y
+JT02-ViDO,Opn/Cls switch Jet Fuel Tk 2 Inp Valve,DO,,,,,,Y
+JT03-ViDO,Opn/Cls switch Jet Fuel Tk 3 Inp Valve,DO,,,,,,Y
+JT04-ViDO,Opn/Cls switch Jet Fuel Tk 4 Inp Valve,DO,,,,,,Y
+JT05-ViDO,Opn/Cls switch Jet Fuel Tk 5 Inp Valve,DO,,,,,,Y
+JT06-ViDO,Opn/Cls switch Jet Fuel Tk 6 Inp Valve,DO,,,,,,Y
+JT07-ViDO,Opn/Cls switch Jet Fuel Tk 7 Inp Valve,DO,,,,,,Y
+JT08-ViDO,Opn/Cls switch Jet Fuel Tk 8 Inp Valve,DO,,,,,,Y
+JT09-ViDO,Opn/Cls switch Jet Fuel Tk 9 Inp Valve,DO,,,,,,Y
+JT10-ViDO,Opn/Cls switch Jet Fuel Tk 10 Inp Valve,DO,,,,,,Y
+JT11-ViDO,Opn/Cls switch Jet Fuel Tk 11 Inp Valve,DO,,,,,,Y
+JT12-ViDO,Opn/Cls switch Jet Fuel Tk 12 Inp Valve,DO,,,,,,Y
+LT01-ViDO,Opn/Cls switch Jet Fuel Tk 1 Inp Valve,DO,,,,,,Y
+LT02-ViDO,Opn/Cls switch Lube Tk 1 Inp Valve,DO,,,,,,Y
+LT03-ViDO,Opn/Cls switch Lube Tk 2 Inp Valve,DO,,,,,,Y
+LT04-ViDO,Opn/Cls switch Lube Tk 3 Inp Valve,DO,,,,,,Y
+NT01-ViDO,Opn/Cls switch Naptha Tk 1 Inp Valve,DO,,,,,,Y
+NT02-ViDO,Opn/Cls switch Naptha Tk 2 Inp Valve,DO,,,,,,Y
+NT03-ViDO,Opn/Cls switch Naptha Tk 3 Inp Valve,DO,,,,,,Y
+NT04-ViDO,Opn/Cls switch Naptha Tk 4 Inp Valve,DO,,,,,,Y
+WT01-ViDO,Opn/Cls switch Wax Tk 1 Inp Valve,DO,,,,,,Y
+WT02-ViDO,Opn/Cls switch Wax Tk 2 Inp Valve,DO,,,,,,Y
+WT03-ViDO,Opn/Cls switch Wax Tk 3 Inp Valve,DO,,,,,,Y
+AT01-VoDO,Opn/Cls switch Asphalt Tk 1 Out Valve,DO,,,,,,Y
+AT02-VoDO,Opn/Cls switch Asphalt Tk 2 Out Valve,DO,,,,,,Y
+AT03-VoDO,Opn/Cls switch Asphalt Tk 3 Out Valve,DO,,,,,,Y
+AT04-VoDO,Opn/Cls switch Asphalt Tk 4 Out Valve,DO,,,,,,Y
+GT01-VoDO,Opn/Cls switch Gasoline Tk 1 Out Valve,DO,,,,,,Y
+GT02-VoDO,Opn/Cls switch Gasoline Tk 2 Out Valve,DO,,,,,,Y
+GT03-VoDO,Opn/Cls switch Gasoline Tk 3 Out Valve,DO,,,,,,Y
+GT04-VoDO,Opn/Cls switch Gasoline Tk 4 Out Valve,DO,,,,,,Y
+GT05-VoDO,Opn/Cls switch Gasoline Tk 5 Out Valve,DO,,,,,,Y
+GT06-VoDO,Opn/Cls switch Gasoline Tk 6 Out Valve,DO,,,,,,Y
+GT07-VoDO,Opn/Cls switch Gasoline Tk 7 Out Valve,DO,,,,,,Y
+GT08-VoDO,Opn/Cls switch Gasoline Tk 8 Out Valve,DO,,,,,,Y
+GT09-VoDO,Opn/Cls switch Gasoline Tk 9 Out Valve,DO,,,,,,Y
+GT10-VoDO,Opn/Cls switch Gasoline Tk 10 Out Valve,DO,,,,,,Y
+GT11-VoDO,Opn/Cls switch Gasoline Tk 11 Out Valve,DO,,,,,,Y
+GT12-VoDO,Opn/Cls switch Gasoline Tk 12 Out Valve,DO,,,,,,Y
+GT13-VoDO,Opn/Cls switch Gasoline Tk 13 Out Valve,DO,,,,,,Y
+GT14-VoDO,Opn/Cls switch Gasoline Tk 14 Out Valve,DO,,,,,,Y
+GT15-VoDO,Opn/Cls switch Gasoline Tk 15 Out Valve,DO,,,,,,Y
+JT01-VoDO,Opn/Cls switch Jet Fuel Tk 1 Out Valve,DO,,,,,,Y
+JT02-VoDO,Opn/Cls switch Jet Fuel Tk 2 Out Valve,DO,,,,,,Y
+JT03-VoDO,Opn/Cls switch Jet Fuel Tk 3 Out Valve,DO,,,,,,Y
+JT04-VoDO,Opn/Cls switch Jet Fuel Tk 4 Out Valve,DO,,,,,,Y
+JT05-VoDO,Opn/Cls switch Jet Fuel Tk 5 Out Valve,DO,,,,,,Y
+JT06-VoDO,Opn/Cls switch Jet Fuel Tk 6 Out Valve,DO,,,,,,Y
+JT07-VoDO,Opn/Cls switch Jet Fuel Tk 7 Out Valve,DO,,,,,,Y
+JT08-VoDO,Opn/Cls switch Jet Fuel Tk 8 Out Valve,DO,,,,,,Y
+JT09-VoDO,Opn/Cls switch Jet Fuel Tk 9 Out Valve,DO,,,,,,Y
+JT10-VoDO,Opn/Cls switch Jet Fuel Tk 10 Out Valve,DO,,,,,,Y
+JT11-VoDO,Opn/Cls switch Jet Fuel Tk 11 Out Valve,DO,,,,,,Y
+JT12-VoDO,Opn/Cls switch Jet Fuel Tk 12 Out Valve,DO,,,,,,Y
+LT01-VoDO,Opn/Cls switch Lube Tk 1 Out Valve,DO,,,,,,Y
+LT02-VoDO,Opn/Cls switch Lube Tk 2 Out Valve,DO,,,,,,Y
+LT03-VoDO,Opn/Cls switch Lube Tk 3 Out Valve,DO,,,,,,Y
+LT04-VoDO,Opn/Cls switch Lube Tk 4 Out Valve,DO,,,,,,Y
+NT01-VoDO,Opn/Cls switch Naptha Tk 1 Out Valve,DO,,,,,,Y
+NT02-VoDO,Opn/Cls switch Naptha Tk 2 Out Valve,DO,,,,,,Y
+NT03-VoDO,Opn/Cls switch Naptha Tk 3 Out Valve,DO,,,,,,Y
+NT04-VoDO,Opn/Cls switch Naptha Tk 4 Out Valve,DO,,,,,,Y
+WT01-VoDO,Opn/Cls switch Wax Tk 1 Out Valve,DO,,,,,,Y
+WT02-VoDO,Opn/Cls switch Wax Tk 2 Out Valve,DO,,,,,,Y
+WT03-VoDO,Opn/Cls switch Wax Tk 3 Out Valve,DO,,,,,,Y
+End

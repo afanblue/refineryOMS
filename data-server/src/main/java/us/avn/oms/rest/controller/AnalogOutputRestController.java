@@ -92,7 +92,7 @@ public class AnalogOutputRestController {
 		History h = new History();
 		h.setId(id);
 		h.setY(ao.getScanValue());
-		h.setX(ao.getScanTime().getTime()/1000L);
+		h.setX(ao.getScanTime().getEpochSecond());
 		Collection<History> ch = histService.getTagHistory(hr);
 		ch.add(h);
 		hd.setAiTag(ao);

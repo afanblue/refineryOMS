@@ -107,9 +107,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER alm_bi_trg BEFORE INSERT ON alarm for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -126,7 +126,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER alm_bu_trg BEFORE UPDATE ON alarm for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -216,9 +216,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER almsg_bi_trg BEFORE INSERT ON alarm_message for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -235,7 +235,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER almsg_bu_trg BEFORE UPDATE ON alarm_message for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -273,9 +273,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER altyp_bi_trg BEFORE INSERT ON alarm_type for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -292,7 +292,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER altyp_bu_trg BEFORE UPDATE ON alarm_type for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -364,9 +364,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ai_bi_trg BEFORE INSERT ON analog_input for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -383,7 +383,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ai_bu_trg BEFORE UPDATE ON analog_input for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -431,9 +431,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ao_bi_trg BEFORE INSERT ON analog_output for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -450,7 +450,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ao_bu_trg BEFORE UPDATE ON analog_output for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -508,9 +508,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`calc_bi_trg` BEFORE INSERT ON `calculated` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -528,7 +528,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`calc_bu_trg` BEFORE UPDATE ON `calculated` FOR EACH ROW
 BEGIN
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -630,9 +630,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER conf_bi_trg BEFORE INSERT ON config for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -649,7 +649,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER conf_bu_trg BEFORE UPDATE ON config for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -706,9 +706,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`cb_bi_trg` BEFORE INSERT ON `control_block` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -726,7 +726,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`cb_bu_trg` BEFORE UPDATE ON `control_block` FOR EACH ROW
 BEGIN
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -764,9 +764,9 @@ DELIMITER ;;
 begin
   declare newID int;
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -783,7 +783,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER cust_bu_trg BEFORE UPDATE ON customer for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -830,9 +830,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER di_bi_trg BEFORE INSERT ON digital_input for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -849,7 +849,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER di_bu_trg BEFORE UPDATE ON digital_input for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -892,9 +892,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER do_bi_trg BEFORE INSERT ON digital_output for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -911,7 +911,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER do_bu_trg BEFORE UPDATE ON digital_output for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -965,9 +965,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER fld_bi_trg BEFORE INSERT ON field for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -984,7 +984,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER fld_bu_trg BEFORE UPDATE ON field for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1051,9 +1051,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hist_bi_trg BEFORE INSERT ON history for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1070,7 +1070,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hist_bu_trg BEFORE UPDATE ON history for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1127,9 +1127,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`hold_bi_trg` BEFORE INSERT ON `hold` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1147,7 +1147,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`hold_bu_trg` BEFORE UPDATE ON `hold` FOR EACH ROW
 BEGIN
-	set new.last_modified_dt = now();
+	set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1210,9 +1210,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hs_bi_trg BEFORE INSERT ON hot_spot for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1229,7 +1229,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hs_bu_trg BEFORE UPDATE ON hot_spot for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1274,9 +1274,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER menu_bi_trg BEFORE INSERT ON menu for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1293,7 +1293,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER menu_bu_trg BEFORE UPDATE ON menu for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1413,9 +1413,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER page_bi_trg BEFORE INSERT ON page for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1432,7 +1432,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER page_bu_trg BEFORE UPDATE ON page for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1493,9 +1493,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER pltgrp_bi_trg BEFORE INSERT ON plot_group for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1512,7 +1512,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER pltgrp_bu_trg BEFORE UPDATE ON plot_group for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1547,9 +1547,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER priv_bi_trg BEFORE INSERT ON privilege for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1566,7 +1566,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER priv_bu_trg BEFORE UPDATE ON privilege for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1606,9 +1606,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rc_bi_trg BEFORE INSERT ON reference_code for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1625,7 +1625,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rc_bu_trg BEFORE UPDATE ON reference_code for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1665,9 +1665,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`rtt_bi_trg` BEFORE INSERT ON `rel_tag_tag` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1685,7 +1685,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`rtt_bu_trg` BEFORE UPDATE ON `rel_tag_tag` FOR EACH ROW
 BEGIN
- set new.last_modified_dt = now();
+ set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1725,9 +1725,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER role_bi_trg BEFORE INSERT ON role for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1744,7 +1744,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER role_bu_trg BEFORE UPDATE ON role for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1781,9 +1781,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rp_bi_trg BEFORE INSERT ON role_priv for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1800,7 +1800,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rp_bu_trg BEFORE UPDATE ON role_priv for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1932,9 +1932,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipment_bi_trg` BEFORE INSERT ON `shipment` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1952,7 +1952,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipment_bu_trg` BEFORE UPDATE ON `shipment` FOR EACH ROW
 BEGIN
-	set new.last_modified_dt = now();
+	set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1993,9 +1993,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipmentitem_bi_trg` BEFORE INSERT ON `shipment_item` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2013,7 +2013,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipmentitem_bu_trg` BEFORE UPDATE ON `shipment_item` FOR EACH ROW
 BEGIN
-	set new.last_modified_dt = now();
+	set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2051,9 +2051,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`soi_bi_trg` BEFORE INSERT ON `sim_io` FOR EACH ROW
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2071,7 +2071,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`soi_bu_trg` BEFORE UPDATE ON `sim_io` FOR EACH ROW
 BEGIN
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2115,9 +2115,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tag_bi_trg BEFORE INSERT ON tag for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2154,7 +2154,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tag_bu_trg BEFORE UPDATE ON tag for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2193,9 +2193,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tt_bi_trg BEFORE INSERT ON tag_type for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2212,7 +2212,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tt_bu_trg BEFORE UPDATE ON tag_type for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2252,9 +2252,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tank_bi_trg BEFORE INSERT ON tank for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2271,7 +2271,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tank_bu_trg BEFORE UPDATE ON tank for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2439,9 +2439,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER transfer_bi_trg BEFORE INSERT ON transfer for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2458,7 +2458,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER transfer_bu_trg BEFORE UPDATE ON transfer for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2493,9 +2493,9 @@ DELIMITER ;;
 begin
   declare newID int;
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2512,7 +2512,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tp_bu_trg BEFORE UPDATE ON transfer_point for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2617,9 +2617,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unit_bi_trg BEFORE INSERT ON unit for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2636,7 +2636,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unit_bu_trg BEFORE UPDATE ON unit for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2677,9 +2677,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER uc_bi_trg BEFORE INSERT ON unit_conversion for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2696,7 +2696,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER uc_bu_trg BEFORE UPDATE ON unit_conversion for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2731,9 +2731,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unittype_bi_trg BEFORE INSERT ON unit_type for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2750,7 +2750,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unittype_bu_trg BEFORE UPDATE ON unit_type for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2792,9 +2792,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER user_bi_trg BEFORE INSERT ON user for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2811,7 +2811,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER user_bu_trg BEFORE UPDATE ON user for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2862,9 +2862,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ur_bi_trg BEFORE INSERT ON user_role for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2881,7 +2881,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ur_bu_trg BEFORE UPDATE ON user_role for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2920,9 +2920,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vert_bi_trg BEFORE INSERT ON `vertex` for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2939,7 +2939,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vert_bu_trg BEFORE UPDATE ON `vertex` for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2994,9 +2994,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vol_bi_trg BEFORE INSERT ON volume for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -3013,7 +3013,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vol_bu_trg BEFORE UPDATE ON volume for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3049,9 +3049,9 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER wdog_bi_trg BEFORE INSERT ON watchdog for each row
 begin
   if new.create_dt is null then
-    set new.create_dt = now();
+    set new.create_dt = utc_timestamp();
   end if;
-  set new.last_modified_dt = now();
+  set new.last_modified_dt = utc_timestamp();
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -3068,7 +3068,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER wdog_bu_trg BEFORE UPDATE ON watchdog for each row
-  set new.last_modified_dt = now() */;;
+  set new.last_modified_dt = utc_timestamp() */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3105,8 +3105,8 @@ CREATE TABLE `xfer` (
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`xfer_bi_trg` BEFORE INSERT ON `xfer` FOR EACH ROW
 BEGIN
-  if new.create_dt is null then set new.create_dt=now(); end if;
-  set new.last_modified_dt = now();
+  if new.create_dt is null then set new.create_dt=utc_timestamp(); end if;
+  set new.last_modified_dt = utc_timestamp();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

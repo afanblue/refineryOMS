@@ -25,9 +25,9 @@
     <result property="newItem"        column="new_item" />
     <result property="active"         column="active" />
     <result property="contentCd"      column="content_cd" />
-    <result property="expVolumeMin"   column="exp_volume_min" />
-    <result property="expVolumeMax"   column="exp_volume_max" />
-    <result property="actVolume"      column="act_volume" />
+    <result property="expVolumeMin"   column="min_vol" />
+    <result property="expVolumeMax"   column="max_vol" />
+    <result property="actVolume"      column="act_vol" />
   </resultMap>
 
   <select id="getOrder" resultMap="ordmap">
@@ -41,14 +41,15 @@
   </select>
   
   <select id="getOrderItems" resultMap="itemMap">
-    select s.shipment_id, i.item_no, coalesce(i.content_cd,'') content_cd
+    select i.shipment_id, i.item_no, coalesce(i.content_cd,'') content_cd
          , coalesce(i.content_cd,'N') new_item, i.active
-         , coalesce(i.exp_volume_min,0) min_vol, coalesce(i.exp_volume_max,100000) max_vol
+         , coalesce(i.exp_volume_min,0) min_vol
+         , coalesce(i.exp_volume_max,100000) max_vol
          , coalesce(i.act_volume,0) act_vol
-      from shipment s join shipment_item i on s.shipment_id=i.shipment_id
-     where s.shipment_id = #{param1}
+      from shipment_item i
+     where i.shipment_id = #{param1}
     union 
-    select s.shipment_id, h.hold_no, '' content_cd, 'Y', null,
+    select s.shipment_id, h.hold_no, '' content_cd, 'Y' new_item, null active
          , 0 min_vol, coalesce(h.volume*h.no_duplicates,100000) max_vol
          , 0 act_vol
       from shipment s 
@@ -84,7 +85,7 @@
   <select id="getPendingOrderItems" resultMap="itemMap">
     select shipment_id, item_no, active, coalesce(content_cd,'') content_cd
          , coalesce(content_cd,'N') new_item
-         , exp_volume_min, exp_volume_max, coalesce(act_volume,0) act_volume
+         , exp_volume_min min_vol, exp_volume_max max_vol, coalesce(act_volume,0) act_vol
       from shipment_item 
      where active = 'P'
        and shipment_id = #{parm1}

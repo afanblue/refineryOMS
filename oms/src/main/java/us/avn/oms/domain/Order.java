@@ -17,8 +17,13 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Date;
+import java.util.Collections;
 
 public class Order extends OMSObject implements Serializable {
 	
@@ -38,9 +43,8 @@ public class Order extends OMSObject implements Serializable {
 	private Long    carrierId;
 	private String  carrier;
 	private String  purchase;     // Purchase 'P', Sale 'S'
-	private String  contents;     // based on: 
-	private Date    expDate;
-	private Date    actDate;
+	private Instant expDate;
+	private Instant actDate;
 	private Double  expVolume;
 	private Double  actVolume;
 	private Collection<Item> items;
@@ -52,9 +56,8 @@ public class Order extends OMSObject implements Serializable {
 		customerId = 0L;
 		carrierId = 0L;
 		purchase = PURCHASE;
-		Date d = new Date();
-		expDate = d;
-		actDate = d;
+		items = Collections.emptyList();
+		actDate = expDate = Instant.now();
 	}
 	
 	public Long getShipmentId() {
@@ -111,32 +114,34 @@ public class Order extends OMSObject implements Serializable {
 	}
 	
 	
-	public String getExpDate() {
+	public Timestamp getExpDate() {
 		if( expDate != null ) {
-			return sdfd.format(expDate);
+//			return sdfd.format(expDate);
+			return Timestamp.from(expDate);
 		}
 		return null;
 	}
 	
-	public void setExpDate(String xd) {
+	public void setExpDate(Timestamp xd) {
 		try {
-			this.expDate = sdfd.parse(xd);
+			this.expDate = xd.toInstant();
 		} catch( Exception e) {
 			this.expDate = null;
 		}
 	}
 	
 	
-	public String getActDate() {
+	public Timestamp getActDate() {
 		if( actDate != null ) {
-			return sdfd.format(actDate);
+//			return sdfd.format(actDate);
+			return Timestamp.from(actDate);
 		}
 		return null;
 	}
 	
-	public void setActDate(String ad ) {
+	public void setActDate(Timestamp ad ) {
 		try {
-			this.actDate = sdfd.parse(ad);
+			this.actDate = ad.toInstant();
 		} catch( Exception e ) {
 			this.actDate = null;
 		}

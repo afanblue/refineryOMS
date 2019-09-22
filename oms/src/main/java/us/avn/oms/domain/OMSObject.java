@@ -22,10 +22,12 @@ package us.avn.oms.domain;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * @author Allan
@@ -37,8 +39,8 @@ public abstract class OMSObject implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 20180831131012L;
-	protected SimpleDateFormat sdf = new SimpleDateFormat("y-MM-dd HH:mm:ss");
-	protected SimpleDateFormat sdfd = new SimpleDateFormat("y-MM-dd");
+	protected DateTimeFormatter sdf  = DateTimeFormatter.ofPattern("y-MM-dd HH:mm:ss");
+	protected DateTimeFormatter sdfd = DateTimeFormatter.ofPattern("y-MM-dd");
 
 	/**
 	 * 
@@ -52,7 +54,10 @@ public abstract class OMSObject implements Serializable {
         
         String json;
 		try {
-			mapper.setDateFormat(sdf);
+//			mapper.registerModule( new JavaTimeModule());
+			mapper.findAndRegisterModules()
+			      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);;
+//			mapper.setDateFormat(sdf);
 			json = mapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
 			StringWriter sw = new StringWriter();

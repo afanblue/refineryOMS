@@ -85,8 +85,6 @@ public class Item extends OMSObject {
 	public void setActVolume(Double volume) {
 		this.actVolume = volume;
 	}
-	
 
-	
 
 }

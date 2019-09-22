@@ -32,6 +32,8 @@ public interface TagMapper {
 	
 	Collection<Tag> getAllTagsByType(  String ttc );
 	
+	Collection<Tag> getTagsByTypeRandom( String ttc );
+	
 	Collection<Taglet> getAllTagletsByType( String ttc );
 	
 	Collection<IdName> getAllIdNamesByType( String ttc );
@@ -47,6 +49,14 @@ public interface TagMapper {
 	void deleteChildTagsOfType( Long id, String code );
 
 	Collection<RelTagTag> getParentTags( Long id );
+	
+	/**
+	 * Get list of parent tags for child 'id' with relationship 'code'
+	 * @param id child id to fetch parent tags for
+	 * @param code relationship code (rel_tag_type.code)
+	 * @return list of parent tags
+	 */
+	Collection<Tag> getParentTagsWCode( Long id, String code );
 	
 	Collection<RelTagTag> getChildTags( Long id );
 	

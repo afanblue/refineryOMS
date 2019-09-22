@@ -3,15 +3,15 @@ package us.avn.oms.domain;
 public class Hold extends OMSObject {
 
     private Long   carrierId;
-    private Long   orderNo;
+    private Long   holdNo;
     private Double volume;
     private Long   noDuplicates;
    
 	public Hold() {	}
 	
-	public Hold( Long cid, Long ono ) {
+	public Hold( Long cid, Long hno ) {
 		this.carrierId = cid;
-		this.orderNo = ono;
+		this.holdNo = hno;
 	}
 
 	public Long getCarrierId() {
@@ -24,11 +24,11 @@ public class Hold extends OMSObject {
 
 	
 	public Long getOrderNo() {
-		return orderNo;
+		return holdNo;
 	}
 
-	public void setOrderNo(Long orderNo) {
-		this.orderNo = orderNo;
+	public void setOrderNo(Long holdNo) {
+		this.holdNo = holdNo;
 	}
 	
 

@@ -1,6 +1,6 @@
 Table,alarm_type,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-alarm_message,id,abbr,alarm_msg_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+alarm_msg_id,alarm_message,id,abbr
 Data,,,
 priority,alarm_msg_id,code
 4,HH,HH

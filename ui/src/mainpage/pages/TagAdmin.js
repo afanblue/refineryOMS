@@ -156,10 +156,10 @@ class TagAdmin extends Component {
     const tag = this.state.tag;
     const id = tag.id;
     let method = "PUT";
-    let url = "http://localhost:8080/oms/tag/update";
+    let url = SERVERROOT + "/tag/update";
     if( id === 0 ) {
       method = "POST";
-      url = "http://localhost:8080/oms/tag/insert";
+      url = SERVERROOT + "/tag/insert";
     }
     const b = JSON.stringify(tag);
     const request = async () => {

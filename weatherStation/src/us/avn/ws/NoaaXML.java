@@ -23,6 +23,9 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -117,9 +120,10 @@ public class NoaaXML extends WeatherStation {
 				log.debug("Weather element: "+wsConditionNames[i]+" ("+conditionNames[i]+") = "+seVal);
 				Double eVal = 0D;
 				if( "observation_time_rfc822".equals(wsConditionNames[i]) ) {
-					SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-					Date d = sdf.parse(seVal);
-					eVal = new Double(d.getTime());
+					DateTimeFormatter sdf = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss Z");
+					ZonedDateTime d = ZonedDateTime.parse(seVal, sdf );
+					Instant id = d.toInstant();
+					eVal = new Double(id.getEpochSecond());
 				} else {
 					eVal = new Double(seVal);
 				}

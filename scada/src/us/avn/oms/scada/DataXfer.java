@@ -18,6 +18,7 @@ package us.avn.oms.scada;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -141,7 +142,7 @@ public class DataXfer extends TimerTask {
 			DigitalInput di = idi.next();
 			log.debug("Processing DI tag "+di.toString());
 			if( 0 != di.getUpdated() ) {
-				Date now = new Date();
+				Instant now = Instant.now();
 				Double result = new Double(di.getSimValue());
 				processDIValue(di, result, now );
 			}
@@ -169,7 +170,7 @@ public class DataXfer extends TimerTask {
 			Double result = evaluator.evaluate(cv.getDefinition(), cvin );
 			log.debug("CV: "+cv.getTag() +" Defn: "+cv.getDefinition()+" using input "+cvin[0]
 					 +" yields "+result);
-			Date now = new Date();
+			Instant now = Instant.now();
 			AnalogInput ai = ais.getAnalogInput(cv.getOutputTagId());
 			if( null != ai ) {
 				AnalogInput aix = new AnalogInput(ai);
@@ -265,7 +266,7 @@ public class DataXfer extends TimerTask {
 	 * @param scanValue
 	 * @param scanTime
 	 */
-	private void processAIValue( AnalogInput ai, Double scanValue, Date scanTime ) {
+	private void processAIValue( AnalogInput ai, Double scanValue, Instant scanTime ) {
 		try {
 			Double newScanValue = correctScanValue( ai, scanValue );
 			ai.setRawValue(scanValue);
@@ -290,7 +291,7 @@ public class DataXfer extends TimerTask {
 	 * @param scanValue
 	 * @param scanTime
 	 */
-	private void processDIValue( DigitalInput di, Double scanValue, Date scanTime ) {
+	private void processDIValue( DigitalInput di, Double scanValue, Instant scanTime ) {
 		di.setPrevValue(di.getScanValue());
 		di.setPrevScanTime(di.getScanTime());
 		di.setScanValue(scanValue);

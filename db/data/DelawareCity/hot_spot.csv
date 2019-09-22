@@ -1,6 +1,6 @@
 Table,hot_spot,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,field_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+field_id,tag,id,name
 Data,,,
 field_id,c1Lat,c1Long,c2Lat,c2Long,page_id,active
 DeCity,39.591996,-75.629561,39.587032,-75.620378,9,Y

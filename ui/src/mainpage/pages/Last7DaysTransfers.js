@@ -17,13 +17,15 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import {SERVERROOT} from '../../Parameters.js';
-import Log          from '../requests/Log.js';
+
+import {SERVERROOT}    from '../../Parameters.js';
+import Log             from '../requests/Log.js';
+import OMSRequest      from '../requests/OMSRequest.js';
 import Last7DaysTransferList from './lists/Last7TransferList.js';
 import DefaultContents from './DefaultContents.js';
-import TransferForm from './forms/TransferForm.js';
-import Waiting from './Waiting.js';
-import {Transfer} from './objects/Transfer.js';
+import TransferForm    from './forms/TransferForm.js';
+import Waiting         from './Waiting.js';
+import {Transfer}      from './objects/Transfer.js';
 
 
 /*
@@ -42,14 +44,20 @@ class Last7DaysTransfers extends Component {
       updateDisplay: true,
       returnedText: null,
       transfer: null,
-      color: "green",
-      nextCorner: 1
+      transferTypes: null,
+      statuses: null,
+      sources: null,
+      color: "green"
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.handleTransferSelect  = this.handleTransferSelect.bind(this);
+    this.handleSelect      = this.handleSelect.bind(this);
     this.handleTransferUpdate  = this.handleTransferUpdate.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
+    this.finishXferFetch   = this.finishXferFetch.bind(this);
+    this.finishTypesFetch  = this.finishTypesFetch.bind(this);
+    this.finishStsFetch    = this.finishStsFetch.bind(this);
+    this.finishSrcsFetch   = this.finishSrcsFetch.bind(this);
   }
   
   handleErrors(response) {
@@ -74,33 +82,59 @@ class Last7DaysTransfers extends Component {
     return sts;
   }
   
-  handleTransferSelect(event) {
-    const clsMthd = "Last7DaysTransfers.transferSelect";
-    const id = event.z;
-    const myRequest=SERVERROOT + "/transfer/" + id;
-    const request = async () => {
-      try {
-        const response = await fetch(myRequest);
-        const json = await response.json();
-        let ud = json;
-        var x = new Transfer(ud.id,ud.name,ud.statusId,ud.source
-                            ,ud.transferTypeId,ud.transferType
-                            ,ud.sourceId,ud.source,ud.destinationId, ud.destination
-                            ,ud.expStartTime,ud.expEndTime,ud.expVolume
-                            ,ud.actStartTime,ud.actEndTime,ud.actVolume,ud.delta);
-        this.setState({stage: "itemRetrieved",
-                       updateDisplay: true,
-                       updateData: false,
-                       returnedText: json,
-                       transfer: x
-                      });
-      } catch( e ) {
-        alert("Problem fetching XXXX id "+id+"\n"+e);
-        Log.error("Error - " + e, clsMthd);        
-      }
-    }
-    request();
+  finishXferFetch( req ) {
+    let xd = req;
+    var x = new Transfer( xd.id,xd.name,xd.statusId,xd.source
+                        , xd.transferTypeId,xd.transferType
+                        , xd.sourceId,xd.source,xd.destinationId, xd.destination
+                        , xd.expStartTime,xd.expEndTime,xd.expVolume
+                        , xd.actStartTime,xd.actEndTime,xd.actVolume,xd.delta);
+    this.setState({stage: "itemRetrieved",
+                   updateDisplay: true,
+                   updateData: false,
+                   transfer: x
+                  });
   }
+  
+  finishTypesFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, transferTypes:req });
+  }
+  
+  finishStsFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, statuses: req });
+  }
+
+  finishSrcsFetch(req) {
+    this.setState({stage: "itemRetrieved", updateDisplay: true, sources: req });
+  }
+
+  
+  fetchFormData(id) {
+    const loc = "Last7DaysTransfers.select";
+    let myRequest = SERVERROOT + "/transfer/" + id;
+    let req0 = new OMSRequest(loc, myRequest, 
+                            "Problem selecting transfer "+myRequest,
+                            this.finishXferFetch);
+    req0.fetchData();
+    let req2 = new OMSRequest(loc, SERVERROOT + "/tag/types/TK,RU,S,TC,TT,PU",
+                            "Problem retrieving type list ", this.finishSrcsFetch);
+    req2.fetchData();
+    let req3 = new OMSRequest(loc, SERVERROOT + "/transfer/types",
+                            "Problem retrieving input tag list", this.finishTypesFetch);
+    req3.fetchData();
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    let req4 = new OMSRequest(loc, SERVERROOT + "/transfer/statuses",
+                            "Problem retrieving output tag list", this.finishStsFetch);
+    req4.fetchData();
+    this.setState({schematic:null, sco:null, typeList:null, outTags:null})    
+  }
+  
+  handleSelect(event) {
+    const id = event.z;
+    this.fetchFormData(id);
+  }
+
+
 
   validateForm( x ) {
     let doSubmit = true;
@@ -147,7 +181,7 @@ class Last7DaysTransfers extends Component {
           await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
           alert("Update/insert complete on "+this.state.transfer.name)
         } catch( error ) {
-          alert("Problem "+(id===0?"inserting":"updating")+" XXXX "
+          alert("Problem "+(id===0?"inserting":"updating")+" transfer "
                +"id "+id+"\n"+error);
           Log.error("Error - " + error,clsMthd);
         }
@@ -221,17 +255,25 @@ class Last7DaysTransfers extends Component {
         return <Waiting />
       case "dataFetched":
         return <Last7DaysTransferList transferData = {this.state.returnedText}
-                                      transferSelect = {this.handleTransferSelect}
+                                      transferSelect = {this.handleSelect}
                                       handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        return <TransferForm transferData = {this.state.returnedText}
-                             transfer     = {this.state.transfer}
-                             transferUpdate = {this.handleTransferUpdate}
-                             fieldChange  = {this.handleFieldChange}
-                             handleQuit   = {this.handleQuit}
-                             handleClick  = {this.handleClick}
-               />
+        if( (this.state.transfer === null) || (this.state.transferTypes === null) || 
+            (this.state.sources  === null) || (this.state.statuses === null)    ) {
+          return <Waiting />
+        } else {
+          return <TransferForm transferData = {this.state.returnedText}
+                               transfer     = {this.state.transfer}
+                               transferTypes= {this.state.transferTypes}
+                               statuses     = {this.state.statuses}
+                               sources      = {this.state.sources}
+                               transferUpdate = {this.handleTransferUpdate}
+                               fieldChange  = {this.handleFieldChange}
+                               handleQuit   = {this.handleQuit}
+                               handleClick  = {this.handleClick}
+                 />
+        }
       default:
         return <DefaultContents />
     }

@@ -1,0 +1,14 @@
+Table,hold,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+carrier_id,tag,id,name
+Data,,,
+carrier_id,hold_no,volume,no_duplicates
+TT315,1,400.0,2
+S316,1,120000.0,1
+S316,2,130000.0,2
+S316,3,145000.0,2
+S316,4,80000.0,1
+S317,1,150000.0,2
+S317,2,210000.0,2
+S317,3,140000.0,2
+End

@@ -17,7 +17,11 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Iterator;
 
 import us.avn.oms.service.TagService;
@@ -73,25 +77,25 @@ public class Transfer extends OMSObject implements Serializable {
 	protected Long    destinationId;
 	/** The {@link String} instance for the destination name (in TAG, not in TRANSFER DB record) */
 	protected String  destination;
-	/** The {@link Date} instance for the expected start time */
-	protected Date    expStartTime;
-	/** The {@link Date} instance for the expected end time */
-	protected Date    expEndTime;
+	/** The {@link Instant} instance for the expected start time */
+	protected Instant expStartTime;
+	/** The {@link Instant} instance for the expected end time */
+	protected Instant expEndTime;
 	/** The {@link Double} instance for the expected volume (in bbls) */
     protected Double  expVolume;
     /** The {@link Integer} instance for the repeat interval (in minutes) */
     protected Integer delta;
-    /** The {@link Date} instance for the actual start time */
-    protected Date    actStartTime;
-    /** The {@link Date} instance for the actual end time */
-    protected Date    actEndTime;
+    /** The {@link Instant} instance for the actual start time */
+    protected Instant    actStartTime;
+    /** The {@link Instant} instance for the actual end time */
+    protected Instant    actEndTime;
     /** The {@link Double} instance for the actuall volume transferred (in bbls) */
     protected Double  actVolume;
     /** The {@link Long} difference in time (seconds) between the current time and the expected start time (computed in query) */
     protected Long    startDiff;
     /** The {@link Long} difference in time (seconds) between the current time and the expected end time (computed in query) */
     protected Long    endDiff;
-    /** The {@link Date} new start time, computed in the query using the formula:
+    /** The {@link Instant} new start time, computed in the query using the formula:
      * {@code 
      * IF repeat interval is not zero, set newStartTime = today
      * ELSE set newStartTime = tomorrow
@@ -101,8 +105,8 @@ public class Transfer extends OMSObject implements Serializable {
      * Subtract beginning of time (1/1/1970, 0:00:00) from newStartTime
      * }
      */
-    protected Date    newStartTime;
-    /** The {@link Date} new start time, computed in the query using the formula:
+    protected Instant newStartTime;
+    /** The {@link Instant} new start time, computed in the query using the formula:
      * {@code 
      * IF repeat interval is not zero, set newEndTime = today
      * ELSE set newEndTime = tomorrow
@@ -112,7 +116,7 @@ public class Transfer extends OMSObject implements Serializable {
      * Subtract beginning of time (1/1/1970, 0:00:00) from newEndTime
      * }
      */
-    protected Date    newEndTime;
+    protected Instant    newEndTime;
     
 //    private Collection<IdName> statuses;
 //    private Collection<IdName> transferTypes;
@@ -258,32 +262,32 @@ public class Transfer extends OMSObject implements Serializable {
 	}
 	
 
-	public String getExpStartTime() {
+	public Timestamp getExpStartTime() {
 		if( expStartTime != null ) {
-			return sdf.format(expStartTime);
+			return Timestamp.from(expStartTime);
 		}
 		return null;
 	}
 
-	public void setExpStartTime(String est) {
+	public void setExpStartTime(Timestamp est) {
 		try {
-			this.expStartTime = sdf.parse(est);
+			this.expStartTime = est.toInstant();
 		} catch( Exception e) {
 			this.expStartTime = null;
 		}
 	}
 	
 	
-	public String getExpEndTime() {
+	public Timestamp getExpEndTime() {
 		if( expEndTime != null ) {
-			return sdf.format(expEndTime);
+			return Timestamp.from(expEndTime);
 		}
 		return null;
 	}
 
-	public void setExpEndTime(String eet) {
+	public void setExpEndTime(Timestamp eet) {
 		try {
-			this.expEndTime = sdf.parse(eet);
+			this.expEndTime = eet.toInstant();
 		} catch( Exception e) {
 			this.expEndTime = null;
 		}
@@ -308,32 +312,32 @@ public class Transfer extends OMSObject implements Serializable {
 	}
 
 	
-	public String getActStartTime() {
-		if( actStartTime != null ) {
-			return sdf.format(actStartTime);
+	public Timestamp getActStartTime() {
+		if( actEndTime != null ) {
+			return Timestamp.from(actEndTime);
 		}
 		return null;
 	}
 
-	public void setActStartTime(String ast) {
+	public void setActStartTime(Timestamp ast) {
 		try {
-			this.actStartTime = sdf.parse(ast);
+			this.actStartTime = ast.toInstant();
 		} catch( Exception e) {
 			this.actStartTime = null;
 		}
 	}
 	
 	
-	public String getActEndTime() {
+	public Timestamp getActEndTime() {
 		if( actEndTime != null ) {
-			return sdf.format(actEndTime);
+			return Timestamp.from(actEndTime);
 		}
 		return null;
 	}
 
-	public void setActEndTime(String aet) {
+	public void setActEndTime(Timestamp aet) {
 		try {
-			this.actEndTime = sdf.parse(aet);
+			this.actEndTime = aet.toInstant();
 		} catch( Exception e) {
 			this.actEndTime = null;
 		}
@@ -367,40 +371,39 @@ public class Transfer extends OMSObject implements Serializable {
 	}
 	
 		
-	public String getNewStartTime() {
+	public Timestamp getNewStartTime() {
 		if( newStartTime != null ) {
-			return sdf.format(newStartTime);
+			return Timestamp.from(newStartTime);
 		}
 		return null;
 	}
 
-	public void setNewStartTime(String nst) {
+	public void setNewStartTime(Timestamp nst) {
 		try {
-			this.newStartTime = sdf.parse(nst);
+			this.newStartTime = nst.toInstant();
 		} catch( Exception e) {
 			this.newStartTime = null;
 		}
 	}
 	
 	
-	public String getNewEndTime() {
+	public Timestamp getNewEndTime() {
 		if( newEndTime != null ) {
-			return sdf.format(newEndTime);
+			return Timestamp.from(newEndTime);
 		}
 		return null;
 	}
 
-	public void setNewEndTime(String net) {
+	public void setNewEndTime(Timestamp net) {
 		try {
-			this.newEndTime = sdf.parse(net);
+			this.newEndTime = net.toInstant();
 		} catch( Exception e) {
 			this.newEndTime = null;
 		}
 	}
 	
 	/**
-	 * Method: startTransfer
-	 * Description: Start the transfer, i.e., set the status to Active
+	 * Start the transfer, i.e., set the status to Active
 	 * 
 	 * @param xs - TransferService
 	 */
@@ -409,8 +412,7 @@ public class Transfer extends OMSObject implements Serializable {
 	}
 	
 	/**
-	 * Method: completeTransfer
-	 * Description: Complete the transfer, i.e., set the status to Complete
+	 * Complete the transfer, i.e., set the status to Complete
 	 * 
 	 * @param xs - TransferService
 	 */
@@ -420,7 +422,7 @@ public class Transfer extends OMSObject implements Serializable {
 
 	
 	/**
-	 * check the source for this transfer.  If it's a process unit, find the tank
+	 * Check the source for this transfer.  If it's a process unit, find the tank
 	 * with the most volume and set the source ID to that tank.
 	 *
 	 * @param ts  - tagService
@@ -448,11 +450,13 @@ public class Transfer extends OMSObject implements Serializable {
 					this.sourceId = aiv.getId();
 				}
 			}
+		} else if( Tag.DOCK.equals(src.getTagTypeCode())) {
+			
 		}
 	}
 	
 	/**
-	 * check the destination for a transfer.  If it's a process unit, find the tank
+	 * Check the destination for a transfer.  If it's a process unit, find the tank
 	 * with the least volume and set the source ID to that tank. 
 	 * 				
 	 * @param ts  TagService

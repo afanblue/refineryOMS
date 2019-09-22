@@ -1,6 +1,6 @@
 Table,role,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-role,id,name,parent_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+parent_id,role,id,name
 Data,,,
 name,parent_id,active
 Operator,Admin,Y

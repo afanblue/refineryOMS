@@ -1,5 +1,5 @@
 Table,config,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
 Data
 item_name,item_value
 NORMCOLOR,darkgreen
@@ -42,4 +42,12 @@ WEATHER_DELAY,3
 WEATHER_INTERVAL,12
 NAME-PATTERN-PIPE,T2RU[0-9]+-P
 NAME-PATTERN-PUMP,T2RU[0-9]+-Pmp
+Dock1,DK1toProdCd
+Dock2,DK2toProdCd
+Dock3,DK3toProdCd
+Dock4,DK4toProdCd
+STATION_NAME_MASK,DKStnSTN
+TruckDock1,ProdCdtoTT1
+TruckDock2,ProdCdtoTT2
+TrainDock,ProdCdtoTR
 End

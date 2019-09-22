@@ -58,6 +58,7 @@ public class Tag extends OMSObject implements Serializable {
 	public static final String SCHEMATIC = "SCM";
 	public static final String SCHEMATIC_OBJECT = "SCO";
 	public static final String SHIP = "S";
+	public static final String STATION = "STN";
 	public static final String TANK = "TK";
 	public static final String TANK_CAR = "TC";
 	public static final String TANK_TRUCK = "TT";

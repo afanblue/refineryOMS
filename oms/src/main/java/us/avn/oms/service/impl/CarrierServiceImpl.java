@@ -19,6 +19,7 @@ package us.avn.oms.service.impl;
 import java.util.Collection;
 
 import us.avn.oms.domain.Carrier;
+import us.avn.oms.domain.Hold;
 import us.avn.oms.mapper.TagMapper;
 import us.avn.oms.mapper.CarrierMapper;
 import us.avn.oms.service.CarrierService;
@@ -48,6 +49,10 @@ public class CarrierServiceImpl implements CarrierService {
 		return carrierMapper.getCarrier(id);
 	}
 	
+	public Collection<Hold> getHolds( Long id ) {
+		return carrierMapper.getHolds(id);
+	}
+	
 	@Override
 	public Long updateCarrier( Carrier c ) {
 		tagMapper.updateTag(c);
@@ -58,6 +63,16 @@ public class CarrierServiceImpl implements CarrierService {
 	public Long insertCarrier( Carrier c ) {		
 		Long id = tagMapper.insertTag(c);
 		return id;
+	}
+	
+	@Override
+	public void updateHold( Hold h ) {
+		carrierMapper.updateHold(h);
+	}
+	
+	@Override
+	public void insertHold( Hold h ) {
+		carrierMapper.insertHold(h);
 	}
 
 }

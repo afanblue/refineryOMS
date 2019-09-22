@@ -1,0 +1,28 @@
+Table,tag,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+Data,,,
+name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
+RU1CP-AO,Pump speed Unit 1 Crude Pump,AO,,,-75.625879,,-75.625140,Y
+RU1GP-AO,Pump speed Unit 1 Gasoline Pump,AO,,,-75.625879,,-75.625140,Y
+RU1FOP-AO,Pump speed Unit 1 Fuel Oil Pump,AO,,,-75.625879,,-75.625140,Y
+RU1JP-AO,Pump speed Unit 1 Jet Fuel Pump,AO,,,-75.625879,,-75.625140,Y
+RU1RFP-AO,Pump speed Unit 1 RFO Pump,AO,,,-75.625879,,-75.625140,Y
+RU1LRP-AO,Pump speed Unit 1 LRG Pump,AO,,,-75.625879,,-75.625140,Y
+RU1AP-AO,Pump speed Unit 1 Asphalt Pump,AO,,,-75.625879,,-75.625140,Y
+RU1LP-AO,Pump speed Unit 1 Lubricant Pump,AO,,,-75.625879,,-75.625140,Y
+RU2CP-AO,Pump speed Unit 2 Crude Pump,AO,,,-75.625879,,-75.625140,Y
+RU2GP-AO,Pump speed Unit 2 Gasoline Pump,AO,,,-75.625879,,-75.625140,Y
+RU2FOP-AO,Pump speed Unit 2 Fuel Oil Pump,AO,,,-75.625879,,-75.625140,Y
+RU2JP-AO,Pump speed Unit 2 Jet Fuel Pump,AO,,,-75.625879,,-75.625140,Y
+RU2RFP-AO,Pump speed Unit 2 RFO Pump,AO,,,-75.625879,,-75.625140,Y
+RU2LRP-AO,Pump speed Unit 2 LRG Pump,AO,,,-75.625879,,-75.625140,Y
+RU2AP-AO,Pump speed Unit 2 Asphalt Pump,AO,,,-75.625879,,-75.625140,Y
+RU2LP-AO,Pump speed Unit 2 Lubricant Pump,AO,,,-75.625879,,-75.625140,Y
+SB1P2-AO,Pump speed for Slip 1 Pump 2,AO,,,-75.625879,,-75.625140,Y
+SB1P3-AO,Pump speed for Slip 1 Pump 3,AO,,,-75.625879,,-75.625140,Y
+SB1P4-AO,Pump speed for Slip 1 Pump 4,AO,,,-75.625879,,-75.625140,Y
+SB2P1-AO,Pump speed for Slip 2 Pump 1,AO,,,-75.625879,,-75.625140,Y
+SB2P2-AO,Pump speed for Slip 2 Pump 2,AO,,,-75.625879,,-75.625140,Y
+SB2P3-AO,Pump speed for Slip 2 Pump 3,AO,,,-75.625879,,-75.625140,Y
+SB2P4-AO,Pump speed for Slip 2 Pump 4,AO,,,-75.625879,,-75.625140,Y
+End

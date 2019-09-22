@@ -18,7 +18,7 @@
 
 import React, {Component} from 'react';
 
-import {Order} from '../objects/Order.js';
+import {Order}   from '../objects/Order.js';
 
 
 class OrderList extends Component {
@@ -31,7 +31,8 @@ class OrderList extends Component {
     var json = this.props.orderData;
     var orderSelect = this.props.orderSelect;
     var orderList = [];
-    var z = new Order( 0, 0, "", 0, "", "P", "S", "", "", 0, 0);
+    var tNow = new Date();
+    var z = new Order( 0, 0, "", 0, "", "P", "S", tNow, tNow, 0, 0);
     orderList.push(z);
     json.map(function(xd,x){
         var xf = new Order( xd.shipmentId, xd.customerId, xd.customer, xd.carrierId

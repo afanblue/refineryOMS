@@ -1,0 +1,193 @@
+Table,tag,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+Data,,,
+name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
+CT01-L,Crude Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+CT02-L,Crude Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+CT03-L,Crude Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+CT04-L,Crude Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+CT05-L,Crude Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+CT06-L,Crude Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+CT07-L,Crude Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+CT08-L,Crude Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+CT09-L,Crude Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+CT10-L,Crude Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+CT11-L,Crude Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+CT12-L,Crude Tank 12 Level,AI,,,-75.625879,,-75.625140,Y
+GT01-L,Gasoline Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+GT02-L,Gasoline Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+GT03-L,Gasoline Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+GT04-L,Gasoline Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+GT05-L,Gasoline Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+GT06-L,Gasoline Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+GT07-L,Gasoline Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+GT08-L,Gasoline Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+GT09-L,Gasoline Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+GT10-L,Gasoline Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+GT11-L,Gasoline Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+GT12-L,Gasoline Tank 12 Level,AI,,,-75.625879,,-75.625140,Y
+GT13-L,Gasoline Tank 13 Level,AI,,,-75.625879,,-75.625140,Y
+GT14-L,Gasoline Tank 14 Level,AI,,,-75.625879,,-75.625140,Y
+GT15-L,Gasoline Tank 15 Level,AI,,,-75.625879,,-75.625140,Y
+JT01-L,Jet Fuel Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+JT02-L,Jet Fuel Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+JT03-L,Jet Fuel Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+JT04-L,Jet Fuel Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+JT05-L,Jet Fuel Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+JT06-L,Jet Fuel Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+JT07-L,Jet Fuel Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+JT08-L,Jet Fuel Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+JT09-L,Jet Fuel Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+JT10-L,Jet Fuel Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+JT11-L,Jet Fuel Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+JT12-L,Jet Fuel Tank 12 Level,AI,,,-75.625879,,-75.625140,Y
+FOT01-L,Fuel Oil Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+FOT02-L,Fuel Oil Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+FOT03-L,Fuel Oil Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+FOT04-L,Fuel Oil Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+FOT05-L,Fuel Oil Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+FOT06-L,Fuel Oil Tank 6 Level,AI,,,-75.625879,,-75.625140,Y
+FOT07-L,Fuel Oil Tank 7 Level,AI,,,-75.625879,,-75.625140,Y
+FOT08-L,Fuel Oil Tank 8 Level,AI,,,-75.625879,,-75.625140,Y
+FOT09-L,Fuel Oil Tank 9 Level,AI,,,-75.625879,,-75.625140,Y
+FOT10-L,Fuel Oil Tank 10 Level,AI,,,-75.625879,,-75.625140,Y
+FOT11-L,Fuel Oil Tank 11 Level,AI,,,-75.625879,,-75.625140,Y
+RT01-L,Residual Fuel Oil Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+RT02-L,Residual Fuel Oil Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+RT03-L,Residual Fuel Oil Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+NT01-L,Naptha Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+NT02-L,Naptha Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+NT03-L,Naptha Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+NT04-L,Naptha Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+AT01-L,Asphalt Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+AT02-L,Asphalt Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+AT03-L,Asphalt Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+AT04-L,Asphalt Tank 5 Level,AI,,,-75.625879,,-75.625140,Y
+LT01-L,Lubricant Tank 1 Level,AI,,,-75.625879,,-75.625140,Y
+LT02-L,Lubricant Tank 2 Level,AI,,,-75.625879,,-75.625140,Y
+LT03-L,Lubricant Tank 3 Level,AI,,,-75.625879,,-75.625140,Y
+LT04-L,Lubricant Tank 4 Level,AI,,,-75.625879,,-75.625140,Y
+CT01-T,Crude Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT02-T,Crude Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT03-T,Crude Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT04-T,Crude Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT05-T,Crude Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT06-T,Crude Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT07-T,Crude Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT08-T,Crude Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT09-T,Crude Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT10-T,Crude Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT11-T,Crude Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+CT12-T,Crude Tank 12 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT01-T,Gasoline Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT02-T,Gasoline Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT03-T,Gasoline Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT04-T,Gasoline Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT05-T,Gasoline Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT06-T,Gasoline Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT07-T,Gasoline Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT08-T,Gasoline Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT09-T,Gasoline Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT10-T,Gasoline Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT11-T,Gasoline Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT12-T,Gasoline Tank 12 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT13-T,Gasoline Tank 13 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT14-T,Gasoline Tank 14 Temperature,AI,,,-75.625879,,-75.625140,Y
+GT15-T,Gasoline Tank 15 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT01-T,Jet Fuel Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT02-T,Jet Fuel Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT03-T,Jet Fuel Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT04-T,Jet Fuel Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT05-T,Jet Fuel Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT06-T,Jet Fuel Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT07-T,Jet Fuel Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT08-T,Jet Fuel Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT09-T,Jet Fuel Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT10-T,Jet Fuel Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT11-T,Jet Fuel Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+JT12-T,Jet Fuel Tank 12 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT01-T,Fuel Oil Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT02-T,Fuel Oil Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT03-T,Fuel Oil Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT04-T,Fuel Oil Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT05-T,Fuel Oil Tank 5 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT06-T,Fuel Oil Tank 6 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT07-T,Fuel Oil Tank 7 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT08-T,Fuel Oil Tank 8 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT09-T,Fuel Oil Tank 9 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT10-T,Fuel Oil Tank 10 Temperature,AI,,,-75.625879,,-75.625140,Y
+FOT11-T,Fuel Oil Tank 11 Temperature,AI,,,-75.625879,,-75.625140,Y
+RT01-T,Residual Fuel Oil Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+RT02-T,Residual Fuel Oil Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+RT03-T,Residual Fuel Oil Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+NT01-T,Naptha Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+NT02-T,Naptha Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+NT03-T,Naptha Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+NT04-T,Naptha Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+AT01-T,Asphalt Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+AT02-T,Asphalt Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+AT03-T,Asphalt Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+AT04-T,Asphalt Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+LT01-T,Lubricant Tank 1 Temperature,AI,,,-75.625879,,-75.625140,Y
+LT02-T,Lubricant Tank 2 Temperature,AI,,,-75.625879,,-75.625140,Y
+LT03-T,Lubricant Tank 3 Temperature,AI,,,-75.625879,,-75.625140,Y
+LT04-T,Lubricant Tank 4 Temperature,AI,,,-75.625879,,-75.625140,Y
+DCT-0000,External Temperature,AI,,,-75.625879,,-75.625140,Y
+DCP-0000,Barometric Pressure,AI,,,-75.625879,,-75.625140,Y
+DCR-0000,Wind Speed,AI,,,-75.625879,,-75.625140,Y
+DCM-0000,Wind Direction,AI,,,-75.625879,,-75.625140,Y
+DCT-0001,External Temperature - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCP-0001,Barometric Pressure - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCR-0001,Wind Speed - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+DCM-0001,Wind Direction - Tomorrow,AI,,,-75.625879,,-75.625140,Y
+C-101,calculation test tag,AI,,,,,,Y
+CT-101,Calculation test 1,AI,,,,,,Y
+CTA-101,External Temperature - deg F,AI,,,,,,Y
+DCL-0000,Accumulated precipitation,AI,,,,,,Y
+RU1CP-SP,Unit 1 Crude Pump setpoint,AI,,,,,,Y
+RU1GP-SP,Unit 1 Gasoline Pump setpoint,AI,,,,,,Y
+RU1FOP-SP,Unit 1 Fuel Oil Pump setpoint,AI,,,,,,Y
+RU1JP-SP,Unit 1 Jet Fuel Pump setpoint,AI,,,,,,Y
+RU1RFP-SP,Unit 1 RFO Pump setpoint,AI,,,,,,Y
+RU1LRP-SP,Unit 1 LRG Pump setpoint,AI,,,,,,Y
+RU1AP-SP,Unit 1 Asphalt Pump setpoint,AI,,,,,,Y
+RU1LP-SP,Unit 1 Lubricant Pump setpoint,AI,,,,,,Y
+RU2CP-SP,Unit 2 Crude Pump setpoint,AI,,,,,,Y
+RU2GP-SP,Unit 2 Gasoline Pump setpoint,AI,,,,,,Y
+RU2FOP-SP,Unit 2 Fuel Oil Pump setpoint,AI,,,,,,Y
+RU2JP-SP,Unit 2 Jet Fuel Pump setpoint,AI,,,,,,Y
+RU2RFP-SP,Unit 2 RFO Pump setpoint,AI,,,,,,Y
+RU2LRP-SP,Unit 2 LRG Pump setpoint,AI,,,,,,Y
+RU2AP-SP,Unit 2 Asphalt Pump setpoint,AI,,,,,,Y
+RU2LP-SP,Unit 2 Lubricant Pump setpoint,AI,,,,,,Y
+SB1P2-SP,for Slip 1 Pump 2 setpoint,AI,,,,,,Y
+SB1P3-SP,for Slip 1 Pump 3 setpoint,AI,,,,,,Y
+SB1P4-SP,for Slip 1 Pump 4 setpoint,AI,,,,,,Y
+SB2P1-SP,for Slip 2 Pump 1 setpoint,AI,,,,,,Y
+SB2P2-SP,for Slip 2 Pump 2 setpoint,AI,,,,,,Y
+SB2P3-SP,for Slip 2 Pump 3 setpoint,AI,,,,,,Y
+SB2P4-SP,for Slip 2 Pump 4 setpoint,AI,,,,,,Y
+RU1CP-PV,Process variable Unit 1 Crude Pump,AI,,,,,,Y
+RU1GP-PV,Process variable Unit 1 Gasoline Pump,AI,,,,,,Y
+RU1FOP-PV,Process variable Unit 1 Fuel Oil Pump,AI,,,,,,Y
+RU1JP-PV,Process variable Unit 1 Jet Fuel Pump,AI,,,,,,Y
+RU1RFP-PV,Process variable Unit 1 RFO Pump,AI,,,,,,Y
+RU1LRP-PV,Process variable Unit 1 LRG Pump,AI,,,,,,Y
+RU1AP-PV,Process variable Unit 1 Asphalt Pump,AI,,,,,,Y
+RU1LP-PV,Process variable Unit 1 Lubricant Pump,AI,,,,,,Y
+RU2CP-PV,Process variable Unit 2 Crude Pump,AI,,,,,,Y
+RU2GP-PV,Process variable Unit 2 Gasoline Pump,AI,,,,,,Y
+RU2FOP-PV,Process variable Unit 2 Fuel Oil Pump,AI,,,,,,Y
+RU2JP-PV,Process variable Unit 2 Jet Fuel Pump,AI,,,,,,Y
+RU2RFP-PV,Process variable Unit 2 RFO Pump,AI,,,,,,Y
+RU2LRP-PV,Process variable Unit 2 LRG Pump,AI,,,,,,Y
+RU2AP-PV,Process variable Unit 2 Asphalt Pump,AI,,,,,,Y
+RU2LP-PV,Process variable Unit 2 Lubricant Pump,AI,,,,,,Y
+SB1P2-PV,Process variable for Slip 1 Pump 2,AI,,,,,,Y
+SB1P3-PV,Process variable for Slip 1 Pump 3,AI,,,,,,Y
+SB1P4-PV,Process variable for Slip 1 Pump 4,AI,,,,,,Y
+SB2P1-PV,Process variable for Slip 2 Pump 1,AI,,,,,,Y
+SB2P2-PV,Process variable for Slip 2 Pump 2,AI,,,,,,Y
+SB2P3-PV,Process variable for Slip 2 Pump 3,AI,,,,,,Y
+SB2P4-PV,Process variable for Slip 2 Pump 4,AI,,,,,,Y
+End

@@ -1,0 +1,277 @@
+Table,tag,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+Data,,,
+name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
+RU1CP-DI,On/Off sensor Unit 1 Crude Pump,DI,,,-75.625879,,-75.625140,Y
+RU1GP-DI,On/Off sensor Unit 1 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
+RU1FOP-DI,On/Off sensor Unit 1 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
+RU1JP-DI,On/Off sensor Unit 1 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
+RU1RFP-DI,On/Off sensor Unit 1 RFO Pump,DI,,,-75.625879,,-75.625140,Y
+RU1LRP-DI,On/Off sensor Unit 1 LRG Pump,DI,,,-75.625879,,-75.625140,Y
+RU1AP-DI,On/Off Unit 1 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
+RU1LP-DI,On/Off sensor Unit 1 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
+RU2CP-DI,On/Off sensor Unit 2 Crude Pump,DI,,,-75.625879,,-75.625140,Y
+RU2GP-DI,On/Off sensor Unit 2 Gasoline Pump,DI,,,-75.625879,,-75.625140,Y
+RU2FOP-DI,On/Off sensor Unit 2 Fuel Oil Pump,DI,,,-75.625879,,-75.625140,Y
+RU2JP-DI,On/Off sensor Unit 2 Jet Fuel Pump,DI,,,-75.625879,,-75.625140,Y
+RU2RFP-DI,On/Off sensor Unit 2 RFO Pump,DI,,,-75.625879,,-75.625140,Y
+RU2LRP-DI,On/Off sensor Unit 2 LRG Pump,DI,,,-75.625879,,-75.625140,Y
+RU2AP-DI,On/Off sensor Unit 2 Asphalt Pump,DI,,,-75.625879,,-75.625140,Y
+RU2LP-DI,On/Off sensor Unit 2 Lubricant Pump,DI,,,-75.625879,,-75.625140,Y
+SB1P2-DI,OnOff state for slip 1 Pump 2,DI,,,-75.625879,,-75.625140,Y
+SB1P3-DI,OnOff state for slip 1 Pump 3,DI,,,-75.625879,,-75.625140,Y
+SB1P4-DI,OnOff state for slip 1 Pump 4,DI,,,-75.625879,,-75.625140,Y
+SB2P1-DI,OnOff state for slip 2 Pump 1,DI,,,-75.625879,,-75.625140,Y
+SB2P2-DI,OnOff state for slip 2 Pump 2,DI,,,-75.625879,,-75.625140,Y
+SB2P3-DI,OnOff state for slip 2 Pump 3,DI,,,-75.625879,,-75.625140,Y
+SB2P4-DI,OnOff state for slip 2 Pump 4,DI,,,-75.625879,,-75.625140,Y
+SB1P1-DI,OnOff state for slip 1 Pump 1,DI,,,-75.625879,,-75.625140,Y
+TT2Here-DI,Tank Truck Present Position 2,DI,,,,,,Y
+TT1Here-DI,Tank Truck Present Position 1,DI,,,,,,Y
+TC1Here-DI,Tank Car Present Position 1,DI,,,,,,Y
+TC2Here-DI,Tank Car Present Position 2,DI,,,,,,Y
+TC3Here-DI,Tank Car Present Position 3,DI,,,,,,Y
+TC4Here-DI,Tank Car Present Position 4,DI,,,,,,Y
+TC5Here-DI,Tank Car Present Position 5,DI,,,,,,Y
+TC6Here-DI,Tank Car Present Position 6,DI,,,,,,Y
+Ship2-DI,Ship Present slip 2,DI,,,,,,Y
+Ship1-DI,Ship Present slip 1,DI,,,,,,Y
+Ship3-DI,Ship Present slip 3,DI,,,,,,Y
+Ship4-DI,Ship Present slip 4,DI,,,,,,Y
+CT01-PoDI,On/Off sensor Crude Tank 1 Pump,DI,,,,,,Y
+CT02-PoDI,On/Off sensor Crude Tank 2 Pump,DI,,,,,,Y
+CT03-PoDI,On/Off sensor Crude Tank 3 Pump,DI,,,,,,Y
+CT04-PoDI,On/Off sensor Crude Tank 4 Pump,DI,,,,,,Y
+CT05-PoDI,On/Off sensor Crude Tank 5 Pump,DI,,,,,,Y
+CT06-PoDI,On/Off sensor Crude Tank 6 Pump,DI,,,,,,Y
+CT07-PoDI,On/Off sensor Crude Tank 7 Pump,DI,,,,,,Y
+CT08-PoDI,On/Off sensor Crude Tank 8 Pump,DI,,,,,,Y
+CT09-PoDI,On/Off sensor Crude Tank 9 Pump,DI,,,,,,Y
+CT10-PoDI,On/Off sensor Crude Tank 10 Pump,DI,,,,,,Y
+CT11-PoDI,On/Off sensor Crude Tank 11 Pump,DI,,,,,,Y
+CT12-PoDI,On/Off sensor Crude Tank 12 Pump,DI,,,,,,Y
+CT01-ViDI,Crude Tank 1 Valve,DI,,,,,,Y
+CT02-ViDI,Crude Tank 2 Valve,DI,,,,,,Y
+CT03-ViDI,Crude Tank 3 Valve,DI,,,,,,Y
+CT04-ViDI,Crude Tank 4 Valve,DI,,,,,,Y
+CT05-ViDI,Crude Tank 5 Valve,DI,,,,,,Y
+CT06-ViDI,Crude Tank 6 Valve,DI,,,,,,Y
+CT07-ViDI,Crude Tank 7 Valve,DI,,,,,,Y
+CT08-ViDI,Crude Tank 8 Valve,DI,,,,,,Y
+CT09-ViDI,Crude Tank 9 Valve,DI,,,,,,Y
+CT10-ViDI,Crude Tank 10 Valve,DI,,,,,,Y
+CT11-ViDI,Crude Tank 11 Valve,DI,,,,,,Y
+CT12-ViDI,Crude Tank 12 Valve,DI,,,,,,Y
+FOT01-ViDI,Fuel Oil Tank 1 Valve,DI,,,,,,Y
+FOT01-VoDI,Fuel Oil Tank 1 Valve,DI,,,,,,Y
+FOT01-PoDI,Fuel Oil Tank 1 Pump,DI,,,,,,Y
+FOT02-ViDI,Fuel Oil Tank 2 Valve,DI,,,,,,Y
+FOT02-VoDI,Fuel Oil Tank 2 Valve,DI,,,,,,Y
+FOT02-PoDI,Fuel Oil Tank 2 Pump,DI,,,,,,Y
+FOT03-ViDI,Fuel Oil Tank 3 Valve,DI,,,,,,Y
+FOT03-VoDI,Fuel Oil Tank 3 Valve,DI,,,,,,Y
+FOT03-PoDI,Fuel Oil Tank 3 Pump,DI,,,,,,Y
+FOT04-ViDI,Fuel Oil Tank 4 Valve,DI,,,,,,Y
+FOT04-VoDI,Fuel Oil Tank 4 Valve,DI,,,,,,Y
+FOT04-PoDI,Fuel Oil Tank 4 Pump,DI,,,,,,Y
+FOT05-ViDI,Fuel Oil Tank 5 Valve,DI,,,,,,Y
+FOT05-VoDI,Fuel Oil Tank 5 Valve,DI,,,,,,Y
+FOT05-PoDI,Fuel Oil Tank 5 Pump,DI,,,,,,Y
+FOT06-ViDI,Fuel Oil Tank 6 Valve,DI,,,,,,Y
+FOT06-VoDI,Fuel Oil Tank 6 Valve,DI,,,,,,Y
+FOT06-PoDI,Fuel Oil Tank 6 Pump,DI,,,,,,Y
+FOT07-ViDI,Fuel Oil Tank 7 Valve,DI,,,,,,Y
+FOT07-VoDI,Fuel Oil Tank 7 Valve,DI,,,,,,Y
+FOT07-PoDI,Fuel Oil Tank 7 Pump,DI,,,,,,Y
+FOT08-ViDI,Fuel Oil Tank 8 Valve,DI,,,,,,Y
+FOT08-VoDI,Fuel Oil Tank 8 Valve,DI,,,,,,Y
+FOT08-PoDI,Fuel Oil Tank 8 Pump,DI,,,,,,Y
+FOT09-ViDI,Fuel Oil Tank 9 Valve,DI,,,,,,Y
+FOT09-VoDI,Fuel Oil Tank 9 Valve,DI,,,,,,Y
+FOT09-PoDI,Fuel Oil Tank 0 Pump,DI,,,,,,Y
+FOT10-ViDI,Fuel Oil Tank 10 Valve,DI,,,,,,Y
+FOT10-VoDI,Fuel Oil Tank 10 Valve,DI,,,,,,Y
+FOT10-PoDI,Fuel Oil Tank 10 Pump,DI,,,,,,Y
+FOT11-ViDI,Fuel Oil Tank 11 Valve,DI,,,,,,Y
+FOT11-VoDI,Fuel Oil Tank 11 Valve,DI,,,,,,Y
+FOT11-PoDI,Fuel Oil Tank 11 Pump,DI,,,,,,Y
+GT01-PoDI,Gasoline Tank 1 Pump,DI,,,,,,Y
+GT02-PoDI,Gasoline Tank 2 Pump,DI,,,,,,Y
+GT03-PoDI,Gasoline Tank 3 Pump,DI,,,,,,Y
+GT04-PoDI,Gasoline Tank 4 Pump,DI,,,,,,Y
+GT05-PoDI,Gasoline Tank 5 Pump,DI,,,,,,Y
+GT06-PoDI,Gasoline Tank 6 Pump,DI,,,,,,Y
+GT07-PoDI,Gasoline Tank 7 Pump,DI,,,,,,Y
+GT08-PoDI,Gasoline Tank 8 Pump,DI,,,,,,Y
+GT09-PoDI,Gasoline Tank 9 Pump,DI,,,,,,Y
+GT10-PoDI,Gasoline Tank 10 Pump,DI,,,,,,Y
+GT11-PoDI,Gasoline Tank 11 Pump,DI,,,,,,Y
+GT12-PoDI,Gasoline Tank 12 Pump,DI,,,,,,Y
+GT13-PoDI,Gasoline Tank 13 Pump,DI,,,,,,Y
+GT14-PoDI,Gasoline Tank 14 Pump,DI,,,,,,Y
+GT15-PoDI,Gasoline Tank 15 Pump,DI,,,,,,Y
+GT01-ViDI,Gasoline Tank 1 Valve,DI,,,,,,Y
+GT02-ViDI,Gasoline Tank 2 Valve,DI,,,,,,Y
+GT03-ViDI,Gasoline Tank 3 Valve,DI,,,,,,Y
+GT04-ViDI,Gasoline Tank 4 Valve,DI,,,,,,Y
+GT05-ViDI,Gasoline Tank 5 Valve,DI,,,,,,Y
+GT06-ViDI,Gasoline Tank 6 Valve,DI,,,,,,Y
+GT07-ViDI,Gasoline Tank 7 Valve,DI,,,,,,Y
+GT08-ViDI,Gasoline Tank 8 Valve,DI,,,,,,Y
+GT09-ViDI,Gasoline Tank 9 Valve,DI,,,,,,Y
+GT10-ViDI,Gasoline Tank 10 Valve,DI,,,,,,Y
+GT11-ViDI,Gasoline Tank 11 Valve,DI,,,,,,Y
+GT12-ViDI,Gasoline Tank 12 Valve,DI,,,,,,Y
+GT13-ViDI,Gasoline Tank 13 Valve,DI,,,,,,Y
+GT14-ViDI,Gasoline Tank 14 Valve,DI,,,,,,Y
+GT15-ViDI,Gasoline Tank 15 Valve,DI,,,,,,Y
+GT01-VoDI,Gasoline Tank 1 Valve,DI,,,,,,Y
+GT02-VoDI,Gasoline Tank 2 Valve,DI,,,,,,Y
+GT03-VoDI,Gasoline Tank 3 Valve,DI,,,,,,Y
+GT04-VoDI,Gasoline Tank 4 Valve,DI,,,,,,Y
+GT05-VoDI,Gasoline Tank 5 Valve,DI,,,,,,Y
+GT06-VoDI,Gasoline Tank 6 Valve,DI,,,,,,Y
+GT07-VoDI,Gasoline Tank 7 Valve,DI,,,,,,Y
+GT08-VoDI,Gasoline Tank 8 Valve,DI,,,,,,Y
+GT09-VoDI,Gasoline Tank 9 Valve,DI,,,,,,Y
+GT10-VoDI,Gasoline Tank 10 Valve,DI,,,,,,Y
+GT11-VoDI,Gasoline Tank 11 Valve,DI,,,,,,Y
+GT12-VoDI,Gasoline Tank 12 Valve,DI,,,,,,Y
+GT13-VoDI,Gasoline Tank 13 Valve,DI,,,,,,Y
+GT14-VoDI,Gasoline Tank 14 Valve,DI,,,,,,Y
+GT15-VoDI,Gasoline Tank 15 Valve,DI,,,,,,Y
+AT01-ViDI,Asphalt Tank 1 Valve,DI,,,,,,Y
+AT02-ViDI,Asphalt Tank 2 Valve,DI,,,,,,Y
+AT03-ViDI,Asphalt Tank 3 Valve,DI,,,,,,Y
+AT04-ViDI,Asphalt Tank 4 Valve,DI,,,,,,Y
+AT01-PoDI,Asphalt Tank 1 Pump,DI,,,,,,Y
+AT01-VoDI,Asphalt Tank 1 Valve,DI,,,,,,Y
+AT02-PoDI,Asphalt Tank 2 Pump,DI,,,,,,Y
+AT02-VoDI,Asphalt Tank 2 Valve,DI,,,,,,Y
+AT03-PoDI,Asphalt Tank 3 Pump,DI,,,,,,Y
+AT03-VoDI,Asphalt Tank 3 Valve,DI,,,,,,Y
+AT04-PoDI,Asphalt Tank 4 Pump,DI,,,,,,Y
+AT04-VoDI,Asphalt Tank 4 Valve,DI,,,,,,Y
+JT01-ViDI,Jet Fuel Tank 1 Valve,DI,,,,,,Y
+JT02-ViDI,Jet Fuel Tank 2 Valve,DI,,,,,,Y
+JT03-ViDI,Jet Fuel Tank 3 Valve,DI,,,,,,Y
+JT04-ViDI,Jet Fuel Tank 4 Valve,DI,,,,,,Y
+JT05-ViDI,Jet Fuel Tank 5 Valve,DI,,,,,,Y
+JT06-ViDI,Jet Fuel Tank 6 Valve,DI,,,,,,Y
+JT07-ViDI,Jet Fuel Tank 7 Valve,DI,,,,,,Y
+JT08-ViDI,Jet Fuel Tank 8 Valve,DI,,,,,,Y
+JT09-ViDI,Jet Fuel Tank 9 Valve,DI,,,,,,Y
+JT10-ViDI,Jet Fuel Tank 10 Valve,DI,,,,,,Y
+JT11-ViDI,Jet Fuel Tank 11 Valve,DI,,,,,,Y
+JT12-ViDI,Jet Fuel Tank 12 Valve,DI,,,,,,Y
+JT01-PoDI,Jet Fuel Tank 1 Pump,DI,,,,,,Y
+JT01-VoDI,Jet Fuel Tank 1 Valve,DI,,,,,,Y
+JT02-PoDI,Jet Fuel Tank 2 Pump,DI,,,,,,Y
+JT02-VoDI,Jet Fuel Tank 2 Valve,DI,,,,,,Y
+JT03-PoDI,Jet Fuel Tank 3 Pump,DI,,,,,,Y
+JT03-VoDI,Jet Fuel Tank 3 Valve,DI,,,,,,Y
+JT04-PoDI,Jet Fuel Tank 4 Pump,DI,,,,,,Y
+JT04-VoDI,Jet Fuel Tank 4 Valve,DI,,,,,,Y
+JT05-PoDI,Jet Fuel Tank 5 Pump,DI,,,,,,Y
+JT05-VoDI,Jet Fuel Tank 5 Valve,DI,,,,,,Y
+JT06-PoDI,Jet Fuel Tank 6 Pump,DI,,,,,,Y
+JT06-VoDI,Jet Fuel Tank 6 Valve,DI,,,,,,Y
+JT07-PoDI,Jet Fuel Tank 7 Pump,DI,,,,,,Y
+JT07-VoDI,Jet Fuel Tank 7 Valve,DI,,,,,,Y
+JT08-PoDI,Jet Fuel Tank 8 Pump,DI,,,,,,Y
+JT08-VoDI,Jet Fuel Tank 8 Valve,DI,,,,,,Y
+JT09-PoDI,Jet Fuel Tank 9 Pump,DI,,,,,,Y
+JT09-VoDI,Jet Fuel Tank 9 Valve,DI,,,,,,Y
+JT10-PoDI,Jet Fuel Tank 10 Pump,DI,,,,,,Y
+JT10-VoDI,Jet Fuel Tank 10 Valve,DI,,,,,,Y
+JT11-PoDI,Jet Fuel Tank 11 Pump,DI,,,,,,Y
+JT11-VoDI,Jet Fuel Tank 11 Valve,DI,,,,,,Y
+JT12-PoDI,Jet Fuel Tank 12 Pump,DI,,,,,,Y
+JT12-VoDI,Jet Fuel Tank 12 Valve,DI,,,,,,Y
+LT01-ViDI,Lubricant Tank 1 Valve,DI,,,,,,Y
+LT02-ViDI,Lubricant Tank 2 Valve,DI,,,,,,Y
+LT03-ViDI,Lubricant Tank 3 Valve,DI,,,,,,Y
+LT04-ViDI,Lubricant Tank 4 Valve,DI,,,,,,Y
+LT01-PoDI,Lubricant Tank 1 Pump,DI,,,,,,Y
+LT01-VoDI,Lubricant Tank 1 Valve,DI,,,,,,Y
+LT02-PoDI,Lubricant Tank 2 Pump,DI,,,,,,Y
+LT02-VoDI,Lubricant Tank 2 Valve,DI,,,,,,Y
+LT03-PoDI,Lubricant Tank 3 Pump,DI,,,,,,Y
+LT03-VoDI,Lubricant Tank 3 Valve,DI,,,,,,Y
+LT04-PoDI,Lubricant Tank 4 Pump,DI,,,,,,Y
+LT04-VoDI,Lubricant Tank 4 Valve,DI,,,,,,Y
+NT01-ViDI,Naptha Tank 1 Valve,DI,,,,,,Y
+NT02-ViDI,Naptha Tank 2 Valve,DI,,,,,,Y
+NT03-ViDI,Naptha Tank 3 Valve,DI,,,,,,Y
+NT04-ViDI,Naptha Tank 4 Valve,DI,,,,,,Y
+NT01-PoDI,Naptha Tank 1 Pump,DI,,,,,,Y
+NT01-VoDI,Naptha Tank 1 Valve,DI,,,,,,Y
+NT02-PoDI,Naptha Tank 2 Pump,DI,,,,,,Y
+NT02-VoDI,Naptha Tank 2 Valve,DI,,,,,,Y
+NT03-PoDI,Naptha Tank 3 Pump,DI,,,,,,Y
+NT03-VoDI,Naptha Tank 3 Valve,DI,,,,,,Y
+NT04-PoDI,Naptha Tank 4 Pump,DI,,,,,,Y
+NT04-VoDI,Naptha Tank 4 Valve,DI,,,,,,Y
+WT01-ViDI,Wax Tank 1 Valve,DI,,,,,,Y
+WT02-ViDI,Wax Tank 2 Valve,DI,,,,,,Y
+WT03-ViDI,Wax Tank 3 Valve,DI,,,,,,Y
+WT01-PoDI,Wax Tank 1 Pump,DI,,,,,,Y
+WT01-VoDI,Wax Tank 1 Valve,DI,,,,,,Y
+WT02-PoDI,Wax Tank 1 Pump,DI,,,,,,Y
+WT02-VoDI,Wax Tank 1 Valve,DI,,,,,,Y
+WT03-PoDI,Wax Tank 1 Pump,DI,,,,,,Y
+WT03-VoDI,Wax Tank 1 Valve,DI,,,,,,Y
+CT011-VoDI,Crude Tank 1 Valve,DI,,,,,,Y
+CT021-VoDI,Crude Tank 2 Valve,DI,,,,,,Y
+CT031-VoDI,Crude Tank 3 Valve,DI,,,,,,Y
+CT041-VoDI,Crude Tank 4 Valve,DI,,,,,,Y
+CT051-VoDI,Crude Tank 5 Valve,DI,,,,,,Y
+CT061-VoDI,Crude Tank 6 Valve,DI,,,,,,Y
+CT071-VoDI,Crude Tank 7 Valve,DI,,,,,,Y
+CT081-VoDI,Crude Tank 8 Valve,DI,,,,,,Y
+CT091-VoDI,Crude Tank 9 Valve,DI,,,,,,Y
+CT101-VoDI,Crude Tank 10 Valve,DI,,,,,,Y
+CT111-VoDI,Crude Tank 11 Valve,DI,,,,,,Y
+CT121-VoDI,Crude Tank 12 Valve,DI,,,,,,Y
+PV11-DI,Pipe Valve-Unit 1 Tanks 1-4,DI,,,,,,Y
+PV21-DI,Pipe Valve-Unit 2 Tanks 1-4,DI,,,,,,Y
+PV12-DI,Pipe Valve-Unit 1 Tanks 5-8,DI,,,,,,Y
+PV22-DI,Pipe Valve-Unit 2 Tanks 5-8,DI,,,,,,Y
+PV13-DI,Pipe Valve-Unit 1 Tanks 9-12,DI,,,,,,Y
+PV23-DI,Pipe Valve-Unit 2 Tanks 9-12,DI,,,,,,Y
+CT012-VoDI,Crude Tank 1 Unit 2 Valve,DI,,,,,,Y
+CT022-VoDI,Crude Tank 2 Unit 2 Valve,DI,,,,,,Y
+CT032-VoDI,Crude Tank 3 Unit 2 Valve,DI,,,,,,Y
+CT042-VoDI,Crude Tank 4 Unit 2 Valve,DI,,,,,,Y
+CT052-VoDI,Crude Tank 5 Unit 2 Valve,DI,,,,,,Y
+CT062-VoDI,Crude Tank 6 Unit 2 Valve,DI,,,,,,Y
+CT072-VoDI,Crude Tank 7 Unit 2 Valve,DI,,,,,,Y
+CT082-VoDI,Crude Tank 8 Unit 2 Valve,DI,,,,,,Y
+CT092-VoDI,Crude Tank 9 Unit 2 Valve,DI,,,,,,Y
+CT102-VoDI,Crude Tank 10 Unit 2 Valve,DI,,,,,,Y
+CT112-VoDI,Crude Tank 11 Unit 2 Valve,DI,,,,,,Y
+CT122-VoDI,Crude Tank 12 Unit 2 Valve,DI,,,,,,Y
+Com011-DI,Pipe on-off state RU1 tanks 1-2,DI,,,,,,Y
+Com013-DI,Pipe on-off state RU1 tanks 5-6,DI,,,,,,Y
+Com015-DI,Pipe on-off state RU1 tanks 9-10,DI,,,,,,Y
+Com021-DI,Pipe on-off state RU2 tanks 1-2,DI,,,,,,Y
+Com023-DI,Pipe on-off state RU2 tanks 5-6,DI,,,,,,Y
+Com025-DI,Pipe on-off state RU2 tanks 9-10,DI,,,,,,Y
+Com012-DI,Pipe on-off state RU1 tanks 3-4,DI,,,,,,Y
+Com014-DI,Pipe on-off state RU1 tanks 7-8,DI,,,,,,Y
+Com016-DI,Pipe on-off state RU1 tanks 11-12,DI,,,,,,Y
+Com022-DI,Pipe on-off state RU2 tanks 3-4,DI,,,,,,Y
+Com024-DI,Pipe on-off state RU2 tanks 7-8,DI,,,,,,Y
+Com026-DI,Pipe on-off state RU2 tanks 11-12,DI,,,,,,Y
+RU1-OnOff,RU1 run state,DI,,,,,,Y
+RU2-OnOff,RU2 run state,DI,,,,,,Y
+RU1-3-DI,State variable for pipe RU1-3,DI,,,,,,Y
+RU1-4-DI,State variable for pipe RU1-4,DI,,,,,,Y
+RU2-3-DI,State variable for pipe RU2-3,DI,,,,,,Y
+RU2-4-DI,State variable for pipe RU2-4,DI,,,,,,Y
+RU2-2-DI,State variable for pipe RU2-2,DI,,,,,,Y
+RU1-2-DI,State variable for pipe RU1-2,DI,,,,,,Y
+D12-DI,Schematic stuff 1,DI,,,,,,Y
+D123-DI,Schematic stuff 2,DI,,,,,,Y
+D1234-DI,Schematic stuff 3,DI,,,,,,Y
+End

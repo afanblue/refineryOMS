@@ -1,5 +1,5 @@
 Table,watchdog,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
 Data,,,
 name,active
 AnalogInput,Y

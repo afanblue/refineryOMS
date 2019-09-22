@@ -18,6 +18,7 @@ package us.avn.oms.scada;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -92,7 +93,7 @@ public class XferDigitalData extends TimerTask {
 			DigitalInput di = idi.next();
 			log.debug("Processing DI tag "+di.toString());
 			if( 0 != di.getUpdated() ) {
-				Date now = new Date();
+				Instant now = Instant.now();
 				di.setPrevValue(di.getScanValue());
 				di.setPrevScanTime(di.getScanTime());
 				di.setScanValue(new Double(di.getSimValue()));

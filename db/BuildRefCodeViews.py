@@ -34,7 +34,7 @@ for row in results:
     delim = ","
 
 
-vwQueryTemplate = ("create view vwx(colList) as select colList from reference_code "
+vwQueryTemplate = ("create or replace view vwx(colList) as select colList from reference_code "
 		           "where category = \"catx\" order by name")
 catQuery = "select distinct category from reference_code"
 crsr.execute(catQuery)

@@ -17,7 +17,7 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-
+import moment             from 'moment';
 
 class ActiveAlarmList extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class ActiveAlarmList extends Component {
           <thead className="fixedHeader">
             <tr>
               <th className={["oms-spacing-90","oms-underline"].join(' ')}> Name </th>
-              <th className={["oms-spacing-120","oms-underline"].join(' ')}> Occurred </th>
+              <th className={["oms-spacing-150","oms-underline"].join(' ')}> Occurred </th>
               <th className={["oms-spacing-240","oms-underline"].join(' ')}> Description </th>
               <th className={["oms-spacing-80","oms-underline"].join(' ')}> Code </th>
               <th className={["oms-spacing-50","oms-underline"].join(' ')}> Pri </th>
@@ -60,20 +60,20 @@ class ActiveAlarmList extends Component {
             function(n,x){
               var z = n.id;
               var color = n.color;
+              var ackColor = n.color;
               if( n.acknowledged === 'Y' ) {
-                color = "white";
+                ackColor = "white";
               }
-              var almOcc = n.almOccurred;
-              var occ = (new Date(almOcc)).toLocaleString('en-US', {hour12:false});
+              var occ = moment.unix(n.almOccurred).format("YYYY-MM-DD HH:mm:ss");
               return (
                 <tr key={x}>
                   <td className={["oms-spacing-90","oms-cursor-pointer"].join(' ')} 
-                      style={{"color":color}}>
+                      style={{"color":ackColor}}>
                     <button type="button" className="link-button"
                             onClick={() => {handleSelect({z})}} >{n.tagId.name}
                     </button>
                   </td>
-                  <td className="oms-spacing-120" style={{"color":color}}>
+                  <td className="oms-spacing-150" style={{"color":ackColor}}>
                     {occ}
                   </td>
                   <td className="oms-spacing-240" style={{"color":color}}>

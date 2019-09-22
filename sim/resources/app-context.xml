@@ -82,6 +82,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.ReferenceCodeMapper" />
    </bean>
    
+   <bean id="shipMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ShipMapper" />
+   </bean>
+
    <bean id="simioMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.SimIOMapper" />
@@ -175,7 +180,11 @@
       <property name="referenceCodeMapper" ref="referenceCodeMapper" />
    </bean>
    
-   <bean id="simioService" class="us.avn.oms.service.impl.SimIOServiceImpl">
+   <bean id="shipService"    class="us.avn.oms.service.impl.ShipServiceImpl">
+      <property name="shipMapper"           ref="shipMapper" />
+   </bean>
+   
+   <bean id="simioService"   class="us.avn.oms.service.impl.SimIOServiceImpl">
       <property name="simIoMapper"         ref="simioMapper" />
    </bean>
    

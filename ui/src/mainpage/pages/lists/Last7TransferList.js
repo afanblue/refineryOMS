@@ -29,6 +29,7 @@ class Last7DaysTransferList extends Component {
 
   render() {
     var json = this.props.transferData;
+    var transferSelect = this.props.transferSelect;
     var transferList = [];
     json.map(function(ud,x){
         var xf = new Transfer(ud.id, ud.name, ud.statusId, ud.status
@@ -56,8 +57,13 @@ class Last7DaysTransferList extends Component {
           <tbody className="scrollContent">
           {transferList.map(
             function(n,x){
+              let z = n.id;
               return <tr key={x}>
-                       <td className="oms-spacing-120">{n.name}</td>
+                       <td className="oms-spacing-120">
+                         <button type="button" className="link-button"
+                                 onClick={() => {transferSelect({z})}} >{n.name}
+                         </button>
+                       </td>
                        <td className="oms-spacing-90">{n.source}</td>
                        <td className="oms-spacing-90">{n.destination}</td>
                        <td className="oms-spacing-150">

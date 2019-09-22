@@ -21,10 +21,12 @@
   
   
   <select id="getAllTrains" resultMap="trm">
-    select tr.id, c.id owner_id, c.name owner, tr.content_code
-         , tr.no_cars, tr.arrival_dt 
-      from train tr join customer c on tr.owner_id = c.id
-     order by tr.id
+    select t.id, t.name, c.id owner_id, c.name owner
+      from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id
+      join customer c on rtt.child_tag_id = c.id
+     where t.tag_type_code = 'TR'
+       and rtt.code = 'C'
+     order by t.name
   </select>
 
   <select id="getTrain" resultMap="trm">

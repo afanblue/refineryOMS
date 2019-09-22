@@ -55,7 +55,7 @@ public interface OrderService {
 
 	/**
 	 * Get all the pending shipment items for a given shipment (order)
-	 * @param id ID of order to get the itesm for
+	 * @param id ID of order to get the items for
 	 * @return pending shipment items
 	 */
 	Collection<Item> getPendingOrderItems( Long id );

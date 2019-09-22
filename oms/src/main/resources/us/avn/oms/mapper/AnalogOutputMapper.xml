@@ -123,7 +123,7 @@
     update analog_output
        set is_new = 1
          , scan_value = #{scanValue}
-         , scan_time = now()
+         , scan_time = utc_timestamp()
      where tag_id = #{tagId}
   </update>
 
@@ -139,7 +139,7 @@
          , slope = #{slope}
          , is_new = 1
          , scan_value = #{scanValue}
-         , scan_time = coalesce(#{scanTime},now())
+         , scan_time = coalesce(#{scanTime},utc_timestamp())
          , prev_value = #{prevValue}
          , prev_time = #{prevTime}
          , last_hist_value = #{lastHistValue}

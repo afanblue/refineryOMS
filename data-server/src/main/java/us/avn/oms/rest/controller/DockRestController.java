@@ -69,7 +69,7 @@ public class DockRestController {
 			t = ts.getTag(id);
 			t.setInTagId(getChildId(id,null));
 			t.setOutTagId(getChildId(id,"CRR"));
-			t.setOutTagList(getPumpList(id,"PMP"));
+			t.setOutTagList(getStationList(id,"STN"));
 		}
 		return t;
 	}
@@ -89,11 +89,11 @@ public class DockRestController {
 		return cid;
 	}
 	
-	private Collection<Long> getPumpList( Long id, String code ) {
+	private Collection<Long> getStationList( Long id, String code ) {
 		Collection<Long> cid = new Vector<Long>();
 		Iterator<RelTagTag> irtt = null;
 		if( null == code ) {
-			irtt = ts.getChildrenOfType(id,"PMP").iterator();
+			irtt = ts.getChildrenOfType(id,"STN").iterator();
 		} else {
 			irtt = ts.getChildrenOfType(id, code).iterator();
 		}
@@ -130,14 +130,17 @@ public class DockRestController {
 	
 	/**
 	 * Add carrier tag ID to the REL_TAG_TAG table
+	 * The code for the carrier relationship will be the dock, i.e., 'DK'.
 	 * 
 	 * @param t	- Tag
 	 */
 	private void insertCarrier(Tag t) {
 		Long id = t.getId();
+		Long carrierId = t.getOutTagId();
+		Tag carrier = ts.getTag(carrierId);
 		String code = t.getTagTypeCode();
-		ts.deleteChildTagsOfType(id,code);
-		RelTagTag ct = new RelTagTag(id,t.getOutTagId(),code);
+		ts.deleteChildTagsOfType(carrierId,code);
+		RelTagTag ct = new RelTagTag(carrierId,id,code);
 		ts.insertRelationship(ct);
 	}
 

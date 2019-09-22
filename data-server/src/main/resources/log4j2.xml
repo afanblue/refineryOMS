@@ -28,6 +28,9 @@
         <Logger name="us.avn.oms" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
+        <Logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+      		<AppenderRef ref="RollingFile"/>
+        </Logger>
         <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="ERROR" additivity="false">
       		<AppenderRef ref="RollingFile"/>
       		<AppenderRef ref="Console"/>

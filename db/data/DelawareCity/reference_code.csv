@@ -1,5 +1,5 @@
 Table,reference_code,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
 Data,,,
 category,name,code,value,description,active
 TRANSFER_STATUS,Active,A,0,Transfer currently in progress,Y

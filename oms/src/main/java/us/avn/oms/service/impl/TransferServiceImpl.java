@@ -17,7 +17,8 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
-
+import java.util.HashMap;
+import java.util.Iterator;
 
 import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.Transfer;
@@ -108,6 +109,28 @@ public class TransferServiceImpl implements TransferService {
 		return transferMapper.getTransferTypes();
 	}
 	
+	@Override
+	public HashMap<String,Long> getAllTransferTypes() {
+		HashMap<String,Long> xt = new HashMap<String,Long>();
+		Iterator<IdName> itt = transferMapper.getTransferTypes().iterator();
+		while( itt.hasNext() ) {
+			IdName in = itt.next();
+			xt.put(in.getName(), in.getId());
+		}
+		return xt;
+	}
+
+	public HashMap<String,Long> getAllTransferStatuses() {
+		HashMap<String,Long> xt = new HashMap<String,Long>();
+		Iterator<IdName> itt = transferMapper.getTransferStatuses().iterator();
+		while( itt.hasNext() ) {
+			IdName in = itt.next();
+			xt.put(in.getName(), in.getId());
+		}
+		return xt;
+	}
+	
+
 	@Override
 	public Long getTransferTypeId( String code ) {
 		return transferMapper.getTransferTypeId(code);

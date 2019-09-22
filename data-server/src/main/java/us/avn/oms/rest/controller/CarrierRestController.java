@@ -17,6 +17,7 @@
 package us.avn.oms.rest.controller;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,11 +26,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import us.avn.oms.domain.Tag;
+//import us.avn.oms.domain.Tag;
 import us.avn.oms.domain.Carrier;
+import us.avn.oms.domain.Hold;
 import us.avn.oms.service.CustomerService;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.CarrierService;
@@ -53,7 +55,7 @@ public class CarrierRestController {
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
 	public Collection<Carrier> getAllcarriers( ) {
-		log.debug("get all configuration items");
+		log.debug("get all carriers");
 		return carrierService.getAllCarriers();
 	}
 	
@@ -64,6 +66,8 @@ public class CarrierRestController {
 			c = new Carrier();
 			c.setId(id);
 			c.setName("Nothing for id "+id);
+		} else {
+			c.setHolds(carrierService.getHolds(id));
 		}
 		return c;
 	}
@@ -78,6 +82,7 @@ public class CarrierRestController {
 		} else {
 			carrierService.updateCarrier(c);
 		}
+		updateHolds(c);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
@@ -89,7 +94,15 @@ public class CarrierRestController {
 		} else {
 			carrierService.updateCarrier(c);
 		}
+		updateHolds(c);
 		return id;
 	}
 
+	private void updateHolds(Carrier c) {
+		Iterator<Hold> ih = c.getHolds().iterator();
+		while( ih.hasNext() ) {
+			Hold h = ih.next();
+			carrierService.insertHold(h);
+		}
+	}
 }

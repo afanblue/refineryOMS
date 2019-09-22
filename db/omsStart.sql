@@ -6,9 +6,9 @@ update analog_input
 update analog_input 
    set scan_value = 0.95*max_value
      , scan_time = current_timestamp
- where tag_id in (select id from tag where name like 'DCL-C%';
+ where tag_id in (select id from tag where name like 'DCL-C%');
 
 update analog_input 
    set scan_value = 0.2*max_value
      , scan_time = current_timestamp
- where tag_id in (select id from tag where name like 'DCL-G%';
+ where tag_id in (select id from tag where name like 'DCL-G%');

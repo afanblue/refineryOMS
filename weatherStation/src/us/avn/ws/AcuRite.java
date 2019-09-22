@@ -17,6 +17,7 @@
 package us.avn.ws;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +32,7 @@ import us.avn.ws.WsCSV;
  * 				into the parameters on the line.
  *
  * {@code
- * 		time	- 0
+ * 		time	- 0 (local time!)
  * 		temperature	- 1
  * 		barometric pressure	- 6
  * 		wind speed - 8
@@ -52,11 +53,10 @@ public class AcuRite extends WsCSV {
 //  Condition names specify outdoor temperature, barometricPressure
 //  , windSpeed, windDirection, precipitationLastHour
     private static String[] csvConditionNames= { "0", "1", "6", "8", "11", "7"};
-    private static SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy hh:mm:ss a");
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("M/d/yyyy h:m:ss a");
 
     /**
-     * Constructor
-     * Description: Create a WeatherStation object as an ACU, w/a location of 1
+     * Create a WeatherStation object as an ACU, w/a location of 1
      *              @see WeatherStation#WeatherStation
      *              A "location" of "1" will likely not return any useful values and
      *              will need to be reset to a useful file location.
@@ -64,20 +64,19 @@ public class AcuRite extends WsCSV {
 	public AcuRite() {
 		super( "ACU", "1" );
 		setWsConditionNames(csvConditionNames);
-		setSdf(sdf);
+		setDtf(dtf);
 		setSkipFirst(true);
 	}
 
 	/**
-	 * Constructor
-	 * Description: Create a WeatherStation objects as an ACU, w/the provided location
+	 * Create a WeatherStation objects as an ACU, w/the provided location
 	 *
 	 * @param l (String) location of CSV file containing weather values
 	 */
 	public AcuRite( String l ) {
 		super( "ACU", l );
 		setWsConditionNames(csvConditionNames);
-		setSdf(sdf);
+		setDtf(dtf);
 		setSkipFirst(true);
 	}
 

@@ -36,9 +36,7 @@ class OrderForm extends Component {
     const contents = this.props.contents;
     const custs    = this.props.customers;
     const carrs    = this.props.carriers;
-    let defVal     = x.expDate.substr(0,10);
-//    const srcs   = this.props.sources;
-//    const dests  = this.props.sources;
+    let defVal     = x.expDate;
     var fc       = this.props.fieldChange;
     var purchaseSelect = <select id="purchase" name="purchase" value={x.purchase} onChange={fc} ><option value={"P"}>Purchase</option><option value={"S"}>Sale</option></select>
     var statusSelect = <select id="active" name="active" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>

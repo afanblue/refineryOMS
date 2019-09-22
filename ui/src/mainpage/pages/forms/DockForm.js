@@ -39,11 +39,12 @@ class DockForm extends Component {
     let t = this.props.tag;
     let carrierList  = this.props.carrierList;
     let sensorList   = this.props.sensorList;
-    let pumpList     = this.props.pumpList;
+    let stnList      = this.props.stationList;
     let tup = this.props.tagUpdate;
     let fc  = this.props.fieldChange;
     let hq  = this.props.handleQuit;
 
+    var nameInput = <div></div>
     var miscLabel = <div></div>
     var miscListSelect = <div></div>
     var inTagLabel = <div></div>
@@ -52,22 +53,39 @@ class DockForm extends Component {
     var outTagSelect = <div></div>
     var outListLabel = <div></div>
     var outListSelect = <div></div>
-
-/* specify select options for "carrier present" */
-    inTagLabel = <div>Carrier Present? : </div>
-    inTagSelect = <select id="inTagId" name="inTagId" value={t.inTagId} onChange={fc} >{sensorList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
+    var activeLabel = <div></div>
+    var activeSelect = <div></div>
+    var midStyle = {verticalAlign:'middle'};
+    
 
 /* specify select options for list of carriers */
     outTagLabel = <div>Carrier : </div>
     outTagSelect = <select id="outTagId" name="outTagId" value={t.outTagId} onChange={fc} >{carrierList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
 
-/* specify select options for MISC field (which for Docks is the carrier type) */
-    miscLabel = <div>Carrier Type:</div>
-    miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} ><option value="">---</option> <option value="S">S</option><option value="TR">Train</option><option value="TT">TankTruck</option></select>
+/* IF stationList is null, then we only want to set the Carrier */
+    if( stnList !== null ) {
 
-/* specify select options for the outTagList (which are Pumps) */
-    outListLabel = <div>Output pumps: </div>
-    outListSelect =  <select id="outTagList" name="outTagList" value={t.outTagList} multiple="T" size="6" onChange={fc} >{pumpList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
+/*    set name input to readonly */
+      nameInput = <div><input type="text" id="name" name="name" value={t.name} className="oms-spacing-80" size="10" maxLength="10" onChange={fc} /></div>
+        
+/*    set active options */
+      activeLabel = <div>Active :</div>
+      activeSelect = <div><select id="active" name="active" value={t.active} onChange={fc} ><option value="N">N</option><option value="Y">Y</option></select></div>
+
+/*    specify select options for MISC field (which for Docks is the carrier type) */
+      miscLabel = <div>Carrier Type:</div>
+      miscListSelect = <select id="misc" name="misc" value={t.misc} onChange={fc} ><option value="">---</option> <option value="S">S</option><option value="TR">Train</option><option value="TT">TankTruck</option></select>
+
+/*    specify select options for "carrier present" */
+      inTagLabel = <div>Carrier Present? : </div>
+      inTagSelect = <select id="inTagId" name="inTagId" value={t.inTagId} onChange={fc} >{sensorList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
+
+/*    specify select options for the outTagList (which are Stations) */
+      outListLabel = <div style={midStyle}>Dock stations: </div>
+      outListSelect =  <select id="outTagList" name="outTagList" value={t.outTagList} multiple="T" size="6" onChange={fc} >{stnList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
+    } else {
+      nameInput = <div><input type="text" id="name" name="name" value={t.name} className="oms-spacing-80" size="10" maxLength="10" onChange={fc} readOnly="readonly" /></div> 
+    }
 
 
     return(
@@ -78,7 +96,7 @@ class DockForm extends Component {
               <td className="oms-top">
 
       <form id="tagForm" onSubmit={(e) => {tup(e)}} >
-        Please enter your tag information 
+        Please add the carrier to your dock information 
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
@@ -90,9 +108,7 @@ class DockForm extends Component {
             <th className="oms-spacing-180">Name (10 chars):</th>
             <td className="oms-spacing">
               <input type="hidden" name="id" value={t.id} />
-              <input type="text" id="name" name="name" value={t.name} 
-                     className="oms-spacing-80" size="10" maxLength="10"
-                     onChange={fc} />
+              {nameInput}
             </td>
           </tr>
           <tr>
@@ -108,14 +124,8 @@ class DockForm extends Component {
             <td className="oms-spacing">{miscListSelect}</td>
           </tr>
           <tr>
-            <th className="oms-spacing-180">Active:</th>
-            <td className="oms-spacing">
-              <select id="active" name="active" value={t.active} 
-                      onChange={fc} >
-                <option value="N">N</option>
-                <option value="Y">Y</option>
-              </select>
-            </td>
+            <th className="oms-spacing-180">{activeLabel}</th>
+            <td className="oms-spacing">{activeSelect}</td>
           </tr>
           <tr>
             <th className="oms-spacing-180">{inTagLabel}</th>
@@ -126,7 +136,7 @@ class DockForm extends Component {
             <td className="oms-spacing">{outTagSelect}</td>
           </tr>
           <tr>
-            <th className="oms-spacing-180">{outListLabel}</th>
+            <th className="oms-spacing-180" style={midStyle}>{outListLabel}</th>
             <td className="oms-spacing">{outListSelect}</td>
           </tr>
           <tr>

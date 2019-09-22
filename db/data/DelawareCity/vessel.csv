@@ -1,7 +1,7 @@
 Table,vessel,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,id
-customer,id,name,customer_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+id,tag,id,name
+customer_id,customer,id,name
 Data
 id,name,quantity,customer_id
 TC314,TankCar1,820.0,Customer 1

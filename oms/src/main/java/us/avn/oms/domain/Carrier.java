@@ -24,6 +24,7 @@ import java.util.Collection;
  * 
  * @author Allan
  * 
+ * Truck sizes: 
  * Quantities are 5000 - 11600 gal
  *                119  - 276 bbl
  */

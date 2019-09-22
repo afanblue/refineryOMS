@@ -19,6 +19,7 @@ package us.avn.oms.mapper;
 import java.util.Collection;
 
 import us.avn.oms.domain.Carrier;
+import us.avn.oms.domain.Hold;
 
 
 public interface CarrierMapper {
@@ -26,5 +27,11 @@ public interface CarrierMapper {
 	Collection<Carrier> getAllCarriers( );
 	
 	Carrier getCarrier( Long id );
+	
+	Collection<Hold> getHolds(Long id );
+	
+	void insertHold( Hold h );
+	
+	void updateHold( Hold h );
 	
 }

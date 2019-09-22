@@ -17,7 +17,7 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 
 public class Xfer extends OMSObject implements Serializable {
@@ -29,10 +29,10 @@ public class Xfer extends OMSObject implements Serializable {
          scan_time: NULL
 */
 	
-	private Long    id;
-	private Integer updated;
-	private Double  floatValue;
-	private Date    scanTime;
+	private Long     id;
+	private Integer  updated;
+	private Double   floatValue;
+	private Instant  scanTime;
 	
 	public Xfer()  {}
 	
@@ -40,7 +40,7 @@ public class Xfer extends OMSObject implements Serializable {
 		this.id = id;
 		this.floatValue = fv;
 		this.updated = 1;
-		this.scanTime = new Date();
+		this.scanTime = Instant.now();
 	}
 	
 	
@@ -71,11 +71,11 @@ public class Xfer extends OMSObject implements Serializable {
 	}
 
 
-	public Date getScanTime() {
+	public Instant getScanTime() {
 		return scanTime;
 	}
 
-	public void setScanTime(Date st ) {
+	public void setScanTime(Instant st ) {
 		this.scanTime = st;
 	}
 

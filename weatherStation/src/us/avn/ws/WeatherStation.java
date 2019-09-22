@@ -18,11 +18,12 @@ package us.avn.ws;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * WeatherStation
@@ -38,6 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * Fields:  type  -- type of WeatherStation
  *          loc   -- "location" of the data.  This can sometimes have a peculiar meaning
+ *          zoned -- boolean indicating where the time returned is given in local "epoch"
+ *          		 or UTC "epoch".
  *
  * @author AVN, 2018-09-10
  *
@@ -53,11 +56,12 @@ public abstract class WeatherStation {
 	
 	protected String type;
 	protected String loc;
+	protected boolean zoned;  // T if time returned is local; F if time is UTC
 	protected String wURL;
     protected String weatherUrl;
     protected String[] wsConditionNames;
 
-	protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	protected DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	protected static String[] conditionNames= { WS_TIME, WS_TEMPERATURE, WS_PRESSURE, WS_WIND_SPEED
     		                                  , WS_WIND_DIRECTION, WS_LAST_HOUR_PRECIP };
 
@@ -66,11 +70,12 @@ public abstract class WeatherStation {
 	public WeatherStation( String t, String l ) {
 		this.type = t;
 		this.loc = l;
+		this.zoned = true;
 	}
 
 	
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -79,16 +84,22 @@ public abstract class WeatherStation {
 
 	
     public String getLocation() {
-		return loc;
+		return this.loc;
 	}
 
 	public void setLocation(String loc) {
 		this.loc = loc;
 	}
 
-
+	public boolean isZoned() {
+		return this.zoned;
+	}
+	
+	public void setZoned( boolean z ) {
+		this.zoned = z;
+	}
 	public String getWeatherUrl() {
-		return weatherUrl;
+		return this.weatherUrl;
 	}
 
 	public void setWeatherUrl(String weatherUrl) {
@@ -97,7 +108,7 @@ public abstract class WeatherStation {
 
 	
 	public String[] getWsConditionNames() {
-		return wsConditionNames;
+		return this.wsConditionNames;
 	}
 
 	public void setWsConditionNames(String[] wsConditionNames) {
@@ -105,12 +116,12 @@ public abstract class WeatherStation {
 	}
 
 	
-	public SimpleDateFormat getSdf() {
-		return sdf;
+	public DateTimeFormatter getDtf() {
+		return this.dtf;
 	}
 
-	public void setSdf(SimpleDateFormat sdf) {
-		this.sdf = sdf;
+	public void setDtf(DateTimeFormatter sdf) {
+		this.dtf = sdf;
 	}
 
 	
@@ -121,7 +132,8 @@ public abstract class WeatherStation {
         
         String json;
 		try {
-			mapper.setDateFormat(sdf);
+//			mapper.setDateFormat(dtf.);
+			mapper.registerModule( new JavaTimeModule());
 			json = mapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
 			StringWriter sw = new StringWriter();

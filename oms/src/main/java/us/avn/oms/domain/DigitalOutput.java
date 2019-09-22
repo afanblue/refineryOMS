@@ -17,7 +17,8 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
+
 
 
 /*
@@ -38,19 +39,19 @@ public class DigitalOutput extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
-	protected Long    tagId;
-	protected Tag     tag;
-	protected String  histTypeCode;
-	protected String  valueView;
-	protected Long    isNew;
-	protected Double  scanValue;
-	protected Date    scanTime;
- 	protected Double  prevValue;
-	protected Date    prevTime;
- 	protected Double  lastHistValue;
- 	protected Date    lastHistTime;
- 	protected Integer intSinceLhs;
-    protected Integer intScanTime;
+	protected Long     tagId;
+	protected Tag      tag;
+	protected String   histTypeCode;
+	protected String   valueView;
+	protected Long     isNew;
+	protected Double   scanValue;
+	protected Instant  scanTime;
+ 	protected Double   prevValue;
+	protected Instant  prevTime;
+ 	protected Double   lastHistValue;
+ 	protected Instant  lastHistTime;
+ 	protected Integer  intSinceLhs;
+    protected Integer  intScanTime;
 
  	public DigitalOutput() { }
  	
@@ -131,11 +132,11 @@ public class DigitalOutput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getScanTime() {
+	public Instant getScanTime() {
 		return scanTime;
 	}
 
-	public void setScanTime(Date scanTime) {
+	public void setScanTime(Instant scanTime) {
 		this.scanTime = scanTime;
 	}
 
@@ -149,11 +150,11 @@ public class DigitalOutput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getPrevTime() {
+	public Instant getPrevTime() {
 		return prevTime;
 	}
 
-	public void setPrevTime(Date prevTime) {
+	public void setPrevTime(Instant prevTime) {
 		this.prevTime = prevTime;
 	}
 
@@ -167,11 +168,11 @@ public class DigitalOutput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getLastHistTime() {
+	public Instant getLastHistTime() {
 		return lastHistTime;
 	}
 
-	public void setLastHistTime(Date lastHistTime) {
+	public void setLastHistTime(Instant lastHistTime) {
 		this.lastHistTime = lastHistTime;
 	}
 

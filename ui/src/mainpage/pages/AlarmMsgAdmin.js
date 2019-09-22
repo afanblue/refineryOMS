@@ -96,10 +96,10 @@ class AlarmMsgAdmin extends Component {
     const clsMthd = "AlarmMsgAdmin.handleUpdate";
     const id = this.state.msg.id;
     let method = "PUT";
-    let url = "http://localhost:8080/oms/alarm/message/update";
+    let url = SERVERROOT + "/alarm/message/update";
     if( id === 0 ) {
       method = "POST";
-      url = "http://localhost:8080/oms/alarm/message/insert";
+      url = SERVERROOT + "/alarm/message/insert";
     }
     const b = JSON.stringify(this.state.msg);
     const request = async () => {

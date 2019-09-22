@@ -15,11 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+import moment    from 'moment';
 
 
-export function Order(i,ci,c,cri,cr,a,p,xd,ad,xv,av) { 
+export function Order(i,ci,c,cri,cr,a,p,xd,ad,xv,av) {
+  let fmt = "YYYY-MM-DD";
+  let now = moment().format(fmt);
   this.shipmentId=i; this.customerId=ci; this.customer=c; this.carrierId=cri;
-  this.carrier=cr; this.active=a; this.purchase=p; this.expDate=xd; this.actDate=ad;
+  this.carrier=cr; this.active=a; this.purchase=p; 
+  this.expDate = (xd===null)?now:moment.utc(xd*1).format(fmt); 
+  this.actDate = (ad===null)?"":moment.utc(ad*1).format(fmt);
   this.expVolume=xv; this.actVolume=av; this.items=null;
 }
 

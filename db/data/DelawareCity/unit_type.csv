@@ -1,5 +1,5 @@
 Table,unit_type,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
 Data,,,
 name,code
 length,L

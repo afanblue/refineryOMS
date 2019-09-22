@@ -276,12 +276,16 @@ public class RPN2 {
         switch (operation) {
         	case ".":
         		result = op1;
+        		break;
         	case "&":
         		result = ((op1!=0) && (op2!=0))?1D:0D;
+        		break;
         	case "|":
         		result = ((op1!=0) || (op2!=0))?1D:0D;
+        		break;
         	case "!":
         		result = (op1!=0)?0:1;
+        		break;
             case "+":
                 result = op1 + op2;
                 break;

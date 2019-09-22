@@ -1,9 +1,9 @@
 Table,unit,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-unit_type,id,name,unit_type_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+unit_type_id,unit_type,id,name
 Data,,,
 name,code,unit_type_id
-,---,length
+none,---,length
 meter,m,length
 foot,ft,length
 deg F,°F,temperature

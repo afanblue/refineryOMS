@@ -86,10 +86,10 @@ class AlarmTypeAdmin extends Component {
     const id = this.state.type.id;
     const clsMthd = "AlarmTypeAdmin.typeUpdate";
     let method = "PUT";
-    let url = "http://localhost:8080/oms/alarm/type/update";
+    let url = SERVERROOT + "/alarm/type/update";
     if( id === 0 ) {
       method = "POST";
-      url = "http://localhost:8080/oms/alarm/type/insert";
+      url = SERVERROOT + "/alarm/type/insert";
     }
     const b = JSON.stringify(this.state.type);
     const request = async () => {

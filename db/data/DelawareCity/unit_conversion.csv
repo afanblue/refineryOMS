@@ -1,10 +1,10 @@
 Table,unit_conversion,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-unit,id,name,from_id
-unit,id,name,to_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+from_id,unit,id,name
+to_id,unit,id,name
 Data,,,
 from_id,to_id,offset,factor
-,,0.0,1.0
+none,none,0.0,1.0
 meter,meter,0.0,1.0
 meter,foot,0.0,3.28084
 deg F,deg C,32.0,1.8

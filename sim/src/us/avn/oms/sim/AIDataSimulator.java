@@ -17,9 +17,9 @@
 package us.avn.oms.sim;
 
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -81,7 +81,7 @@ public class AIDataSimulator {
 
 		wds.updateWatchdog(Watchdog.DCAI);
 		
-		configuration = getSystemConfiguration(cs);
+		configuration = cs.getAllConfigItems();
 		
 		HashMap<String,Double> cc = new HashMap<String,Double>();
 //			get the current conditions
@@ -106,9 +106,10 @@ public class AIDataSimulator {
 				cc = ws.getCurrentConditions();
 			}
 
-		Date currentScanTime = new Date();
+		Instant currentScanTime = null;
 		if(null != cc.get(WeatherStation.WS_TIME)) {
-			currentScanTime = new Date(new Long(cc.get(WeatherStation.WS_TIME).longValue()));
+			currentScanTime = Instant.ofEpochSecond(cc.get(WeatherStation.WS_TIME).longValue());
+			log.debug("WeatherStation time: "+currentScanTime.toString());
 		}
 		Double currentTemp = (Double)cc.get(WeatherStation.WS_TEMPERATURE); 
 		Double currentPressure = (Double)cc.get(WeatherStation.WS_PRESSURE);
@@ -181,23 +182,12 @@ public class AIDataSimulator {
 	}
 	
 
-	private static HashMap<String,String> getSystemConfiguration( ConfigService cs ) {
-		HashMap<String,String> cfg = new HashMap<String,String>();
-		Iterator<Config> iat = cs.getAllConfigurationItems().iterator();
-		while( iat.hasNext() ) {
-			Config c = iat.next();
-			cfg.put(c.getKey(), c.getValue());
-		}
-		return cfg;
-	}
-	
-	
 	private static void checkTransfers( AnalogInputService ais, TankService tks
 			                          , TransferService tfs, XferService xs) {
 		Iterator<Transfer> ix = tfs.getActiveTransfers().iterator();
 		while( ix.hasNext() ) {
 			Transfer x = ix.next();
-			Double delta = computeChange( x, tks );
+			Double delta = computeChange( x );
 			log.debug("Transfer "+x.getName()+"/"+x.getId()+" - Change: "+delta);
 			decrementSource( x.getSourceId(), delta );
 			incrementDestination( x.getDestinationId(), delta );
@@ -208,13 +198,18 @@ public class AIDataSimulator {
 
 
 	/**
-	 * Method: computeChange
-	 * Description: determine the change in volume! for a transfer
-	 * Notes: This is where the magic occurs!
+	 * Determine the change in volume! for a transfer
+	 * {@code This is where the magic occurs!
+	 *      * Transfers are only allowed between refinery units (RU),
+	 *        tanks (TK), and docking stations (STN).
+	 *      * Docking stations exist for Ships, Tank Trucks and Tank Cars
+	 *      * If the docking station is a source, it MUST be crude and the 
+	 *        destination MUST be a crude tank.
 	 *      * We assume that this is called once a minute and 
-	 *        return that value
+	 *        returns the appropriate value
 	 *      * FWIW, I don't know if these numbers are anywhere near
 	 *              reasonable.
+	 *      
 	 * 		+-----------------------------+-----------------------+
 	 * 		|    Between                  |  Amount Transferred   |
 	 *      +-----------------------------+-----------------------+
@@ -240,11 +235,11 @@ public class AIDataSimulator {
 	 *      +-----------------------------+-----------------------+
 	 *      | anything else               |     0 (no transfer)   |
 	 *      +-----------------------------+-----------------------+
-	 *      
-	 * @param x
-	 * @return
+	 * }    
+	 * @param x transfer to update
+	 * @return volume change (from source to destination)
 	 */
-	private static Double computeChange( Transfer x, TankService tks ) {
+	private static Double computeChange( Transfer x ) {
 		Double delta;
 		log.debug(x.toString());
 		Tag src = tgs.getTag(x.getSourceId());
@@ -254,6 +249,7 @@ public class AIDataSimulator {
 		switch ( src.getTagTypeCode() ) {
 			case Tag.TANK :
 				Tank srcTk = tks.getTank(x.getSourceId());
+				/* tank - tank transfer */
 				if( Tag.TANK.equals(dest.getTagTypeCode())) {
 					Tank destTk = tks.getTank(x.getDestinationId());
 					if( srcTk.getContentTypeCode().equals(destTk.getContentTypeCode())) {
@@ -265,22 +261,24 @@ public class AIDataSimulator {
 					} else {
 						delta = 0D;
 					}
+				/* tank - refinery unit transfer */
 				} else if( Tag.REFINERY_UNIT.equals(dest.getTagTypeCode())) {
-					delta = Transfer.FAST;
+					if( Tank.CRUDE.equals(srcTk.getContentTypeCode())) {
+						delta = Transfer.FAST;
+					} else {
+						delta = 0D;
+					}
+				/* tank - docking station transfer */
 				} else {
 					if ( Tank.CRUDE.equals(srcTk.getContentTypeCode()) ) {
 						delta = 0D;
 					} else {
-						if ( Tag.SHIP.equals(dest.getTagTypeCode())) {
+						if ( Tag.STATION.equals(dest.getMisc())) {
 							delta = Transfer.FAST;
-						} else if ( Tag.TANK_CAR.equals(dest.getTagTypeCode())) {
+						} else if ( Tag.TANK_CAR.equals(dest.getMisc())) {
 							delta = Transfer.FAST;
-						} else if ( Tag.TANK_TRUCK.equals(dest.getTagTypeCode())) {
+						} else if ( Tag.TANK_TRUCK.equals(dest.getMisc())) {
 							delta = Transfer.SLOW;
-						} else if ( Tag.SHIP.equals(dest.getTagTypeCode())) {
-							delta = Transfer.FAST;
-						} else if ( Tag.DOCK.equals(dest.getTagTypeCode())) {
-							delta = Transfer.FAST;
 						} else {
 							delta = 0D;
 						}
@@ -289,15 +287,18 @@ public class AIDataSimulator {
 				break;
 			case Tag.REFINERY_UNIT :
 				Tank destTk = tks.getTank(x.getDestinationId());
-				String code = destTk.getContentType().toUpperCase().concat("-PERCENT");
-				String fString = (String)configuration.get(code);
-				fString = (fString==null?"0":fString);
-				log.debug("Fraction: "+destTk.getContentTypeCode()+" = "+fString);
-				Double f = new Double( fString );
-				delta = Transfer.FAST * f / 100D;
+				if( Tank.CRUDE.equals(destTk.getContentTypeCode())) {
+					delta = 0D;
+				} else {
+					String code = destTk.getContentType().toUpperCase().concat("-PERCENT");
+					String fString = (String)configuration.get(code);
+					fString = (fString==null?"0":fString);
+					log.debug("Fraction: "+destTk.getContentTypeCode()+" = "+fString);
+					Double f = new Double( fString );
+					delta = Transfer.FAST * f / 100D;
+				}
 				break;
-			case Tag.SHIP :
-			case Tag.DOCK :
+			case Tag.STATION :
 				Tank dstTk = tks.getTank(x.getDestinationId());
 				if( Tag.TANK.equals(dest.getTagTypeCode())) {
 					if( Tank.CRUDE.equals(dstTk.getContentTypeCode())) {

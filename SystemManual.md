@@ -33,6 +33,16 @@ This is all done w/Spring REST and myBatis.  That should be enough information.
 -  the services are defined in the ```oms-shared``` project, i.e., ```src/main/java/us.avn.oms.service``` and implemented in the ```impl``` subdirectory of the services, i.e., ```src/main/java/us.avn.oms.service.impl```.
 ---
 
+### Date handling (2019-09-10)
+
+I haven't come up w/an elegant method for handling dates and time stamps.  What I have attempted to implement is letting Java and the DB handle the time stamps in their own particular formats (e.g., MySQL TIMESTAMPS and Java Instance).  This leaves the (hard) part to formatting the dates appropriately in the npm/react code.  I have tried to use the objects to format the dates to their needed strings and let the UI handle all dates and times as strings.  Then when returning the data back to the application server, (typically in the xxxxAdmin code), I convert the string back to a timestamp.
+
+The DB maintains the timestamp in GMT (Zulu), so in the conversions to and fro, you'll need to include the local time zone.  I use moment.utc and moment.unix
+
+There aren't a lot of timestamps where this needs to be done.  Alarms, Orders (Shipments) and Transfers are the big ones.
+
+I'm using the ```moment``` package to handle the parsing and formatting. 
+
 ### Adding a new page
 
 Pages are viewable (i.e., appear in your menu list) based on privileges, which are assigned to roles, which are assigned to users.  There are two privileges associated w/a page, a "view" privilege and an "execute" privilege.  
@@ -144,23 +154,29 @@ I like to think of these as intuitively obvious, but there are some properties o
    ---
    | Code | Name | Description |
    | ------------- | ------------ | --------------------- |
+
+
+
+
    | ```AI``` | ```AnalogInput``` | Field sensor analog |
    | ```AO``` | ```AnalogOutput``` | Analog Output value |
    | ```C```  | ```CalculatedVariable``` | Calculated Variable |
-   | ```CB``` | ```ControlBlock``` | Field control device |
+   | ```CB``` | ```ControlBlock``` | Field control device (not used) |
+   | ```CT``` | ```Container``` | Shipping container (not used) |
    | ```DI``` | ```DigitalInput``` | Field sensor digital |
    | ```DK``` | ```Dock``` | DockNumber |
    | ```DO``` | ```DigitalOutput``` | Digital output |
    | ```FLD``` | ```Field``` | Refinery field |
    | ```HS``` | ```Hot Spot``` | Hot spot (link to another page, not needed?) |
    | ```P``` | ```Pipe``` | Field pipe |
-   | ```PG``` | ```PlotGroup``` | Group of tags for pre-defined plots |
+   | ```PG``` | ```PlotGroup``` | Group of tags for pre-defined plots (not used) |
    | ```PMP``` | ```Pump``` | Pump |
    | ```PU``` | ```ProcessUnit``` | Refinery Process Unit |
    | ```RU``` | ```RefineryUnit``` | Refinery Unit |
    | ```S``` | ```Ship``` | Ship |
    | ```SCM``` | ```Schematic``` | Refinery Schematic |
    | ```SCO``` | ```SchematicObject``` | Objects for Refinery Schematics |
+   | ```STN``` | ```DockingStation``` | Pumping points for a Dock |
    | ```T``` | ```Train``` | Train, e.g., collection of tank cars |
    | ```TC``` | ```TankCar``` | Railroad tank car |
    | ```TK``` | ```Tank``` | Liquid container |
@@ -280,10 +296,14 @@ This is how the processing works:
 
 ### Docks
 
-Docks are the stationary locations for ships.  Ships must be defined entities and can be related to them via a REL_TAG_TAG record when they are docked.  Under "real" circumstances, this would be a manual process.  An operator would assign a dock to a ship and a sensor would trip when the ship had actually docked.  In the meantime, the simulator creates the relationship and sets the ship present indicator.  The transfer is then created and processed.  When the transfer is complete, the simulator deletes the relationship and clears the ship present flag.
+Docks are the stationary locations for ships, trains and trucks.  Docks have "stations" which are the locations of the pumps used to move contents to or from the ship, truck or train car.  All of these carriers must be defined entities and can be related to them via a REL_TAG_TAG record when they are docked.  Under "real" circumstances, this would be a manual process.  An operator would assign a dock to a ship and a sensor would trip when the ship had actually docked.  In the meantime, the simulator creates the relationship and sets the ship present indicator.  The transfer is then created and processed.  When the transfer is complete, the simulator deletes the relationship and clears the ship present flag.
 
 Docks are implemented as a special usage of a Tag.  For a dock the input tag is the ID of the digital input which specifies that a carrier (ship, train, truck) is present at the dock.  The "output" tag is the ID of the carrier present at the dock.
 N.B., trains are problematic because they actually consist of multiple tank cars which must be treated individually.
+
+### Docking Stations
+
+Associated with docks are docking stations (STN) 
 
 ### Fields
 
@@ -327,8 +347,13 @@ Here, we make the simplifying assumption that all shipping vessels contain the s
 
 Containers specify the discrete holds in a ship or a train (the tank cars).  As such a container has only 
 
-Ships tie up at docks at which they are unloaded or loaded.  Also, a ship has multiple holds from which/to which product is transferred.   
+Ships tie up at docks at which they are unloaded or loaded.  Also, a ship has multiple holds from which/to which product is transferred.
 
+Ships (tag type = "S")  
+Trains (tag type = "TR")
+Trucks (tag type = "TT")
+
+All three of these are implemented as tags.  Their owner is specified in a relationship where the ship/train/truck ID is the parent tag ID and the customer ID is the child tag ID.  The value of the code is "C". 
 ### Tags
 
 Tags are the root definition object.  The meaning of most of the Tag fields is self-evident, but the "inTag" (inTagId), "outTag" (outTagId), "inTagList", and "outTagList" probably need some additional explanation.  The usage of these tags is dependent on the tag type.  The names also originate in Control Blocks (CB) which needed an input tag for the process variable and an output tag for the output.  All of these relationships are defined in the REL_TAG_TAG table and (mostly) require codes to discriminate between their usage. 
@@ -388,9 +413,43 @@ The volume is computed using interpolations with the VOLUME table.  The units ar
 
 Transfers are the objects that define how oil and refined products are transferred from one place to another.  This could be from a ship to a tank, from a crude oil tank to a refining unit, from a refining unit to a refined products tank, from a refined project tank to a ship or a tank car or a tank truck, or even from one tank to another tank which has the same contents.  (NB, not sure that check is made...).
 
-Transfers exist as either a template or as an executable transfer.  Templates are used as (wait for it) templates to create executable transfers, i.e., they are a method to schedule a transfer.  When the ```transfer``` processor runs, it checks to see if a template is due to be started.  If so, it will create the transfer as an executable transfer.
+Transfers exist as either a template or as an executable transfer (i.e., the transfer type, see the ```transfer_type_vw```).  Templates are used as (wait for it) templates to create executable transfers, i.e., they are a method to schedule a transfer.  When the ```transfer``` processor runs, it checks to see if a template is due to be started.  If so, it will create the transfer as an executable transfer.
 
+Transfers also have a status, 
+
+  ---
+  | id | name       | code | value | description                     |
+  |  1 | Active     | A    |     0 | Transfer currently in progress  |
+  |  2 | Complete   | C    |     1 | Transfer complete               |
+  |  4 | Incomplete | I    |     3 | Transfer not completely defined |
+  |  5 | Pending    | P    |     4 | Transfer waiting on activation (mostly (?) templates) |
+  |  3 | Scheduled  | S    |     2 | Transfer scheduled, completely defined, but not yet time to activate |
+  ---
 Transfers are somewhat different from other objects, e.g., Analog Inputs or Digital Inputs, in that only templates or ad hoc transfers have a record in the TAG table.  All scheduled transfers assume the tag ID of the template that they were created from.  This is implemented with a TAG_ID field in the TRANSFER table.
+
+Events that should create a transfer
+ - vessel (tag type: S=ship; T=train; TT=tank truck) appears at dock
+ - daily transfer from crude tank to refining unit
+ - daily transfer from refining unit to product tanks
+
+Daily transfers are based on templates which start at midnight and last for one day.  At the end of the day, they are completed and new ones begun, assuming that the refinery unit is on.  The transfer from the crude unit(s) is done FROM the two fullest tanks to the refinery units.  The transfers to the product tanks is done TO the emptiest product tanks.  The transfers to the product tanks for a given product should NOT be to the same tank.
+
+If a vessel appears at a dock, then there must be an order associated with it.
+
+How do we know that the vessel is present at the dock?
+- there is a vessel (tag type: T, TT, S) which has a REL_TAG_TAG record as a child to the dock (parent).  This record is created manually by an operator (!) or automagically by the simulator. 
+- the digital indicator for the vessel is set, as part of the manual process or (again) automagically by the simulator
+- every ten minutes (?) the transfer program checks for the presence of a vessel by checking for docks that have a vessel present via a) the digital indicator and b) a child RTT record of code CRR. 
+
+How do we identify the vessel?  The vessel can be determined by the RTT record of code CRR.  Tank Trucks and Ships appear (presumably) repeatedly.  Trains, again, presumably, do not, since the contents are received from/delivered to different customers w/different tank cars.  OTOH, trains can be treated the same as Ships and TankTrucks, but a new Tag will be created for every train.
+
+What do we do once we find a vessel at a dock?  Is the process the same for Ships, Trains, and TankTrucks? (I think so)
+- look for a template associated w/that dock and that product type
+- create a new transfer to be started ASAP
+- turn on the associated pumps
+- open the associated valves (and close others?)
+
+Once the transfer is complete, at some point the vessel needs to be undocked, either manually or, by the simulator, automagicially
 
 When a transfer is started or stopped, the ```transfer``` program starts or stops pumps and opens or closes the valves related to that transfer.  The dilemma for tanks that have separate pumps, valves, or pipes for different destinations, e.g., from the docks to the crude tanks, from the refined product tanks to the docks, from the crude tanks to the refinery units is to correctly identify the objects that ought to be opened/closed, started/stopped.  Another way to say this is, does this source/destination pump/valve/pipe affect the given destination/source ?  Example: we don't want to open a valve to refinery unit 2 if the tank is supplying refinery unit 1. 
 
@@ -411,7 +470,7 @@ My naming convention is for pumps, valves, and pipes.  If there's any other tag 
 
 so the idea is that I do a regex on the name.  If there's no match, then the refinery unit isn't coded in the name and i can safely execute the action, i.e., start/stop/open/close/on/off.  If there is a match, then i have to figure out the tank (first two digits, for valves and pumps) and the refinery unit (third digit).  Except for pipes, where if it matches, the digit determines the refinery unit.  Also, the ACTUAL regex pattern used has to include the tank's contents code, which means I append the pattern to the contents code from the tank or pipe.  (note the assumption: all pumps and valves w/this problem are associated w/a tank.  Pipes use the **misc** field to specify what's being transferred in this pipe)
 
-For valves the {o|i} is an indicator whether the valve is input or output, though that's mostly for uniqueness and user "friendliness".  Uniqueness because valves are present for both input and output.
+For valves the {o|i} is an indicator whether the valve is output or input, though that's mostly for uniqueness and user "friendliness".  Uniqueness because valves are present for both input and output.
 
 ### 
 ### Watchdogs

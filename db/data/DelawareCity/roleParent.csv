@@ -1,5 +1,5 @@
-Table,roleParent,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+Table,role,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
 Data,,,
 name,active
 Admin,Y

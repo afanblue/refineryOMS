@@ -17,10 +17,15 @@
 package us.avn.ws;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 
 public class TestWS {
+
+	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	public TestWS() {
 		
@@ -37,9 +42,8 @@ public class TestWS {
 	            String key =name.toString();
 	            String value = cc.get(name)!=null?cc.get(name).toString():"(null)";
 	            if( "time".equals(key) ) {
-	            	Date d = new Date(new Long(cc.get(name).longValue()));
-	            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	            	value = sdf.format(d);
+	            	Instant d = Instant.ofEpochSecond(cc.get(name).longValue());
+	            	value = d.toString();
 	            } 
 	            System.out.println(key + " " + value);
 			}

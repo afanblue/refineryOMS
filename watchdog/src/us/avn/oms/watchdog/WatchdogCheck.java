@@ -18,7 +18,6 @@ package us.avn.oms.watchdog;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,7 +38,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import us.avn.oms.domain.Config;
 import us.avn.oms.domain.Watchdog;
 import us.avn.oms.service.ConfigService;
 import us.avn.oms.service.WatchdogService;
@@ -62,8 +60,6 @@ public class WatchdogCheck extends TimerTask {
     private ApplicationContext context = null;
     private ConfigService cfgs = null;
     private WatchdogService wds = null;
-
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private Long emailInterval;
     private HashMap<Long,Long> lastUpdateCount = new HashMap<Long,Long>(10);
@@ -89,7 +85,7 @@ public class WatchdogCheck extends TimerTask {
 		if( cfgs == null ) { cfgs = (ConfigService) context.getBean("configService"); }
 		if( wds  == null ) { wds  = (WatchdogService) context.getBean("watchdogService"); }
 		
-		configuration = getSystemConfiguration( cfgs );
+		configuration = cfgs.getAllConfigItems();
 		Collection<Watchdog> cwd = wds.getActiveWatchdogs();
 		log.debug("Active watchdogs: "+cwd.size());
 		Iterator<Watchdog> iwd = cwd.iterator();
@@ -119,16 +115,6 @@ public class WatchdogCheck extends TimerTask {
 		if( 0 < deadDogs.length() ) {
 			sendMail(deadDogs.toString());
 		}
-	}
-	
-	private static HashMap<String,String> getSystemConfiguration( ConfigService cs ) {
-		HashMap<String,String> cfg = new HashMap<String,String>();
-		Iterator<Config> iat = cs.getAllConfigurationItems().iterator();
-		while( iat.hasNext() ) {
-			Config c = iat.next();
-			cfg.put(c.getKey(), c.getValue());
-		}
-		return cfg;
 	}
 	
 

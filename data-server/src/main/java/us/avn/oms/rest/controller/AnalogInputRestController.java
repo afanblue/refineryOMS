@@ -99,7 +99,7 @@ public class AnalogInputRestController {
 		History h = new History();
 		h.setId(id);
 		h.setY(ai.getScanValue());
-		h.setX(ai.getScanTime().getTime()/1000L);
+		h.setX(ai.getScanTime().getEpochSecond());
 		Collection<History> ch = histService.getTagHistory(hr);
 		ch.add(h);
 		hd.setAiTag(ai);

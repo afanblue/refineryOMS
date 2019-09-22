@@ -1,7 +1,7 @@
 Table,role_priv,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-role,id,name,role_id
-privilege,id,name,priv_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+role_id,role,id,name
+priv_id,privilege,id,name
 Data,,,
 role_id,priv_id
 Admin,Acknowledge Alarms
@@ -70,4 +70,5 @@ Operator,View Users
 Operator,View Carriers
 Operator,View Orders
 Operator,Admin Docks
+Operator,DockVessel
 End

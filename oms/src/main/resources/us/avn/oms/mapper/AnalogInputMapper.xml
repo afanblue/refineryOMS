@@ -197,7 +197,7 @@
          , slope = #{slope}
          , raw_value = #{rawValue}
          , scan_value = #{scanValue}
-         , scan_time = coalesce(#{scanTime},now())
+         , scan_time = coalesce(#{scanTime},utc_timestamp())
          , prev_value = #{prevValue}
          , prev_time = #{prevTime}
          , last_hist_value = #{lastHistValue}

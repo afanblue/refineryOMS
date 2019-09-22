@@ -19,6 +19,7 @@ package us.avn.oms.service;
 import java.util.Collection;
 
 import us.avn.oms.domain.Carrier;
+import us.avn.oms.domain.Hold;
 
 
 public interface CarrierService {
@@ -30,5 +31,11 @@ public interface CarrierService {
 	public Long updateCarrier( Carrier c );
 
 	public Long insertCarrier( Carrier c );
+	
+	public Collection<Hold> getHolds( Long id );
+	
+	public void updateHold( Hold h );
+	
+	public void insertHold( Hold h );
 
 }

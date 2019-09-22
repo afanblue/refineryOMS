@@ -1,6 +1,6 @@
 Table,tank,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+id,tag,id,name
 Data,,,
 id,api,density,height,diameter,units,content_type_code
 CT01,32.6,0.862,40.0,300.0,ft,C

@@ -57,6 +57,7 @@ public class Config implements Serializable {
 	public static final String SHIP_PRESENT_NAME = "SHIP-PRESENT-NAME";
 	public static final String SMTP_HOST = "SMTP_HOST";
 	public static final String SMTP_PORT = "SMTP_PORT";
+	public static final String STATION_NAME_MASK = "STATION_NAME_MASK";
 	public static final String TANKCAR_PRESENT_NAME = "TANKCAR-PRESENT-NAME";
 	public static final String TANKTRUCK_PRESENT_NAME = "TANKTRUCK-PRESENT-NAME";
 	public static final String TRAIN_PRESENT_NAME = "TRAIN-PRESENT-NAME";

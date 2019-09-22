@@ -1,7 +1,7 @@
 Table,control_block,,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,id
-tag,id,name,tag_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+id,tag,id,name
+tag_id,tag,id,name
 Data,,,
 id,pv_id,sp_id
 RU1CP-DO,RU1CP-DI,None

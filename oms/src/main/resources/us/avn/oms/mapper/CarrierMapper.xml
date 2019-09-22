@@ -25,6 +25,12 @@
      <result property="quantity"        column="quantity"/>
   </resultMap>
 
+  <resultMap id="holdResultMap" type="Hold">
+    <result property="carrierId"       column="carrier_id" />
+    <result property="holdNo"          column="hold_no" />
+    <result property="volume"          column="volume" />
+    <result property="noDuplicates"    column="no_duplicates" />
+  </resultMap>
 
   <select id="getAllCarriers" resultMap="carrierResultMap">
     select t.id, t.name, t.description, t.tag_type_code, t.misc, t.active, s.quantity
@@ -43,5 +49,28 @@
               from hold group by carrier_id) s on t.id=s.id
    	 where t.id = #{param1}
   </select>
+  
+  <select id="getHolds" resultMap="holdResultMap">
+	select carrier_id, hold_no, volume, no_duplicates
+	  from hold where carrier_id = #{parm1}
+  </select>
+  
+  <update id="updateHold" parameterType="Hold">
+    update shipment
+       set volume = #{volume}
+         , no_duplicates = #{noDuplicates}
+     where carrier_id = #{carrierId}
+       and hold_no = #{holdNo}
+  </update>
+  
+  
+  <insert id="insertHold" parameterType="Hold" >
+    insert hold
+          ( carrier_id,   hold_no,   volume,    no_duplicates )
+    values( #{carrierID}, #{holdNo}, #{volume}, #{noDuplicates} )
+    on duplicate key update
+            volume = volume
+          , no_duplicates = noDuplicates
+  </insert>
 
 </mapper>

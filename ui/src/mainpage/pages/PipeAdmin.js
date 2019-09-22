@@ -151,10 +151,10 @@ class PipeAdmin extends Component {
     const pipe = Object.assign({},this.state.pipe);
     const id = pipe.id;
     let method = "PUT";
-    let url = "http://localhost:8080/oms/pipe/update";
+    let url = SERVERROOT + "/pipe/update";
     if( id === 0 ) {
       method = "POST";
-      url = "http://localhost:8080/oms/pipe/insert";
+      url = SERVERROOT + "/pipe/insert";
     }
     let pts = [];
     let vtxList = pipe.vtxList;

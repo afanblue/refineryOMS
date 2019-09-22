@@ -17,6 +17,7 @@
 package us.avn.oms.service;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.Transfer;
@@ -37,6 +38,10 @@ public interface TransferService {
 	Long getTransferStatusId( String code );
 	
 	Collection<IdName> getTransferTypes();
+	
+	HashMap<String,Long> getAllTransferTypes();
+	
+	HashMap<String,Long> getAllTransferStatuses();
 	
 	Long getTransferTypeId( String code );
 	

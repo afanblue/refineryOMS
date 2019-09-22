@@ -19,38 +19,32 @@
   
   
   <select id="getAllShips" resultMap="srm">
-    select s.id, s.full_name, c.id owner_id, c.name owner
-      from ship s join customer c on s.owner_id = c.id
-     order by s.full_name
+    select s.id, s.name, c.id owner_id, c.name owner
+      from tag s join rel_tag_tag rtt on s.id=rtt.parent_tag_id
+      join customer c on rtt.child_tag_id = c.id
+     where s.tag_type_code = 'S'
+       and rtt.code = 'C'
+     order by s.name
   </select>
 
   <select id="getShip" resultMap="srm">
-    select s.id, t.name, s.full_name, c.id owner_id, c.name owner 
+    select s.id, s.name, c.id owner_id, c.name owner
          , t.description, t.tag_type_code, t.active
-	  from ship s join tag t on s.id = t.id
-	  join customer c on s.owner_id=c.id
-	 where s.id = #{param1} 
+      from tag s join rel_tag_tag rtt on s.id=rtt.parent_tag_id
+      join customer c on rtt.child_tag_id = c.id
+     where s.tag_type_code = 'S'
+       and rtt.code = 'C'
+       and s.id = #{param1} 
   </select>
   
   <select id="getShipByName" resultMap="srm">
-    select s.id, t.name, s.full_name, c.id owner_id, c.name owner
+    select s.id, s.name, c.id owner_id, c.name owner
          , t.description, t.tag_type_code, t.active
-	  from ship s join tag t on s.id = t.id
-	  join customer c on s.owner_id = c.id
+      from tag s join rel_tag_tag rtt on s.id=rtt.parent_tag_id
+      join customer c on rtt.child_tag_id = c.id
+     where s.tag_type_code = 'S'
+       and rtt.code = 'C'
 	 where t.name = #{param1} 
   </select>
-  
-  <update id="updateShip" parameterType="Ship">
-    update ship
-       set full_name = #{fullName}
-         , ownerId = #{ownerId}
-     where id = #{id}
-  </update>
-  
-  <insert id="insertShip" parameterType="Ship">
-    insert ship
-         ( id, full_name, owner_id )
-   values( #{id}, #{fullName}, #{ownerId})
-  </insert>
-  
+    
 </mapper>

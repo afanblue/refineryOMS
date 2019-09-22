@@ -77,6 +77,7 @@ public class OrderRestController {
 		} else {
 			o.setItems(orderService.getOrderItems(id));
 		}
+		log.debug("Order ("+id+") "+o.toString());
 		return o;
 	}
 	

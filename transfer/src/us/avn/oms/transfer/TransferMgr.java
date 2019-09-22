@@ -19,7 +19,6 @@ package us.avn.oms.transfer;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,20 +35,16 @@ public class TransferMgr {
 		try {
 			x.execute(args);
 		} catch( Exception e ) {
-//			Date now = new Date();
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			String eas = sw.toString();
-//    		System.out.println(sdf.format(now) + eas.toString());	
 			slog.error(eas);
 		}
 	}
 	
 	/**
-	 * Method: execute
-	 * Description: start the thread that processes transfers.
-	 * 				start @ 15 seconds after the minute and run
-	 * 				every minute after that.
+	 * Start the thread that processes transfers.  start @ 15 seconds after 
+	 * the minute and run every minute after that.
 	 * 
 	 * @param args  used to specify when new transfers are created
 	 * 				from templates.  
@@ -71,11 +66,9 @@ public class TransferMgr {
         	try {
         		Thread.sleep( 60 * 60 * 1000);
         	} catch (Exception e) {
-//    			Date now = new Date();
     			StringWriter sw = new StringWriter();
     			e.printStackTrace(new PrintWriter(sw));
     			String eas = sw.toString();
-//        		System.out.println(sdf.format(now) + eas.toString());	
     			log.error(eas);
         	}
         }

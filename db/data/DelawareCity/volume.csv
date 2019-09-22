@@ -1,6 +1,6 @@
 Table,volume,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,tank_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+tank_id,tag,id,name
 Data,,,
 tank_id,level,volume
 CT01,0.0,0.0

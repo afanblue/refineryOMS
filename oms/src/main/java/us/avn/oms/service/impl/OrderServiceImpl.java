@@ -17,6 +17,7 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import us.avn.oms.domain.Item;
 import us.avn.oms.domain.Order;
@@ -39,8 +40,11 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public Order getOrder( Long id ) {
-		Order o = orderMapper.getOrder(id);
-		o.setItems(orderMapper.getOrderItems(id));
+		Order o = new Order(id);
+		if( id > 0 ) {
+			o = orderMapper.getOrder(id);
+			o.setItems(orderMapper.getOrderItems(id));
+		}
 		return o;
 	}
 	
@@ -51,7 +55,11 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public Collection<Item> getOrderItems( Long id ) {
-		return orderMapper.getOrderItems(id);
+		Collection<Item> ci = Collections.emptyList();
+		if( id > 0 ) {
+			ci = orderMapper.getOrderItems(id);
+		}
+		return ci;
 	}
 	
 	/**

@@ -44,13 +44,13 @@ class DockAdmin extends Component {
       siteLocation: null,
       carrierList: null,
       sensorList: null,
-      pumpList: null,
+      stationList: null,
       contentsList: null
     };
     this.finishCarrierFetch  = this.finishCarrierFetch.bind(this);
     this.finishCntntsFetch   = this.finishCntntsFetch.bind(this);
     this.finishListFetch     = this.finishListFetch.bind(this);
-    this.finishPumpListFetch = this.finishPumpListFetch.bind(this);
+    this.finishStnListFetch  = this.finishStnListFetch.bind(this);
     this.finishSensorFetch   = this.finishSensorFetch.bind(this);
     this.finishTagFetch      = this.finishTagFetch.bind(this);
     this.handleTagSelect     = this.handleTagSelect.bind(this);
@@ -107,8 +107,8 @@ class DockAdmin extends Component {
     this.setState({stage: "tagRetrieved", updateDisplay: true, sensorList: req });
   }
   
-  finishPumpListFetch(req) {
-    this.setState({stage: "tagRetrieved", updateDisplay: true, pumpList: req });
+  finishStnListFetch(req) {
+    this.setState({stage: "tagRetrieved", updateDisplay: true, stationList: req });
   }
   
   finishCntntsFetch(req) {
@@ -136,8 +136,8 @@ class DockAdmin extends Component {
     let req2 = new OMSRequest(loc, SERVERROOT + "/tag/types/" + code,
                              "Problem retrieving dock list", this.finishCarrierFetch);
     req2.fetchData();
-    let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/PMP",
-                             "Problem retrieving pump list", this.finishPumpListFetch);
+    let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/STN",
+                             "Problem retrieving station list", this.finishStnListFetch);
     req3.fetchData();
     let req4 = new OMSRequest(loc, SERVERROOT + "/tag/types/DI",
                              "Problem retrieving roles", this.finishSensorFetch);
@@ -154,10 +154,10 @@ class DockAdmin extends Component {
     const tag = this.state.tag;
     const id = tag.id;
     let method = "PUT";
-    let url = "http://localhost:8080/oms/dock/update";
+    let url = SERVERROOT + "/dock/update";
     if( id === 0 ) {
       method = "POST";
-      url = "http://localhost:8080/oms/dock/insert";
+      url = SERVERROOT + "/dock/insert";
     }
     const b = JSON.stringify(tag);
     const request = async () => {
@@ -263,14 +263,14 @@ class DockAdmin extends Component {
         }
       case "tagRetrieved":
         if( (this.state.tag === null)        || (this.state.carrierList===null)
-         || (this.state.sensorList === null) || (this.state.pumpList === null) ) 
+         || (this.state.sensorList === null) || (this.state.stationList === null) ) 
         {
           return <Waiting />
         } else {
           return <DockForm tag           = {this.state.tag}
                            carrierList   = {this.state.carrierList}
                            sensorList    = {this.state.sensorList}
-                           pumpList      = {this.state.pumpList}
+                           stationList   = {this.state.stationList}
                            contentsList  = {this.state.contentsList}
                            tagUpdate     = {this.handleTagUpdate}
                            fieldChange   = {this.handleFieldChange}

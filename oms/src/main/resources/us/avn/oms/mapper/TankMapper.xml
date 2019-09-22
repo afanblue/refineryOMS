@@ -113,16 +113,16 @@
   </select>
   
   <select id="getTotalTankCapacitiesForContents" resultMap="valueMap">
-    select content_type_code code, sum(0.17811*pi()*diameter*diameter*scan_value/4) value
+    select content_type_code code, round(sum(0.17811*pi()*diameter*diameter*height/4),4) value
       from tank t join tank_level_vw tlv on t.id=tlv.tank_id
-     group by content_type_code;
+     group by content_type_code
   </select>
   
   <select id="getTotalTankVolumesForContents" resultMap="valueMap">
-    select content_type_code code, sum(0.17811*pi()*diameter*diameter*scan_value/4) value
+    select content_type_code code, round(sum(0.17811*pi()*diameter*diameter*scan_value/4),4) value
       from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     group by content_type_code;
+     group by content_type_code
   </select>
   
   <select id="getTankCapacitiesForContents" resultMap="valueMap">
@@ -149,8 +149,9 @@
            join tank tk on tk.id = rtt.child_tag_id
            join analog_input ai on ai.tag_id = trt.level_tag_id
      where t.name = #{param1}
-       and tk.id not in (select source_id from transfer where status_id=3)
-       and tk.id not in (select destination_id from transfer where status_id=3)
+       and tk.id not in (select source_id from transfer
+                          where status_id in (3,1)
+                           and tk.id not in (select destination_id from transfer where status_id in (3,1)))
   </select>
   
   <select id="getLevelVolumesForTank" resultMap="volumeMap" >

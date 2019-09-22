@@ -1,5 +1,5 @@
 Table,alarm_message,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
 Data,,,
 abbr,message
 TKHH,Tank is nearing overflow limit

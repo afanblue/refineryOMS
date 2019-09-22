@@ -114,7 +114,7 @@ public class History extends OMSObject implements Serializable {
 			nai = ai;
 			History h = new History();
 			h.setTagId(ai.getTagId());
-			h.setX(ai.getScanTime().getTime()/1000L);
+			h.setX(ai.getScanTime().getEpochSecond());
 			h.setY(ai.getScanValue());
 //			log.debug("Insert history record tag "+ai.getTag().getName()+"/"+ai.getTagId());
 			hs.insertHistoryRecord(h);
@@ -137,7 +137,7 @@ public class History extends OMSObject implements Serializable {
 			nai = ai;
 			History h = new History();
 			h.setTagId(ai.getTagId());
-			h.setX(ai.getScanTime().getTime()/1000L);
+			h.setX(ai.getScanTime().getEpochSecond());
 			h.setY(ai.getScanValue());
 //			log.debug("Insert history record tag "+ai.getTag().getName()+"/"+ai.getTagId());
 			hs.insertHistoryRecord(h);

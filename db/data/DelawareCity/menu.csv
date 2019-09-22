@@ -1,8 +1,8 @@
 Table,menu,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-page,id,name,page_id
-menu_type_vw,id,code,menu_type_id
-horizontal_menu_vw,id,text,category_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+page_id,page,id,name
+menu_type_id,menu_type_vw,id,code
+category_id,horizontal_menu_vw,id,text
 Data,,,
 menu_type_id,category_id,text,order_no,active,page_id
 VT,Admin,System Configuration,1,Y,Configuration
@@ -42,6 +42,7 @@ VT,Orders,Sales,20,Y,Sales
 VT,Orders,Active,2,Y,Active Orders
 VT,Orders,Last Weeks Orders,30,Y,Last Weeks Orders
 VT,Orders,Last Months Orders,40,Y,Last Months Orders
-VT,Admin,Ships,145,Y,ShipAdmin
+VT,Admin,Ships,145,N,ShipAdmin
 VT,Admin,Docks,82,Y,Docks
+VT,Orders,Vessel Dock,50,Y,VesselDock
 End

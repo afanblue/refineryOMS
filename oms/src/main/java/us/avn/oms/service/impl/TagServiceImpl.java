@@ -33,6 +33,12 @@ import us.avn.oms.domain.Taglet;
 import us.avn.oms.mapper.TagMapper;
 import us.avn.oms.service.TagService;
 
+/**
+ * Implementation of the TagService interface
+ * 
+ * @author Allan
+ *
+ */
 public class TagServiceImpl implements TagService {
 
 
@@ -45,8 +51,16 @@ public class TagServiceImpl implements TagService {
 	
 	
 	@Override
+	/**
+	 * @see TagService#getAllTagsByType
+	 */
 	public Collection<Tag> getAllTagsByType( String ttc ) {
 		return tagMapper.getAllTagsByType(ttc);
+	}
+	
+	@Override
+	public Collection<Tag> getTagsByTypeRandom( String ttc ) {
+		return tagMapper.getTagsByTypeRandom(ttc);
 	}
 	
 	@Override
@@ -94,6 +108,11 @@ public class TagServiceImpl implements TagService {
 		return tagMapper.getParentTags(id);
 	}
 
+	@Override
+	public Collection<Tag> getParentTagsWCode( Long id, String code ) {
+		return tagMapper.getParentTagsWCode(id, code);
+	}
+	
 	@Override
 	public Collection<RelTagTag> getChildTags( Long id ) {
 		return tagMapper.getChildTags(id);

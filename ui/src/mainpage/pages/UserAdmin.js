@@ -102,10 +102,10 @@ class UserAdmin extends Component {
     const user = this.state.user;
     const id = user.id;
     let method = "PUT";
-    let url = "http://localhost:8080/oms/user/update";
+    let url = SERVERROOT + "/user/update";
     if( id === 0 ) {
       method = "POST";
-      url = "http://localhost:8080/oms/user/insert";
+      url = SERVERROOT + "/user/insert";
     }
     const b = JSON.stringify(user);
     const request = async () => {

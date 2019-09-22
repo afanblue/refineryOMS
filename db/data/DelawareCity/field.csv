@@ -1,6 +1,6 @@
 Table,field,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+id,tag,id,name
 Data,,,
 id,road_image,satellite_image
 DeCity,images/site.png,images/delcity.png

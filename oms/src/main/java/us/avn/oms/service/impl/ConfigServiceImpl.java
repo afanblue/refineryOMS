@@ -17,6 +17,7 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -39,6 +40,17 @@ public class ConfigServiceImpl implements ConfigService {
 	@Override
 	public Collection<Config> getAllConfigurationItems( ) {
 		return configMapper.getAllConfigurationItems();
+	}
+	
+	@Override
+	public HashMap<String,String> getAllConfigItems() {
+		HashMap<String,String> cfg = new HashMap<String,String>();
+		Iterator<Config> iat = configMapper.getAllConfigurationItems().iterator();
+		while( iat.hasNext() ) {
+			Config c = iat.next();
+			cfg.put(c.getKey(), c.getValue());
+		}
+		return cfg;
 	}
 	
 	@Override

@@ -18,6 +18,10 @@ if "%2" == "" (
 )
 echo %1 - %siteName%
 
+rem  create the schema
+mysql -u'oms' --password=%1 --execute="drop database if exists oms"
+mysql -u'oms' --password=%1 --execute="create schema if not exists oms"
+
 rem  create the base tables
 mysql -u'oms' --password=%1 --execute="source oms.ddl" -Doms
 rem create the views
@@ -31,7 +35,7 @@ rem  load reference_code table
 echo Load reference table data
 python LoadDB.py data/%siteName%/reference_code.csv
 
-rem  create reference code views
+rem  create reference code views (already created)
 python BuildRefCodeViews.py
 
 rem  load unit types
@@ -50,20 +54,25 @@ rem  load privileges
 python LoadDB.py data/%siteName%/privilege.csv
 
 rem  load pages
+echo "Load pages"
 python LoadDB.py data/%siteName%/page.csv
 
 rem  load roles
+echo "Load parent roles"
 python LoadDB.py data/%siteName%/roleParent.csv
+echo "Load child roles"
 python LoadDB.py data/%siteName%/role.csv
 
 rem  load menus
+echo "Load admin menu"
 python LoadDB.py data/%siteName%/menuAdmin.csv
+echo "Load other menus"
 python LoadDB.py data/%siteName%/menu.csv
 
-rem  load role-privs
+rem  load role-priv relationships
 python LoadDB.py data/%siteName%/role_priv.csv
 
-rem  load user roles
+rem  load user role relationship
 python LoadDB.py data/%siteName%/user_role.csv
 
 REM -- archaic mysql -u'oms' --password=%1 --execute="source omsData.ddl" -Doms
@@ -83,6 +92,19 @@ python LoadDB.py data/%siteName%/customer.csv
 echo ------------------------------------------------------
 
 rem  load tag collection
+echo "AItag"
+python LoadDB.py data/%siteName%/AItag.csv
+echo "AOtag"
+python LoadDB.py data/%siteName%/AOtag.csv
+echo "CalcTag"
+python LoadDB.py data/%siteName%/Calctag.csv
+echo "CBtag"
+python LoadDB.py data/%siteName%/CBtag.csv
+echo "DItag"
+python LoadDB.py data/%siteName%/DItag.csv
+echo "DOtag"
+python LoadDB.py data/%siteName%/DOtag.csv
+echo "tag"
 python LoadDB.py data/%siteName%/tag.csv
 
 rem rem  load analog inputs

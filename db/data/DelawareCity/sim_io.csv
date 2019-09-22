@@ -1,7 +1,7 @@
 Table,sim_io,,
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-tag,id,name,id
-tag,id,name,in_id
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+id,tag,id,name
+in_id,tag,id,name
 Data,,,
 id,in_id
 RU1CP-DO,RU1CP-DI

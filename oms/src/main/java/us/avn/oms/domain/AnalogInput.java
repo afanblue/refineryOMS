@@ -17,8 +17,8 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -61,35 +61,35 @@ public class AnalogInput extends OMSObject implements Serializable {
 	public static final String MISCELLANEOUS = "M";
 	
 	protected Long    tagId;
-	protected Tag     tag;
-	protected String  analogTypeCode;
-	protected Long    unitId;
-	protected Integer scanInt;
-	protected Integer scanOffset;
-	protected Integer currentScan;
-	protected Double  zeroValue;
-	protected Double  maxValue;
-	protected String  histTypeCode;
-	protected Double  percent;
-	protected Double  slope;
-	protected Double  rawValue;
-	protected Double  scanValue;
-	protected Date    scanTime;
- 	protected Double  prevValue;
-	protected Date    prevTime;
- 	protected Double  lastHistValue;
- 	protected Date    lastHistTime;
- 	protected Double  hh;
- 	protected Double  hi;
- 	protected Double  lo;
- 	protected Double  ll;
- 	protected Long    intSinceLhs;
-    protected Long    intScanTime;
- 	protected Double  simValue;
- 	protected Date    simScanTime;
- 	protected Integer updated;
+	protected Tag      tag;
+	protected String   analogTypeCode;
+	protected Long     unitId;
+	protected Integer  scanInt;
+	protected Integer  scanOffset;
+	protected Integer  currentScan;
+	protected Double   zeroValue;
+	protected Double   maxValue;
+	protected String   histTypeCode;
+	protected Double   percent;
+	protected Double   slope;
+	protected Double   rawValue;
+	protected Double   scanValue;
+	protected Instant  scanTime;
+ 	protected Double   prevValue;
+	protected Instant  prevTime;
+ 	protected Double   lastHistValue;
+ 	protected Instant  lastHistTime;
+ 	protected Double   hh;
+ 	protected Double   hi;
+ 	protected Double   lo;
+ 	protected Double   ll;
+ 	protected Long     intSinceLhs;
+    protected Long     intScanTime;
+ 	protected Double   simValue;
+ 	protected Instant  simScanTime;
+ 	protected Integer  updated;
 	protected Collection<Alarm> calm;
- 	protected Tag siteLocation;
+ 	protected Tag      siteLocation;
 
  	public AnalogInput() { }
  	
@@ -255,11 +255,11 @@ public class AnalogInput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getScanTime() {
+	public Instant getScanTime() {
 		return scanTime;
 	}
 
-	public void setScanTime(Date scanTime) {
+	public void setScanTime(Instant scanTime) {
 		this.scanTime = scanTime;
 	}
 
@@ -273,11 +273,11 @@ public class AnalogInput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getPrevTime() {
+	public Instant getPrevTime() {
 		return prevTime;
 	}
 
-	public void setPrevTime(Date prevTime) {
+	public void setPrevTime(Instant prevTime) {
 		this.prevTime = prevTime;
 	}
 
@@ -291,11 +291,11 @@ public class AnalogInput extends OMSObject implements Serializable {
 	}
 
 
-	public Date getLastHistTime() {
+	public Instant getLastHistTime() {
 		return lastHistTime;
 	}
 
-	public void setLastHistTime(Date lastHistTime) {
+	public void setLastHistTime(Instant lastHistTime) {
 		this.lastHistTime = lastHistTime;
 	}
 
@@ -363,11 +363,11 @@ public class AnalogInput extends OMSObject implements Serializable {
 	}
 
 	
-	public Date getSimScanTime() {
+	public Instant getSimScanTime() {
 		return simScanTime;
 	}
 
-	public void setSimScanTime(Date pst) {
+	public void setSimScanTime(Instant pst) {
 		this.simScanTime = pst;
 	}
 
@@ -520,10 +520,10 @@ public class AnalogInput extends OMSObject implements Serializable {
 				&& (scanTime != prevTime) ) {
 			History h = new History();
 			h.setTagId(tagId);
-			h.setX(scanTime.getTime()/1000L);
+			h.setX(scanTime.getEpochSecond());
 			
 //			intSinceLhs = (intSinceLhs==null)?0:intSinceLhs;
-			intSinceLhs = (scanTime.getTime()-lastHistTime.getTime())/1000L;
+			intSinceLhs = scanTime.getEpochSecond()-lastHistTime.getEpochSecond();
 //			log.debug("Hourly update flag: "+tagId+" - intSinceLhs "+intSinceLhs);
 			if( (lastHistValue == null) 
 					|| (intSinceLhs >= (3600-60-15))  ) {

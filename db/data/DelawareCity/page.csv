@@ -1,7 +1,7 @@
-Table,tbl
-ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained
-privilege,id,name,view_priv_id
-privilege,id,name,exec_priv_id
+Table,page,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+view_priv_id,privilege,id,name
+exec_priv_id,privilege,id,name
 Data,,,
 name,uri,view_priv_id,exec_priv_id,active
 Configuration,configuration.php,Configuration,Configuration,Y
@@ -44,4 +44,5 @@ Last Weeks Orders,None,OrderAdmin,View Orders,Y
 Last Months Orders,None,OrderAdmin,View Orders,Y
 ShipAdmin,None,Admin Ship,Admin Ship,Y
 Docks,None,Admin Docks,Admin Docks,Y
+VesselDock,None,DockVessel,DockVessel,Y
 End

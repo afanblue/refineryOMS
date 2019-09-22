@@ -17,6 +17,7 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
+import Log                from './requests/Log.js';
 //import logo from './logo.svg';
 
 import ActiveAlarms       from './pages/ActiveAlarms.js';
@@ -34,6 +35,7 @@ import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
 import DigitalOutputAdmin from './pages/DigitalOutputAdmin.js';
 import DockAdmin          from './pages/DockAdmin.js';
+import DockingAdmin       from './pages/DockingAdmin.js';
 import FieldAdmin         from './pages/FieldAdmin.js';
 import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
@@ -111,17 +113,20 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
       }     
     case "Orders" :
       option = (((option==="")||(option===null))?"Active":option);
+      Log.info("Orders: "+option);
       switch ( option ) {
         case "Active":
-          return <OrderAdmin stage={stage} />
+          return <OrderAdmin stage={stage} option="B" />
         case "LastWeeksOrders":
           return <DefaultContents pageName={pageName} />
         case "LastMonthsOrders":
           return <DefaultContents pageName={pageName} />
         case "Purchases":
-          return <DefaultContents pageName={pageName} />
+          return <OrderAdmin pageName={pageName} option="P"/>
         case "Sales":
-          return <DefaultContents pageName={pageName} />
+          return <OrderAdmin pageName={pageName} option="S"/>
+        case "VesselDock":
+          return <DockingAdmin stage={stage} />
         default:
           return <DefaultContents pageName={pageName} />
       }

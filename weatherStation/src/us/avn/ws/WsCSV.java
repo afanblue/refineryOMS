@@ -20,7 +20,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+//import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
@@ -53,21 +58,23 @@ public class WsCSV extends WeatherStation {
 	//                                             , windSpeed, windDirection, precipitationLastHour
 	private static String[] csvConditionNames= { "0", "1", "2", "3", "4", "5"};
 	private boolean skipFirst = false;
+	private DateTimeFormatter ldtf = DateTimeFormatter.ofPattern("yyyy-MM-dd H:mm:ss");
 
 	public WsCSV() {  }
 
 	public WsCSV( String l ) {
 		super("CSV", l );
+		setDtf(ldtf);
 		setWsConditionNames(csvConditionNames);
 	}
 
 	public WsCSV( String t, String l ) {
 		super( t, l );
+		setDtf(ldtf);
 	}
 
 	/**
-	 * Method: isSkipFirst
-	 * Description: get skip first line state (T === skip first line)
+	 * get skip first line state (T === skip first line)
 	 * 
 	 * @return boolean specifying whether or not to skip the first line of the CSV file
 	 */
@@ -76,8 +83,7 @@ public class WsCSV extends WeatherStation {
 	}
 
 	/**
-	 * Method: setSkipFirst
-	 * Description: set skip first line state
+	 * set skip first line state
 	 * @param skipFirst (boolean) T === skip first line
 	 */
 	public void setSkipFirst(boolean skipFirst) {
@@ -85,8 +91,7 @@ public class WsCSV extends WeatherStation {
 	}
 
 	/**
-	 * Method: getCurrentConditions
-	 * Description: returns a HashMap of the parameters and their values
+	 * returns a HashMap of the parameters and their values
 	 * Notes: Skips the first line dependent on "skipFirst" value
 	 * 		  retrieves the values from the last line of the file
 	 * @return  HashMap with current values of weather parameters
@@ -108,13 +113,18 @@ public class WsCSV extends WeatherStation {
 						Integer v = newInt(wsConditionNames[i]);
 						log.trace(v+"th parameter");
 						if( 0 <= v ) {
-							log.trace("Value: "+f[v]);
+							log.debug("Value: "+f[v]);
 							if( ! "time".equals(conditionNames[i]) ) {
 								Double x = newDouble( f[v] );
 								cc.put(conditionNames[i], Math.round(100D*x)/100D);
 							} else {
-								Date d = sdf.parse( f[v] );
-								cc.put(conditionNames[i], new Double(d.getTime()) );
+								String tz = java.util.TimeZone.getDefault().getID();
+								log.debug("TimeZone: "+tz);
+								LocalDateTime ld = LocalDateTime.parse(f[v], dtf );
+								ZonedDateTime d = ZonedDateTime.of(ld, ZoneId.of(tz));
+								Instant id = d.toInstant();
+
+								cc.put(conditionNames[i], new Double(id.getEpochSecond()) );
 							}
 						}
 					}
@@ -133,9 +143,8 @@ public class WsCSV extends WeatherStation {
 	}
 
 	/**
-	 * Method: newInt 
-	 * Description: cover routine to parse the index for a parameter
-	 * 				which creates a new integer and catches and logs any exception
+	 * cover routine to parse the index for a parameter
+	 * which creates a new integer and catches and logs any exception
 	 *
 	 * @param s - integer string to parse
 	 * @return parsed integer value 
@@ -154,9 +163,8 @@ public class WsCSV extends WeatherStation {
 	}
 
 	/**
-	 * Method: newDouble
-	 * Description: cover routine to parse the string value from the CSV file
-	 * 				and return a Double value, catching and logging any exception
+	 * cover routine to parse the string value from the CSV file
+	 * and return a Double value, catching and logging any exception
 	 * 
 	 * @param s - double string to parse
 	 * @return parsed double value

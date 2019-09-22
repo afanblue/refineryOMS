@@ -109,7 +109,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
   <select id="getAllActiveAlarms" resultMap="alarmInfoMap">
     select an.id, an.tag_id, an.alm_occurred, an.acknowledged, an.active
          , an.alarm_msg_id, an.priority, an.code, an.color, am.message
-         , t.tag_type_code, t.name, t.description, an.value
+         , t.tag_type_code, t.name, t.description, round(an.value,3) value
       from alarm_info an join alarm_message am on an.alarm_msg_id = am.id
            join tag t on an.tag_id = t.id
      order by an.priority desc, an.alm_occurred desc

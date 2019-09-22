@@ -33,6 +33,7 @@ class RoleForm extends Component {
     const roleUpdate = this.props.roleUpdate;
     const handleQuit = this.props.handleQuit;
     const roleChange = this.props.roleChange;
+    var midStyle = {verticalAlign:'middle'};
 
     
     return(
@@ -72,7 +73,7 @@ class RoleForm extends Component {
             </td>
           </tr>
           <tr>
-            <td className="oms-spacing-180">Privileges:</td>
+            <td className="oms-spacing-180" style={midStyle}>Privileges:</td>
             <td className="oms-spacing">
               <select id="privs" name="privs" value={r.privs} 
                       onChange={roleChange} multiple={true} size={10}>
