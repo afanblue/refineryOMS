@@ -279,8 +279,12 @@ public class DataXfer extends TimerTask {
 			ais.updateAnalogInput(ai);
 		} catch( Exception e ) {
 			StringWriter sw = new StringWriter();
+			log.error("processAIvalue:"+ai.toString());
+			StackTraceElement[] st = e.getStackTrace();
 			e.printStackTrace(new PrintWriter(sw));
-			log.error(sw.toString());
+			for( int i=0; i<Math.max(st.length,5); i++ ) {
+				log.error(st[i].toString());				
+			}
 		}
 	}
 

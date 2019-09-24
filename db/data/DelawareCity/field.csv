@@ -5,10 +5,10 @@ Data,,,
 id,road_image,satellite_image
 DeCity,images/site.png,images/delcity.png
 StCroix,images/stcroixroad.png,images/stcroix.png
-Crude,None,None
-Refined,None,None
-Gasoline,None,None
-FuelOils,None,None
-Asphalts,None,None
-JetFuels,None,None
+Crude,null,null
+Refined,null,null
+Gasoline,null,null
+FuelOils,null,null
+Asphalts,null,null
+JetFuels,null,null
 End
