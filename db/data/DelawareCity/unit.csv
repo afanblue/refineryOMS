@@ -1,5 +1,5 @@
 Table,unit,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 unit_type_id,unit_type,id,name
 Data,,,
 name,code,unit_type_id

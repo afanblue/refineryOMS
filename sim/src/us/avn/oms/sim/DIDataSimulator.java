@@ -47,9 +47,9 @@ public class DIDataSimulator {
      *              the appearance of train cars, tank trucks and ships which set
      *              the appropriate digital values.
      *              
-     * @param dis
-     * @param wds
-     * @param xs
+     * @param dis digital input service
+     * @param wds Watchdog service
+     * @param xs  Transfer service
      */
 	public static void execute( DigitalInputService dis, WatchdogService wds, XferService xs ) {
 		log.debug("Start DI processing");

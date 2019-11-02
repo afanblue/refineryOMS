@@ -1,5 +1,5 @@
 Table,role,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 parent_id,role,id,name
 Data,,,
 name,parent_id,active

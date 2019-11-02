@@ -1,5 +1,5 @@
 Table,role_priv,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 role_id,role,id,name
 priv_id,privilege,id,name
 Data,,,

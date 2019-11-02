@@ -1,5 +1,5 @@
 Table,customer,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
 name,active,etherkey
 Customer 1,Y,nowh ereb utup

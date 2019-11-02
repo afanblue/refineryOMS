@@ -103,7 +103,7 @@ To configure this
 
    1.  Create environment variables OMS_HOME and OMS_LOGS.  Create an oms user to use as the account under which these process will run.  
    
-   1.  Set up a mySQL DB instance and knows the user name and password.  Create the user(s).  Using a single user, i.e., "oms" allows  anyone w/the oms password to change your schema, which is probably not desirable, but unless this is a production system (unlikely), then security is probably not a high priority.  For that matter, the default  password for the OMS schema is not secure.
+   1.  Set up a mySQL DB instance and knows the user name and password.  Create the user(s).  Using a single user, i.e., "oms" allows  anyone w/the oms password to change your schema, which is probably not desirable, but unless this is a production system (unlikely), then security is probably not a high priority.  For that matter, the default  password for the OMS schema is not secure.  Change the 'omsx' as so desired
 
     ```
           create schema oms;                   
@@ -124,6 +124,8 @@ To configure this
 
     ```
     grant all privileges on oms.* to oms;
+    grant all privileges on *.* to oms@localhost identified by 'omsx' with grant option;
+    grant all privileges on *.* to oms@127.0.0.1 identified by 'omsx' with grant option;
     GRANT SUPER ON *.* TO oms;
     ```
 - end if
@@ -138,6 +140,7 @@ To configure this
 	   To redirect all output to a file db.log
     ```
            oms.bat {omspwd} {site name} >db.log 2>&1
+               
     ```
        **Linux**: 
     ```

@@ -17,6 +17,8 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
 
 import us.avn.oms.domain.Carrier;
 import us.avn.oms.domain.Hold;
@@ -41,14 +43,38 @@ public class CarrierServiceImpl implements CarrierService {
 	
 	@Override
 	public Collection<Carrier> getAllCarriers( ) {
-		return carrierMapper.getAllCarriers();
+		Collection<Carrier> cc = carrierMapper.getAllCarriers( );
+		Collection<Carrier> ck = new Vector<Carrier>(cc.size());
+		Iterator<Carrier> icc = cc.iterator();
+		while( icc.hasNext() ) {
+			Carrier c = icc.next();
+			c.setHolds(this.getHolds(c.getId()));
+			ck.add(c);
+		}
+		return ck;
 	}
 	
 	@Override
 	public Carrier getCarrier( Long id) {
-		return carrierMapper.getCarrier(id);
+		Carrier c = carrierMapper.getCarrier(id);
+		c.setHolds(this.getHolds(id));
+		return c;
 	}
 	
+	@Override
+	public Collection<Carrier> getAllCarriersForProduct( String code ) {
+		Collection<Carrier> cc = carrierMapper.getAllCarriersForProduct( code );
+		Collection<Carrier> ck = new Vector<Carrier>(cc.size());
+		Iterator<Carrier> icc = cc.iterator();
+		while( icc.hasNext() ) {
+			Carrier c = icc.next();
+			c.setHolds(this.getHolds(c.getId()));
+			ck.add(c);
+		}
+		return ck;
+	}
+	
+
 	public Collection<Hold> getHolds( Long id ) {
 		return carrierMapper.getHolds(id);
 	}

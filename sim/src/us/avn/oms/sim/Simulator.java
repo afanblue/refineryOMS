@@ -30,6 +30,10 @@ public class Simulator {
 
     private Logger log = LogManager.getLogger(this.getClass());
     private static Logger slog = LogManager.getLogger("us.avn.oms.sim.Simulator");
+//	interval in minutes to run PseudoRandomEventSimulator.  It gets run every 
+//	interval starting on the hour.  If this number isn't a factor of 60, it will
+//	not necessarily run starting on the hour.  Which might not be a bad thing.
+    private Integer pseDelayInterval = 60;
 
 	public static void main(String[] args) {
 		Simulator sim = new Simulator();
@@ -59,13 +63,15 @@ public class Simulator {
 //		run Analog and Digital simulations every 10 seconds
         log.debug("Delay: "+delay);
         aiTimer.scheduleAtFixedRate(aitt, delay, 10*1000);
-        log.debug("Analog scan started");
+        log.debug("Analog scan started, delay: "+delay);
         diTimer.scheduleAtFixedRate(ditt, delay, 10*1000);
-        log.debug("Digital scan started");
-//		run the pseudo random event simulator every hour on the hour
-        int pseDelay = 1000 * ((60 - cal.get(Calendar.MINUTE)) * 60 + (60 - cal.get(Calendar.SECOND)));
-//        preTimer.scheduleAtFixedRate(prett, pseDelay, 3600*1000);
-        log.debug("PSE scan started");
+        log.debug("Digital scan started, delay: "+delay);
+//		run the pseudo random event simulator every delayInterval
+        int calMin = cal.get(Calendar.MINUTE);
+        int delayMin = pseDelayInterval - calMin%pseDelayInterval - 1;
+        int pseDelay = 1000 * (delayMin * 60 + (60 - cal.get(Calendar.SECOND)));
+        preTimer.scheduleAtFixedRate(prett, pseDelay, pseDelayInterval*60*1000);
+        log.debug("PSE scan started, delay: "+pseDelay+"/"+delayMin);
         int x = 1;
         while( x == 1 ) {
         	try {
@@ -74,7 +80,6 @@ public class Simulator {
     			StringWriter sw = new StringWriter();
     			e.printStackTrace(new PrintWriter(sw));
     			String eas = sw.toString();
-//        		System.out.println(sdf.format(now) + eas.toString());	
     			log.error(eas);
         	}
         }

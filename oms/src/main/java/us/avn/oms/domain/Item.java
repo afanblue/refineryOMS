@@ -13,7 +13,21 @@ public class Item extends OMSObject {
     private Double  expVolumeMax;
     private Double  actVolume;
    
-	public Item() {	}
+	public Item() {	
+		shipmentId = 0L; 
+		itemNo=0L; 
+		active="P";
+		actVolume = 0D;
+	}
+	
+	public Item( Long id, Long ino, String act ) {
+		shipmentId = id;
+		itemNo = ino;
+		active = act;
+		expVolumeMin = 0D;
+		expVolumeMax = 0D;
+		actVolume = 0D;
+	}
 	
 	public Long getShipmentId() {
 		return shipmentId;

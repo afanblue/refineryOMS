@@ -1,5 +1,5 @@
 Table,user_role,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 user_id,user,id,alias
 role_id,role,id,name
 Data,,,

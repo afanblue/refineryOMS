@@ -19,6 +19,9 @@ package us.avn.oms.transfer;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
@@ -90,7 +93,7 @@ public class TransferUpdate extends TimerTask {
     private Integer newTransferInterval;
     private HashMap<String,Long> types;
     private HashMap<String,Long> statuses;
-    private Instant tomorrow;
+    private ZonedDateTime tomorrow;
     private Vector<String> stations = new Vector<String>(3);
 
     
@@ -231,8 +234,8 @@ public class TransferUpdate extends TimerTask {
 						   : false;
 		log.debug( "runScheduledTransfers: Check? " + (checkOnce?"true":"false") + " or " + (checkMulti?"true":"false"));
 
-		Instant now = Instant.now();
-		tomorrow = now.plus(24,ChronoUnit.HOURS);
+		ZonedDateTime now = ZonedDateTime.now();
+		tomorrow = now.plus(24,ChronoUnit.HOURS) ;
 		Iterator<Transfer> ixpt = xfrs.getPendingTemplates().iterator();
 
 		while( ixpt.hasNext() ) {
@@ -291,7 +294,7 @@ public class TransferUpdate extends TimerTask {
 		newX.setTagId(x.getTagId());
 		/* Change transfer type id & status id */
 		DateTimeFormatter ldtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate ld = LocalDate.of( tomorrow.get(ChronoField.YEAR )
+		LocalDate ld = LocalDate.of( tomorrow.get(ChronoField.YEAR)
 				                   , tomorrow.get(ChronoField.MONTH_OF_YEAR)
 				                   , tomorrow.get(ChronoField.DAY_OF_MONTH));
 		newX.setName(newX.getName()+ld.toString());
@@ -301,6 +304,8 @@ public class TransferUpdate extends TimerTask {
 		newX.checkSource( tgs, tks );
 		/* destination check */
 		newX.checkDestination( tgs, tks );
+		newX.setStatusId(xfrs.getTransferStatusId(Transfer.SCHEDULED ));
+		newX.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
 		newX.setExpStartTime(x.getNewStartTime());
 		newX.setExpEndTime(newX.getNewEndTime());
 		log.debug("insertNewTransfer: "+newX.toString());
@@ -438,7 +443,7 @@ public class TransferUpdate extends TimerTask {
 		Tag dest = tgs.getTag(template.getDestinationId());
 		String name = "";
 		String today = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(Instant.now());
-		Calendar cal = Calendar.getInstance();
+//		Calendar cal = Calendar.getInstance();
 		xfr.setId(0L);
 		xfr.setTagId(template.getId());
 		
@@ -466,7 +471,7 @@ public class TransferUpdate extends TimerTask {
 		xfr.checkDestination(tgs, tks);
 		xfr.setName(name);
 		xfr.setContentsCode(i.getContentCd());
-		xfr.setStatusId(xfrs.getTransferStatusId(Transfer.PENDING));
+		xfr.setStatusId(xfrs.getTransferStatusId(Transfer.ACTIVE));
 		xfr.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
 		xfr.setDelta(0);
 		xfr.setExpVolume(i.getExpVolumeMax());

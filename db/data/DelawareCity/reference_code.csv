@@ -1,5 +1,5 @@
 Table,reference_code,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
 category,name,code,value,description,active
 TRANSFER_STATUS,Active,A,0,Transfer currently in progress,Y
@@ -19,7 +19,7 @@ OFF-ON,Off,N,0,Off,Y
 OFF-ON,On,N,1,On,Y
 TF,False,F,0,False,Y
 TF,True,T,1,True,Y
-HISTORY-TYPE,null,N,0,No history stored,Y
+HISTORY-TYPE,None,N,0,No history stored,Y
 HISTORY-TYPE,Boxcar,B,1,Boxcar algorithm,Y
 HISTORY-TYPE,Linear,L,2,Linear algorithm,Y
 ANALOG-TYPE,Temperature,T,0,Temperature,Y

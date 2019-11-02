@@ -178,7 +178,7 @@ tbl = "menu"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "page_id,page,id,name",
-        "menu_type_id,menu_type_vw,id,code",
+        "menu_type_id,reference_code,id,code",
         "Data,,,")
 qry = ("select rc.code menu_type_id, m.text, m.order_no, m.active "
        "from menu m join reference_code rc on m.menu_type_id=rc.id "
@@ -192,7 +192,7 @@ tbl = "menu"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "page,id,name,page_id",
-        "menu_type_id,menu_type_vw,id,code",
+        "menu_type_id,reference_code,id,code",
         "category_id,horizontal_menu_vw,id,text",
         "Data,,,")
 qry = ("select rc.code menu_type_id, c.text category_id, m.text, m.order_no"
@@ -493,20 +493,23 @@ addData( crsr, tbl, qry, hdr, False )
 tbl = "transfer"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "source_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "destination_id,tag,id,name,tag,tag_type_code,tag_type_code",
-        "transfer_status_vw,id,name,status_id",
-        "transfer_type_vw,id,name,transfer_type_id",
+        "status_id,transfer_status_vw,value,name",
+        "transfer_type_id,transfer_type_vw,value,name",
         "Data,,,")
-qry    = ("select x.name, tsv.name status_id, ttv.name transfer_type_id "
+qry    = ("select x.name, tsv.name status_id, ttv.name transfer_type_id"
+          ", concat(tt.name,'|',tt.tag_type_code) tag_id"
           ", concat(ts.name,'|',ts.tag_type_code) source_id"
-          ", concat(td.name,'|',td.tag_type_code) destination_id, "
-          "exp_start_time, exp_end_time, exp_volume, "
-          "act_start_time, act_end_time, act_volume "
-          "from transfer x join tag ts on x.source_id = ts.id "
+          ", concat(td.name,'|',td.tag_type_code) destination_id"
+          ", exp_start_time, exp_end_time, exp_volume"
+          ", act_start_time, act_end_time, act_volume "
+          "from transfer x join tag ts on x.source_id = ts.id " 
           "join tag td on x.destination_id=td.id "
-          "join transfer_status_vw tsv on x.status_id = tsv.id "
-          "join transfer_type_vw ttv on x.transfer_type_id = ttv.id" )
+          "join tag tt on x.tag_id=tt.id "
+          "join transfer_status_vw tsv on x.status_id = tsv.value "
+          "join transfer_type_vw ttv on x.transfer_type_id = ttv.value" )
 addData( crsr, tbl, qry, hdr, False )
 
 
@@ -518,6 +521,7 @@ hdr = ( "Table,"+tbl+",,",
 qry    = "select x.id from xfer x"
 addData( crsr, tbl, qry, hdr, False )
 
+''' carriers loaded as Tags '''
 ''' hold '''
 tbl = "hold"
 hdr = ( "Table,"+tbl+",,",

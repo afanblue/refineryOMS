@@ -25,6 +25,7 @@ import java.util.Date;
 //import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,10 @@ import org.springframework.context.ApplicationContext;
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import us.avn.oms.domain.Carrier;
 import us.avn.oms.domain.Customer;
+import us.avn.oms.domain.Hold;
+import us.avn.oms.domain.Item;
 //import us.avn.oms.domain.Config;
 import us.avn.oms.domain.Order;
 import us.avn.oms.domain.RelTagTag;
@@ -53,6 +57,7 @@ import us.avn.oms.service.CarrierService;
 //import us.avn.oms.service.AnalogOutputService;
 import us.avn.oms.service.ConfigService;
 import us.avn.oms.service.CustomerService;
+import us.avn.oms.service.OrderService;
 import us.avn.oms.service.ReferenceCodeService;
 import us.avn.oms.service.ShipService;
 //import us.avn.oms.service.AnalogOutputService;
@@ -96,32 +101,33 @@ import us.avn.oms.service.WatchdogService;
  *
  */
 public class PseudoRandomEventSimulator extends TimerTask  {
-	
-    /* Get actual class name to be printed on */
-    private static Logger log = LogManager.getLogger("us.avn.oms.sim.PseudoRandomEventSimulator");
 
-    private ApplicationContext context = null;
-    private  static CarrierService crs = null;
-    private  static ConfigService cs = null;
-    private  static CustomerService css = null;
-    private  static ReferenceCodeService rfs = null;
-    private  static ShipService shps = null;
-    private  static TagService tgs = null;
-    private  static TankService tks = null;
-    private  static TrainService trs = null;
-    private  static WatchdogService wds = null;
-    private  static TransferService xfrs = null;
-    
-    private Calendar cal;
-    
-    static final double WEEKS_ASPHALT  = 7  *   2000D;
-    static final double MONTHS_CRUDE   = 30 * 120000D;
-    static final double WEEKS_FUELOIL  = 7  *  36000D;
-    static final double WEEKS_GASOLINE = 7  *  55000D;
-    static final double WEEKS_JETFUEL  = 7  *  12000D;
-    static final double WEEKS_LUBES    = 7  *   1200D;
-    static final double WEEKS_NAPTHA   = 7  *   2000D;
-    static final double WEEKS_WAX      = 7  *   1200D;
+	/* Get actual class name to be printed on */
+	private static Logger log = LogManager.getLogger("us.avn.oms.sim.PseudoRandomEventSimulator");
+
+	private ApplicationContext context = null;
+	private  static CarrierService crs = null;
+	private  static ConfigService cs = null;
+	private  static CustomerService css = null;
+	private  static OrderService os = null;
+	private  static ReferenceCodeService rfs = null;
+//    private  static ShipService shps = null;
+	private  static TagService tgs = null;
+	private  static TankService tks = null;
+//    private  static TrainService trs = null;
+	private  static WatchdogService wds = null;
+	private  static TransferService xfrs = null;
+
+	private Calendar cal;
+
+	static final double WEEKS_ASPHALT  = 7  *   2000D;
+	static final double MONTHS_CRUDE   = 30 * 120000D;
+	static final double WEEKS_FUELOIL  = 7  *  36000D;
+	static final double WEEKS_GASOLINE = 7  *  55000D;
+	static final double WEEKS_JETFUEL  = 7  *  12000D;
+	static final double WEEKS_LUBES    = 7  *   1200D;
+	static final double WEEKS_NAPTHA   = 7  *   2000D;
+	static final double WEEKS_WAX      = 7  *   1200D;
 
 	public void run( ) {
 
@@ -129,96 +135,191 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		if( crs  == null ) { crs  = (CarrierService) context.getBean("carrierService"); }
 		if( cs   == null ) { cs   = (ConfigService) context.getBean("configService"); }
 		if( css  == null ) { css  = (CustomerService) context.getBean("customerService"); }
+		if( os   == null ) { os   = (OrderService) context.getBean("orderService"); }
 		if( rfs  == null ) { rfs  = (ReferenceCodeService) context.getBean("refCodeService"); }
-		if( shps == null ) { shps = (ShipService) context.getBean("shipService"); }
+//		if( shps == null ) { shps = (ShipService) context.getBean("shipService"); }
 		if( tgs  == null ) { tgs  = (TagService) context.getBean("tagService"); }
 		if( tks  == null ) { tks  = (TankService) context.getBean("tankService"); }
-		if( trs  == null ) { trs  = (TrainService) context.getBean("trainService"); }
+//		if( trs  == null ) { trs  = (TrainService) context.getBean("trainService"); }
 		if( xfrs == null ) { xfrs = (TransferService) context.getBean("transferService"); }
 		if( wds  == null ) { wds  = (WatchdogService) context.getBean("watchdogService"); }
 
 		log.debug("Start PRE processing");
 		wds.updateWatchdog(Watchdog.PRE);
-		Calendar cal = Calendar.getInstance();
-/*	*/
+		cal = Calendar.getInstance();
+		
+		/*	*/
 		Iterator<Value> itv = tks.getTotalTankVolumesForContents().iterator();
 		while( itv.hasNext() ) {
 			Value tv = itv.next();
 			Order o = null;
+			log.debug("PRE: create order for product "+tv.getCode());
 			switch (tv.getCode()) {
-				case Tank.ASPHALT :
-					o = createRefinedOrder(tv, Tank.ASPHALT, WEEKS_ASPHALT );
-					break;
-				case Tank.CRUDE :
-					o = createCrudeOrder(tv);
-					break;
-				case Tank.FUEL_OIL :
-					o = createRefinedOrder(tv, Tank.FUEL_OIL, WEEKS_FUELOIL );
-					break;
-				case Tank.GASOLINE :
-					o = createRefinedOrder(tv, Tank.GASOLINE, WEEKS_GASOLINE );
-					break;
-				case Tank.JET_FUEL :
-					o = createRefinedOrder(tv, Tank.JET_FUEL, WEEKS_JETFUEL);
-					break;
-				case Tank.LUBRICANT :
-					o = createRefinedOrder(tv, Tank.LUBRICANT, WEEKS_LUBES );
-					break;
-				case Tank.NAPTHA :
-					o = createRefinedOrder(tv, Tank.NAPTHA, WEEKS_NAPTHA );
-					break;
-				case Tank.WAX :
-					o = createRefinedOrder(tv,Tank.WAX, WEEKS_WAX );
-					break;
+			case Tank.ASPHALT :
+				o = createRefinedOrder(tv, Tank.ASPHALT, WEEKS_ASPHALT );
+				break;
+			case Tank.CRUDE :
+				o = createCrudeOrder(tv);
+				break;
+			case Tank.FUEL_OIL :
+				o = createRefinedOrder(tv, Tank.FUEL_OIL, WEEKS_FUELOIL );
+				break;
+			case Tank.GASOLINE :
+				o = createRefinedOrder(tv, Tank.GASOLINE, WEEKS_GASOLINE );
+				break;
+			case Tank.JET_FUEL :
+				o = createRefinedOrder(tv, Tank.JET_FUEL, WEEKS_JETFUEL);
+				break;
+			case Tank.LUBRICANT :
+				o = createRefinedOrder(tv, Tank.LUBRICANT, WEEKS_LUBES );
+				break;
+			case Tank.NAPTHA :
+				o = createRefinedOrder(tv, Tank.NAPTHA, WEEKS_NAPTHA );
+				break;
+			case Tank.WAX :
+				o = createRefinedOrder(tv,Tank.WAX, WEEKS_WAX );
+				break;
 			}
 			if( null != o ) {
-				
+				log.debug("PRE create order - "+o.toString());
+				os.insertOrder(o);
+				Iterator<Item> ii = o.getItems().iterator();
+				while( ii.hasNext() ) {
+					Item i = ii.next();
+					i.setShipmentId(o.getShipmentId());
+					os.insertItem(i);
+				}
+			} else {
+				log.debug("PRE: No order made for product "+tv.getCode());
 			}
 		}
-/* */
+		/* */
 		log.debug("End PRE processing");
 	}
-	
+
+	/**
+	 * Create an order for crude oil.
+	 * @param tv Value object specifying current amount in inventory for given product
+	 * @return 
+	 */
 	private Order createCrudeOrder( Value tv ) {
 		Order o = null;
 		if( tv.getValue() < MONTHS_CRUDE ) {
+			log.debug("PRE: createCrudeOrder for type "+tv.getCode());
 			o = new Order();
 			Tag carrier = getCrudeCarrier();
-			Ship s = shps.getShip(carrier.getId());
 			if( null != carrier ) {
+				Carrier s = crs.getCarrier(carrier.getId());
 				Customer cust = getCustomer();
 				if( null != cust ) {
 					o.setCustomerId(cust.getId());
 					o.setCustomer(cust.getName());
 					o.setCarrier(carrier.getName());
 					o.setCarrierId(carrier.getId());
+					o.setPurchase(Order.PURCHASE);
 
-					Instant expDate =  cal.toInstant();
+					Double amt = s.getQuantity();
+					o.setExpVolume(amt);
+
 					Duration oneDay = Duration.ofDays(1L);
-					expDate.plus(oneDay);
-					
-					o.setExpDate(Timestamp.from(expDate));
+					Instant expDate = Instant.now().plus(oneDay);
+//					o.setExpDate(Timestamp.from(expDate));
+					o.setExpDate(expDate);
+
+					Collection<Item> ci = new Vector<Item>();
+					Iterator<Hold> ch = s.getHolds().iterator();
+					Long itemNo = 0L;
+					while( ch.hasNext() ) {
+						Hold h = ch.next();
+						itemNo++;
+						Item item = new Item(0L,itemNo,"A");
+						item.setContentCd(Tank.CRUDE);
+						item.setExpVolumeMax(h.getVolume());
+						item.setExpVolumeMin(h.getVolume());
+						item.setNewItem("F");
+						item.setActive("P");
+						item.setActVolume(0D);
+						ci.add(item);
+					}
+					o.setItems(ci);
+				} else {
+					o = null;
+					log.debug("PRE: no customer found");
 				}
+			} else {
+				o = null;
+				log.debug("PRE: no crude carrier found");
 			}
 		}
 		return o;
 	}
-	
+
 	private Order createRefinedOrder( Value tv, String type, double limit ) {
 		Order o = null;
 		if( tv.getValue() > limit ) {
+			log.debug("PRE: createRefinedOrder for type "+type);
 			o = new Order();
+			Tag carrier = getProductCarrier(type);
+			if( null != carrier ) {
+				Carrier s = crs.getCarrier(carrier.getId());
+				Customer cust = getCustomer();
+				if( null != cust ) {
+					o.setCustomerId(cust.getId());
+					o.setCustomer(cust.getName());
+					o.setCarrier(carrier.getName());
+					o.setCarrierId(carrier.getId());
+					o.setPurchase(Order.SALE);
+
+					Double amt = s.getQuantity();
+					o.setExpVolume(amt);
+
+					Duration delay = Duration.ofHours(2L);
+					Instant expDate = Instant.now().plus(delay);
+//					o.setExpDate(Timestamp.from(expDate));
+					o.setExpDate(expDate);
+
+					Collection<Item> ci = new Vector<Item>();
+					Iterator<Hold> ch = s.getHolds().iterator();
+					Long itemNo = 0L;
+					while( ch.hasNext() ) {
+						Hold h = ch.next();
+						itemNo++;
+						Item item = new Item(0L,itemNo,"A");
+						item.setContentCd(type);
+						item.setExpVolumeMax(h.getVolume());
+						item.setExpVolumeMin(h.getVolume());
+						item.setNewItem("F");
+						item.setActive("P");
+						item.setActVolume(0D);
+						ci.add(item);
+					}
+					o.setItems(ci);
+				} else {
+					o = null;
+					log.debug("PRE: no customer found");
+				}
+			} else {
+				o = null;
+				log.debug("PRE: No carrier found for product "+type);
+			}
 		}
 		return o;
 	}
-	
+
+	/**
+	 * Get a Tag of type S (ship) which is not being used (i.e., is not currently
+	 * docked) to use as a carrier for a crude order (remember: this is a simulation) 
+	 * 
+	 * @return
+	 */
 	private Tag getCrudeCarrier() {
 		Tag t = null;
 		Iterator<Tag> it = tgs.getTagsByTypeRandom(Tag.SHIP).iterator();
-		boolean unused = false;
-		while( ! unused && it.hasNext()) {
+		log.debug("PRE: getCrudeCarrier "+(it.hasNext()?"not mt":"mt") );
+		while( it.hasNext() ) {
 			Tag xt = it.next();
 			Collection<RelTagTag> crtt = tgs.getChildrenOfType(xt.getId(), Tag.DOCK);
+			log.debug("PRE: getCrudeCarrier "+xt.getId()+" "+(crtt.isEmpty()?"mt":"not mt"));
 			if( crtt.isEmpty() ) {
 				t = xt;
 				break;
@@ -226,7 +327,34 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		}
 		return t;
 	}
-	
+
+	/**
+	 * Get a Tag of either type T (train), or TT (tank truck) which is not
+	 * being used (i.e., is inot currently docked) to use as a carrier for a refined
+	 * product carrier.
+	 * <br>
+	 * Ships are not currently being used
+	 * @param productType 
+	 * @return
+	 */
+	private Tag getProductCarrier( String productType ) {
+		Tag t = null;
+		Iterator<Tag> it = tgs.getTagsByTypeRandom(Tag.TANK_TRUCK).iterator();
+		log.debug("PRE: getProductCarrier "+(it.hasNext()?"not mt":"mt") );
+		while( it.hasNext()) {
+			Tag xt = it.next();
+			if( xt.getMisc().equals(productType) ) {
+				Collection<RelTagTag> crtt = tgs.getChildrenOfType(xt.getId(), Tag.DOCK);
+				log.debug("PRE: getProductCarrier "+xt.getId()+" "+(crtt.isEmpty()?"mt":"not mt"));
+				if( crtt.isEmpty() ) {
+					t = xt;
+					break;
+				}
+			}
+		}
+		return t;
+	}
+
 	private Customer getCustomer() {
 		Customer c = null;
 		Collection<Customer> cc = css.getAllCustomers();

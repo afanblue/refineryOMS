@@ -27,9 +27,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  *  Value provides a more-or-less generic structure for a value to be fetched or updated
  *  <ol>
- *  <li>     id: 1</li>
- *  <li>   code: C</li>
- *  <li>  value: 42.00</li>
+ *  <li>     id: 1 (id for Tank)</li>
+ *  <li>   code: C (product code for tank contents)</li>
+ *  <li>  value: 42.00 (associated volume of tank)</li>
  *  </ol> 
  *          
  */

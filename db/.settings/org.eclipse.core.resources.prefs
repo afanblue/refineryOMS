@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding/BuildRefCodeViews.py=utf-8
+encoding/BuildTankTags.py=utf-8
+encoding/ExtractDB.py=utf-8
+encoding/ExtractTableData.py=utf-8
+encoding/LoadDB.py=utf-8

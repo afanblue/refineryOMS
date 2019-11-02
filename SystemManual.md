@@ -2,9 +2,13 @@
 
 This document describes how the functionality provided was implemented (more or less)
 
-## DB ERD
+## DB ERD & other info
 
 A (poorly organized, probably out of date) ERD for the DB is saved in the OMSV1.mwb (from MySQL Workbench) and OMSv1.pdf
+
+You can list the users in mysql w: select * from mysql.users;
+You can list the tables in mysql w: select * from information_schema.tables;
+
 
 ### Page structure
 

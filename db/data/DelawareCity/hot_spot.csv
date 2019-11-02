@@ -1,5 +1,5 @@
 Table,hot_spot,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 field_id,tag,id,name
 Data,,,
 field_id,c1Lat,c1Long,c2Lat,c2Long,page_id,active

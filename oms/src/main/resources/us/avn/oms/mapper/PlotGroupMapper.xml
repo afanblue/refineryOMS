@@ -40,7 +40,7 @@
          , if(td.tag_type_code='TK',destination_id,null), null, null, 'Y', 'X'
       from transfer x join tag ts on x.source_id=ts.id 
       join tag td on x.destination_id = td.id 
-      join transfer_status_vw tsv on tsv.id = x.status_id
+      join transfer_status_vw tsv on tsv.value = x.status_id
      where tsv.code = 'A'
      order by 2
   </select>

@@ -29,119 +29,125 @@ mysql -u'oms' --password=%1 --execute="source views.ddl" -Doms
 
 rem  load config table
 echo Load configuration table data
-python LoadDB.py data/%siteName%/config.csv
+python LoadDB.py %1 data/%siteName%/config.csv
 
 rem  load reference_code table
 echo Load reference table data
-python LoadDB.py data/%siteName%/reference_code.csv
+python LoadDB.py %1 data/%siteName%/reference_code.csv
 
 rem  create reference code views (already created)
-python BuildRefCodeViews.py
+python BuildRefCodeViews.py %1
 
-rem  load unit types
-python LoadDB.py data/%siteName%/unit_type.csv
+rem  load watchdog table
+python LoadDB.py %1 data/%siteName%/watchdog.csv
 
-rem  load units
-python LoadDB.py data/%siteName%/unit.csv
+rem  load unit types table
+python LoadDB.py %1 data/%siteName%/unit_type.csv
+
+rem  load units table
+python LoadDB.py %1 data/%siteName%/unit.csv
 
 rem  load unit conversions
-python LoadDB.py data/%siteName%/unit_conversion.csv
+python LoadDB.py %1 data/%siteName%/unit_conversion.csv
 
 rem  load users
-python LoadDB.py data/%siteName%/user.csv
+python LoadDB.py %1 data/%siteName%/user.csv
 
 rem  load privileges
-python LoadDB.py data/%siteName%/privilege.csv
+python LoadDB.py %1 data/%siteName%/privilege.csv
 
 rem  load pages
-echo "Load pages"
-python LoadDB.py data/%siteName%/page.csv
+echo "Load pages (page)"
+python LoadDB.py %1 data/%siteName%/page.csv
 
 rem  load roles
 echo "Load parent roles"
-python LoadDB.py data/%siteName%/roleParent.csv
+python LoadDB.py %1 data/%siteName%/roleParent.csv
 echo "Load child roles"
-python LoadDB.py data/%siteName%/role.csv
+python LoadDB.py %1 data/%siteName%/role.csv
 
 rem  load menus
 echo "Load admin menu"
-python LoadDB.py data/%siteName%/menuAdmin.csv
+python LoadDB.py %1 data/%siteName%/menuAdmin.csv
 echo "Load other menus"
-python LoadDB.py data/%siteName%/menu.csv
+python LoadDB.py %1 data/%siteName%/menu.csv
 
 rem  load role-priv relationships
-python LoadDB.py data/%siteName%/role_priv.csv
+python LoadDB.py %1 data/%siteName%/role_priv.csv
 
 rem  load user role relationship
-python LoadDB.py data/%siteName%/user_role.csv
+python LoadDB.py %1 data/%siteName%/user_role.csv
 
 REM -- archaic mysql -u'oms' --password=%1 --execute="source omsData.ddl" -Doms
 
 rem  load tag types
-python LoadDB.py data/%siteName%/tag_type.csv
+python LoadDB.py %1 data/%siteName%/tag_type.csv
 
 rem  load alarm messages
-python LoadDB.py data/%siteName%/alarm_message.csv
+python LoadDB.py %1 data/%siteName%/alarm_message.csv
 
 rem  load alarm types
-python LoadDB.py data/%siteName%/alarm_type.csv
+python LoadDB.py %1 data/%siteName%/alarm_type.csv
 
 rem load customers
-python LoadDB.py data/%siteName%/customer.csv
+python LoadDB.py %1 data/%siteName%/customer.csv
 
 echo ------------------------------------------------------
 
 rem  load tag collection
 echo "AItag"
-python LoadDB.py data/%siteName%/AItag.csv
+python LoadDB.py %1 data/%siteName%/AItag.csv
 echo "AOtag"
-python LoadDB.py data/%siteName%/AOtag.csv
+python LoadDB.py %1 data/%siteName%/AOtag.csv
 echo "CalcTag"
-python LoadDB.py data/%siteName%/Calctag.csv
+python LoadDB.py %1 data/%siteName%/Calctag.csv
 echo "CBtag"
-python LoadDB.py data/%siteName%/CBtag.csv
+python LoadDB.py %1 data/%siteName%/CBtag.csv
 echo "DItag"
-python LoadDB.py data/%siteName%/DItag.csv
+python LoadDB.py %1 data/%siteName%/DItag.csv
 echo "DOtag"
-python LoadDB.py data/%siteName%/DOtag.csv
+python LoadDB.py %1 data/%siteName%/DOtag.csv
 echo "tag"
-python LoadDB.py data/%siteName%/tag.csv
+python LoadDB.py %1 data/%siteName%/tag.csv
 
 rem rem  load analog inputs
-python LoadDB.py data/%siteName%/analog_input.csv
+python LoadDB.py %1 data/%siteName%/analog_input.csv
 
 rem  load digital inputs
-python LoadDB.py data/%siteName%/digital_input.csv
+python LoadDB.py %1 data/%siteName%/digital_input.csv
 
 rem  load analog outputs
-python LoadDB.py data/%siteName%/analog_output.csv
+python LoadDB.py %1 data/%siteName%/analog_output.csv
 
 rem  load digital outputs
-python LoadDB.py data/%siteName%/digital_output.csv
+python LoadDB.py %1 data/%siteName%/digital_output.csv
 
 rem  load calculated
-python LoadDB.py data/%siteName%/calculated.csv
+python LoadDB.py %1 data/%siteName%/calculated.csv
 
 rem  load tanks
-python LoadDB.py data/%siteName%/tank.csv
+python LoadDB.py %1 data/%siteName%/tank.csv
 
 rem  load fields
-python LoadDB.py data/%siteName%/field.csv
+python LoadDB.py %1 data/%siteName%/field.csv
 
-rem  load containers
-python LoadDB.py data/%siteName%/container.csv
+rem  load shipment
+python LoadDB.py %1 data/%siteName%/shipment.csv
+
+rem load shipment_items
+python LoadDB.py %1 data/%sitename%/shipment_item.csv
 
 rem  load tag relationships
-python LoadDB.py data/%siteName%/rel_tag_tag.csv
+python LoadDB.py %1 data/%siteName%/rel_tag_tag.csv
 
 rem  load hotspots
-python LoadDB.py data/%siteName%/hot_spot.csv
+python LoadDB.py %1 data/%siteName%/hot_spot.csv
 
 rem  load volumes
-python LoadDB.py data/%siteName%/volume.csv
+python LoadDB.py %1 data/%siteName%/volume.csv
 
 rem  load transfers
-python LoadDB.py data/%siteName%/transfer.csv
+python LoadDB.py %1 data/%siteName%/transfer.csv
 
 rem  set the initial values for the analog inputs
 mysql -u'oms' --password=%1 --execute="source omsStart.sql" -Doms

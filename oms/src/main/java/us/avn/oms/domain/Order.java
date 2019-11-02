@@ -113,7 +113,26 @@ public class Order extends OMSObject implements Serializable {
 		this.purchase = purchase;
 	}
 	
+
+	public Instant getActDate() {
+		return actDate;
+	}
 	
+	public void setActDate( Instant ad ) {
+		actDate = ad;
+	}
+	
+
+	public Instant getExpDate() {
+		return expDate;
+	}
+	
+	public void setExpDate( Instant xd ) {
+		expDate = xd;
+	}
+
+
+/*
 	public Timestamp getExpDate() {
 		if( expDate != null ) {
 //			return sdfd.format(expDate);
@@ -129,8 +148,7 @@ public class Order extends OMSObject implements Serializable {
 			this.expDate = null;
 		}
 	}
-	
-	
+
 	public Timestamp getActDate() {
 		if( actDate != null ) {
 //			return sdfd.format(actDate);
@@ -139,13 +157,14 @@ public class Order extends OMSObject implements Serializable {
 		return null;
 	}
 	
-	public void setActDate(Timestamp ad ) {
+	public void setActDate( Timestamp ad ) {
 		try {
 			this.actDate = ad.toInstant();
 		} catch( Exception e ) {
 			this.actDate = null;
 		}
 	}
+*/
 
 	
 	public Double getExpVolume() {

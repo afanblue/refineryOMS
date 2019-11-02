@@ -37,7 +37,7 @@
       from tag t
       join (select carrier_id id, sum(no_duplicates * volume) quantity 
               from hold group by carrier_id) s on t.id=s.id
-     where t.tag_type_code in ('S','TT','TR')
+     where t.tag_type_code in ('S','TT','T')
        and t.active = 'Y'
      order by 2
   </select>
@@ -47,7 +47,17 @@
       from tag t
       left outer join (select carrier_id id, sum(no_duplicates * volume) quantity 
               from hold group by carrier_id) s on t.id=s.id
-   	 where t.id = #{param1}
+   	 where t.tag_type_code in ('S','TT','T')
+   	   and t.id = #{param1}
+  </select>
+  
+  <select id="getAllCarriersForProduct" resultMap="carrierResultMap">
+    select t.id, t.name, t.description, t.tag_type_code, t.misc, t.active, coalesce(s.quantity,0) quantity
+      from tag t
+      left outer join (select carrier_id id, sum(no_duplicates * volume) quantity 
+              from hold group by carrier_id) s on t.id=s.id
+   	 where t.tag_type_code in ('S','TT','T')
+   	   and t.misc = #{param1}
   </select>
   
   <select id="getHolds" resultMap="holdResultMap">

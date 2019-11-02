@@ -6,11 +6,15 @@ Created on Nov 21, 2018
 @author: Allan
 '''
 # import os, sysconfig
+import sys
 import MySQLdb
+
+args = sys.argv
+#print( args )
 
 config = {
   "user": "oms",
-  "passwd": "omsx",
+  "passwd": args[1],
   "host": "127.0.0.1",
   "db": "oms",
   "use_unicode": True
@@ -22,7 +26,8 @@ crsr = cnx.cursor()
 
 refColQuery = ("select column_name, data_type, character_maximum_length "
                "from INFORMATION_SCHEMA.COLUMNS"
-	           " where table_name = \"reference_code\"")
+	           " where table_name = \"reference_code\""
+	           " and column_name not in (\"create_dt\",\"last_modified_dt\")")
 #	print ( dataTypeQuery+"\n") 
 crsr.execute(refColQuery);
 
@@ -47,7 +52,7 @@ for cat in catList:
 				 		      .replace( "colList" , columnList)
 						      .replace( "vwx", vwName ) )
 	print( vwQuery+"\n")
-	crsr.execute(vwQuery) 
+#	crsr.execute(vwQuery) 
 
 
 

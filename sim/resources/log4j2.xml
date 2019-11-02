@@ -25,6 +25,9 @@
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile"/>
         </Root>
+        <Logger name="com.mysql" level="DEBUG" additivity="false">
+      		<AppenderRef ref="RollingFile"/>
+        </Logger>
         <Logger name="us.avn.oms" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>

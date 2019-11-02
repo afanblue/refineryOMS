@@ -3,7 +3,8 @@
 require_once("includes/connection.php");
 
 $refColQuery = "select column_name, data_type, character_maximum_length from INFORMATION_SCHEMA.COLUMNS"
-	         . " where table_name = \"reference_code\"";
+	         . " where table_name = \"reference_code\""
+	         . " and column_name not in (\"create_dt\",\"last_modified_dt\")"";
 //	echo $dataTypeQuery."\n";
 $refColSet = $connection->query($refColQuery);
 $columnList = "";

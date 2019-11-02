@@ -25,6 +25,7 @@ public class Ship extends Tag implements Serializable {
 	private String fullName;
 	private String owner;
 	private Long ownerId;
+	private Collection<Hold> holds;
 	
 	public Ship() {
 		super();
@@ -72,6 +73,15 @@ public class Ship extends Tag implements Serializable {
 
 	public void setOwnerId(Long ownerId) {
 		this.ownerId = ownerId;
+	}
+
+	
+	public Collection<Hold> getHolds() {
+		return holds;
+	}
+
+	public void setHolds(Collection<Hold> holds) {
+		this.holds = holds;
 	}
 	
 	

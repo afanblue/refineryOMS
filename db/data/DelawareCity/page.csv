@@ -1,5 +1,5 @@
 Table,page,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 view_priv_id,privilege,id,name
 exec_priv_id,privilege,id,name
 Data,,,
@@ -24,25 +24,25 @@ Active Transfers (crude),active_transfers.php?field=crude,View Transfer,Execute 
 Process Unit,admin_process_unit.php,Admin Process Units,Admin Process Units,Y
 Process Unit List,process_units.php,View Process Units,View Process Units,Y
 Transfer Admin,admin_transfers.php,View Transfer,View Transfer,Y
-Container Admin,null,View Carriers,Admin Carriers,Y
-Site Star Plot,null,View Plot Groups,View Plot Groups,Y
-Plots,null,View Plot Groups,View Plot Groups,Y
-Manage Plots,null,Admin Plot Groups,Admin Plot Groups,Y
-Ad Hoc Plot,null,View Plot Groups,View Plot Groups,Y
-List Schematics,null,Access Schematics,Access Schematics,Y
-Manage Schematics,null,Schematic Admin,Schematic Admin,Y
-Calc Var Admin,null,Calc Admin,Calc Admin,Y
-Digital Out,null,DO Admin,DO Admin,Y
-Analog Out,null,AO Admin,AO Admin,Y
-Control Block,null,ControlBlock Admin,ControlBlock Admin,Y
-Tag Admin,null,Tag Admin,Tag Admin,Y
-Pipe,null,AdminPipes,AdminPipes,Y
-Active Orders,null,View Orders,OrderAdmin,Y
-Purchases,null,OrderAdmin,OrderAdmin,Y
-Sales,null,OrderAdmin,OrderAdmin,Y
-Last Weeks Orders,null,OrderAdmin,View Orders,Y
-Last Months Orders,null,OrderAdmin,View Orders,Y
-ShipAdmin,null,Admin Ship,Admin Ship,Y
-Docks,null,Admin Docks,Admin Docks,Y
-VesselDock,null,DockVessel,DockVessel,Y
+Container Admin,None,View Carriers,Admin Carriers,Y
+Site Star Plot,None,View Plot Groups,View Plot Groups,Y
+Plots,None,View Plot Groups,View Plot Groups,Y
+Manage Plots,None,Admin Plot Groups,Admin Plot Groups,Y
+Ad Hoc Plot,None,View Plot Groups,View Plot Groups,Y
+List Schematics,None,Access Schematics,Access Schematics,Y
+Manage Schematics,None,Schematic Admin,Schematic Admin,Y
+Calc Var Admin,None,Calc Admin,Calc Admin,Y
+Digital Out,None,DO Admin,DO Admin,Y
+Analog Out,None,AO Admin,AO Admin,Y
+Control Block,None,ControlBlock Admin,ControlBlock Admin,Y
+Tag Admin,None,Tag Admin,Tag Admin,Y
+Pipe,None,AdminPipes,AdminPipes,Y
+Active Orders,None,View Orders,OrderAdmin,Y
+Purchases,None,OrderAdmin,OrderAdmin,Y
+Sales,None,OrderAdmin,OrderAdmin,Y
+Last Weeks Orders,None,OrderAdmin,View Orders,Y
+Last Months Orders,None,OrderAdmin,View Orders,Y
+ShipAdmin,None,Admin Ship,Admin Ship,Y
+Docks,None,Admin Docks,Admin Docks,Y
+VesselDock,None,DockVessel,DockVessel,Y
 End

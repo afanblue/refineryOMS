@@ -26,6 +26,8 @@ public interface CarrierService {
 	
 	public Collection<Carrier> getAllCarriers( );
 	
+	public Collection<Carrier> getAllCarriersForProduct( String code );
+	
 	public Carrier getCarrier( Long id);
 	
 	public Long updateCarrier( Carrier c );

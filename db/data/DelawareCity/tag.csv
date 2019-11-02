@@ -1,151 +1,151 @@
 Table,tag,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
 name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
-DeCity,Delaware City Refinery,FLD,null,39.592313,-75.641903,39.579168,-75.619368,Y
-StCroix,St. Croix USVI Refinery,FLD,null,39.583824,-75.627185,39.583002,-75.627185,N
-Crude,Crude Field Delaware City,FLD,null,39.585193,-75.628699,39.580756,-75.623171,Y
-Refined,Refined Products Delaware City,FLD,null,39.591601,-75.629544,39.58711,-75.620741,Y
-Gasoline,Gasoline Delaware City,FLD,null,39.591683,-75.629544,39.587165,-75.624333,Y
-FuelOils,Fuel Oils Delaware City,FLD,null,39.590369,-75.627995,39.58711,-75.623312,Y
-Asphalts,Asphalts Delaware City,FLD,null,39.590232,-75.624298,39.587137,-75.620143,Y
-CT01,Crude Tank 1,TK,null,39.584946,-75.6281,39.584207,-75.627185,Y
-CT02,Crude Tank 2,TK,null,39.583851,-75.6281,39.583002,-75.627185,Y
-CT03,Crude Tank 3,TK,null,39.582755,-75.6281,39.581961,-75.627185,Y
-CT04,Crude Tank 4,TK,null,39.581687,-75.6281,39.580784,-75.627185,Y
-CT05,Crude Tank 5,TK,null,39.584946,-75.62634,39.584207,-75.625459,Y
-CT06,Crude Tank 6,TK,null,39.583851,-75.62634,39.583002,-75.625459,Y
-CT07,Crude Tank 7,TK,null,39.582755,-75.62634,39.581961,-75.625459,Y
-CT08,Crude Tank 8,TK,null,39.581687,-75.62634,39.580784,-75.625459,Y
-CT09,Crude Tank 9,TK,null,39.584946,-75.624579,39.584207,-75.623699,Y
-CT10,Crude Tank 10,TK,null,39.583851,-75.624579,39.583002,-75.623699,Y
-CT11,Crude Tank 11,TK,null,39.582755,-75.624579,39.581961,-75.623699,Y
-CT12,Crude Tank 12,TK,null,39.581687,-75.624579,39.580784,-75.623699,Y
-GT01,Gasoline Tank 1,TK,null,39.591165,-75.629051,39.590672,-75.628312,Y
-GT02,Gasoline Tank 2,TK,null,39.59048,-75.629051,39.589987,-75.628312,Y
-GT03,Gasoline Tank 3,TK,null,39.589795,-75.629051,39.589302,-75.628312,Y
-GT04,Gasoline Tank 4,TK,null,39.58911,-75.629051,39.588617,-75.628312,Y
-GT05,Gasoline Tank 5,TK,null,39.588425,-75.629051,39.587932,-75.628312,Y
-GT06,Gasoline Tank 6,TK,null,39.58774,-75.629051,39.587247,-75.628312,Y
-GT07,Gasoline Tank 7,TK,null,39.591165,-75.627819,39.590672,-75.628312,Y
-GT08,Gasoline Tank 8,TK,null,39.591165,-75.626762,39.590672,-75.626023,Y
-GT09,Gasoline Tank 9,TK,null,39.591165,-75.625636,39.590672,-75.624897,Y
-GT10,Gasoline Tank 10,TK,null,39.59015,-75.627819,39.589794,-75.628312,Y
-GT11,Gasoline Tank 11,TK,null,39.589684,-75.627819,39.589355,-75.628312,Y
-GT12,Gasoline Tank 12,TK,null,39.589246,-75.627819,39.588862,-75.628312,Y
-GT13,Gasoline Tank 13,TK,null,39.588753,-75.627819,39.588397,-75.628312,Y
-GT14,Gasoline Tank 14,TK,null,39.58826,-75.627819,39.587877,-75.628312,Y
-GT15,Gasoline Tank 15,TK,null,39.58763,-75.627819,39.587219,-75.628312,Y
-JT01,Jet Fuel Tank 1,TK,null,39.590232,-75.624931,39.589903,-75.624438,Y
-JT02,Jet Fuel Tank 2,TK,null,39.589739,-75.624931,39.58941,-75.624438,Y
-JT03,Jet Fuel Tank 2,TK,null,39.589246,-75.624931,39.588917,-75.624438,Y
-JT04,Jet Fuel Tank 4,TK,null,39.588753,-75.624931,39.588424,-75.624438,Y
-JT05,Jet Fuel Tank 5,TK,null,39.58826,-75.624931,39.587931,-75.624438,Y
-JT06,Jet Fuel Tank 6,TK,null,39.587767,-75.624931,39.587438,-75.624438,Y
-JT07,Jet Fuel Tank 7,TK,null,39.590232,-75.624086,39.589903,-75.623593,Y
-JT08,Jet Fuel Tank 8,TK,null,39.589739,-75.624086,39.58941,-75.623593,Y
-JT09,Jet Fuel Tank 9,TK,null,39.589246,-75.624086,39.588917,-75.623593,Y
-JT10,Jet Fuel Tank 10,TK,null,39.588753,-75.624086,39.588424,-75.623593,Y
-JT11,Jet Fuel Tank 11,TK,null,39.58826,-75.624086,39.587931,-75.623593,Y
-JT12,Jet Fuel Tank 12,TK,null,39.587767,-75.624086,39.587438,-75.623593,Y
-FOT01,Fuel Oil Tank 1,TK,null,39.590222,-75.626888,39.589811,-75.62636,Y
-FOT02,Fuel Oil Tank 2,TK,null,39.589709,-75.626888,39.589298,-75.62636,Y
-FOT03,Fuel Oil Tank 3,TK,null,39.589196,-75.626888,39.588785,-75.62636,Y
-FOT04,Fuel Oil Tank 4,TK,null,39.588683,-75.626888,39.588272,-75.62636,Y
-FOT05,Fuel Oil Tank 5,TK,null,39.58817,-75.626888,39.587759,-75.62636,Y
-FOT06,Fuel Oil Tank 6,TK,null,39.587657,-75.626888,39.587246,-75.62636,Y
-FOT07,Fuel Oil Tank 7,TK,null,39.589709,-75.625917,39.589298,-75.625389,Y
-FOT08,Fuel Oil Tank 8,TK,null,39.589196,-75.625917,39.588785,-75.625389,Y
-FOT09,Fuel Oil Tank 9,TK,null,39.588683,-75.625917,39.588272,-75.625389,Y
-FOT10,Fuel Oil Tank 10,TK,null,39.58817,-75.625917,39.587759,-75.625389,Y
-FOT11,Fuel Oil Tank 11,TK,null,39.587657,-75.625917,39.587246,-75.625389,Y
-WT01,Waxl Tank 1,TK,null,39.591711,-75.622326,39.591218,-75.621727,Y
-WT02,Wax Tank 2,TK,null,39.591135,-75.622291,39.590807,-75.621798,Y
-WT03,Wax Tank 3,TK,null,39.591245,-75.621586,39.590807,-75.620952,Y
-NT01,Liquid Refinery Gas Tank 1,TK,null,39.587767,-75.6231,39.587438,-75.622502,Y
-NT02,Liquid Refinery Gas Tank 2,TK,null,39.590232,-75.6231,39.589903,-75.622502,Y
-NT03,Liquid Refinery Gas Tank 3,TK,null,39.590232,-75.622291,39.589903,-75.621762,Y
-NT04,Naptha Tank 4,TK,null,39.589739,-75.622185,39.58941,-75.621762,Y
-AT01,Asphalt Tank 2,TK,null,39.589246,-75.622185,39.588917,-75.621762,Y
-AT02,Asphalt Tank 3,TK,null,39.590232,-75.62134,39.589903,-75.620917,Y
-AT03,Asphalt Tank 4,TK,null,39.589739,-75.62134,39.58941,-75.620917,Y
-AT04,Asphalt Tank 5,TK,null,39.589246,-75.62134,39.588917,-75.620917,Y
-LT01,Lubricant Tank 1,TK,null,39.589739,-75.6231,39.58941,-75.622502,Y
-LT02,Lubricant Tank 2,TK,null,39.589246,-75.6231,39.588917,-75.622502,Y
-LT03,Lubricant Tank 3,TK,null,39.588753,-75.6231,39.588424,-75.622502,Y
-LT04,Lubricant Tank 4,TK,null,39.58826,-75.6231,39.587931,-75.622502,Y
-RefProd,null,HS,null,39.592029,-75.625879,0,-75.62514,Y
-CrudeHS,null,HS,null,39.585595,-75.625879,0,-75.62514,Y
-RU1C-Pmp,Unit 1 Crude Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1G-Pmp,Unit 1 Gasoline Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1FO-Pmp,Unit 1 Fuel Oil Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1J-Pmp,Unit 1 Jet Fuel Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1RF-Pmp,Unit 1 RFO Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1LR-Pmp,Unit 1 LRG Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1A-Pmp,Unit 1 Asphalt Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU1L-Pmp,Unit 1 Lubricant Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2C-Pmp,Unit 2 Crude Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2G-Pmp,Unit 2 Gasoline Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2FO-Pmp,Unit 2 Fuel Oil Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2J-Pmp,Unit 2 Jet Fuel Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2RF-Pmp,Unit 2 RFO Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2LR-Pmp,Unit 2 LRG Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2A-Pmp,Unit 2 Asphalt Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-RU2L-Pmp,Unit 2 Lubricant Pump,PMP,null,0,-75.625879,0,-75.62514,Y
-CrudeUnit,Crude Tank Unit,PU,null,39.585111,-75.628558,39.580674,-75.623206,Y
-RefindLvls,Refined Tank Levels,PU,null,39.591711,-75.625879,39.587137,-75.62514,Y
-RefUnit1|RU,,RU,null,39.586507,-75.635389,39.583933,-75.633276,Y
-RefUnit2|RU,,RU,null,39.589629,-75.635037,39.586672,-75.633347,Y
-AsfaltUnit,Asphalt tank unit,PU,null,0,-75.625879,0,-75.62514,Y
-FOUnit,Fuel Oil Tank Unit,PU,null,0,-75.625879,0,-75.62514,Y
-GasoUnit,Gasoline Tank Unit,PU,null,0,-75.625879,0,-75.62514,Y
-JetFuelUni,Jet Fuel Unit,PU,null,0,-75.625879,0,-75.62514,Y
-JetFuels,Jet Fuel Unit,FLD,null,39.590286,-75.626164,39.587165,-75.622361,Y
-Local,Local Weather,PU,null,0,-75.625879,0,-75.62514,Y
-TC314,Tank Car 1,TC,null,0,0,0,0,Y
-TT315,Tank Truck 1,TT,null,0,0,0,0,Y
-S316,AFRAMax Ship 1,S,null,0,0,0,0,Y
-S317,SuezMax Ship 2,S,null,0,0,0,0,Y
-LubeUnit,Lubrication Tank Unit,PU,null,39.590259,-75.626164,39.587055,-75.62053,Y
-NapthaUnit,Naptha Tanks,PU,null,39.590341,-75.626164,39.587165,-75.620354,Y
+DeCity,Delaware City Refinery,FLD,None,39.592313,-75.641903,39.579168,-75.619368,Y
+StCroix,St. Croix USVI Refinery,FLD,None,39.583824,-75.627185,39.583002,-75.627185,N
+Crude,Crude Field Delaware City,FLD,None,39.585193,-75.628699,39.580756,-75.623171,Y
+Refined,Refined Products Delaware City,FLD,None,39.591601,-75.629544,39.58711,-75.620741,Y
+Gasoline,Gasoline Delaware City,FLD,None,39.591683,-75.629544,39.587165,-75.624333,Y
+FuelOils,Fuel Oils Delaware City,FLD,None,39.590369,-75.627995,39.58711,-75.623312,Y
+Asphalts,Asphalts Delaware City,FLD,None,39.590232,-75.624298,39.587137,-75.620143,Y
+CT01,Crude Tank 1,TK,C,39.584946,-75.6281,39.584207,-75.627185,Y
+CT02,Crude Tank 2,TK,C,39.583851,-75.6281,39.583002,-75.627185,Y
+CT03,Crude Tank 3,TK,C,39.582755,-75.6281,39.581961,-75.627185,Y
+CT04,Crude Tank 4,TK,C,39.581687,-75.6281,39.580784,-75.627185,Y
+CT05,Crude Tank 5,TK,C,39.584946,-75.62634,39.584207,-75.625459,Y
+CT06,Crude Tank 6,TK,C,39.583851,-75.62634,39.583002,-75.625459,Y
+CT07,Crude Tank 7,TK,C,39.582755,-75.62634,39.581961,-75.625459,Y
+CT08,Crude Tank 8,TK,C,39.581687,-75.62634,39.580784,-75.625459,Y
+CT09,Crude Tank 9,TK,C,39.584946,-75.624579,39.584207,-75.623699,Y
+CT10,Crude Tank 10,TK,C,39.583851,-75.624579,39.583002,-75.623699,Y
+CT11,Crude Tank 11,TK,C,39.582755,-75.624579,39.581961,-75.623699,Y
+CT12,Crude Tank 12,TK,C,39.581687,-75.624579,39.580784,-75.623699,Y
+GT01,Gasoline Tank 1,TK,G,39.591165,-75.629051,39.590672,-75.628312,Y
+GT02,Gasoline Tank 2,TK,G,39.59048,-75.629051,39.589987,-75.628312,Y
+GT03,Gasoline Tank 3,TK,G,39.589795,-75.629051,39.589302,-75.628312,Y
+GT04,Gasoline Tank 4,TK,G,39.58911,-75.629051,39.588617,-75.628312,Y
+GT05,Gasoline Tank 5,TK,G,39.588425,-75.629051,39.587932,-75.628312,Y
+GT06,Gasoline Tank 6,TK,G,39.58774,-75.629051,39.587247,-75.628312,Y
+GT07,Gasoline Tank 7,TK,G,39.591165,-75.627819,39.590672,-75.628312,Y
+GT08,Gasoline Tank 8,TK,G,39.591165,-75.626762,39.590672,-75.626023,Y
+GT09,Gasoline Tank 9,TK,G,39.591165,-75.625636,39.590672,-75.624897,Y
+GT10,Gasoline Tank 10,TK,G,39.59015,-75.627819,39.589794,-75.628312,Y
+GT11,Gasoline Tank 11,TK,G,39.589684,-75.627819,39.589355,-75.628312,Y
+GT12,Gasoline Tank 12,TK,G,39.589246,-75.627819,39.588862,-75.628312,Y
+GT13,Gasoline Tank 13,TK,G,39.588753,-75.627819,39.588397,-75.628312,Y
+GT14,Gasoline Tank 14,TK,G,39.58826,-75.627819,39.587877,-75.628312,Y
+GT15,Gasoline Tank 15,TK,G,39.58763,-75.627819,39.587219,-75.628312,Y
+JFT01,Jet Fuel Tank 1,TK,JF,39.590232,-75.624931,39.589903,-75.624438,Y
+JFT02,Jet Fuel Tank 2,TK,JF,39.589739,-75.624931,39.58941,-75.624438,Y
+JFT03,Jet Fuel Tank 2,TK,JF,39.589246,-75.624931,39.588917,-75.624438,Y
+JFT04,Jet Fuel Tank 4,TK,JF,39.588753,-75.624931,39.588424,-75.624438,Y
+JFT05,Jet Fuel Tank 5,TK,JF,39.58826,-75.624931,39.587931,-75.624438,Y
+JFT06,Jet Fuel Tank 6,TK,JF,39.587767,-75.624931,39.587438,-75.624438,Y
+JFT07,Jet Fuel Tank 7,TK,JF,39.590232,-75.624086,39.589903,-75.623593,Y
+JFT08,Jet Fuel Tank 8,TK,JF,39.589739,-75.624086,39.58941,-75.623593,Y
+JFT09,Jet Fuel Tank 9,TK,JF,39.589246,-75.624086,39.588917,-75.623593,Y
+JFT10,Jet Fuel Tank 10,TK,JF,39.588753,-75.624086,39.588424,-75.623593,Y
+JFT11,Jet Fuel Tank 11,TK,JF,39.58826,-75.624086,39.587931,-75.623593,Y
+JFT12,Jet Fuel Tank 12,TK,JF,39.587767,-75.624086,39.587438,-75.623593,Y
+FOT01,Fuel Oil Tank 1,TK,FO,39.590222,-75.626888,39.589811,-75.62636,Y
+FOT02,Fuel Oil Tank 2,TK,FO,39.589709,-75.626888,39.589298,-75.62636,Y
+FOT03,Fuel Oil Tank 3,TK,FO,39.589196,-75.626888,39.588785,-75.62636,Y
+FOT04,Fuel Oil Tank 4,TK,FO,39.588683,-75.626888,39.588272,-75.62636,Y
+FOT05,Fuel Oil Tank 5,TK,FO,39.58817,-75.626888,39.587759,-75.62636,Y
+FOT06,Fuel Oil Tank 6,TK,FO,39.587657,-75.626888,39.587246,-75.62636,Y
+FOT07,Fuel Oil Tank 7,TK,FO,39.589709,-75.625917,39.589298,-75.625389,Y
+FOT08,Fuel Oil Tank 8,TK,FO,39.589196,-75.625917,39.588785,-75.625389,Y
+FOT09,Fuel Oil Tank 9,TK,FO,39.588683,-75.625917,39.588272,-75.625389,Y
+FOT10,Fuel Oil Tank 10,TK,FO,39.58817,-75.625917,39.587759,-75.625389,Y
+FOT11,Fuel Oil Tank 11,TK,FO,39.587657,-75.625917,39.587246,-75.625389,Y
+WT01,Waxl Tank 1,TK,W,39.591711,-75.622326,39.591218,-75.621727,Y
+WT02,Wax Tank 2,TK,W,39.591135,-75.622291,39.590807,-75.621798,Y
+WT03,Wax Tank 3,TK,W,39.591245,-75.621586,39.590807,-75.620952,Y
+NT01,Liquid Refinery Gas Tank 1,TK,N,39.587767,-75.6231,39.587438,-75.622502,Y
+NT02,Liquid Refinery Gas Tank 2,TK,N,39.590232,-75.6231,39.589903,-75.622502,Y
+NT03,Liquid Refinery Gas Tank 3,TK,N,39.590232,-75.622291,39.589903,-75.621762,Y
+NT04,Naptha Tank 4,TK,N,39.589739,-75.622185,39.58941,-75.621762,Y
+AT01,Asphalt Tank 2,TK,A,39.589246,-75.622185,39.588917,-75.621762,Y
+AT02,Asphalt Tank 3,TK,A,39.590232,-75.62134,39.589903,-75.620917,Y
+AT03,Asphalt Tank 4,TK,A,39.589739,-75.62134,39.58941,-75.620917,Y
+AT04,Asphalt Tank 5,TK,A,39.589246,-75.62134,39.588917,-75.620917,Y
+LT01,Lubricant Tank 1,TK,L,39.589739,-75.6231,39.58941,-75.622502,Y
+LT02,Lubricant Tank 2,TK,L,39.589246,-75.6231,39.588917,-75.622502,Y
+LT03,Lubricant Tank 3,TK,L,39.588753,-75.6231,39.588424,-75.622502,Y
+LT04,Lubricant Tank 4,TK,L,39.58826,-75.6231,39.587931,-75.622502,Y
+RefProd,None,HS,None,39.592029,-75.625879,0.0,-75.62514,Y
+CrudeHS,None,HS,None,39.585595,-75.625879,0.0,-75.62514,Y
+RU1C-Pmp,Unit 1 Crude Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1G-Pmp,Unit 1 Gasoline Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1FO-Pmp,Unit 1 Fuel Oil Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1J-Pmp,Unit 1 Jet Fuel Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1RF-Pmp,Unit 1 RFO Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1LR-Pmp,Unit 1 LRG Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1A-Pmp,Unit 1 Asphalt Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU1L-Pmp,Unit 1 Lubricant Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2C-Pmp,Unit 2 Crude Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2G-Pmp,Unit 2 Gasoline Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2FO-Pmp,Unit 2 Fuel Oil Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2J-Pmp,Unit 2 Jet Fuel Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2RF-Pmp,Unit 2 RFO Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2LR-Pmp,Unit 2 LRG Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2A-Pmp,Unit 2 Asphalt Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+RU2L-Pmp,Unit 2 Lubricant Pump,PMP,None,0.0,-75.625879,0.0,-75.62514,Y
+CrudeUnit,Crude Tank Unit,PU,None,39.585111,-75.628558,39.580674,-75.623206,Y
+RefindLvls,Refined Tank Levels,PU,None,39.591711,-75.625879,39.587137,-75.62514,Y
+RefUnit1,None,RU,None,39.586507,-75.635389,39.583933,-75.633276,Y
+RefUnit2,None,RU,None,39.589629,-75.635037,39.586672,-75.633347,Y
+AsfaltUnit,Asphalt tank unit,PU,None,0.0,-75.625879,0.0,-75.62514,Y
+FOUnit,Fuel Oil Tank Unit,PU,None,0.0,-75.625879,0.0,-75.62514,Y
+GasoUnit,Gasoline Tank Unit,PU,None,0.0,-75.625879,0.0,-75.62514,Y
+JetFuelUni,Jet Fuel Unit,PU,None,0.0,-75.625879,0.0,-75.62514,Y
+JetFuels,Jet Fuel Unit,FLD,None,39.590286,-75.626164,39.587165,-75.622361,Y
+Local,Local Weather,PU,None,0.0,-75.625879,0.0,-75.62514,Y
+TC314,Tank Car 1,TC,None,0.0,0.0,0.0,0.0,Y
+TT315,Tank Truck 1,TT,G,None,None,None,None,Y
+S316,AFRAMax Ship 1,S,C,0.0,0.0,0.0,0.0,Y
+S317,SuezMax Ship 2,S,C,0.0,0.0,0.0,0.0,Y
+LubeUnit,Lubrication Tank Unit,PU,None,39.590259,-75.626164,39.587055,-75.62053,Y
+NapthaUnit,Naptha Tanks,PU,None,39.590341,-75.626164,39.587165,-75.620354,Y
 Schematic0,Schematic Insert - Test 0,SCM,0,0.0,0.0,0.0,0.0,Y
-Schematic1,Schematic Insert - Test 1,SCM,0,0,0,0,0,Y
-Schematic2,Schematic Insert - Test 2,SCM,null,0,0,0,0,Y
-Schematic3,Schematic Insert - Test 3,SCM,null,0,0,0,0,Y
-CurTemp,,SCO,TX,17.0,504.0,40.0,609.0,Y
-CrudeTK01,,SCO,TK,353.0,80.0,417.0,110.0,Y
-WindDir,,SCO,G,45.0,508.0,135.0,596.0,Y
-P1toRU,,SCO,P,404.0,108.0,404.0,182.0,Y
-V2RU,,SCO,VH,398.0,182.0,422.0,194.0,Y
-VV2RU,,SCO,VV,179.0,186.0,191.0,210.0,Y
-WindSpeed,,SCO,TX,135.0,535.0,155.0,598.0,Y
-VPump,,SCO,PT,95.0,248.0,110.0,258.0,Y
-HPump,,SCO,PL,56.0,248.0,66.0,263.0,Y
-RefUnit1|RU,,SCO,RU,5.0,6.0,41.0,74.0,Y
-Dock1,,SCO,SH,403.0,498.0,465.0,620.0,Y
-CtoR1,Crude transfer to refinery unit 1,XFR,C,0,0,0,0,Y
-R2toA,Asphalt transfer from refinery unit 2,XFR,A,0,0,0,0,Y
-R2toFO,Fuel oil transfer from refinery unit 2,XFR,FO,0,0,0,0,Y
-R2toG,Gasoline transfer from refinery unit 2,XFR,G,0,0,0,0,Y
-R1toJF,Jet fuel transfer from refinery unit 1,XFR,JF,0,0,0,0,Y
-R1toL,Lubricant transfer from refinery unit 1,XFR,L,0,0,0,0,Y
-R2toN,Naptha transfer from refinery unit 2,XFR,N,0,0,0,0,Y
-R1toFO,Fuel oil transfer from refinery unit 1,XFR,FO,0,0,0,0,Y
-R1toG,Gasoline transfer from refinery unit 1,XFR,G,0,0,0,0,Y
-R1toN,Naptha transfer from refinery unit 1,XFR,N,0,0,0,0,Y
-CtoR2,Crude transfer to refinery unit 2,XFR,C,0,0,0,0,Y
-R2toL,Lubricant transfer from refinery unit 2,XFR,L,0,0,0,0,Y
-R2toJF,Jet fuel transfer from refinery unit 2,XFR,JF,0,0,0,0,Y
-GtoTT,Gasoline transfer to tank truck,XFR,G,0,0,0,0,Y
-R1toA,Asphalt transfer from refinery unit 1,XFR,A,0,0,0,0,Y
-GtoTC,Gasoline transfer to tank car,XFR,G,0,0,0,0,Y
+Schematic1,Schematic Insert - Test 1,SCM,0,0.0,0.0,0.0,0.0,Y
+Schematic2,Schematic Insert - Test 2,SCM,None,0.0,0.0,0.0,0.0,Y
+Schematic3,Schematic Insert - Test 3,SCM,None,0.0,0.0,0.0,0.0,Y
+CurTemp,None,SCO,TX,17.0,504.0,40.0,609.0,Y
+CrudeTK01,None,SCO,TK,353.0,80.0,417.0,110.0,Y
+WindDir,None,SCO,G,45.0,508.0,135.0,596.0,Y
+P1toRU,None,SCO,P,404.0,108.0,404.0,182.0,Y
+V2RU,None,SCO,VH,398.0,182.0,422.0,194.0,Y
+VV2RU,None,SCO,VV,179.0,186.0,191.0,210.0,Y
+WindSpeed,None,SCO,TX,135.0,535.0,155.0,598.0,Y
+VPump,None,SCO,PT,95.0,248.0,110.0,258.0,Y
+HPump,None,SCO,PL,56.0,248.0,66.0,263.0,Y
+RefUnit1,None,SCO,RU,5.0,6.0,41.0,74.0,Y
+Dock1,None,SCO,SH,403.0,498.0,465.0,620.0,Y
+CtoR1,Crude transfer to refinery unit 1,XFR,C,0.0,0.0,0.0,0.0,Y
+R2toA,Asphalt transfer from refinery unit 2,XFR,A,0.0,0.0,0.0,0.0,Y
+R2toFO,Fuel oil transfer from refinery unit 2,XFR,FO,0.0,0.0,0.0,0.0,Y
+R2toG,Gasoline transfer from refinery unit 2,XFR,G,0.0,0.0,0.0,0.0,Y
+R1toJF,Jet fuel transfer from refinery unit 1,XFR,JF,0.0,0.0,0.0,0.0,Y
+R1toL,Lubricant transfer from refinery unit 1,XFR,L,0.0,0.0,0.0,0.0,Y
+R2toN,Naptha transfer from refinery unit 2,XFR,N,0.0,0.0,0.0,0.0,Y
+R1toFO,Fuel oil transfer from refinery unit 1,XFR,FO,0.0,0.0,0.0,0.0,Y
+R1toG,Gasoline transfer from refinery unit 1,XFR,G,0.0,0.0,0.0,0.0,Y
+R1toN,Naptha transfer from refinery unit 1,XFR,N,0.0,0.0,0.0,0.0,Y
+CtoR2,Crude transfer to refinery unit 2,XFR,C,0.0,0.0,0.0,0.0,Y
+R2toL,Lubricant transfer from refinery unit 2,XFR,L,0.0,0.0,0.0,0.0,Y
+R2toJF,Jet fuel transfer from refinery unit 2,XFR,JF,0.0,0.0,0.0,0.0,Y
+GtoTT1,Gasoline transfer to tank truck,XFR,G,0.0,0.0,0.0,0.0,Y
+R1toA,Asphalt transfer from refinery unit 1,XFR,A,0.0,0.0,0.0,0.0,Y
+GtoTC,Gasoline transfer to tank car,XFR,G,0.0,0.0,0.0,0.0,Y
 TankField,Tank Field,SCM,0,0.0,0.0,0.0,0.0,Y
 TFRU1,RefUnit 1,SCO,RU,15.0,31.0,62.0,150.0,Y
-TFRU2,RefUnit2|RU,SCO,RU,15.0,502.0,60.0,552.0,Y
-TFPRU1-0,,SCO,P,50.0,42.0,89.0,45.0,Y
-TFPRU2-0,,SCO,P,50.0,542.0,75.0,542.0,Y
-TFPRU1-1,,SCO,P,89.0,43.0,89.0,600.0,Y
-TFPRU2-1,,SCO,P,75.0,542.0,75.0,620.0,Y
+TFRU2,RefUnit2,SCO,RU,15.0,502.0,60.0,552.0,Y
+TFPRU1-0,None,SCO,P,50.0,42.0,89.0,45.0,Y
+TFPRU2-0,None,SCO,P,50.0,542.0,75.0,542.0,Y
+TFPRU1-1,None,SCO,P,89.0,43.0,89.0,600.0,Y
+TFPRU2-1,None,SCO,P,75.0,542.0,75.0,620.0,Y
 TFC01,Crude TK 1,SCO,TK,125.0,15.0,170.0,95.0,Y
 TFC02,Crude TK 2,SCO,TK,235.0,15.0,280.0,95.0,Y
 TFC03,Crude TK 3,SCO,TK,305.0,15.0,350.0,95.0,Y
@@ -158,18 +158,18 @@ TFC09,Crude TK 9,SCO,TK,125.0,385.0,170.0,465.0,Y
 TFC10,Crude TK 10,SCO,TK,235.0,385.0,280.0,465.0,Y
 TFC11,Crude TK 11,SCO,TK,305.0,385.0,350.0,465.0,Y
 TFC12,Crude TK 12,SCO,TK,415.0,385.0,470.0,465.0,Y
-TFPCom011,,SCO,P,141.0,170.0,255.0,170.0,Y
-TFPCom021,,SCO,P,167.0,181.0,280.0,181.0,Y
-TFPCom012,,SCO,P,141.0,355.0,255.0,355.0,Y
-TFPCom022,,SCO,P,167.0,368.0,280.0,368.0,Y
-TFPCom013,,SCO,P,141.0,541.0,256.0,541.0,Y
-TFPCom023,,SCO,P,167.0,553.0,280.0,553.0,Y
-HPumpR,,SCO,PR,55.0,177.0,73.0,208.0,Y
-VPumpR,,SCO,PB,95.0,175.0,123.0,199.0,Y
-3WayValve,,SCO,3VT,177.0,68.0,206.0,101.0,Y
-3WayVlvBtm,,SCO,3VB,201.0,64.0,219.0,82.0,Y
-3WayVlvRt,,SCO,3VR,232.0,59.0,243.0,76.0,Y
-3WayVlvLft,,SCO,3VL,261.0,58.0,279.0,73.0,Y
+TFPCom011,None,SCO,P,141.0,170.0,255.0,170.0,Y
+TFPCom021,None,SCO,P,167.0,181.0,280.0,181.0,Y
+TFPCom012,None,SCO,P,141.0,355.0,255.0,355.0,Y
+TFPCom022,None,SCO,P,167.0,368.0,280.0,368.0,Y
+TFPCom013,None,SCO,P,141.0,541.0,256.0,541.0,Y
+TFPCom023,None,SCO,P,167.0,553.0,280.0,553.0,Y
+HPumpR,None,SCO,PR,55.0,177.0,73.0,208.0,Y
+VPumpR,None,SCO,PB,95.0,175.0,123.0,199.0,Y
+3WayValve,None,SCO,3VT,177.0,68.0,206.0,101.0,Y
+3WayVlvBtm,None,SCO,3VB,201.0,64.0,219.0,82.0,Y
+3WayVlvRt,None,SCO,3VR,232.0,59.0,243.0,76.0,Y
+3WayVlvLft,None,SCO,3VL,261.0,58.0,279.0,73.0,Y
 CTPmp011,Pump Out tank 1,SCO,PR,155.0,97.0,180.0,120.0,Y
 CTV011,Valve out Tk01 to RU1,SCO,VH,137.0,128.0,149.0,148.0,Y
 CTPipe011,Pipe TK1 to RU1,SCO,P,143.0,154.0,143.0,170.0,Y
@@ -244,18 +244,18 @@ CTV112,Valve out Tk11 to RU2,SCO,VH,343.0,498.0,355.0,522.0,Y
 CTV122,Valve out Tk12 to RU2,SCO,VH,464.0,498.0,476.0,522.0,Y
 CT2RU1-P,Crude Tanks pipe to RU1,P,C,0.0,0.0,0.0,0.0,N
 CT2RU2-P,Crude Tanks pipe to RU2,P,C,0.0,0.0,0.0,0.0,N
-TFPRU2-2,,SCO,P,75.0,617.0,388.0,617.0,Y
-TFPRU1-2,,SCO,P,90.0,597.0,376.0,597.0,Y
-TFPRU1-3,,SCO,P,198.0,172.0,198.0,595.0,Y
-TFPRU1-4,,SCO,P,374.0,169.0,374.0,599.0,Y
-TFPCom014,,SCO,P,321.0,170.0,446.0,170.0,Y
-TFPCom015,,SCO,P,321.0,355.0,446.0,355.0,Y
-TFPCom016,,SCO,P,321.0,541.0,446.0,541.0,Y
-TFPCom024,,SCO,P,345.0,181.0,472.0,181.0,Y
-TFPCom025,,SCO,P,345.0,368.0,472.0,368.0,Y
-TFPCom026,,SCO,P,345.0,553.0,471.0,553.0,Y
-TFPRU2-3,,SCO,P,212.0,182.0,212.0,615.0,Y
-TFPRU2-4,,SCO,P,386.0,183.0,386.0,615.0,Y
+TFPRU2-2,None,SCO,P,75.0,617.0,388.0,617.0,Y
+TFPRU1-2,None,SCO,P,90.0,597.0,376.0,597.0,Y
+TFPRU1-3,None,SCO,P,198.0,172.0,198.0,595.0,Y
+TFPRU1-4,None,SCO,P,374.0,169.0,374.0,599.0,Y
+TFPCom014,None,SCO,P,321.0,170.0,446.0,170.0,Y
+TFPCom015,None,SCO,P,321.0,355.0,446.0,355.0,Y
+TFPCom016,None,SCO,P,321.0,541.0,446.0,541.0,Y
+TFPCom024,None,SCO,P,345.0,181.0,472.0,181.0,Y
+TFPCom025,None,SCO,P,345.0,368.0,472.0,368.0,Y
+TFPCom026,None,SCO,P,345.0,553.0,471.0,553.0,Y
+TFPRU2-3,None,SCO,P,212.0,182.0,212.0,615.0,Y
+TFPRU2-4,None,SCO,P,386.0,183.0,386.0,615.0,Y
 CT2RU1a-P,Crude Tanks 1 2 5 6 9 10  Pipe to RU1,P,C,0.0,0.0,0.0,0.0,Y
 CT2RU1b-P,Crude Tanks 3 4 7 8 11 12  Pipe to RU1,P,C,0.0,0.0,0.0,0.0,Y
 CT2RU2a-P,Crude Tanks 1 2 5 6 9 10  Pipe to RU2,P,C,0.0,0.0,0.0,0.0,Y
@@ -301,177 +301,177 @@ CDShip1,Ship 1 Crude Delivery,SCO,SH,4.0,6.0,40.0,106.0,Y
 CDShip2,Ship 2 Crude Delivery,SCO,SH,4.0,170.0,40.0,270.0,Y
 CDShip3,Ship 3 Crude Delivery,SCO,SH,4.0,360.0,40.0,460.0,Y
 CDShip4,Ship 4 Crude Delivery,SCO,SH,4.0,520.0,40.0,620.0,Y
-CT01-V,Crude Tk 1 valve in,V,"",0,0,0,0,Y
-CT02-V,Crude Tk 2 valve in,V,"",0,0,0,0,Y
-CT03-V,Crude Tk 3 valve in,V,"",0,0,0,0,Y
-CT04-V,Crude Tk 4 valve in,V,"",0,0,0,0,Y
-CT05-V,Crude Tk 5 valve in,V,"",0,0,0,0,Y
-CT06-V,Crude Tk 6 valve in,V,"",0,0,0,0,Y
-CT07-V,Crude Tk 7 valve in,V,"",0,0,0,0,Y
-CT08-V,Crude Tk 8 valve in,V,"",0,0,0,0,Y
-CT09-V,Crude Tk 9 valve in,V,"",0,0,0,0,Y
-CT10-V,Crude Tk 10 valve in,V,"",0,0,0,0,Y
-CT11-V,Crude Tk 11 valve in,V,"",0,0,0,0,Y
-CT12-V,Crude Tk 12 valve in,V,"",0,0,0,0,Y
-FOT01-Vi,FuelOil Tk 01 valve in,V,"",0,0,0,0,Y
-FOT01-Vo,FuelOil Tk 01 valve out,V,"",0,0,0,0,Y
-FOT01-Pmp,FuelOil Tk 01 pump in,PMP,"",0,0,0,0,Y
-FOT03-Vi,FuelOil Tk 03 valve in,V,"",0,0,0,0,Y
-FOT03-Vo,FuelOil Tk 03 valve out,V,"",0,0,0,0,Y
-FOT03-Pmp,FuelOil Tk 03 pump in,PMP,"",0,0,0,0,Y
-FOT02-Vi,FuelOil Tk 02 valve in,V,"",0,0,0,0,Y
-FOT02-Vo,FuelOil Tk 02 valve out,V,"",0,0,0,0,Y
-FOT02-Pmp,FuelOil Tk 02 pump in,V,"",0,0,0,0,Y
-FOT04-Vi,FuelOil Tk 04 valve in,V,"",0,0,0,0,Y
-FOT04-Vo,FuelOil Tk 04 valve out,V,"",0,0,0,0,Y
-FOT04-Pmp,FuelOil Tk 04 pump in,PMP,"",0,0,0,0,Y
-FOT05-Vi,FuelOil Tk 05 valve in,V,"",0,0,0,0,Y
-FOT05-Vo,FuelOil Tk 05 valve out,V,"",0,0,0,0,Y
-FOT05-Pmp,FuelOil Tk 05 pump in,PMP,"",0,0,0,0,Y
-FOT06-Vi,FuelOil Tk 06 valve in,V,"",0,0,0,0,Y
-FOT06-Vo,FuelOil Tk 06 valve out,V,"",0,0,0,0,Y
-FOT06-Pmp,FuelOil Tk 06 pump in,PMP,"",0,0,0,0,Y
-FOT07-Vi,FuelOil Tk 07 valve in,V,"",0,0,0,0,Y
-FOT07-Vo,FuelOil Tk 07 valve out,V,"",0,0,0,0,Y
-FOT07-Pmp,FuelOil Tk 07 pump in,PMP,"",0,0,0,0,Y
-FOT08-Vi,FuelOil Tk 08 valve in,V,"",0,0,0,0,Y
-FOT08-Vo,FuelOil Tk 08 valve out,V,"",0,0,0,0,Y
-FOT08-Pmp,FuelOil Tk 08 pump in,PMP,"",0,0,0,0,Y
-FOT09-Vi,FuelOil Tk 09 valve in,V,"",0,0,0,0,Y
-FOT09-Vo,FuelOil Tk 09 valve out,V,"",0,0,0,0,Y
-FOT09-Pmp,FuelOil Tk 09 pump in,PMP,"",0,0,0,0,Y
-FOT10-Vi,FuelOil Tk 10 valve in,V,"",0,0,0,0,Y
-FOT10-Vo,FuelOil Tk 10 valve out,V,"",0,0,0,0,Y
-FOT10-Pmp,FuelOil Tk 10 pump in,PMP,"",0,0,0,0,Y
-FOT11-Vi,FuelOil Tk 11 valve in,V,"",0,0,0,0,Y
-FOT11-Vo,FuelOil Tk 11 valve out,V,"",0,0,0,0,Y
-FOT11-Pmp,FuelOil Tk 11 pump in,PMP,"",0,0,0,0,Y
-GT01-Vi,Gasoline Tk 01 valve in,V,"",0,0,0,0,Y
-GT01-Vo,Gasoline Tk 01 valve out,V,"",0,0,0,0,Y
-GT01-Pmp,Gasoline Tk 01 pump in,PMP,"",0,0,0,0,Y
-GT02-Vi,Gasoline Tk 02 valve in,V,"",0,0,0,0,Y
-GT02-Vo,Gasoline Tk 02 valve out,V,"",0,0,0,0,Y
-GT02-Pmp,Gasoline Tk 02 pump in,PMP,"",0,0,0,0,Y
-GT03-Vi,Gasoline Tk 03 valve in,V,"",0,0,0,0,Y
-GT03-Vo,Gasoline Tk 03 valve out,V,"",0,0,0,0,Y
-GT03-Pmp,Gasoline Tk 03 pump in,PMP,"",0,0,0,0,Y
-GT04-Vi,Gasoline Tk 04 valve in,V,"",0,0,0,0,Y
-GT04-Vo,Gasoline Tk 04 valve out,V,"",0,0,0,0,Y
-GT04-Pmp,Gasoline Tk 04 pump in,PMP,"",0,0,0,0,Y
-GT05-Vi,Gasoline Tk 05 valve in,V,"",0,0,0,0,Y
-GT05-Vo,Gasoline Tk 05 valve out,V,"",0,0,0,0,Y
-GT05-Pmp,Gasoline Tk 05 pump in,PMP,"",0,0,0,0,Y
-GT06-Vi,Gasoline Tk 06 valve in,V,"",0,0,0,0,Y
-GT06-Vo,Gasoline Tk 06 valve out,V,"",0,0,0,0,Y
-GT06-Pmp,Gasoline Tk 06 pump in,PMP,"",0,0,0,0,Y
-GT07-Vi,Gasoline Tk 07 valve in,V,"",0,0,0,0,Y
-GT07-Vo,Gasoline Tk 07 valve out,V,"",0,0,0,0,Y
-GT07-Pmp,Gasoline Tk 07 pump in,PMP,"",0,0,0,0,Y
-GT08-Vi,Gasoline Tk 08 valve in,V,"",0,0,0,0,Y
-GT08-Vo,Gasoline Tk 08 valve out,V,"",0,0,0,0,Y
-GT08-Pmp,Gasoline Tk 08 pump in,PMP,"",0,0,0,0,Y
-GT09-Vi,Gasoline Tk 09 valve in,V,"",0,0,0,0,Y
-GT09-Vo,Gasoline Tk 09 valve out,V,"",0,0,0,0,Y
-GT09-Pmp,Gasoline Tk 09 pump in,PMP,"",0,0,0,0,Y
-GT10-Vi,Gasoline Tk 10 valve in,V,"",0,0,0,0,Y
-GT10-Vo,Gasoline Tk 10 valve out,V,"",0,0,0,0,Y
-GT10-Pmp,Gasoline Tk 10 pump in,PMP,"",0,0,0,0,Y
-GT11-Vi,Gasoline Tk 11 valve in,V,"",0,0,0,0,Y
-GT11-Vo,Gasoline Tk 11 valve out,V,"",0,0,0,0,Y
-GT11-Pmp,Gasoline Tk 11 pump in,PMP,"",0,0,0,0,Y
-GT12-Vi,Gasoline Tk 12 valve in,V,"",0,0,0,0,Y
-GT12-Vo,Gasoline Tk 12 valve out,V,"",0,0,0,0,Y
-GT12-Pmp,Gasoline Tk 12 pump in,PMP,"",0,0,0,0,Y
-GT13-Vi,Gasoline Tk 13 valve in,V,"",0,0,0,0,Y
-GT13-Vo,Gasoline Tk 13 valve out,V,"",0,0,0,0,Y
-GT13-Pmp,Gasoline Tk 13 pump in,PMP,"",0,0,0,0,Y
-GT14-Vi,Gasoline Tk 14 valve in,V,"",0,0,0,0,Y
-GT14-Vo,Gasoline Tk 14 valve out,V,"",0,0,0,0,Y
-GT14-Pmp,Gasoline Tk 14 pump in,PMP,"",0,0,0,0,Y
-GT15-Vi,Gasoline Tk 15 valve in,V,"",0,0,0,0,Y
-GT15-Vo,Gasoline Tk 15 valve out,V,"",0,0,0,0,Y
-GT15-Pmp,Gasoline Tk 15 pump in,PMP,"",0,0,0,0,Y
-AT01-Vi,Asphalt Tk 01 valve in,V,"",0,0,0,0,Y
-AT01-Vo,Asphalt Tk 01 valve out,V,"",0,0,0,0,Y
-AT01-Pmp,Asphalt Tk 01 pump in,PMP,"",0,0,0,0,Y
-AT02-Vi,Asphalt Tk 02 valve in,V,"",0,0,0,0,Y
-AT02-Vo,Asphalt Tk 02 valve out,V,"",0,0,0,0,Y
-AT02-Pmp,Asphalt Tk 02 pump in,PMP,"",0,0,0,0,Y
-AT03-Vi,Asphalt Tk 03 valve in,V,"",0,0,0,0,Y
-AT03-Vo,Asphalt Tk 03 valve out,V,"",0,0,0,0,Y
-AT03-Pmp,Asphalt Tk 03 pump in,PMP,"",0,0,0,0,Y
-AT04-Vi,Asphalt Tk 04 valve in,V,"",0,0,0,0,Y
-AT04-Vo,Asphalt Tk 04 valve out,V,"",0,0,0,0,Y
-AT04-Pmp,Asphalt Tk 04 pump in,PMP,"",0,0,0,0,Y
-JT01-Vi,JetFuel Tk 01 valve in,V,"",0,0,0,0,Y
-JT01-Vo,JetFuel Tk 01 valve out,V,"",0,0,0,0,Y
-JT01-Pmp,JetFuel Tk 01 pump in,PMP,"",0,0,0,0,Y
-JT02-Vi,JetFuel Tk 02 valve in,V,"",0,0,0,0,Y
-JT02-Vo,JetFuel Tk 02 valve out,V,"",0,0,0,0,Y
-JT02-Pmp,JetFuel Tk 02 pump in,PMP,"",0,0,0,0,Y
-JT03-Vi,JetFuel Tk 03 valve in,V,"",0,0,0,0,Y
-JT03-Vo,JetFuel Tk 03 valve out,V,"",0,0,0,0,Y
-JT03-Pmp,JetFuel Tk 03 pump in,PMP,"",0,0,0,0,Y
-JT04-Vi,JetFuel Tk 04 valve in,V,"",0,0,0,0,Y
-JT04-Vo,JetFuel Tk 04 valve out,V,"",0,0,0,0,Y
-JT04-Pmp,JetFuel Tk 04 pump in,PMP,"",0,0,0,0,Y
-JT05-Vi,JetFuel Tk 05 valve in,V,"",0,0,0,0,Y
-JT05-Vo,JetFuel Tk 05 valve out,V,"",0,0,0,0,Y
-JT05-Pmp,JetFuel Tk 05 pump in,PMP,"",0,0,0,0,Y
-JT06-Vi,JetFuel Tk 06 valve in,V,"",0,0,0,0,Y
-JT06-Vo,JetFuel Tk 06 valve out,V,"",0,0,0,0,Y
-JT06-Pmp,JetFuel Tk 06 pump in,PMP,"",0,0,0,0,Y
-JT07-Vi,JetFuel Tk 07 valve in,V,"",0,0,0,0,Y
-JT07-Vo,JetFuel Tk 07 valve out,V,"",0,0,0,0,Y
-JT07-Pmp,JetFuel Tk 07 pump in,PMP,"",0,0,0,0,Y
-JT08-Vi,JetFuel Tk 08 valve in,V,"",0,0,0,0,Y
-JT08-Vo,JetFuel Tk 08 valve out,V,"",0,0,0,0,Y
-JT08-Pmp,JetFuel Tk 08 pump in,PMP,"",0,0,0,0,Y
-JT09-Vi,JetFuel Tk 09 valve in,V,"",0,0,0,0,Y
-JT09-Vo,JetFuel Tk 09 valve out,V,"",0,0,0,0,Y
-JT09-Pmp,JetFuel Tk 09 pump in,PMP,"",0,0,0,0,Y
-JT10-Vi,JetFuel Tk 10 valve in,V,"",0,0,0,0,Y
-JT10-Vo,JetFuel Tk 10 valve out,V,"",0,0,0,0,Y
-JT10-Pmp,JetFuel Tk 10 pump in,PMP,"",0,0,0,0,Y
-JT11-Vi,JetFuel Tk 11 valve in,V,"",0,0,0,0,Y
-JT11-Vo,JetFuel Tk 11 valve out,V,"",0,0,0,0,Y
-JT11-Pmp,JetFuel Tk 11 pump in,PMP,"",0,0,0,0,Y
-JT12-Vi,JetFuel Tk 12 valve in,V,"",0,0,0,0,Y
-JT12-Vo,JetFuel Tk 12 valve out,V,"",0,0,0,0,Y
-JT12-Pmp,JetFuel Tk 12 pump in,PMP,"",0,0,0,0,Y
-LT01-Vi,Lubricants Tk 01 valve in,V,"",0,0,0,0,Y
-LT01-Vo,Lubricants Tk 01 valve out,V,"",0,0,0,0,Y
-LT01-Pmp,Lubricants Tk 01 pump in,PMP,"",0,0,0,0,Y
-LT02-Vi,Lubricants Tk 02 valve in,V,"",0,0,0,0,Y
-LT02-Vo,Lubricants Tk 02 valve out,V,"",0,0,0,0,Y
-LT02-Pmp,Lubricants Tk 02 pump in,PMP,"",0,0,0,0,Y
-LT03-Vi,Lubricants Tk 03 valve in,V,"",0,0,0,0,Y
-LT03-Vo,Lubricants Tk 03 valve out,V,"",0,0,0,0,Y
-LT03-Pmp,Lubricants Tk 03 pump in,PMP,"",0,0,0,0,Y
-LT04-Vi,Lubricants Tk 04 valve in,V,"",0,0,0,0,Y
-LT04-Vo,Lubricants Tk 04 valve out,V,"",0,0,0,0,Y
-LT04-Pmp,Lubricants Tk 04 pump in,PMP,"",0,0,0,0,Y
-NT01-Vi,Naptha Tk 01 valve in,V,"",0,0,0,0,Y
-NT01-Vo,Naptha Tk 01 valve out,V,"",0,0,0,0,Y
-NT01-Pmp,Naptha Tk 01 pump in,PMP,"",0,0,0,0,Y
-NT02-Vi,Naptha Tk 02 valve in,V,"",0,0,0,0,Y
-NT02-Vo,Naptha Tk 02 valve out,V,"",0,0,0,0,Y
-NT02-Pmp,Naptha Tk 02 pump in,PMP,"",0,0,0,0,Y
-NT03-Vi,Naptha Tk 03 valve in,V,"",0,0,0,0,Y
-NT03-Vo,Naptha Tk 03 valve out,V,"",0,0,0,0,Y
-NT03-Pmp,Naptha Tk 03 pump in,PMP,"",0,0,0,0,Y
-NT04-Vi,Naptha Tk 04 valve in,V,"",0,0,0,0,Y
-NT04-Vo,Naptha Tk 04 valve out,V,"",0,0,0,0,Y
-NT04-Pmp,Naptha Tk 04 pump in,PMP,"",0,0,0,0,Y
-WT01-Vi,Waxes Tk 01 valve in,V,"",0,0,0,0,Y
-WT01-Vo,Waxes Tk 01 valve out,V,"",0,0,0,0,Y
-WT01-Pmp,Waxes Tk 01 pump in,PMP,"",0,0,0,0,Y
-WT02-Vi,Waxes Tk 02 valve in,V,"",0,0,0,0,Y
-WT02-Vo,Waxes Tk 02 valve out,V,"",0,0,0,0,Y
-WT02-Pmp,Waxes Tk 02 pump in,PMP,"",0,0,0,0,Y
-WT03-Vi,Waxes Tk 03 valve in,V,"",0,0,0,0,Y
-WT03-Vo,Waxes Tk 03 valve out,V,"",0,0,0,0,Y
-WT03-Pmp,Waxes Tk 03 pump in,PMP,"",0,0,0,0,Y
+CT01-V,Crude Tk 1 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT02-V,Crude Tk 2 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT03-V,Crude Tk 3 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT04-V,Crude Tk 4 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT05-V,Crude Tk 5 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT06-V,Crude Tk 6 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT07-V,Crude Tk 7 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT08-V,Crude Tk 8 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT09-V,Crude Tk 9 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT10-V,Crude Tk 10 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT11-V,Crude Tk 11 valve in,V,",0.0,0.0,0.0,0.0,Y
+CT12-V,Crude Tk 12 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT01-Vi,FuelOil Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT01-Vo,FuelOil Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT01-Pmp,FuelOil Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT03-Vi,FuelOil Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT03-Vo,FuelOil Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT03-Pmp,FuelOil Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT02-Vi,FuelOil Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT02-Vo,FuelOil Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT02-Pmp,FuelOil Tk 02 pump in,V,",0.0,0.0,0.0,0.0,Y
+FOT04-Vi,FuelOil Tk 04 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT04-Vo,FuelOil Tk 04 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT04-Pmp,FuelOil Tk 04 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT05-Vi,FuelOil Tk 05 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT05-Vo,FuelOil Tk 05 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT05-Pmp,FuelOil Tk 05 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT06-Vi,FuelOil Tk 06 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT06-Vo,FuelOil Tk 06 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT06-Pmp,FuelOil Tk 06 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT07-Vi,FuelOil Tk 07 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT07-Vo,FuelOil Tk 07 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT07-Pmp,FuelOil Tk 07 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT08-Vi,FuelOil Tk 08 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT08-Vo,FuelOil Tk 08 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT08-Pmp,FuelOil Tk 08 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT09-Vi,FuelOil Tk 09 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT09-Vo,FuelOil Tk 09 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT09-Pmp,FuelOil Tk 09 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT10-Vi,FuelOil Tk 10 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT10-Vo,FuelOil Tk 10 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT10-Pmp,FuelOil Tk 10 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+FOT11-Vi,FuelOil Tk 11 valve in,V,",0.0,0.0,0.0,0.0,Y
+FOT11-Vo,FuelOil Tk 11 valve out,V,",0.0,0.0,0.0,0.0,Y
+FOT11-Pmp,FuelOil Tk 11 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT01-Vi,Gasoline Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT01-Vo,Gasoline Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT01-Pmp,Gasoline Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT02-Vi,Gasoline Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT02-Vo,Gasoline Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT02-Pmp,Gasoline Tk 02 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT03-Vi,Gasoline Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT03-Vo,Gasoline Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT03-Pmp,Gasoline Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT04-Vi,Gasoline Tk 04 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT04-Vo,Gasoline Tk 04 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT04-Pmp,Gasoline Tk 04 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT05-Vi,Gasoline Tk 05 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT05-Vo,Gasoline Tk 05 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT05-Pmp,Gasoline Tk 05 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT06-Vi,Gasoline Tk 06 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT06-Vo,Gasoline Tk 06 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT06-Pmp,Gasoline Tk 06 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT07-Vi,Gasoline Tk 07 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT07-Vo,Gasoline Tk 07 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT07-Pmp,Gasoline Tk 07 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT08-Vi,Gasoline Tk 08 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT08-Vo,Gasoline Tk 08 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT08-Pmp,Gasoline Tk 08 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT09-Vi,Gasoline Tk 09 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT09-Vo,Gasoline Tk 09 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT09-Pmp,Gasoline Tk 09 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT10-Vi,Gasoline Tk 10 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT10-Vo,Gasoline Tk 10 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT10-Pmp,Gasoline Tk 10 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT11-Vi,Gasoline Tk 11 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT11-Vo,Gasoline Tk 11 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT11-Pmp,Gasoline Tk 11 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT12-Vi,Gasoline Tk 12 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT12-Vo,Gasoline Tk 12 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT12-Pmp,Gasoline Tk 12 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT13-Vi,Gasoline Tk 13 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT13-Vo,Gasoline Tk 13 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT13-Pmp,Gasoline Tk 13 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT14-Vi,Gasoline Tk 14 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT14-Vo,Gasoline Tk 14 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT14-Pmp,Gasoline Tk 14 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+GT15-Vi,Gasoline Tk 15 valve in,V,",0.0,0.0,0.0,0.0,Y
+GT15-Vo,Gasoline Tk 15 valve out,V,",0.0,0.0,0.0,0.0,Y
+GT15-Pmp,Gasoline Tk 15 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+AT01-Vi,Asphalt Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+AT01-Vo,Asphalt Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+AT01-Pmp,Asphalt Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+AT02-Vi,Asphalt Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+AT02-Vo,Asphalt Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+AT02-Pmp,Asphalt Tk 02 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+AT03-Vi,Asphalt Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+AT03-Vo,Asphalt Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+AT03-Pmp,Asphalt Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+AT04-Vi,Asphalt Tk 04 valve in,V,",0.0,0.0,0.0,0.0,Y
+AT04-Vo,Asphalt Tk 04 valve out,V,",0.0,0.0,0.0,0.0,Y
+AT04-Pmp,Asphalt Tk 04 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT01-Vi,JetFuel Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT01-Vo,JetFuel Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT01-Pmp,JetFuel Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT02-Vi,JetFuel Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT02-Vo,JetFuel Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT02-Pmp,JetFuel Tk 02 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT03-Vi,JetFuel Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT03-Vo,JetFuel Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT03-Pmp,JetFuel Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT04-Vi,JetFuel Tk 04 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT04-Vo,JetFuel Tk 04 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT04-Pmp,JetFuel Tk 04 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT05-Vi,JetFuel Tk 05 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT05-Vo,JetFuel Tk 05 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT05-Pmp,JetFuel Tk 05 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT06-Vi,JetFuel Tk 06 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT06-Vo,JetFuel Tk 06 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT06-Pmp,JetFuel Tk 06 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT07-Vi,JetFuel Tk 07 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT07-Vo,JetFuel Tk 07 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT07-Pmp,JetFuel Tk 07 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT08-Vi,JetFuel Tk 08 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT08-Vo,JetFuel Tk 08 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT08-Pmp,JetFuel Tk 08 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT09-Vi,JetFuel Tk 09 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT09-Vo,JetFuel Tk 09 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT09-Pmp,JetFuel Tk 09 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT10-Vi,JetFuel Tk 10 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT10-Vo,JetFuel Tk 10 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT10-Pmp,JetFuel Tk 10 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT11-Vi,JetFuel Tk 11 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT11-Vo,JetFuel Tk 11 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT11-Pmp,JetFuel Tk 11 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+JT12-Vi,JetFuel Tk 12 valve in,V,",0.0,0.0,0.0,0.0,Y
+JT12-Vo,JetFuel Tk 12 valve out,V,",0.0,0.0,0.0,0.0,Y
+JT12-Pmp,JetFuel Tk 12 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+LT01-Vi,Lubricants Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+LT01-Vo,Lubricants Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+LT01-Pmp,Lubricants Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+LT02-Vi,Lubricants Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+LT02-Vo,Lubricants Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+LT02-Pmp,Lubricants Tk 02 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+LT03-Vi,Lubricants Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+LT03-Vo,Lubricants Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+LT03-Pmp,Lubricants Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+LT04-Vi,Lubricants Tk 04 valve in,V,",0.0,0.0,0.0,0.0,Y
+LT04-Vo,Lubricants Tk 04 valve out,V,",0.0,0.0,0.0,0.0,Y
+LT04-Pmp,Lubricants Tk 04 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+NT01-Vi,Naptha Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+NT01-Vo,Naptha Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+NT01-Pmp,Naptha Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+NT02-Vi,Naptha Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+NT02-Vo,Naptha Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+NT02-Pmp,Naptha Tk 02 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+NT03-Vi,Naptha Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+NT03-Vo,Naptha Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+NT03-Pmp,Naptha Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+NT04-Vi,Naptha Tk 04 valve in,V,",0.0,0.0,0.0,0.0,Y
+NT04-Vo,Naptha Tk 04 valve out,V,",0.0,0.0,0.0,0.0,Y
+NT04-Pmp,Naptha Tk 04 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+WT01-Vi,Waxes Tk 01 valve in,V,",0.0,0.0,0.0,0.0,Y
+WT01-Vo,Waxes Tk 01 valve out,V,",0.0,0.0,0.0,0.0,Y
+WT01-Pmp,Waxes Tk 01 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+WT02-Vi,Waxes Tk 02 valve in,V,",0.0,0.0,0.0,0.0,Y
+WT02-Vo,Waxes Tk 02 valve out,V,",0.0,0.0,0.0,0.0,Y
+WT02-Pmp,Waxes Tk 02 pump in,PMP,",0.0,0.0,0.0,0.0,Y
+WT03-Vi,Waxes Tk 03 valve in,V,",0.0,0.0,0.0,0.0,Y
+WT03-Vo,Waxes Tk 03 valve out,V,",0.0,0.0,0.0,0.0,Y
+WT03-Pmp,Waxes Tk 03 pump in,PMP,",0.0,0.0,0.0,0.0,Y
 CDC04,Crude Tank 4,SCO,TK,415.0,15.0,470.0,95.0,Y
 CDC01,Crude Tank 1,SCO,TK,125.0,15.0,170.0,95.0,Y
 CDC02,Crude Tank 2,SCO,TK,235.0,15.0,280.0,95.0,Y
@@ -555,67 +555,76 @@ GDVi12,Valve in gas tank 12,SCO,VH,256.0,284.0,270.0,306.0,Y
 GDVi13,Valve in gas tank 13,SCO,VH,317.0,284.0,328.0,306.0,Y
 GDVi14,Valve in gas tank 14,SCO,VH,387.0,284.0,400.0,306.0,Y
 GDVi15,Valve in gas tank 15,SCO,VH,457.0,284.0,468.0,306.0,Y
-GDP-GT4,Pipe to gas tanks,SCO,P,0,0,0,0,Y
-GDP-GT3,Pipe to gas tanks,SCO,P,0,0,0,0,Y
-GDP-RUGT01,Pipe to gas tank  1,SCO,P,0,0,0,0,Y
-GDP-RUGT02,Pipe to gas tank  2,SCO,P,0,0,0,0,Y
-GDP-RUGT03,Pipe to gas tank  3,SCO,P,0,0,0,0,Y
-GDP-RUGT04,Pipe to gas tank  4,SCO,P,0,0,0,0,Y
-GDP-RUGT05,Pipe to gas tank  5,SCO,P,0,0,0,0,Y
-GDP-RUGT06,Pipe to gas tank  6,SCO,P,0,0,0,0,Y
-GDP-RUGT07,Pipe to gas tank  7,SCO,P,0,0,0,0,Y
-GDP-RUGT10,Pipe to gas tank 10,SCO,P,0,0,0,0,Y
-GDP-RUGT11,Pipe to gas tank 11,SCO,P,0,0,0,0,Y
-GDP-RUGT12,Pipe to gas tank 12,SCO,P,0,0,0,0,Y
-GDP-RUGT13,Pipe to gas tank 13,SCO,P,0,0,0,0,Y
-GDP-RUGT14,Pipe to gas tank 14,SCO,P,0,0,0,0,Y
-GDP-RUGT15,Pipe to gas tank 15,SCO,P,0,0,0,0,Y
-GDP-RUGT09,Pipe to gas tank  9,SCO,P,0,0,0,0,Y
-GDP-RUGT08,Pipe to gas tank  8,SCO,P,0,0,0,0,Y
-Dock1,Ship Dock 1 northernmost,DK,S,0,0,0,0,Y
-Dock2,Ship Dock 2,DK,S,0,0,0,0,Y
-Dock3,Ship Dock 3,DK,S,0,0,0,0,Y
-Dock4,Ship Dock 4 southernmost,DK,S,0,0,0,0,Y
-DK1toC,Dock 1 to Crude tanks,XFR,C,0,0,0,0,Y
-DK2toC,Dock 2 to Crude tanks,XFR,C,0,0,0,0,Y
-DK3toC,Dock 3 to Crude tanks,XFR,C,0,0,0,0,Y
-DK4toC,Dock 4 to Crude tanks,XFR,C,0,0,0,0,Y
-DK1-1Pmp,Dock 1 Pump - Position 1,PMP,,0,0,0,0,Y
-DK1-2Pmp,Dock 1 Pump - Position 2,PMP,,0,0,0,0,Y
-DK1-3Pmp,Dock 1 Pump - Position 3,PMP,,0,0,0,0,Y
-DK1-4Pmp,Dock 1 Pump - Position 4,PMP,,0,0,0,0,Y
-DK2-1Pmp,Dock 2 Pump - Position 1,PMP,,0,0,0,0,Y
-DK2-2Pmp,Dock 2 Pump - Position 2,PMP,,0,0,0,0,Y
-DK2-3Pmp,Dock 2 Pump - Position 3,PMP,,0,0,0,0,Y
-DK2-4Pmp,Dock 2 Pump - Position 4,PMP,,0,0,0,0,Y
-DK3-1Pmp,Dock 3 Pump - Position 1,PMP,,0,0,0,0,Y
-DK3-2Pmp,Dock 3 Pump - Position 2,PMP,,0,0,0,0,Y
-DK3-3Pmp,Dock 3 Pump - Position 3,PMP,,0,0,0,0,Y
-DK3-4Pmp,Dock 3 Pump - Position 4,PMP,,0,0,0,0,Y
-DK4-1Pmp,Dock 4 Pump - Position 1,PMP,,0,0,0,0,Y
-DK4-2Pmp,Dock 4 Pump - Position 2,PMP,,0,0,0,0,Y
-DK4-3Pmp,Dock 4 Pump - Position 3,PMP,,0,0,0,0,Y
-DK4-4Pmp,Dock 4 Pump - Position 4,PMP,,0,0,0,0,Y
-Dock1Stn1,Dock 1 Pump station 1,STN,DK,0,0,0,0,Y
-Dock1Stn2,Dock 1 Pump station 2,STN,DK,0,0,0,0,Y
-Dock1Stn3,Dock 1 Pump station 3,STN,DK,0,0,0,0,Y
-Dock1Stn4,Dock 1 Pump station 4,STN,DK,0,0,0,0,Y
-Dock2Stn1,Dock 2 Pump station 1,STN,DK,0,0,0,0,Y
-Dock2Stn2,Dock 2 Pump station 2,STN,DK,0,0,0,0,Y
-Dock2Stn3,Dock 2 Pump station 3,STN,DK,0,0,0,0,Y
-Dock2Stn4,Dock 2 Pump station 4,STN,DK,0,0,0,0,Y
-Dock3Stn1,Dock 3 Pump station 1,STN,DK,0,0,0,0,Y
-Dock3Stn2,Dock 3 Pump station 2,STN,DK,0,0,0,0,Y
-Dock3Stn3,Dock 3 Pump station 3,STN,DK,0,0,0,0,Y
-Dock3Stn4,Dock 3 Pump station 4,STN,DK,0,0,0,0,Y
-Dock4Stn1,Dock 4 Pump station 1,STN,DK,0,0,0,0,Y
-Dock4Stn2,Dock 4 Pump station 2,STN,DK,0,0,0,0,Y
-Dock4Stn3,Dock 4 Pump station 3,STN,DK,0,0,0,0,Y
-Dock4Stn4,Dock 4 Pump station 4,STN,DK,0,0,0,0,Y
-TrkDk1,Truck Dock 1 West,DK,TT,0,0,0,0,Y
-TrkDk2,Truck Dock 2 East,DK,TT,0,0,0,0,Y
-TrnDk,Train Dock (6 cars),DK,TR,0,0,0,0,Y
-TrkDk1Stn1,Truck dock 1 station 1,STN,DK,0,0,0,0,Y
-TrkDk2Stn1,Truck dock 2 station 1,STN,DK,0,0,0,0,Y
-TrnDkStn1,Train dock station 1,STN,DK,0,0,0,0,Y
+GDP-GT4,Pipe to gas tanks,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-GT3,Pipe to gas tanks,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT01,Pipe to gas tank  1,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT02,Pipe to gas tank  2,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT03,Pipe to gas tank  3,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT04,Pipe to gas tank  4,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT05,Pipe to gas tank  5,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT06,Pipe to gas tank  6,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT07,Pipe to gas tank  7,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT10,Pipe to gas tank 10,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT11,Pipe to gas tank 11,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT12,Pipe to gas tank 12,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT13,Pipe to gas tank 13,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT14,Pipe to gas tank 14,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT15,Pipe to gas tank 15,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT09,Pipe to gas tank  9,SCO,P,0.0,0.0,0.0,0.0,Y
+GDP-RUGT08,Pipe to gas tank  8,SCO,P,0.0,0.0,0.0,0.0,Y
+Dock1,Ship Dock 1 northernmost,DK,S,0.0,0.0,0.0,0.0,Y
+Dock2,Ship Dock 2,DK,S,0.0,0.0,0.0,0.0,Y
+Dock3,Ship Dock 3,DK,S,0.0,0.0,0.0,0.0,Y
+Dock4,Ship Dock 4 southernmost,DK,S,0.0,0.0,0.0,0.0,Y
+DK1toC,Dock 1 to Crude tanks,XFR,C,0.0,0.0,0.0,0.0,Y
+DK2toC,Dock 2 to Crude tanks,XFR,C,0.0,0.0,0.0,0.0,Y
+DK3toC,Dock 3 to Crude tanks,XFR,C,0.0,0.0,0.0,0.0,Y
+DK4toC,Dock 4 to Crude tanks,XFR,C,0.0,0.0,0.0,0.0,Y
+DK1-1Pmp,Dock 1 Pump - Position 1,PMP,None,0.0,0.0,0.0,0.0,Y
+DK1-2Pmp,Dock 1 Pump - Position 2,PMP,None,0.0,0.0,0.0,0.0,Y
+DK1-3Pmp,Dock 1 Pump - Position 3,PMP,None,0.0,0.0,0.0,0.0,Y
+DK1-4Pmp,Dock 1 Pump - Position 4,PMP,None,0.0,0.0,0.0,0.0,Y
+DK2-1Pmp,Dock 2 Pump - Position 1,PMP,None,0.0,0.0,0.0,0.0,Y
+DK2-2Pmp,Dock 2 Pump - Position 2,PMP,None,0.0,0.0,0.0,0.0,Y
+DK2-3Pmp,Dock 2 Pump - Position 3,PMP,None,0.0,0.0,0.0,0.0,Y
+DK2-4Pmp,Dock 2 Pump - Position 4,PMP,None,0.0,0.0,0.0,0.0,Y
+DK3-1Pmp,Dock 3 Pump - Position 1,PMP,None,0.0,0.0,0.0,0.0,Y
+DK3-2Pmp,Dock 3 Pump - Position 2,PMP,None,0.0,0.0,0.0,0.0,Y
+DK3-3Pmp,Dock 3 Pump - Position 3,PMP,None,0.0,0.0,0.0,0.0,Y
+DK3-4Pmp,Dock 3 Pump - Position 4,PMP,None,0.0,0.0,0.0,0.0,Y
+DK4-1Pmp,Dock 4 Pump - Position 1,PMP,None,0.0,0.0,0.0,0.0,Y
+DK4-2Pmp,Dock 4 Pump - Position 2,PMP,None,0.0,0.0,0.0,0.0,Y
+DK4-3Pmp,Dock 4 Pump - Position 3,PMP,None,0.0,0.0,0.0,0.0,Y
+DK4-4Pmp,Dock 4 Pump - Position 4,PMP,None,0.0,0.0,0.0,0.0,Y
+Dock1Stn1,Dock 1 Pump station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock1Stn2,Dock 1 Pump station 2,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock1Stn3,Dock 1 Pump station 3,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock1Stn4,Dock 1 Pump station 4,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock2Stn1,Dock 2 Pump station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock2Stn2,Dock 2 Pump station 2,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock2Stn3,Dock 2 Pump station 3,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock2Stn4,Dock 2 Pump station 4,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock3Stn1,Dock 3 Pump station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock3Stn2,Dock 3 Pump station 2,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock3Stn3,Dock 3 Pump station 3,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock3Stn4,Dock 3 Pump station 4,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock4Stn1,Dock 4 Pump station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock4Stn2,Dock 4 Pump station 2,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock4Stn3,Dock 4 Pump station 3,STN,DK,0.0,0.0,0.0,0.0,Y
+Dock4Stn4,Dock 4 Pump station 4,STN,DK,0.0,0.0,0.0,0.0,Y
+TrkDk1,Truck Dock 1 West,DK,TT,0.0,0.0,0.0,0.0,Y
+TrkDk2,Truck Dock 2 East,DK,TT,0.0,0.0,0.0,0.0,Y
+TrnDk,Train Dock (6 cars),DK,TR,0.0,0.0,0.0,0.0,Y
+TrkDk1Stn1,Truck dock 1 station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+TrkDk2Stn1,Truck dock 2 station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+TrnDkStn1,Train dock station 1,STN,DK,0.0,0.0,0.0,0.0,Y
+TT316G-1,Tank Truck 2,TT,G,None,None,None,None,Y
+TT317A-1,Asphalt Tank Truck 2,TT,A,None,None,None,None,Y
+TT317FO-1,Fuel Oil Tank Truck 1,TT,FO,None,None,None,None,Y
+TT317JF-1,Jet Fuel Tank Truck 1,TT,JF,None,None,None,None,Y
+TT318JF-2,Jet Fuel Tank Truck 2,TT,JF,None,None,None,None,Y
+TT318L-1,Lubricant Tank Truck 1,TT,L,None,None,None,None,Y
+TT319N-1,Naptha Tank Truck 1,TT,N,None,None,None,None,Y
+GtoTT2,Gasoline transfer to tank truck,XFR,G,None,None,None,None,Y
+TT320W-1,Wax Tank Truck,TT,W,None,None,None,None,Y
 End

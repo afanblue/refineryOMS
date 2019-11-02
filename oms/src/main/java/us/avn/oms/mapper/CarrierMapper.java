@@ -26,6 +26,8 @@ public interface CarrierMapper {
 	
 	Collection<Carrier> getAllCarriers( );
 	
+	Collection<Carrier> getAllCarriersForProduct( String code );
+	
 	Carrier getCarrier( Long id );
 	
 	Collection<Hold> getHolds(Long id );

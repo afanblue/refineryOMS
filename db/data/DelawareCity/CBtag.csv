@@ -1,4 +1,5 @@
 Table,tag,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
+name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
 End

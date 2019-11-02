@@ -7,6 +7,8 @@ Created on Nov 21, 2018
 @author: Allan
 
 Description: 
+
+Load the csv file into the oms DB 
 '''
 import sys
 import re
@@ -111,13 +113,16 @@ def AddWhereClause( constraints, columnIndex, data )  :
 #    print("WhereClause: "+ rtn )
     return rtn;
 
+args = sys.argv
+#print( args )
+
 
 row = 1;
 text = ( "Table", "ColumnConstrained", "Data", "x", "End" );
 
 config = {
   "user": "oms",
-  "passwd": "omsx",
+  "passwd": args[1],
   "host": "127.0.0.1",
   "db": "oms",
   "use_unicode": True
@@ -126,10 +131,7 @@ config = {
 cnx = MySQLdb.connect(**config)
 crsr = cnx.cursor()
 
-args = sys.argv
-#print( args )
-
-file = open(args[1], "r")
+file = open(args[2], "r")
 looking = 0
 found = -1
 noRows = 0;

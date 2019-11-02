@@ -69,8 +69,8 @@
       from transfer x join tag tx on x.tag_id=tx.id 
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where ttv.code = #{param1}
        and (x.act_start_time is null 
            or x.act_start_time > date_sub(curdate(), interval 5 day))
@@ -88,8 +88,8 @@
       from transfer x join tag tx on x.tag_id=tx.id 
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where tsv.code = 'A'
      order by x.act_start_time desc, 8
   </select>
@@ -105,8 +105,8 @@
       from transfer x join tag tx on x.tag_id=tx.id 
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where ttv.code = 'X'
        and date(act_end_time) > date(date_sub(current_date, interval #{param1} day))
      order by x.act_end_time desc
@@ -123,8 +123,8 @@
       from transfer x join tag tx on x.tag_id=tx.id 
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where ttv.code = 'X'
        and tsv.code in ('S','P')
   </select>
@@ -146,7 +146,7 @@
          , x.exp_start_time, x.exp_end_time, x.exp_volume 
          , x.act_start_time, x.act_end_time, x.act_volume, x.delta 
       from transfer x join tag tx on x.tag_id=tx.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id 
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value 
      where ttv.code = 'T'
       and x.name = #{param1}
   </select>
@@ -164,8 +164,8 @@
       from transfer x join tag tx on x.tag_id = tx.id
            join tag ts on x.tag_id=ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where tsv.code = 'A'
        and ttv.code != 'T'
      order by 8, 2
@@ -186,8 +186,8 @@
       from transfer x join tag tx on x.tag_id=tx.id
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where tsv.code in ('P','S')
        and ttv.code != 'T'
      order by 8, 2
@@ -214,8 +214,8 @@
       from transfer x join tag tx on x.tag_id=tx.id
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
-           join transfer_status_vw tsv on x.status_id = tsv.id
-           join transfer_type_vw ttv on x.transfer_type_id = ttv.id
+           join transfer_status_vw tsv on x.status_id = tsv.value
+           join transfer_type_vw ttv on x.transfer_type_id = ttv.value
            join (select id, 60*hour(exp_start_time)+minute(exp_start_time) smin
                       , 60*hour(exp_end_time)+minute(exp_end_time) emin
                    from transfer ) x1 on x.id = x1.id
@@ -232,19 +232,19 @@
   </select>
 
   <select id="getTransferTypes" resultMap="idNameResultMap">
-    select tt.id, tt.code name from transfer_type_vw tt
+    select tt.value id, tt.code name from transfer_type_vw tt order by 2
   </select>
   
   <select id="getTransferTypeId" resultType="Long">
-    select tt.id from transfer_type_vw tt where tt.code = #{param1}
+    select tt.value from transfer_type_vw tt where tt.code = #{param1}
   </select>
   
   <select id="getTransferStatuses" resultMap="idNameResultMap">
-    select ts.id, ts.code name from transfer_status_vw ts
+    select ts.value id, ts.code name from transfer_status_vw ts
   </select>
   
   <select id="getTransferStatusId" resultType="Long">
-    select ts.id from transfer_status_vw ts where ts.code = #{param1}
+    select ts.value from transfer_status_vw ts where ts.code = #{param1}
   </select>
   
   <update id="updateTransfer" parameterType="Transfer">
@@ -266,14 +266,14 @@
   
   <update id="completeTransfer" >
     update transfer
-       set status_id = (select id from transfer_status_vw where code = 'C')
+       set status_id = (select value from transfer_status_vw where code = 'C')
          , act_end_time = CURRENT_TIMESTAMP
      where id = #{param1}
   </update>
   
   <update id="startTransfer" >
     update transfer
-       set status_id = (select id from transfer_status_vw where code = 'A')
+       set status_id = (select value from transfer_status_vw where code = 'A')
          , act_start_time = CURRENT_TIMESTAMP
      where id = #{param1}
   </update>

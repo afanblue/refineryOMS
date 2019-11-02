@@ -1,5 +1,5 @@
 Table,unit_conversion,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 from_id,unit,id,name
 to_id,unit,id,name
 Data,,,
@@ -7,6 +7,7 @@ from_id,to_id,offset,factor
 none,none,0.0,1.0
 meter,meter,0.0,1.0
 meter,foot,0.0,3.28084
+foot,meter,0.0,0.3048
 deg F,deg C,32.0,1.8
 deg F,deg F,0.0,1.0
 deg C,deg F,-32.0,0.555555555555
@@ -21,6 +22,5 @@ cubic feet,cubic feet,0.0,1.0
 cubic feet,gallons,0.0,7.48052
 cubic feet,barrels,0.0,0.178108
 degrees,degrees,0.0,1.0
-foot,meter,0.0,0.3048
 bbl/min,bbl/min,0.0,1.0
 End

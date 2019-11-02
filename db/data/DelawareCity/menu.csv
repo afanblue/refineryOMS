@@ -1,7 +1,7 @@
 Table,menu,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence
-page_id,page,id,name
-menu_type_id,menu_type_vw,id,code
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
+page,id,name,page_id
+menu_type_id,reference_code,id,code
 category_id,horizontal_menu_vw,id,text
 Data,,,
 menu_type_id,category_id,text,order_no,active,page_id
