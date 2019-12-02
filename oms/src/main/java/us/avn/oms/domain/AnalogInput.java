@@ -30,9 +30,6 @@ import us.avn.oms.service.HistoryService;
 /*
  *           tag_id: 24
  *        type_code: L
- *         scan_int: 6
- *      scan_offset: 4
- *     current_scan: 0
  *       zero_value: 0
  *        max_value: 100
  *   hist_type_code: L
@@ -54,19 +51,17 @@ public class AnalogInput extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
-	public static final String TEMPERATURE = "T";
-	public static final String LEVEL = "L";
+	public static final String CALCULATED = "C";
 	public static final String FLOW_RATE = "F";
+	public static final String LEVEL = "L";
+	public static final String MANUAL = "M";
 	public static final String PRESSURE = "P";
-	public static final String MISCELLANEOUS = "M";
+	public static final String TEMPERATURE = "T";
 	
 	protected Long    tagId;
 	protected Tag      tag;
 	protected String   analogTypeCode;
 	protected Long     unitId;
-	protected Integer  scanInt;
-	protected Integer  scanOffset;
-	protected Integer  currentScan;
 	protected Double   zeroValue;
 	protected Double   maxValue;
 	protected String   histTypeCode;
@@ -164,33 +159,6 @@ public class AnalogInput extends OMSObject implements Serializable {
 		this.unitId = uid;
 	}
 	
-
-	public Integer getScanInt() {
-		return scanInt;
-	}
-
-	public void setScanInt(Integer scanInt) {
-		this.scanInt = scanInt;
-	}
-
-
-	public Integer getScanOffset() {
-		return scanOffset;
-	}
-
-	public void setScanOffset(Integer scanOffset) {
-		this.scanOffset = scanOffset;
-	}
-
-
-	public Integer getCurrentScan() {
-		return currentScan;
-	}
-
-	public void setCurrentScan(Integer currentScan) {
-		this.currentScan = currentScan;
-	}
-
 
 	public Double getZeroValue() {
 		return zeroValue;
@@ -454,7 +422,7 @@ public class AnalogInput extends OMSObject implements Serializable {
 			} else {
 				Iterator<Alarm> ialm = calm.iterator();
 				Alarm xa = new Alarm();
-				while( ialm.hasNext()) { xa = ialm.next(); }
+				if( ialm.hasNext()) { xa = ialm.next(); }
 //				log.debug(xa.toString());
 //				log.debug("Alarm exists for "+xa.getTagId()+"? "+almCode+" = "+xa.getAlarmCode());
 				if( "NORM".equals(almCode) ) {

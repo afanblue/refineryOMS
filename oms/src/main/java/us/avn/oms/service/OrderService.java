@@ -40,6 +40,13 @@ public interface OrderService {
 	Collection<Item> getOrderItems( Long id );
 	
 	/**
+	 * Get order ID by transfer ID
+	 * @param id Transfer ID
+	 * @return all items w/ specified transfer ID (should only be one)
+	 */
+	Collection<Item> getOrderItemByTransferId( Long id );
+	
+	/**
 	 * Get all of the active orders, i.e., those that have some items with
 	 * active = 'A'
 	 * @return all active orders 

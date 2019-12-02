@@ -30,12 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *         specifically, this is originally intended for dropdown lists, but
  *         it may have further applicability
  *         
- *              id: 1
- *            name: DeCity
- *     description: Delaware City Refinery
- *   tag_type_code: FLD
- *   tag_type_info: L
- *          active: Y
  *          
  */
 public class IdName extends OMSObject implements Serializable {

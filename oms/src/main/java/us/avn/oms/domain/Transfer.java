@@ -313,8 +313,8 @@ public class Transfer extends OMSObject implements Serializable {
 
 	
 	public Timestamp getActStartTime() {
-		if( actEndTime != null ) {
-			return Timestamp.from(actEndTime);
+		if( actStartTime != null ) {
+			return Timestamp.from(actStartTime);
 		}
 		return null;
 	}
@@ -441,7 +441,7 @@ public class Transfer extends OMSObject implements Serializable {
 	public void checkSource( TagService ts, TankService tks ) {
 		Tag src = ts.getTag(sourceId);
 		if( Tag.PROCESS_UNIT.equals(src.getTagTypeCode())) {
-			Iterator<Value> is = tks.getTankVolumesForUnit(src.getName()).iterator();
+			Iterator<Value> is = tks.getUnusedTankVolumesForUnit(src.getName()).iterator();
 			Double maxVolume = 0.0;
 			while( is.hasNext() ) {
 				Value aiv = is.next();
@@ -475,7 +475,7 @@ public class Transfer extends OMSObject implements Serializable {
 	public void checkDestination( TagService ts, TankService tks ) {
 		Tag dest = ts.getTag(destinationId);
 		if( Tag.PROCESS_UNIT.equals(dest.getTagTypeCode())) {
-			Iterator<Value> is = tks.getTankVolumesForUnit(dest.getName()).iterator();
+			Iterator<Value> is = tks.getUnusedTankVolumesForUnit(dest.getName()).iterator();
 			Double minVolume = Double.MAX_VALUE;
 			while( is.hasNext() ) {
 				Value aiv = is.next();

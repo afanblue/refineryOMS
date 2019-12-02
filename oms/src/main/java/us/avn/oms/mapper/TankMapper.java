@@ -44,7 +44,13 @@ public interface TankMapper {
 	
 	Collection<Value> getTankVolumesForContents( String t );
 	
-	Collection<Value> getTankVolumesForUnit( String n);
+	/**
+	 * Get list of tanks in Unit not involved in Active or Scheduled transfers
+	 * 
+	 * @param unit - name of unit
+	 * @return Collection of tanks 
+	 */
+	Collection<Value> getUnusedTankVolumesForUnit( String unit);
 	
 	Collection<Volume> getLevelVolumesForTank( Long id );
 	

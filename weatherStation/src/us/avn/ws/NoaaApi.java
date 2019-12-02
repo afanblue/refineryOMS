@@ -136,20 +136,17 @@ public class NoaaApi extends WeatherStation {
 							saveValue = true;
 						}
 					}
-					log.debug("KEY_NAME: "+key+" ("+saveKey+")");
-					//		            System.out.print(key);
 					break;
 				case VALUE_STRING:
 					value = parser.getString();
-					log.debug("VALUE_STRING: "+saveKey+": "+value);
 					if( "time".equals(saveKey)) {
 					//	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx");
 						DateTimeFormatter dtf = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 						ZonedDateTime d = ZonedDateTime.parse(value, dtf );
-						
 						Instant id = d.toInstant();
-
+						log.debug("Observation time - ZDT: "+d.toString()+", Instant: "+id.toString());
 						valnum = new Double(id.getEpochSecond());
+						log.debug("VALUE_STRING: "+saveKey+": "+valnum);
 						cc.put(saveKey, valnum);
 						saveKey = null;
 						saveValue = false;
@@ -158,8 +155,8 @@ public class NoaaApi extends WeatherStation {
 					break;
 				case VALUE_NUMBER:
 					valnum = parser.getBigDecimal().doubleValue();
-					log.debug("VALUE_NUMBER: "+saveKey+": "+valnum);
 					if( saveValue ) {
+						log.debug("VALUE_NUMBER: "+saveKey+": "+valnum);
 						cc.put(saveKey, valnum);
 						saveKey = null;
 						saveValue = false;
@@ -167,8 +164,9 @@ public class NoaaApi extends WeatherStation {
 					//		        	System.out.println("\t"+valnum);
 					break;
 				case VALUE_NULL:
-					valnum = null;
+					valnum = 0D;
 					if( saveValue ) {
+						log.debug("VALUE_NULL: "+saveKey+": "+valnum);
 						cc.put(saveKey, valnum);
 						saveKey = null;
 						saveValue = false;

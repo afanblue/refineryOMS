@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.AddressMapper">
+
+  <!-- cache / -->
+<!-- 
+	updateUpdated( Long i );
+-->
+  
+  <resultMap id="addrmap"  type="Address">
+    <result property="id"           column="id"/>
+    <result property="deviceId"     column="device_id"/>
+    <result property="interval"     column="interval"/>
+    <result property="offset"       column="offset"/>
+    <result property="iaddr1"       column="iaddr1"/>
+    <result property="saddr1"       column="saddr1"/>
+    <result property="iaddr2"       column="iaddr2"/>
+    <result property="saddr2"       column="saddr2"/>
+    <result property="iaddr3"       column="iaddr3"/>
+    <result property="saddr3"       column="saddr3"/>
+    <result property="iaddr4"       column="iaddr4"/>
+    <result property="saddr4"       column="saddr4"/>
+    <result property="iaddr5"       column="iaddr5"/>
+    <result property="saddr5"       column="saddr5"/>
+    <result property="iaddr6"       column="iaddr6"/>
+    <result property="saddr6"       column="saddr6"/>
+    <result property="active"       column="active"/>
+    <result property="scanValue"    column="float_value"/>
+    <result property="updated"      column="updated"/>
+  </resultMap>
+  
+  <select id="getAddressesForDevice" resultMap="addrmap" >
+    select a.id, a.device_id, a.cycle_time, a.offset, a.iaddr1, a.saddr1
+    	 , a.iaddr2, a.saddr2, a.iaddr3, a.saddr3, a.iaddr4, a.saddr4
+    	 , a.iaddr5, a.saddr5, a.iaddr6, a.saddr6
+    	 , t.active, x.float_value 
+      from address a join tag t on a.id = t.id
+      join xfer x on a.id = x.id
+     where a.device_id = #{param1}
+  </select>
+  
+  <select id="getActiveAddressesForDeviceByType" resultMap="addrmap" >
+    select a.id, a.device_id, a.cycle_time, a.offset, a.iaddr1, a.saddr1
+    	 , a.iaddr2, a.saddr2, a.iaddr3, a.saddr3, a.iaddr4, a.saddr4
+    	 , a.iaddr5, a.saddr5, a.iaddr6, a.saddr6, t.active
+    	 , x.float_value, x.updated
+      from address a join tag t on a.id = t.id
+      join xfer x on a.id = x.id
+     where t.active = 'Y'
+       and a.device_id = #{param1}
+       and t.tag_type_code = #{param2}
+  </select>
+  
+  <select id="getAddress" resultMap="addrmap">
+    select a.id, a.device_id, a.cycle_time, a.offset, a.iaddr1, a.saddr1
+    	 , a.iaddr2, a.saddr2, a.iaddr3, a.saddr3, a.iaddr4, a.saddr4
+    	 , a.iaddr5, a.saddr5, a.iaddr6, a.saddr6
+      from address a join tag t on a.id=t.id
+     where a.id = #{parm1}
+  </select>
+
+  <insert id="insertAddress" parameterType="Address" >
+    insert into address
+          ( id, device_id, cycle_time, offset, iaddr1, saddr1
+          , iaddr2, saddr2, iaddr3, saddr3, iaddr4, saddr4
+          , iaddr5, saddr5, iaddr6, saddr6 )
+    values( #{id}, #{deviceId}, #{cycleTime}, #{offset}, #{iaddr1}, #{saddr1}
+          , #{iaddr2}, #{saddr2}, #{iaddr3}, #{saddr3}, #{iaddr4}, #{saddr4}
+          , #{iaddr5}, #{saddr5}, #{iaddr6}, #{saddr6} )
+    on duplicate key update
+            device_id = #{deviceId}, cycle_time = #{cycleTime}, offset = #{offset}
+          , iaddr1 = #{iaddr1}, saddr1 = #{saddr1}, iaddr2 = #{iaddr2}, saddr2 = #{saddr2}
+          , iaddr3 = #{iaddr3}, saddr3 = #{saddr3}, iaddr4 = #{iaddr4}, saddr4 = #{saddr4}
+          , iaddr5 = #{iaddr5}, saddr5 = #{saddr5}, iaddr6 = #{iaddr6}, saddr6 = #{saddr6}
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+  </insert>
+  
+  <update id="updateDevice" parameterType="Address">
+    update device 
+       set  device_id = #{deviceId}, interval = #{interval}, offset = #{offset}
+         , iaddr1 = #{iaddr1}, saddr1 = #{saddr1}, iaddr2 = #{iaddr2}, saddr2 = #{saddr2}
+         , iaddr3 = #{iaddr3}, saddr3 = #{saddr3}, iaddr4 = #{iaddr4}, saddr4 = #{saddr4}
+         , iaddr5 = #{iaddr5}, saddr5 = #{saddr5}, iaddr6 = #{iaddr6}, saddr6 = #{saddr6}
+     where id = #{id}
+  </update>
+</mapper>

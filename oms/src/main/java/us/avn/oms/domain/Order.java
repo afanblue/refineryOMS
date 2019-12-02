@@ -40,13 +40,12 @@ public class Order extends OMSObject implements Serializable {
 	private Long    shipmentId;
 	private Long    customerId;
 	private String  customer;
-	private Long    carrierId;
-	private String  carrier;
 	private String  purchase;     // Purchase 'P', Sale 'S'
 	private Instant expDate;
 	private Instant actDate;
 	private Double  expVolume;
 	private Double  actVolume;
+	private Long    transferId;
 	private Collection<Item> items;
 	
 	public Order() { }
@@ -54,7 +53,6 @@ public class Order extends OMSObject implements Serializable {
 	public Order( Long id ) {
 		shipmentId = id;
 		customerId = 0L;
-		carrierId = 0L;
 		purchase = PURCHASE;
 		items = Collections.emptyList();
 		actDate = expDate = Instant.now();
@@ -84,24 +82,6 @@ public class Order extends OMSObject implements Serializable {
 
 	public void setCustomer(String customer) {
 		this.customer = customer;
-	}
-
-	
-	public Long getCarrierId() {
-		return carrierId;
-	}
-	
-	public void setCarrierId(Long carrierId) {
-		this.carrierId = carrierId;
-	}
-	
-	
-	public String getCarrier() {
-		return carrier;
-	}
-
-	public void setCarrier(String carrier) {
-		this.carrier = carrier;
 	}
 
 	
@@ -191,6 +171,15 @@ public class Order extends OMSObject implements Serializable {
 
 	public void setItems(Collection<Item> items) {
 		this.items = items;
+	}
+	
+	
+	public Long getTransferId() {
+		return transferId;
+	}
+	
+	public void setTransferId(Long tid) {
+		this.transferId = tid;
 	}
 	
 	

@@ -100,22 +100,12 @@ public class AIValue extends OMSObject implements Serializable {
 	}
 
 
-	public String getScanTime() {
-		if( scanTime != null ) {
-			return sdf.format(scanTime);
-		}
-		return null;
+	public Instant getScanTime() {
+		return scanTime;
 	}
 
-	public void setScanTime(String scanTime) {
-		try {
-			String tz = java.util.TimeZone.getDefault().getID();
-			LocalDateTime ld = LocalDateTime.parse(scanTime, sdf );
-			ZonedDateTime d = ZonedDateTime.of(ld, ZoneId.of(tz));
-			this.scanTime = d.toInstant();
-		} catch( Exception e ) {
-			this.scanTime = null;
-		}
+	public void setScanTime(Instant st ) {
+		this.scanTime = st;
 	}
 	
 	

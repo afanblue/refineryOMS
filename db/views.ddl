@@ -1,7 +1,7 @@
 -- ---*************************** 1. row ***************************
 select 'active_order_vw' as action from dual;
 DROP VIEW IF EXISTS active_order_vw;
-CREATE VIEW active_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where (`oms`.`shipment_item`.`active` <> 'C');
+CREATE VIEW active_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where (`oms`.`shipment_item`.`active` <> 'C') group by `oms`.`shipment_item`.`shipment_id`;
 -- ---*************************** 2. row ***************************
 select 'active_vw' as action from dual;
 DROP VIEW IF EXISTS active_vw;
@@ -81,11 +81,11 @@ CREATE VIEW on_off_vw AS select `oms`.`reference_code`.`id` AS `id`,`oms`.`refer
 -- ---*************************** 21. row ***************************
 select 'order_volume_vw' as action from dual;
 DROP VIEW IF EXISTS order_volume_vw;
-CREATE VIEW order_volume_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,sum(`oms`.`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`oms`.`shipment_item`.`act_volume`) AS `act_volume` from `oms`.`shipment_item` group by `oms`.`shipment_item`.`shipment_id`;
+CREATE VIEW order_volume_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,`oms`.`shipment_item`.`content_cd` AS `content_cd`,`oms`.`shipment_item`.`transfer_id` AS `transfer_id`,sum(`oms`.`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`oms`.`shipment_item`.`act_volume`) AS `act_volume` from `oms`.`shipment_item` group by `oms`.`shipment_item`.`shipment_id`,`oms`.`shipment_item`.`content_cd`,`oms`.`shipment_item`.`transfer_id`;
 -- ---*************************** 22. row ***************************
 select 'pending_order_vw' as action from dual;
 DROP VIEW IF EXISTS pending_order_vw;
-CREATE VIEW pending_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where (`oms`.`shipment_item`.`active` = 'P');
+CREATE VIEW pending_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where (`oms`.`shipment_item`.`active` = 'P') group by `oms`.`shipment_item`.`shipment_id`;
 -- ---*************************** 23. row ***************************
 select 'rtt_vw' as action from dual;
 DROP VIEW IF EXISTS rtt_vw;

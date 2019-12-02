@@ -1,3 +1,5 @@
+powershell -command %OMS_HOME%\purgeLogs.ps1 -name "devioError" -int 2 
+powershell -command %OMS_HOME%\purgeLogs.ps1 -name "devio" 
 powershell -command %OMS_HOME%\purgeLogs.ps1 -name "pmcError" -int 2
 powershell -command %OMS_HOME%\purgeLogs.ps1 -name "pmc"
 powershell -command %OMS_HOME%\purgeLogs.ps1 -name "simError" -int 2

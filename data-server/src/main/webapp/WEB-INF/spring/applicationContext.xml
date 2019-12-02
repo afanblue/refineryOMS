@@ -30,7 +30,7 @@
    </bean>
 
    <bean id="mysqlDS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
       <property name="url"             value="jdbc:mysql://localhost:3306/${db.instance}?autoReconnect=true&amp;useUnicode=yes"/>
       <property name="username"        value="${db.user}"/>
       <property name="password"        value="${db.pwd}"/>

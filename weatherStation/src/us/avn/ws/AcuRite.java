@@ -50,8 +50,8 @@ import us.avn.ws.WsCSV;
 public class AcuRite extends WsCSV {
 
 	private Logger log = LogManager.getLogger( this.getClass() );
-//  Condition names specify outdoor temperature, barometricPressure
-//  , windSpeed, windDirection, precipitationLastHour
+//  Condition names specify offsets for time, outdoor temperature, 
+//  barometricPressure, windSpeed, windDirection, precipitationLastHour
     private static String[] csvConditionNames= { "0", "1", "6", "8", "11", "7"};
     private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("M/d/yyyy h:m:ss a");
 

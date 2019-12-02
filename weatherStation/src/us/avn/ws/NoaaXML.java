@@ -123,6 +123,7 @@ public class NoaaXML extends WeatherStation {
 					DateTimeFormatter sdf = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss Z");
 					ZonedDateTime d = ZonedDateTime.parse(seVal, sdf );
 					Instant id = d.toInstant();
+					log.debug("Observation time - ZDT: "+d.toString()+", Instant: "+id.toString());
 					eVal = new Double(id.getEpochSecond());
 				} else {
 					eVal = new Double(seVal);

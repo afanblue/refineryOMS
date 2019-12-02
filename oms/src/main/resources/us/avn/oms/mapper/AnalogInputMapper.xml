@@ -16,9 +16,6 @@
 	
 	       tag_id: 24
        type_code: L
-        scan_int: 6
-     scan_offset: 4
-    current_scan: 0
       zero_value: 0
        max_value: 100
   hist_type_code: L
@@ -51,9 +48,6 @@
      <result property="tag.active"      column="active" />
      <result property="unitId"          column="unit_id" />
      <result property="analogTypeCode"  column="analog_type_code"/>
-     <result property="scanInt"         column="scan_int"/>
-     <result property="scanOffset"      column="scan_offset" />
-     <result property="currentScan"     column="current_scan"/>
      <result property="zeroValue"       column="zero_value"/>
      <result property="maxValue"        column="max_value"/>
      <result property="histTypeCode"    column="hist_type_code"/>
@@ -93,8 +87,8 @@
   </resultMap>
 
   <select id="getAllActiveAItags" resultMap="analogInputResultMap">
-    select ai.tag_id, t.name, tt.id tag_type_id, ai.analog_type_code, ai.scan_int
-         , ai.scan_offset, ai.current_scan, ai.zero_value, ai.max_value
+    select ai.tag_id, t.name, tt.id tag_type_id, ai.analog_type_code
+         , ai.zero_value, ai.max_value
          , ai.hist_type_code, ai.percent, ai.slope, ai.raw_value, ai.scan_value
          , ai.scan_time, ai.prev_value, ai.prev_time, ai.last_hist_value
          , ai.last_hist_time, ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id, x.float_value
@@ -110,8 +104,8 @@
   </select>
 
   <select id="getAllUpdatedAItags" resultMap="analogInputResultMap">
-    select ai.tag_id, t.name, tt.id tag_type_id, ai.analog_type_code, ai.scan_int
-         , ai.scan_offset, ai.current_scan, ai.zero_value, ai.max_value
+    select ai.tag_id, t.name, tt.id tag_type_id, ai.analog_type_code
+         , ai.zero_value, ai.max_value
          , ai.hist_type_code, ai.percent, ai.slope, ai.raw_value, ai.scan_value
          , ai.scan_time, ai.prev_value, ai.prev_time, ai.last_hist_value
          , ai.last_hist_time, ai.hh, ai.hi, ai.lo, ai.ll, ai.unit_id, x.float_value
@@ -128,8 +122,9 @@
   </select>
 
   <select id="getAllAnalogInputs" resultMap="analogInputResultMap">
-    select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , t.tag_type_code, t.active, ai.analog_type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+    select ai.tag_id, t.id, t.name, t.description
+    	 , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ai.analog_type_code
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
@@ -146,8 +141,9 @@
   </select>
   
   <select id="getAllAnalogInputsByType" resultMap="analogInputResultMap">
-    select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , t.tag_type_code, t.active, ai.analog_type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+    select ai.tag_id, t.id, t.name, t.description
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ai.analog_type_code
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
@@ -158,8 +154,9 @@
   </select>
 
   <select id="getAnalogInput" resultMap="analogInputResultMap">
-    select ai.tag_id, t.id, t.name, t.description, t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , t.tag_type_code, t.active, ai.analog_type_code, ai.scan_int, ai.scan_offset, ai.current_scan
+    select ai.tag_id, t.id, t.name, t.description
+    	 , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
+         , t.tag_type_code, t.active, ai.analog_type_code
          , ai.zero_value, ai.max_value, ai.hist_type_code, ai.percent
          , ai.slope, ai.raw_value, ai.scan_value, ai.scan_time, ai.prev_value
          , ai.prev_time, ai.last_hist_value, ai.last_hist_time
@@ -208,9 +205,6 @@
   <update id="updateAnalogInputStatic" parameterType="AnalogInput">
     update analog_input
        set analog_type_code = #{analogTypeCode}
-         , scan_int = #{scanInt}
-         , scan_offset = #{scanOffset}
-         , current_scan = #{currentScan}
          , zero_value = #{zeroValue}
          , max_value = #{maxValue}
          , hist_type_code = #{histTypeCode}
@@ -225,17 +219,15 @@
   
   <insert id="insertAnalogInput" parameterType="AnalogInput">
     insert analog_input
-         ( tag_id, analog_type_code, scan_int, scan_offset, zero_value, max_value
+         ( tag_id, analog_type_code, zero_value, max_value
          , hist_type_code, percent, slope, raw_value, scan_value, scan_time
          , prev_value, prev_time, last_hist_value, last_hist_time
          , hh, hi, lo, ll, unit_id )
-    values( #{tagId}, #{analogTypeCode}, #{scanInt}, #{scanOffset}, #{zeroValue}, #{maxValue}
+    values( #{tagId}, #{analogTypeCode}, #{zeroValue}, #{maxValue}
          , #{histTypeCode}, #{percent}, null, null, null, null
          , null, null, null, null, #{hh}, #{hi}, #{lo}, #{ll}, #{unitId} )
     on duplicate key update
            analog_type_code = #{analogTypeCode}
-         , scan_int = #{scanInt}
-         , scan_offset = #{scanOffset}
          , zero_value = #{zeroValue}
          , max_value = #{maxValue}
          , hist_type_code = #{histTypeCode}

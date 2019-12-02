@@ -122,6 +122,15 @@ python LoadDB.py %1 data/%siteName%/analog_output.csv
 rem  load digital outputs
 python LoadDB.py %1 data/%siteName%/digital_output.csv
 
+rem  load device table
+python LoadDB.py %1 data/%siteName%/device.csv
+
+rem  load address table
+python LoadDB.py %1 data/%siteName%/address.csv
+
+rem  load sim_io (SIM I/O) table
+python LoadDB.py %1 data/%siteName%/sim_io.csv
+
 rem  load calculated
 python LoadDB.py %1 data/%siteName%/calculated.csv
 
@@ -142,6 +151,9 @@ python LoadDB.py %1 data/%siteName%/rel_tag_tag.csv
 
 rem  load hotspots
 python LoadDB.py %1 data/%siteName%/hot_spot.csv
+
+rem  load vertex
+python LoadDB.py %1 data/%siteName%/vertex.csv
 
 rem  load volumes
 python LoadDB.py %1 data/%siteName%/volume.csv

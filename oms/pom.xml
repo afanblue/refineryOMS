@@ -13,7 +13,7 @@
     <tiles.version>3.0.8</tiles.version>
     <mybatis.version>3.4.5</mybatis.version>
     <mysql.connector.version>8.0.11</mysql.connector.version>
-    <fasterxml.jackson.version>2.9.10</fasterxml.jackson.version>
+    <fasterxml.jackson.version>2.10.0</fasterxml.jackson.version>
   </properties>
   
   <dependencies>

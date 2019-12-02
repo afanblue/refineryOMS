@@ -6,19 +6,19 @@ CV-0001,Current Temp degrees F,C,None,None,None,None,None,Y
 Com011-CV,Crude Tank 1 Pump Out state,C,None,None,None,None,None,Y
 Com013-CV,Crude Tank 3 Pump Out state,C,None,None,None,None,None,Y
 Com015-CV,Crude Tank 5 Pump Out state,C,None,None,None,None,None,Y
-Com021-CV,None,C,None,None,None,None,None,Y
-Com023-CV,None,C,None,None,None,None,None,Y
-Com025-CV,None,C,None,None,None,None,None,Y
+Com021-CV,,C,None,None,None,None,None,Y
+Com023-CV,,C,None,None,None,None,None,Y
+Com025-CV,,C,None,None,None,None,None,Y
 Com012-CV,Crude Tank 2 Pump Out state,C,None,None,None,None,None,Y
 Com014-CV,Crude Tank 4 Pump Out state,C,None,None,None,None,None,Y
 Com016-CV,Crude Tank 6 Pump Out state,C,None,None,None,None,None,Y
-Com022-CV,None,C,None,None,None,None,None,Y
-Com024-CV,None,C,None,None,None,None,None,Y
-Com026-CV,None,C,None,None,None,None,None,Y
-RU1-3-CV,None,C,None,None,None,None,None,Y
-RU1-4-CV,None,C,None,None,None,None,None,Y
-RU2-3-CV,None,C,None,None,None,None,None,Y
-RU2-4-CV,None,C,None,None,None,None,None,Y
-RU1-2-CV,None,C,None,None,None,None,None,Y
-RU2-2-CV,None,C,None,None,None,None,None,Y
+Com022-CV,,C,None,None,None,None,None,Y
+Com024-CV,,C,None,None,None,None,None,Y
+Com026-CV,,C,None,None,None,None,None,Y
+RU1-3-CV,,C,None,None,None,None,None,Y
+RU1-4-CV,,C,None,None,None,None,None,Y
+RU2-3-CV,,C,None,None,None,None,None,Y
+RU2-4-CV,,C,None,None,None,None,None,Y
+RU1-2-CV,,C,None,None,None,None,None,Y
+RU2-2-CV,,C,None,None,None,None,None,Y
 End

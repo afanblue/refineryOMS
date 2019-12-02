@@ -1,0 +1,7 @@
+Table,device,,,
+ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
+Data,,,
+description,type,model,param1,param2,param3,param4,cycle_time,offset,active
+Default OMS Data Simulator,SIM,OMS,None,None,None,None,60,0,Y
+Weather Station Data Collection,WS,API,KTME,None,None,None,20,0,Y
+End

@@ -16,6 +16,8 @@
  *******************************************************************************/
 package us.avn.oms.transfer;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -147,10 +149,17 @@ public class TransferUpdate extends TimerTask {
 		statuses = xfrs.getAllTransferStatuses();
 		nameTemplates = cfgs.getAllConfigItems();
 		
-		completeTransfers();
-		startTransfers();
-		runScheduledTransfers();
-		createTransfersFromOrders();
+		try {
+			completeTransfers();
+			startTransfers();
+			runScheduledTransfers();
+			createTransfersFromOrders();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
 		
 		log.debug("run: Transfer processing complete");
 	}
@@ -202,9 +211,14 @@ public class TransferUpdate extends TimerTask {
 					Item item = ii.next();
 					log.debug("createTransfersFromOrders: pending order item "+item.getItemNo());
 					Transfer xfr = createNewTransfer(order,item,carrier,dock);
-					xfr.startTransfer(xfrs);
-					item.setActive(Order.ACTIVE);
-					ords.updateItem(item);
+					if( null != xfr ) {
+						xfr.startTransfer(xfrs);
+						item.setActive(Order.ACTIVE);
+						item.setTransferId(xfr.getId());
+						ords.updateItem(item);
+					} else {
+						log.debug("No transfer created, see previous messages");
+					}
 				}
 			} else {
 				log.debug("createTransfersFromOrders: carrier not present at dock");
@@ -357,7 +371,7 @@ public class TransferUpdate extends TimerTask {
 	 */
 	private boolean outputAllowed( ChildValue cv ) {
 		boolean oa = false;
-		oa = "DO".equals(cv.getInpType());
+		oa = Tag.DIGITAL_OUTPUT.equals(cv.getInpType());
 		return oa;
 	}
 	
@@ -384,18 +398,17 @@ public class TransferUpdate extends TimerTask {
 	}
 	
 	/**
-	 * Verify the presence of a carrier specified by tag at a transfer point
+	 * Check that the carrier is present at a loading dock, specified 
+	 * by the appropriate indicator in a RelTagTag(code = "DK") record.  There
+	 * should only be one
 	 *
 	 * @param t Order containing specified carrier
 	 * @return	Tag of loading dock
 	 *
-	 * Check that the carrier is present at a loading dock, specified 
-	 * by the appropriate indicator in a RelTagTag(code = "CRR") record.  There
-	 * should only be one
 	 */
-	private Tag carrierPresent( Order o ) {
+	private Tag carrierPresent( Item i ) {
 		Tag dock = null;
-		Collection<RelTagTag> cdk = tgs.getChildrenOfType(o.getCarrierId(), "DK");
+		Collection<RelTagTag> cdk = tgs.getChildrenOfType(i.getCarrierId(), Tag.DOCK);
 		if( cdk.size() == 1 ) { 
 			Iterator<RelTagTag> idk = cdk.iterator();
 			if( idk.hasNext() ) {
@@ -434,52 +447,59 @@ public class TransferUpdate extends TimerTask {
 	 */
 	private Transfer createNewTransfer( Order order, Item i, Tag carrier, Tag dock ) {
 		log.debug("createNewTransfer: order: "+order.getShipmentId()+" item "+i.toString()+" for carrier "
-				 +carrier.getName()+" at dock "+dock.getName());
-		Transfer xfr = new Transfer();
-		String templateName = nameTemplates.get(dock.getName()).replace("ProdCd",i.getContentCd());
-		Transfer template = xfrs.getTemplate(templateName);
-		log.debug("createNewTransfer: template for dock "+dock.getName()+" "+template.toString()); 
-		Tag src = tgs.getTag(template.getSourceId());
-		Tag dest = tgs.getTag(template.getDestinationId());
-		String name = "";
-		String today = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(Instant.now());
-//		Calendar cal = Calendar.getInstance();
-		xfr.setId(0L);
-		xfr.setTagId(template.getId());
-		
-		if( Tag.DOCK.equals(src.getTagTypeCode()) ) {
-			String srcName = nameTemplates.get(Config.STATION_NAME_MASK).replace("DK", src.getName())
-					                      .replace("STN",i.getItemNo().toString());
-			src = tgs.getTagByName(srcName, "STN");
+				+carrier.getName()+" at dock "+dock.getName());
+		Transfer xfr = null;
+		String baseName = nameTemplates.get(dock.getName());
+		if( null != baseName ) {
+			xfr = new Transfer();
+			String templateName = baseName.replace("ProdCd",i.getContentCd());
+			log.debug("createNewTransfer: template "+templateName+" for dock "+dock.getName()); 
+			Transfer template = xfrs.getTemplate(templateName);
+			log.debug("createNewTransfer: template for dock "+dock.getName()+" "+template.toString()); 
+			Tag src = tgs.getTag(template.getSourceId());
+			Tag dest = tgs.getTag(template.getDestinationId());
+			String name = "";
+			String today = DateTimeFormatter.ofPattern("yyyyMMddHHmm").format(ZonedDateTime.now());
+			//		Calendar cal = Calendar.getInstance();
+			xfr.setId(0L);
+			xfr.setTagId(template.getId());
+
+			if( Tag.DOCK.equals(src.getTagTypeCode()) ) {
+				String srcName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
+						.replace("STN",i.getItemNo().toString());
+				src = tgs.getTagByName(srcName, "STN");
+			}
+			xfr.setSourceId(src.getId());
+
+			if( Tag.DOCK.equals(dest.getTagTypeCode()) ) {
+				String destName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
+						.replace("STN",i.getItemNo().toString());
+				dest = tgs.getTagByName(destName, "STN");
+			}
+			xfr.setDestinationId(template.getDestinationId());
+
+			if( Order.PURCHASE.equals(order.getPurchase())) {
+				name = dock.getName() + "-" + i.getItemNo() + "to" + i.getContentCd() + "-" + today;
+			} else {
+				name = i.getContentCd() + "to" + dock.getName() + i.getItemNo() + "-" + today;
+			}
+
+			xfr.checkSource(tgs, tks);
+			xfr.checkDestination(tgs, tks);
+			xfr.setName(name);
+			xfr.setContentsCode(i.getContentCd());
+			xfr.setStatusId(xfrs.getTransferStatusId(Transfer.ACTIVE));
+			xfr.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
+			xfr.setDelta(0);
+			xfr.setExpVolume(i.getExpVolumeMax());
+			xfr.setExpStartTime(Timestamp.from(Instant.now()));
+			Double transferTime = Math.ceil(i.getExpVolumeMax()/Transfer.SLOW);
+			Instant et = Instant.now().plus(transferTime.longValue(), ChronoUnit.DAYS );
+			xfr.setExpEndTime( Timestamp.from(et) );
+			xfrs.insertTransfer(xfr);
+		} else {
+			log.debug("No transfer template set up for dock "+dock.getName());
 		}
-		xfr.setSourceId(src.getId());
-		
-		if( Tag.DOCK.equals(dest.getTagTypeCode()) ) {
-			String destName = nameTemplates.get(Config.STATION_NAME_MASK).replace("DK", src.getName())
-                    .replace("STN",i.getItemNo().toString());
-			dest = tgs.getTagByName(destName, "STN");
-		}
-		xfr.setDestinationId(template.getDestinationId());
-		
-		if( Order.PURCHASE.equals(order.getPurchase())) {
-	    	name = dock.getName() + "-" + i.getItemNo() + "to" + i.getContentCd() + "-" + today;
-	    } else {
-	    	name = i.getContentCd() + "to" + dock.getName() + i.getItemNo() + "-" + today;
-	    }
-		
-		xfr.checkSource(tgs, tks);
-		xfr.checkDestination(tgs, tks);
-		xfr.setName(name);
-		xfr.setContentsCode(i.getContentCd());
-		xfr.setStatusId(xfrs.getTransferStatusId(Transfer.ACTIVE));
-		xfr.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
-		xfr.setDelta(0);
-		xfr.setExpVolume(i.getExpVolumeMax());
-		xfr.setExpStartTime(Timestamp.from(Instant.now()));
-	    Double transferTime = Math.ceil(i.getExpVolumeMax()/Transfer.SLOW);
-	    Instant et = Instant.now().plus(transferTime.longValue(), ChronoUnit.DAYS );
-	    xfr.setExpEndTime( Timestamp.from(et) );
-		xfrs.insertTransfer(xfr);
 		return xfr;
 	}
 	

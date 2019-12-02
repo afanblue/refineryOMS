@@ -14,10 +14,7 @@
 
 	Integer insertDigitalInput( DigitalInput t );
 	
-	       tag_id: 24
-        scan_int: 6
-     scan_offset: 4
-    current_scan: 0
+	      tag_id: 24
   hist_type_code: L
       scan_value: NULL
        scan_time: NULL
@@ -41,9 +38,6 @@
      <result property="tag.c2Long"      column="c2_long"/>
      <result property="tag.tagTypeCode" column="tag_type_code"/>
      <result property="tag.active"      column="active"/>
-     <result property="scanInt"         column="scan_int"/>
-     <result property="scanOffset"      column="scan_offset" />
-     <result property="currentScan"     column="current_scan"/>
      <result property="histTypeCode"    column="hist_type_code"/>
      <result property="alarmState"      column="alarmState" />
      <result property="alarmCode"       column="alarmCode" />
@@ -79,7 +73,7 @@
   
 
   <select id="getAllActiveDItags" resultMap="digitalInputResultMap">
-    select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
+    select di.tag_id, t.name
          , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
          , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
          , di.last_hist_time, coalesce(x.float_value,0) sim_value
@@ -91,7 +85,7 @@
   </select>
 
   <select id="getAllUpdatedDItags" resultMap="digitalInputResultMap">
-    select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
+    select di.tag_id, t.name
          , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
          , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
          , di.last_hist_time, coalesce(x.float_value,0) sim_value
@@ -106,7 +100,6 @@
   <select id="getAllDigitalInputs" resultMap="digitalInputResultMap">
     select di.tag_id, t.name, t.description, t.c1_lat, t.c1_long
          , t.c2_lat, t.c2_long, t.tag_type_code, t.active
-         , di.scan_int, di.scan_offset, di.current_scan
          , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
          , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
          , di.last_hist_time, di.value_view
@@ -122,7 +115,6 @@
   <select id="getDigitalInput" resultMap="digitalInputResultMap">
     select di.tag_id, t.name, t.description, t.c1_lat, t.c1_long
          , t.c2_lat, t.c2_long, t.tag_type_code, t.active
-         , di.scan_int, di.scan_offset, di.current_scan
          , di.hist_type_code, di.scan_value, di.scan_time, di.prev_value
          , di.prev_scan_time, di.last_hist_value, di.last_hist_time
          , di.value_view, di.alarm_state, di.alarm_code
@@ -150,7 +142,7 @@
   </select>
 
   <select id="getCarrierPresentTags" resultMap="digitalInputResultMap">
-    select di.tag_id, t.name, di.scan_int, di.scan_offset, di.current_scan
+    select di.tag_id, t.name
          , di.hist_type_code, di.alarm_state, di.alarm_code, di.scan_value
          , di.scan_time, di.prev_value, di.prev_scan_time, di.last_hist_value
          , di.last_hist_time, coalesce(x.float_value,0) sim_value
@@ -175,9 +167,7 @@
   
   <update id="updateDigitalInputStatic" parameterType="DigitalInput">
     update digital_input
-       set scan_int = #{scanInt}
-         , scan_offset = #{scanOffset}
-         , hist_type_code = #{histTypeCode}
+       set hist_type_code = #{histTypeCode}
          , alarm_state = #{alarmState}
          , alarm_code = #{alarmCode}
          , value_view = #{valueView}
@@ -186,18 +176,15 @@
   
   <insert id="insertDigitalInput" parameterType="DigitalInput">
     insert digital_input
-          ( tag_id, scan_int, scan_offset, current_scan, hist_type_code
+          ( tag_id, hist_type_code
           , scan_value, scan_time, alarm_state, alarm_code
           , prev_value, prev_scan_time, last_hist_value, last_hist_time
           , value_view )
-    values( #{tagId}, #{scanInt}, #{scanOffset}, 0, #{histTypeCode}
+    values( #{tagId}, #{histTypeCode}
           , null, null, #{alarmState}, #{alarmCode}
           , null, null, null, null, #{valueView} )
     on duplicate key update
-            scan_int = #{scanInt}
-          , scan_offset = #{scanOffset}
-          , current_scan = #{currentScan}
-          , hist_type_code = #{histTypeCode}
+            hist_type_code = #{histTypeCode}
           , scan_value = #{scanValue}
           , scan_time = #{scanTime}
           , alarm_state = #{alarmState}

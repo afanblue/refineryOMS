@@ -140,7 +140,7 @@
      where t.content_type_code=#{param1}
   </select>
   
-  <select id="getTankVolumesForUnit" resultMap="valueMap">
+  <select id="getUnusedTankVolumesForUnit" resultMap="valueMap">
     select tk.id
          , round(0.178 * pi() * ai.scan_value * tk.diameter * tk.diameter /4,2) value
       from rel_tag_tag rtt 
@@ -149,9 +149,13 @@
            join tank tk on tk.id = rtt.child_tag_id
            join analog_input ai on ai.tag_id = trt.level_tag_id
      where t.name = #{param1}
-       and tk.id not in (select source_id from transfer
-                          where status_id in (3,1)
-                           and tk.id not in (select destination_id from transfer where status_id in (3,1)))
+       and tk.id not in (select source_id from transfer 
+                          where status_id in (select value from transfer_status_vw
+                                               where name in ('Scheduled','Active'))
+                         union 
+                         select destination_id from transfer 
+                          where status_id in (select value from transfer_status_vw 
+                                               where name in('Scheduled','Active')))
   </select>
   
   <select id="getLevelVolumesForTank" resultMap="volumeMap" >

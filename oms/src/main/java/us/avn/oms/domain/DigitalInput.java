@@ -23,9 +23,6 @@ import java.util.Collection;
 
 /*
  *           tag_id: 24
- *         scan_int: 6
- *      scan_offset: 4
- *     current_scan: 0
  *   hist_type_code: L
  *      alarm_state: 
  *       alarm_code:
@@ -43,9 +40,6 @@ public class DigitalInput extends OMSObject implements Serializable {
 	
 	protected Long     tagId;
 	protected Tag      tag;
-	protected Integer  scanInt;
-	protected Integer  scanOffset;
-	protected Integer  currentScan;
 	protected String   histTypeCode;
 	protected Double   alarmState;
 	protected Double   alarmCode;
@@ -83,33 +77,6 @@ public class DigitalInput extends OMSObject implements Serializable {
 	}
 
 	
-	public Integer getScanInt() {
-		return scanInt;
-	}
-
-	public void setScanInt(Integer scanInt) {
-		this.scanInt = scanInt;
-	}
-
-
-	public Integer getScanOffset() {
-		return scanOffset;
-	}
-
-	public void setScanOffset(Integer scanOffset) {
-		this.scanOffset = scanOffset;
-	}
-
-
-	public Integer getCurrentScan() {
-		return currentScan;
-	}
-
-	public void setCurrentScan(Integer currentScan) {
-		this.currentScan = currentScan;
-	}
-
-
 	public String getHistTypeCode() {
 		return histTypeCode;
 	}

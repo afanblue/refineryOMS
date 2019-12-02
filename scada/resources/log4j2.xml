@@ -28,7 +28,7 @@
         <Logger name="us.avn.oms" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
-        <Logger name="us.avn.oms.mapper" level="ERROR" additivity="false">
+        <Logger name="us.avn.oms.mapper" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
         <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">

@@ -1,0 +1,42 @@
+package us.avn.oms.service.impl;
+
+import java.util.Collection;
+
+import us.avn.oms.domain.Address;
+import us.avn.oms.mapper.AddressMapper;
+import us.avn.oms.service.AddressService;
+
+public class AddressServiceImpl implements AddressService {
+
+	public AddressServiceImpl() {
+		// TODO Auto-generated constructor stub
+	}
+
+	private AddressMapper addrMapper;
+	
+	public void setAddressMapper( AddressMapper am ) {
+		this.addrMapper = am;
+	}
+	
+	public Collection<Address> getAddressesForDevice( Long devId ) {
+		return addrMapper.getAddressesForDevice(devId);
+	}
+	
+	public Collection<Address> getActiveAddressesForDeviceByType( Long devId, String type ) {
+		return addrMapper.getActiveAddressesForDeviceByType(devId, type);
+	}
+	
+	public Address getAddress( Long id) {
+		return addrMapper.getAddress(id);
+	}
+		
+	public Long insertAddress( Address addr ) {
+		addrMapper.insertAddress(addr);
+		return addr.getId();
+	}
+
+	public void updateAddress( Address addr ) {
+		addrMapper.updateAddress(addr);
+	}
+
+}

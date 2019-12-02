@@ -18,6 +18,8 @@ package us.avn.oms.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 
 public class Xfer extends OMSObject implements Serializable {
@@ -75,8 +77,8 @@ public class Xfer extends OMSObject implements Serializable {
 		return scanTime;
 	}
 
-	public void setScanTime(Instant st ) {
-		this.scanTime = st;
+	public void setScanTime(Instant zdt ) {
+		this.scanTime = zdt;
 	}
 
 

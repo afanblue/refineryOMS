@@ -38,7 +38,6 @@
         <typeAlias alias="Role"           type="us.avn.oms.domain.Role" />
         <typeAlias alias="RolePriv"       type="us.avn.oms.domain.RolePriv" />
         <typeAlias alias="Ship"           type="us.avn.oms.domain.Ship"/>
-        <typeAlias alias="SimIO"          type="us.avn.oms.domain.SimIO" />
         <typeAlias alias="Tag"            type="us.avn.oms.domain.Tag"/>
         <typeAlias alias="Taglet"         type="us.avn.oms.domain.Taglet"/>
         <typeAlias alias="TagType"        type="us.avn.oms.domain.TagType"/>

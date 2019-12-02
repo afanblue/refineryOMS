@@ -33,6 +33,8 @@ def addData( crsr, tbl, qry, hdr, prt ) :
     for row in results:
         sep = ""
         for item in row:
+            if item == "None" :
+                item = "NULL"
             tblFile.write("{}{}".format(sep,item))
             sep = ","
         tblFile.write("\n")
@@ -448,6 +450,30 @@ qry = ("select tc.name id, c.definition, tx.name output_tag_id "
        "from calculated c join tag tc on c.id = tc.id "
        "join tag tx on c.output_tag_id = tx.id")
 addData( crsr, tbl, qry, hdr, False )
+
+
+''' device '''
+tbl = "device"
+hdr = ( "Table,"+tbl+",,,",
+        "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "Data,,,")
+qry = ("select description, type, model, param1, param2, param3"
+       ", param4, cycle_time, offset, active "
+       "from device")
+addData( crsr, tbl, qry, hdr, False )
+
+
+''' address '''
+tbl = "address"
+hdr = ( "Table,"+tbl+",,,",
+        "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "device_id,device,id,type,device,model,model",
+        "Data,,,")
+qry = ("select a.id, concat(d.type,'|',d.model) device_id, a.cycle_time, a.offset, "
+       "a.iaddr1, a.iaddr2, a.iaddr3, a.iaddr4, a.iaddr5, a.iaddr6, "
+       "a.saddr1, a.saddr2, a.saddr3, a.saddr4, a.saddr5, a.saddr6 "
+       "from address a join device d on a.device_id=d.id ")
+addData(crsr, tbl, qry, hdr, False )
 
 
 ''' control block '''

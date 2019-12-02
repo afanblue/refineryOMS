@@ -17,6 +17,7 @@
     <result property="actDate"        column="act_date" />
     <result property="expVolume"      column="exp_volume" />
     <result property="actVolume"      column="act_volume" />
+    <result property="transferId"     column="transfer_id"/>
   </resultMap>
   
   <resultMap id="itemMap" type="Item">
@@ -28,11 +29,13 @@
     <result property="expVolumeMin"   column="min_vol" />
     <result property="expVolumeMax"   column="max_vol" />
     <result property="actVolume"      column="act_vol" />
+    <result property="transferId"     column="transfer_id"/>
+    <result property="stationId"     column="station_id"/>
   </resultMap>
 
   <select id="getOrder" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
       from shipment s join customer c on s.customer_id = c.id
       join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
@@ -46,25 +49,38 @@
          , coalesce(i.exp_volume_min,0) min_vol
          , coalesce(i.exp_volume_max,100000) max_vol
          , coalesce(i.act_volume,0) act_vol
+         , transfer_id, station_id
       from shipment_item i
      where i.shipment_id = #{param1}
     union 
     select s.shipment_id, h.hold_no, '' content_cd, 'Y' new_item, null active
          , 0 min_vol, coalesce(h.volume*h.no_duplicates,100000) max_vol
-         , 0 act_vol
+         , 0 act_vol, null transfer_id, null station_id
       from shipment s 
      right outer join hold h on s.carrier_id=h.carrier_id
      where s.shipment_id= #{param1}
        and h.hold_no not in (select item_no from shipment_item where shipment_id=s.shipment_id)
      order by item_no
   </select>
+
+  <select id="getOrderItemByTransferId" resultMap="itemMap">
+  <select id="getOrderItems" resultMap="itemMap">
+    select i.shipment_id, i.item_no, i.carrier_id
+         , coalesce(i.content_cd,'') content_cd
+         , coalesce(i.content_cd,'N') new_item
+         , coalesce(i.exp_volume_min,0) min_vol
+         , coalesce(i.exp_volume_max,100000) max_vol
+         , coalesce(i.act_volume,0) act_vol
+         , i.active, transfer_id, station_id
+      from shipment_item i
+     where i.transfer_id = #{param1}
+  </select>  
   
   <select id="getActiveOrders" resultMap="ordmap">
-    select distinct s.shipment_id, s.customer_id, c.name customer, s.carrier_id
-    	 , t.name carrier, s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-    	 , ovv.act_volume
+    select distinct s.shipment_id, s.customer_id, c.name customer,
+    	 , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
+    	 , ovv.act_volume, ovv.transfer_id
       from shipment s join customer c on s.customer_id = c.id
-      join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
       join active_order_vw aov on s.shipment_id = aov.shipment_id
      where aov.sc != 0
@@ -72,8 +88,8 @@
   </select>
 
   <select id="getPendingOrders" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+    select s.shipment_id, s.customer_id, c.name customer
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
       from shipment s join customer c on s.customer_id = c.id
       join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
@@ -83,19 +99,19 @@
   </select>
   
   <select id="getPendingOrderItems" resultMap="itemMap">
-    select shipment_id, item_no, active, coalesce(content_cd,'') content_cd
-         , coalesce(content_cd,'N') new_item
-         , exp_volume_min min_vol, exp_volume_max max_vol, coalesce(act_volume,0) act_vol
-      from shipment_item 
-     where active = 'P'
-       and shipment_id = #{parm1}
+    select si.shipment_id, si.item_no, si.active, coalesce(si.content_cd,'') content_cd
+         , si.transfer_id, coalesce(si.content_cd,'N') new_item
+         , si.exp_volume_min min_vol, si.exp_volume_max max_vol
+         , coalesce(si.act_volume,0) act_vol
+      from shipment_item si right outer join tag t on si.carrier_id=t.id 
+     where t.active = 'P'
+       and si.shipment_id = #{parm1}
   </select>
 
   <select id="getOrdersByType" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier
+    select s.shipment_id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
       from shipment s join customer c on s.customer_id = c.id
-      join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
      where s.purchase = #{param1}
        and s.exp_date > current_date()-interval 3 month
@@ -103,20 +119,18 @@
   </select>
 
   <select id="getLastWeeksOrders" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier
+    select s.shipment_id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
       from shipment s join customer c on s.customer_id = c.id
-      join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
      where s.exp_date > current_date()-interval 1 week 
      order by s.exp_date desc
   </select>
   
   <select id="getLastMonthsOrders" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier
+    select s.shipment_id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
       from shipment s join customer c on s.customer_id = c.id
-      join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
      where s.exp_date > current_date()-interval 1 month 
      order by s.exp_date desc
@@ -125,7 +139,6 @@
   <update id="updateOrder" parameterType="Order">
     update shipment
        set customer_id = #{customerId}
-         , carrier_id = #{carrierId}
          , purchase = #{purchase}
          , exp_date = #{expDate}
          , act_date = #{actDate}
@@ -136,17 +149,20 @@
     update shipment_item
        set active = #{active}
          , content_cd = #{contentCd}
+         , carrier_id = #{carrierId}
          , exp_volume_min = #{expVolumeMin}
          , exp_volume_max = #{expVolumeMax}
          , act_volume = #{actVolume}
+         , transfer_id = #{transferId}
+         , station_id = #{stationId}
      where shipment_id = #{shipmentId}
        and item_no = #{itemNo}
   </update>
   
   <insert id="insertOrder" parameterType="Order">
     insert shipment
-          ( customer_id,   carrier_id,   purchase,    exp_date,   act_date )
-    values( #{customerId}, #{carrierId}, #{purchase}, #{expDate}, #{actDate} )
+          ( customer_id,   purchase,    exp_date,   act_date )
+    values( #{customerId}, #{purchase}, #{expDate}, #{actDate} )
     <selectKey keyProperty="shipmentId" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID();
     </selectKey>
@@ -154,14 +170,21 @@
   
   <insert id="insertItem" parameterType="Item">
     insert shipment_item
-          ( shipment_id,   item_no,   active,    content_cd,   exp_volume_min,  exp_volume_max,  act_volume )
-    values( #{shipmentId}, #{itemNo}, #{active}, #{contentCd}, #{expVolumeMin}, #{expVolumeMax}, #{actVolume} )
+          ( shipment_id, item_no, carrier_id, active, content_cd
+          , exp_volume_min, exp_volume_max, act_volume
+          , transfer_id, station_id )
+    values( #{shipmentId}, #{itemNo}, #{carrierId}, #{active}, #{contentCd}
+          , #{expVolumeMin}, #{expVolumeMax}, #{actVolume}
+          , #{transferId}, #{stationId} )
     on duplicate key update
             active = #{active}
           , content_cd = #{contentCd}
+          , carrier_id = #{carrierId}
           , exp_volume_min = #{expVolumeMin}
           , exp_volume_max = #{expVolumeMax}
           , act_volume = #{actVolume}
+          , transfer_id = #{transferId}
+          , station_id = #{stationId}
   </insert>
   
 </mapper>

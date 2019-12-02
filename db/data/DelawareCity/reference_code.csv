@@ -19,7 +19,7 @@ OFF-ON,Off,N,0,Off,Y
 OFF-ON,On,N,1,On,Y
 TF,False,F,0,False,Y
 TF,True,T,1,True,Y
-HISTORY-TYPE,None,N,0,No history stored,Y
+HISTORY-TYPE,NULL,N,0,No history stored,Y
 HISTORY-TYPE,Boxcar,B,1,Boxcar algorithm,Y
 HISTORY-TYPE,Linear,L,2,Linear algorithm,Y
 ANALOG-TYPE,Temperature,T,0,Temperature,Y

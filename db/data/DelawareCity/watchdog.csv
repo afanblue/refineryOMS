@@ -6,11 +6,11 @@ AnalogInput,Y
 DigitalInput,Y
 Transfer,Y
 DataCollectionAI,Y
-DataCollectionDI,Y
+DataCollectionDI,N
 AnalogOutput,Y
 DigitalOutput,Y
 DataCollectionAO,Y
-DataCollectionDO,Y
+DataCollectionDO,N
 CalculatedVariable,Y
 ControlBlock,Y
 PseudoRandomEvents,N

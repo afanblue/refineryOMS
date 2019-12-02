@@ -129,14 +129,13 @@ public interface TankService {
 	Collection<Value> getTankVolumesForContents( String t );
 	
 	/**
-	 * Method: getTankVolumesForUnit
-	 * Description: for the given refinery unit, 
+	 * Return collection of tanks in Unit not involved in Active or Scheduled transfers
 	 * 
-	 * @param n (String) name of refinery unit
+	 * @param unit - name of refinery unit
 	 * @return Collection of value objects (tank ID, contents, max possible volume) for all the 
 	 * 			tanks of the specified unit
 	 */
-	Collection<Value> getTankVolumesForUnit( String n);
+	Collection<Value> getUnusedTankVolumesForUnit( String unit);
 	
 	/**
 	 * Method: getLevelVolumesForTank

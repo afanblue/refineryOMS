@@ -91,7 +91,7 @@
            join transfer_status_vw tsv on x.status_id = tsv.value
            join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where tsv.code = 'A'
-     order by x.act_start_time desc, 8
+     order by x.act_start_time desc, x.name
   </select>
   
   <select id="getLastTransfers" resultMap="transferResultMap">

@@ -1,0 +1,31 @@
+status=error
+dest = err
+name = devio
+ 
+property.fileName = ${env:OMS_LOGS}/devio
+ 
+filter.threshold.type = ThresholdFilter
+filter.threshold.level = debug
+  
+appender.devio.type = RollingFile
+appender.devio.name = devio
+appender.devio.fileName = ${fileName}.log
+appender.devio.filePattern = ${fileName}-%d{yyyy-MM-dd}-%i.log.gz
+appender.devio.layout.type = PatternLayout
+appender.devio.layout.pattern = %d{ISO8601} %-5p %c - %m%n
+appender.devio.policies.type = Policies
+appender.devio.policies.time.type = TimeBasedTriggeringPolicy
+appender.devio.policies.time.interval = 1
+appender.devio.policies.time.modulate = true
+appender.devio.policies.size.type = SizeBasedTriggeringPolicy
+appender.devio.policies.size.size=100MB
+appender.devio.strategy.type = DefaultRolloverStrategy
+appender.devio.strategy.max = 5
+ 
+logger.devio.name = us.avn.oms
+logger.devio.level = debug
+logger.devio.additivity = false
+logger.devio.appenderRef.rolling.ref = devio
+ 
+rootLogger.level = error
+rootLogger.appenderRef.stdout.ref = devio

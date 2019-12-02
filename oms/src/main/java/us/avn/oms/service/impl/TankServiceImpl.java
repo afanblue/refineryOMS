@@ -103,10 +103,9 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Method: getFullestTankForContent
-	 * Description: get the value object (ID, contents code, volume) for
-	 * 				the tank w/the least amount available for storage (in barrels)
-	 * 				for all the tanks w/the provided content code
+	 * Return the value object (ID, contents code, volume) for
+	 * the tank w/the least amount available for storage (in barrels)
+	 * for all the tanks w/the provided content code
 	 * 
 	 * @param t - String - contents code
 	 * @return Value object (tank ID, code, volume)
@@ -117,11 +116,10 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Method: getTotalTankCapacitiesForContent
-	 * Description: get a collection of value objects (ID, contents code, volume) for
-	 * 				the total amount currently stored for tanks for each content code, ie,
-	 * 				the total amount currently stored for all crude tanks, 
-	 * 				for all gasoline tanks, etc.
+	 * Return a collection of value objects (ID, contents code, volume) for
+	 * the total amount currently stored for tanks for each content code, ie,
+	 * the total amount currently stored for all crude tanks, 
+	 * for all gasoline tanks, etc.
 	 * 
 	 * @return Collection<Value> object (ID is null, code, volume)
 	 */
@@ -131,11 +129,10 @@ public class TankServiceImpl implements TankService {
 	}
 
 	/**
-	 * Method: getTotalTankVolumesForContent
-	 * Description: get a collection of value objects (ID, contents code, volume) for
-	 * 				the total <b>possible</b> storage volume for tanks for 
-	 * 				each content code, ie, the total amount currently stored
-	 * 				for all crude tanks, for all gasoline tanks, etc.
+	 * Return a collection of value objects (ID, contents code, volume) for
+	 * the total <b>possible</b> storage volume for tanks for 
+	 * each content code, ie, the total amount currently stored
+	 * for all crude tanks, for all gasoline tanks, etc.
 	 * 
 	 * @return Collection<Value> object (ID is null, code, volume)
 	 */
@@ -146,11 +143,10 @@ public class TankServiceImpl implements TankService {
 
 	@Override
 	/**
-	 * Method: getTankCapacitiesForContent
-	 * Description: get a collection of value objects (ID, contents code, volume) for
-	 * 				the total amount currently stored for tanks for each content code, ie,
-	 * 				the total amount currently stored for all crude tanks, 
-	 * 				for all gasoline tanks, etc.
+	 * Return a collection of value objects (ID, contents code, volume) for
+	 * the total amount currently stored for tanks for each content code, ie,
+	 * the total amount currently stored for all crude tanks, 
+	 * for all gasoline tanks, etc.
 	 * 
 	 * @param t - String - contents code
 	 * @return Collection<Value> object (tank ID, code, volume)
@@ -160,8 +156,7 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Method: getTankVolumesForContents
-	 * Description: for the given refinery unit, 
+	 * Return a collection of tank volumes for the given contents 
 	 * 
 	 * @param t (String) contents code
 	 * @return Collection<Value> (tank ID, contents, max possible volume) for all the 
@@ -173,23 +168,23 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Method: getTankVolumesForUnit
-	 * Description: for the given refinery unit, 
+	 * Return a collection of tanks in Unit not involved in Active or Scheduled transfers
 	 * 
-	 * @param n (String) name of refinery unit
+	 * @param unit - name of unit
 	 * @return Collection<Value> (tank ID, contents, max possible volume) for all the 
 	 * 			tanks of the specified unit
 	 */
 	@Override
-	public Collection<Value> getTankVolumesForUnit( String n) {
-		return tankMapper.getTankVolumesForUnit(n);
+	public Collection<Value> getUnusedTankVolumesForUnit( String unit) {
+		return tankMapper.getUnusedTankVolumesForUnit(unit);
 	}
 	
 	/**
-	 * Method: getLevelVolumesForTank
-	 * Description: returns a Collection of Volume objects for the specified Tank
-	 * 				This is a mapping of level vs volume to allow for the computation
-	 * 				(interpolation) of volume from level or level from volume
+	 * Returns a Collection of Volume objects for the specified Tank
+	 * <br>
+	 * This is a mapping of level vs volume to allow for the computation
+	 * (interpolation) of volume from level or level from volume
+	 * <br>
 	 * N.B., there is no temperature correction done.  These are specified for standard
 	 * 		 temperature, i.e, 300 degrees C. 
 	 * 
@@ -202,8 +197,7 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Method: getTank
-	 * Description: get the tank record for the given ID
+	 * Returns the tank record for the given ID
 	 * 
 	 * @param id (Long) tank ID to retrieve
 	 * @return <Tank> tank object retrieved, null if not present
@@ -220,8 +214,7 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Method: updateTank
-	 * Description: update the DB record for the given tank object
+	 * Update the DB record for the given tank object
 	 * 
 	 * @param t (Tank)
 	 */
@@ -231,8 +224,7 @@ public class TankServiceImpl implements TankService {
 	}
 
 	/**
-	 * Method: insertTank
-	 * Description: add provided tank object to database
+	 * Add provided tank object to database
 	 * 
 	 * @param t - Tank to insert
 	 */

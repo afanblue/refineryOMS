@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="us.avn.oms.mapper.DeviceMapper">
+
+  <!-- cache / -->
+<!-- 
+	updateUpdated( Long i );
+-->
+
+  <resultMap id="idmap" type="ReferenceCode">
+    <result property="name"         column="type"/>
+    <result property="code"         column="model"/>
+  </resultMap>
+  
+  <resultMap id="devmap"  type="Device">
+    <result property="id"           column="id"/>
+    <result property="description"  column="description"/>
+    <result property="type"         column="type"/>
+    <result property="model"        column="model"/>
+    <result property="param1"       column="param1"/>
+    <result property="param2"       column="param2"/>
+    <result property="param3"       column="param3"/>
+    <result property="param4"       column="param4"/>
+    <result property="cycleTime"    column="cycle_time"/>
+    <result property="offset"       column="offset"/>
+    <result property="seqNo"        column="seq_no"/>
+    <result property="active"       column="active"/>
+  </resultMap>
+  
+  <select id="getDeviceTypes" resultMap="idmap">
+    select type id, model name from device
+  </select>
+  
+  <select id="getAllDevices" resultMap="devmap" >
+    select id, description, type, model, param1, param2, param3, param4
+         , cycle_time, offset, seq_no, active 
+      from device
+     order by seq_no
+  </select>
+  
+  <select id="getAllActiveDevices" resultMap="devmap" >
+    select id, description, type, model, param1, param2, param3, param4
+         , cycle_time, offset, seq_no, active 
+      from device
+     where active = "Y"
+     order by seq_no 
+  </select>
+  
+  <select id="getAllActiveDevicesOfType" resultMap="devmap" >
+    select id, description, type, model, param1, param2, param3, param4
+         , cycle_time, offset, seq_no, active 
+      from device
+     where active = "Y"
+       and type = #{parm1}
+     order by seq_no
+  </select>
+  
+  <select id="getDevice" resultMap="devmap">
+    select id, description, type, model, param1, param2, param3, param4
+         , cycle_time, offset, seq_no, active 
+      from device
+     where id = #{parm1}
+  </select>
+
+  <insert id="insertDevice" parameterType="Device" useGeneratedKeys="true"
+          keyProperty="id" keyColumn="ID">
+    insert into device( description, type, model, param1, param2, param3, param4
+         , cycle_time, offset, seq_no, active )
+    values( #{description}, #{type}, #{model}, #{param1}, #{param2}, #{param3}, #{param4}
+         , #{cycleTime}, #{offset}, #{seqNo}, #{active} )
+    on duplicate key update
+            description = #{description}, type = #{type}, model=#{model}
+          , param1 = #{param1}, param2 = #{param2}, param3 = #{param3}, param4 = #{param4}
+          , cycle_time = #{cycleTime}, offset = #{offset}, seq_no = #{seqNo}
+          , active = #{active}
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+  </insert>
+  
+  <update id="updateDevice" parameterType="Device">
+    update device 
+       set description = #{description}
+         , type = #{type}
+         , model = #{model}
+         , param1 = #{param1}
+         , param2 = #{param2}
+         , param3 = #{param3}
+         , param4 = #{param4}
+         , cycle_time = #{cycleTime}
+         , offset = #{offset}
+         , seq_no = #{seqNo}
+         , active = #{active}
+     where id = #{id}
+  </update>
+
+</mapper>

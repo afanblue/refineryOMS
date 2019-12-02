@@ -3,5 +3,5 @@ ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable
 Data,,,
 alias,first_name,middle_name,last_name,email,password,state,status
 admin,System,X,Admin,system.admin@nowhere.net,admin,A,Y
-operator,Plant,None,Operator,plant.operator@nowhere.net,operator,A,Y
+operator,Plant,NULL,Operator,plant.operator@nowhere.net,operator,A,Y
 End

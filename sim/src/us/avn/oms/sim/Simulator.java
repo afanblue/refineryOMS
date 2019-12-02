@@ -33,7 +33,7 @@ public class Simulator {
 //	interval in minutes to run PseudoRandomEventSimulator.  It gets run every 
 //	interval starting on the hour.  If this number isn't a factor of 60, it will
 //	not necessarily run starting on the hour.  Which might not be a bad thing.
-    private Integer pseDelayInterval = 60;
+    private Integer pseDelayInterval = 30;
 
 	public static void main(String[] args) {
 		Simulator sim = new Simulator();
@@ -48,24 +48,9 @@ public class Simulator {
 	}
 	
 	public void execute(String[]args) {
-        TimerTask aitt = new AnalogDataSimulator();
-        TimerTask ditt = new DigitalDataSimulator();
         TimerTask prett = new PseudoRandomEventSimulator();
-        Timer aiTimer = new Timer(true);
-        Timer diTimer = new Timer(true);
         Timer preTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
-//		wait until 40 seconds after (20 seconds before) the minute
-        int start = 40;
-        if( cal.get(Calendar.SECOND) > 40 ) { start = 60 + 50; }
-        int delay = start * 1000 - 1000 * cal.get(Calendar.SECOND) - cal.get(Calendar.MILLISECOND);
-        if( delay < 0 ) { delay += 60000; }
-//		run Analog and Digital simulations every 10 seconds
-        log.debug("Delay: "+delay);
-        aiTimer.scheduleAtFixedRate(aitt, delay, 10*1000);
-        log.debug("Analog scan started, delay: "+delay);
-        diTimer.scheduleAtFixedRate(ditt, delay, 10*1000);
-        log.debug("Digital scan started, delay: "+delay);
 //		run the pseudo random event simulator every delayInterval
         int calMin = cal.get(Calendar.MINUTE);
         int delayMin = pseDelayInterval - calMin%pseDelayInterval - 1;

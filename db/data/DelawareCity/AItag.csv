@@ -136,12 +136,12 @@ DCT-0000,External Temperature,AI,None,None,-75.625879,None,-75.62514,Y
 DCP-0000,Barometric Pressure,AI,None,None,-75.625879,None,-75.62514,Y
 DCR-0000,Wind Speed,AI,None,None,-75.625879,None,-75.62514,Y
 DCM-0000,Wind Direction,AI,None,None,-75.625879,None,-75.62514,Y
-DCT-0001,External Temperature - Tomorrow,AI,None,None,-75.625879,None,-75.62514,Y
-DCP-0001,Barometric Pressure - Tomorrow,AI,None,None,-75.625879,None,-75.62514,Y
-DCR-0001,Wind Speed - Tomorrow,AI,None,None,-75.625879,None,-75.62514,Y
-DCM-0001,Wind Direction - Tomorrow,AI,None,None,-75.625879,None,-75.62514,Y
-C-101,calculation test tag,AI,None,None,None,None,None,Y
-CT-101,Calculation test 1,AI,None,None,None,None,None,Y
+DCT-0001,External Temperature - Tomorrow,AI,None,None,-75.625879,None,-75.62514,N
+DCP-0001,Barometric Pressure - Tomorrow,AI,None,None,-75.625879,None,-75.62514,N
+DCR-0001,Wind Speed - Tomorrow,AI,None,None,-75.625879,None,-75.62514,N
+DCM-0001,Wind Direction - Tomorrow,AI,None,None,-75.625879,None,-75.62514,N
+C-101,calculation test tag,AI,None,None,None,None,None,N
+CT-101,Calculation test 1,AI,None,None,None,None,None,N
 CTA-101,External Temperature - deg F,AI,None,None,None,None,None,Y
 DCL-0000,Accumulated precipitation,AI,None,None,None,None,None,Y
 RU1CP-SP,Unit 1 Crude Pump setpoint,AI,None,None,None,None,None,Y

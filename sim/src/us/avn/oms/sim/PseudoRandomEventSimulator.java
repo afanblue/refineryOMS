@@ -48,6 +48,7 @@ import us.avn.oms.domain.Tag;
 //import us.avn.oms.domain.AnalogOutput;
 //import us.avn.oms.domain.SimIO;
 import us.avn.oms.domain.Tank;
+import us.avn.oms.domain.Transfer;
 //import us.avn.oms.domain.Transfer;
 import us.avn.oms.domain.Value;
 import us.avn.oms.domain.Watchdog;
@@ -149,6 +150,14 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		cal = Calendar.getInstance();
 		
 		/*	*/
+		createNeededOrders();
+		addCarrierPresentForOrders();
+		undockCarriersFromOrders();
+		/* */
+		log.debug("End PRE processing");
+	}
+
+	private void createNeededOrders() {
 		Iterator<Value> itv = tks.getTotalTankVolumesForContents().iterator();
 		while( itv.hasNext() ) {
 			Value tv = itv.next();
@@ -193,10 +202,52 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 				log.debug("PRE: No order made for product "+tv.getCode());
 			}
 		}
-		/* */
-		log.debug("End PRE processing");
 	}
 
+	/**
+	 * Check on order for expected start time and add the necessary record to
+	 * indicate that the given carrier is present ...
+	 * <br/>
+	 * So for all of the orders that have passed their expected start time, we
+	 * find an appropriate dock for the carrier and insert a record in the REL_TAG_TAG
+	 * w/carrier ID as parent, dock ID as child, and code DK.
+	 */
+	private void addCarrierPresentForOrders() {
+		log.debug("addCarrierPresent");
+		Iterator<Order> ipo = os.getPendingOrders().iterator();
+		while( ipo.hasNext() ) {
+			Order o = ipo.next();
+			Tag carrier = tgs.getTag(o.getCarrierId());
+			Tag dock = getDockForCarrier(carrier);
+			if( null != dock ) {
+				RelTagTag rtt = new RelTagTag(carrier.getId(), dock.getId(), Tag.DOCK);
+				tgs.insertRelationship(rtt);
+			} else {
+				log.debug("No available dock for carrier "+carrier.getName()+" for order "+o.getShipmentId());;
+			}
+		}
+	}
+	
+	/**
+	 * Check the transfers for all of the active orders.  If any is complete, then we
+	 * can undock the carrier, which means deleting the REL_TAG_TAG record for the carrier
+	 */
+	private void undockCarriersFromOrders() {
+		log.debug("Undock carriers");
+		Iterator<Order> iao = os.getActiveOrders().iterator();
+		while( iao.hasNext() ) {
+			Order o = iao.next();
+			Transfer x = xfrs.getTransfer(o.getTransferId());
+			if( x.getStatusId() == xfrs.getTransferStatusId(Transfer.COMPLETE) ) {
+				Iterator<RelTagTag> irtt = tgs.getChildrenOfType(o.getCarrierId(), Tag.DOCK).iterator();
+				while( irtt.hasNext() ) {
+					RelTagTag rtt = irtt.next();
+					tgs.deleteChildTagsOfType(rtt.getParentTagId(), Tag.DOCK);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Create an order for crude oil.
 	 * @param tv Value object specifying current amount in inventory for given product
@@ -214,8 +265,8 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 				if( null != cust ) {
 					o.setCustomerId(cust.getId());
 					o.setCustomer(cust.getName());
-					o.setCarrier(carrier.getName());
-					o.setCarrierId(carrier.getId());
+//					o.setCarrier(carrier.getName());
+//					o.setCarrierId(carrier.getId());
 					o.setPurchase(Order.PURCHASE);
 
 					Double amt = s.getQuantity();
@@ -239,6 +290,8 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 						item.setNewItem("F");
 						item.setActive("P");
 						item.setActVolume(0D);
+						item.setCarrierId(carrier.getId());
+						item.setCarrier(carrier.getName());
 						ci.add(item);
 					}
 					o.setItems(ci);
@@ -258,12 +311,12 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Order o = null;
 		if( tv.getValue() > limit ) {
 			log.debug("PRE: createRefinedOrder for type "+type);
-			o = new Order();
 			Tag carrier = getProductCarrier(type);
 			if( null != carrier ) {
 				Carrier s = crs.getCarrier(carrier.getId());
 				Customer cust = getCustomer();
 				if( null != cust ) {
+					o = new Order();
 					o.setCustomerId(cust.getId());
 					o.setCustomer(cust.getName());
 					o.setCarrier(carrier.getName());
@@ -294,6 +347,10 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 						ci.add(item);
 					}
 					o.setItems(ci);
+					if( ci.isEmpty() ) {
+						o = null;
+						log.debug("PRE: problem, no holds found for carrier "+carrier.getName());
+					}
 				} else {
 					o = null;
 					log.debug("PRE: no customer found");
@@ -368,4 +425,35 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		}
 		return c;
 	}
+	
+	/**
+	 * Return an available dock for the given carrier.  It checks all
+	 * docks to determine if
+	 * {@code 
+	 * - the dock is the same as the carrier
+	 * - the carrier is already docked
+	 * - the dock isn't already occupied
+	 * }		
+	 * @param c Tag for carrier
+	 * @return Tag for available dock
+	 */
+	private Tag getDockForCarrier( Tag c ) {
+		Tag t = null;
+		Iterator<Tag> it = tgs.getAllTagsByType(Tag.DOCK).iterator();
+		while( it.hasNext() ) {
+			Tag d = it.next();
+			if( d.getMisc().equals(c.getTagTypeCode())) {
+				Collection<RelTagTag> crtt = tgs.getChildrenOfType(c.getId(), Tag.DOCK );
+				if( crtt==null || crtt.isEmpty() ) {
+					Collection<RelTagTag> prtt = tgs.getParentOfType(d.getId(), Tag.DOCK );					
+					if( prtt==null || prtt.isEmpty() ) {
+						t = d;
+						break;
+					}
+				}
+			}
+		}
+		return t;
+	}
+	
 }
