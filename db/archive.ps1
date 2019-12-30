@@ -34,4 +34,14 @@ mysqldump -uoms -p$pwd oms transfer --no-create-info --compact --where "create_d
 mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from transfer where create_dt < date_sub(sysdate(), interval @months month) and transfer_type_id = (select id from transfer_type_vw where code='X')"
 mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minTransferDate' from transfer where transfer_type_id = (select id from transfer_type_vw where code='X')" >>archive.log
 
+mysqldump -uoms -p$pwd oms shipment_item --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active not in ('A','P')" --result-file=$XFERNM
+
+mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from shipment_item where create_dt < date_sub(sysdate(), interval @months month) and active not in ('A','P')"
+mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minOrderItemDate' from shipment_item" >>archive.log
+
+mysqldump -uoms -p$pwd oms shipment --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active = 'A')" --result-file=$XFERNM
+
+mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from shipment where create_dt < date_sub(sysdate(), interval @months month) and shipment_id not in (select shipment_id from shipment_item)"
+mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minOrderDate' from shipment" >>archive.log
+
 popd

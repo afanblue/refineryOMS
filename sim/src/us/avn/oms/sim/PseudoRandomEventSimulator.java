@@ -118,6 +118,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 //    private  static TrainService trs = null;
 	private  static WatchdogService wds = null;
 	private  static TransferService xfrs = null;
+	private  Collection<Tag> dockList = null;
 
 	private Calendar cal;
 
@@ -150,6 +151,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		cal = Calendar.getInstance();
 		
 		/*	*/
+		dockList = tgs.getAllTagsByType(Tag.DOCK);
 		createNeededOrders();
 		addCarrierPresentForOrders();
 		undockCarriersFromOrders();
@@ -217,13 +219,23 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Iterator<Order> ipo = os.getPendingOrders().iterator();
 		while( ipo.hasNext() ) {
 			Order o = ipo.next();
-			Tag carrier = tgs.getTag(o.getCarrierId());
-			Tag dock = getDockForCarrier(carrier);
-			if( null != dock ) {
-				RelTagTag rtt = new RelTagTag(carrier.getId(), dock.getId(), Tag.DOCK);
-				tgs.insertRelationship(rtt);
-			} else {
-				log.debug("No available dock for carrier "+carrier.getName()+" for order "+o.getShipmentId());;
+			Iterator<Item> it = os.getPendingOrderItems(o.getShipmentId()).iterator();
+			Vector<Long> carrierIds = new Vector<Long>();
+			while( it.hasNext() ) {
+				Item i = it.next();
+				Tag carrier = tgs.getTag(i.getCarrierId());	
+				if( ! carrierIds.contains(carrier.getId()) ) {
+					carrierIds.add(carrier.getId());
+					Tag dock = getDockForCarrier(carrier);
+					if( null != dock ) {
+						RelTagTag rtt = new RelTagTag(carrier.getId(), dock.getId(), Tag.DOCK);
+						tgs.insertRelationship(rtt);
+//						i.setDockId(dock.getId());
+//						os.updateItem(i);
+					} else {
+						log.debug("No available dock for carrier "+carrier.getName()+" for order "+o.getShipmentId());;
+					}
+				}
 			}
 		}
 	}
@@ -237,14 +249,28 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Iterator<Order> iao = os.getActiveOrders().iterator();
 		while( iao.hasNext() ) {
 			Order o = iao.next();
-			Transfer x = xfrs.getTransfer(o.getTransferId());
-			if( x.getStatusId() == xfrs.getTransferStatusId(Transfer.COMPLETE) ) {
-				Iterator<RelTagTag> irtt = tgs.getChildrenOfType(o.getCarrierId(), Tag.DOCK).iterator();
-				while( irtt.hasNext() ) {
-					RelTagTag rtt = irtt.next();
-					tgs.deleteChildTagsOfType(rtt.getParentTagId(), Tag.DOCK);
+			Iterator<Item> iit = os.getOrderItems(o.getShipmentId()).iterator();
+			Vector<Long> carrierIds = new Vector<Long>();
+			while( iit.hasNext() ) {
+				Item it = iit.next();
+				if( null != it.getTransferId() ) {
+					Transfer x = xfrs.getTransfer(it.getTransferId());
+					if( x.getStatusId() != xfrs.getTransferStatusId(Transfer.COMPLETE) ) {
+						Iterator<RelTagTag> irtt = tgs.getChildrenOfType(it.getCarrierId(), Tag.DOCK).iterator();
+						while( irtt.hasNext() ) {
+							RelTagTag rtt = irtt.next();
+							carrierIds.add(rtt.getParentTagId());
+						}
+					}
 				}
 			}
+			Iterator<Long> icid = carrierIds.iterator();
+			while( icid.hasNext() ) {
+				Long cid = icid.next();
+				tgs.deleteChildTagsOfType(cid, Tag.DOCK);
+			}
+			carrierIds = null;
+			iit = null;
 		}
 	}
 	
@@ -319,8 +345,8 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 					o = new Order();
 					o.setCustomerId(cust.getId());
 					o.setCustomer(cust.getName());
-					o.setCarrier(carrier.getName());
-					o.setCarrierId(carrier.getId());
+//					o.setCarrier(carrier.getName());
+//					o.setCarrierId(carrier.getId());
 					o.setPurchase(Order.SALE);
 
 					Double amt = s.getQuantity();
@@ -430,19 +456,24 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	 * Return an available dock for the given carrier.  It checks all
 	 * docks to determine if
 	 * {@code 
-	 * - the dock is the same as the carrier
+	 * - the dock is the same as the carrier (i.e., Ship/Truck/Train)
+	 *   (the MISC field of the dock matches TAG_TYPE_CODE of carrier)
 	 * - the carrier is already docked
+	 *   (no REL_TAG_TAG records where carrier is parent w/CODE=Tag.DOCK)
 	 * - the dock isn't already occupied
+	 *   (no REL_TAG_TAG records where dock is child and CODE=Tag.DOCK)
 	 * }		
 	 * @param c Tag for carrier
 	 * @return Tag for available dock
 	 */
 	private Tag getDockForCarrier( Tag c ) {
 		Tag t = null;
-		Iterator<Tag> it = tgs.getAllTagsByType(Tag.DOCK).iterator();
+		Iterator<Tag> it = dockList.iterator();
 		while( it.hasNext() ) {
 			Tag d = it.next();
+			// can dock handle carrier? (same type?)
 			if( d.getMisc().equals(c.getTagTypeCode())) {
+				// check to make sure carrier isn't docked
 				Collection<RelTagTag> crtt = tgs.getChildrenOfType(c.getId(), Tag.DOCK );
 				if( crtt==null || crtt.isEmpty() ) {
 					Collection<RelTagTag> prtt = tgs.getParentOfType(d.getId(), Tag.DOCK );					

@@ -10,8 +10,6 @@
     <result property="shipmentId"     column="shipment_id" />
     <result property="customerId"     column="customer_id" />
     <result property="customer"       column="customer" />
-    <result property="carrierId"      column="carrier_id" />
-    <result property="carrier"        column="carrier" />
     <result property="purchase"       column="purchase" />
     <result property="expDate"        column="exp_date" />
     <result property="actDate"        column="act_date" />
@@ -29,15 +27,17 @@
     <result property="expVolumeMin"   column="min_vol" />
     <result property="expVolumeMax"   column="max_vol" />
     <result property="actVolume"      column="act_vol" />
+    <result property="carrierId"      column="carrier_id" />
+    <result property="carrier"        column="carrier" />
+    <result property="stationId"      column="station_id"/>
+    <result property="station"        column="station"/>
     <result property="transferId"     column="transfer_id"/>
-    <result property="stationId"     column="station_id"/>
   </resultMap>
 
   <select id="getOrder" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer, s.carrier_id, t.name carrier
+    select s.shipment_id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
       from shipment s join customer c on s.customer_id = c.id
-      join tag t on s.carrier_id = t.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
      where s.shipment_id = #{param1}
      order by s.exp_date desc
@@ -49,35 +49,34 @@
          , coalesce(i.exp_volume_min,0) min_vol
          , coalesce(i.exp_volume_max,100000) max_vol
          , coalesce(i.act_volume,0) act_vol
-         , transfer_id, station_id
+         , i.carrier_id, i.transfer_id, i.station_id
       from shipment_item i
      where i.shipment_id = #{param1}
     union 
     select s.shipment_id, h.hold_no, '' content_cd, 'Y' new_item, null active
          , 0 min_vol, coalesce(h.volume*h.no_duplicates,100000) max_vol
-         , 0 act_vol, null transfer_id, null station_id
-      from shipment s 
-     right outer join hold h on s.carrier_id=h.carrier_id
+         , 0 act_vol, null carrier_id, null transfer_id, null station_id
+      from shipment s join shipment_item si on s.shipment_id=si.shipment_id 
+     right outer join hold h on si.carrier_id=h.carrier_id
      where s.shipment_id= #{param1}
        and h.hold_no not in (select item_no from shipment_item where shipment_id=s.shipment_id)
      order by item_no
   </select>
 
   <select id="getOrderItemByTransferId" resultMap="itemMap">
-  <select id="getOrderItems" resultMap="itemMap">
     select i.shipment_id, i.item_no, i.carrier_id
          , coalesce(i.content_cd,'') content_cd
          , coalesce(i.content_cd,'N') new_item
          , coalesce(i.exp_volume_min,0) min_vol
          , coalesce(i.exp_volume_max,100000) max_vol
          , coalesce(i.act_volume,0) act_vol
-         , i.active, transfer_id, station_id
+         , i.active, i.transfer_id, i.station_id
       from shipment_item i
      where i.transfer_id = #{param1}
   </select>  
   
   <select id="getActiveOrders" resultMap="ordmap">
-    select distinct s.shipment_id, s.customer_id, c.name customer,
+    select distinct s.shipment_id, s.customer_id, c.name customer
     	 , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
     	 , ovv.act_volume, ovv.transfer_id
       from shipment s join customer c on s.customer_id = c.id
@@ -90,20 +89,21 @@
   <select id="getPendingOrders" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
-      from shipment s join customer c on s.customer_id = c.id
-      join tag t on s.carrier_id = t.id
+      from shipment s join shipment_item si on s.shipment_id=si.shipment_id
+      join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
-      join pending_order_vw pov on s.shipment_id = pov.shipment_id
-     where pov.sc != 0
-     order by s.exp_date desc
+     where si.active = 'P'
+     order by s.exp_date desc;
   </select>
   
   <select id="getPendingOrderItems" resultMap="itemMap">
     select si.shipment_id, si.item_no, si.active, coalesce(si.content_cd,'') content_cd
-         , si.transfer_id, coalesce(si.content_cd,'N') new_item
-         , si.exp_volume_min min_vol, si.exp_volume_max max_vol
+         , si.transfer_id, coalesce(si.content_cd,'N') new_item, si.carrier_id
+         , coalesce(si.exp_volume_min,0) min_vol
+         , coalesce(si.exp_volume_max,0) max_vol
          , coalesce(si.act_volume,0) act_vol
-      from shipment_item si right outer join tag t on si.carrier_id=t.id 
+      from shipment_item si
+      right outer join tag t on si.carrier_id=t.id 
      where t.active = 'P'
        and si.shipment_id = #{parm1}
   </select>

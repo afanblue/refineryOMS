@@ -46,26 +46,50 @@ public class OrderRestController {
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/active")
 	public Collection<Order> getActiveOrders( ) {
 		log.debug("get active orders");
-		return orderService.getActiveOrders();
+		Collection<Order> orders = orderService.getActiveOrders();
+		Iterator<Order> io = orders.iterator();
+		while( io.hasNext() ) {
+			Order o = io.next();
+			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+		}
+		return orders;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/{type}")
 	public Collection<Order> getOrdersByType( @PathVariable String type ) {
 		log.debug("get active orders of type "+type);
-		return orderService.getOrdersByType(type);
+		Collection<Order> orders = orderService.getOrdersByType(type);
+		Iterator<Order> io = orders.iterator();
+		while( io.hasNext() ) {
+			Order o = io.next();
+			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+		}
+		return orders;
 	}
 	
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/lastWeek")
 	public Collection<Order> getLastWeeksOrders( ) {
 		log.debug("get active orders");
-		return orderService.getLastWeeksOrders();
+		Collection<Order> orders = orderService.getLastWeeksOrders();
+		Iterator<Order> io = orders.iterator();
+		while( io.hasNext() ) {
+			Order o = io.next();
+			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+		}
+		return orders;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/lastMonth")
 	public Collection<Order> getLastMonthOrders( ) {
 		log.debug("get active orders");
-		return orderService.getLastMonthsOrders();
+		Collection<Order> orders = orderService.getLastMonthsOrders();
+		Iterator<Order> io = orders.iterator();
+		while( io.hasNext() ) {
+			Order o = io.next();
+			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+		}
+		return orders;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")

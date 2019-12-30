@@ -204,11 +204,11 @@ public class TransferUpdate extends TimerTask {
 			order.setItems(ords.getPendingOrderItems(id));
 			log.debug("createTransfersFromOrders (order): "+order.toString());
 			Iterator<Item> ii = order.getItems().iterator();
-			Tag carrier = tgs.getTag(order.getCarrierId());
-			Tag dock = carrierPresent(order);
-			if( null != dock ) {
-				while( ii.hasNext() ) {
-					Item item = ii.next();
+			while( ii.hasNext() ) {
+				Item item = ii.next();
+				Tag carrier = tgs.getTag(item.getCarrierId());
+				Tag dock = carrierPresent(item);
+				if( null != dock ) {
 					log.debug("createTransfersFromOrders: pending order item "+item.getItemNo());
 					Transfer xfr = createNewTransfer(order,item,carrier,dock);
 					if( null != xfr ) {
@@ -219,9 +219,9 @@ public class TransferUpdate extends TimerTask {
 					} else {
 						log.debug("No transfer created, see previous messages");
 					}
+				} else {
+					log.debug("createTransfersFromOrders: carrier not present at dock");
 				}
-			} else {
-				log.debug("createTransfersFromOrders: carrier not present at dock");
 			}
 		}
 	}

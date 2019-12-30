@@ -158,7 +158,7 @@ CREATE TABLE `alarm` (
   CONSTRAINT `alarm_ibfk_1` FOREIGN KEY (`alarm_type_id`) REFERENCES `alarm_type` (`id`),
   CONSTRAINT `alarm_ibfk_2` FOREIGN KEY (`alarm_msg_id`) REFERENCES `alarm_message` (`id`),
   CONSTRAINT `alarm_tag_fk` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2469 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2550 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1149,7 +1149,7 @@ CREATE TABLE `history` (
   KEY `hist_tag_nuk` (`tag_id`),
   KEY `hist_stime_nuk` (`scan_time`),
   CONSTRAINT `history_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1391797 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1407551 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1750,7 +1750,7 @@ CREATE TABLE `rel_tag_tag` (
   KEY `tag_child_fk` (`child_tag_id`),
   CONSTRAINT `rel_tag_tag_ibfk_2` FOREIGN KEY (`parent_tag_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `rel_tag_tag_ibfk_3` FOREIGN KEY (`child_tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4348 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4276 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2002,7 +2002,6 @@ DROP TABLE IF EXISTS `shipment`;
 CREATE TABLE `shipment` (
   `shipment_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
-  `carrier_id` int(11) DEFAULT NULL,
   `purchase` varchar(1) DEFAULT 'P' COMMENT ' Purchase or Sale',
   `exp_date` timestamp NULL DEFAULT NULL COMMENT 'expected pickup (arrival) date ',
   `act_date` timestamp NULL DEFAULT NULL COMMENT 'date "packed" and shipped',
@@ -2011,7 +2010,7 @@ CREATE TABLE `shipment` (
   PRIMARY KEY (`shipment_id`),
   KEY `shipment_cust_fk_idx` (`customer_id`),
   CONSTRAINT `shipment_cust_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3484 DEFAULT CHARSET=utf8 COMMENT='customer order, either a purchase or a sale';
+) ENGINE=InnoDB AUTO_INCREMENT=9264 DEFAULT CHARSET=utf8 COMMENT='customer order, either a purchase or a sale';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2068,8 +2067,9 @@ CREATE TABLE `shipment_item` (
   `exp_volume_min` double DEFAULT '0',
   `exp_volume_max` double DEFAULT '100000',
   `act_volume` double DEFAULT '0',
-  `transfer_id` int(11) DEFAULT NULL COMMENT 'ID of transfer created to handle this order',
+  `carrier_id` int(11) DEFAULT NULL,
   `station_id` int(11) DEFAULT NULL COMMENT 'The station within the dock to/from which this particular item sends/gets its content.',
+  `transfer_id` int(11) DEFAULT NULL COMMENT 'ID of transfer created to handle this order',
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`shipment_id`,`item_no`),
@@ -2508,7 +2508,7 @@ CREATE TABLE `transfer` (
   KEY `transfer_dest_id_fk` (`destination_id`),
   CONSTRAINT `transfer_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `transfer_ibfk_4` FOREIGN KEY (`destination_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2477 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2855 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3878,4 +3878,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-02  0:30:13
+-- Dump completed on 2019-12-30  0:30:03

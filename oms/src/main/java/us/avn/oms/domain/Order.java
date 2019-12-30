@@ -45,7 +45,6 @@ public class Order extends OMSObject implements Serializable {
 	private Instant actDate;
 	private Double  expVolume;
 	private Double  actVolume;
-	private Long    transferId;
 	private Collection<Item> items;
 	
 	public Order() { }
@@ -173,14 +172,5 @@ public class Order extends OMSObject implements Serializable {
 		this.items = items;
 	}
 	
-	
-	public Long getTransferId() {
-		return transferId;
-	}
-	
-	public void setTransferId(Long tid) {
-		this.transferId = tid;
-	}
-	
-	
+		
 }

@@ -6,28 +6,36 @@ public class Item extends OMSObject {
 	
     private Long    shipmentId;
     private Long    itemNo;
-    private Long    carrierId;
     private String  contentCd;
     private String  newItem;
     private Double  expVolumeMin;
     private Double  expVolumeMax;
     private Double  actVolume;
 	private String  active;       // Active 'A', Pending 'P', Complete 'C'
-    private Long    transferId;
-    private Long    stationId;
+    private Long    carrierId;
     private String  carrier;
+    private Long    stationId;
+    private String  station;
+    private Long    transferId;
+    private String  transfer;
    
 	public Item() {	
 		shipmentId = 0L; 
 		itemNo=0L; 
 		active="P";
 		actVolume = 0D;
+		carrierId = null;
+		stationId = null;
+		transferId = null;
 	}
 	
 	public Item( Long id, Long ino, String act ) {
 		shipmentId = id;
 		itemNo = ino;
 		active = act;
+		carrierId = null;
+		stationId = null;
+		transferId = null;
 		expVolumeMin = 0D;
 		expVolumeMax = 0D;
 		actVolume = 0D;
@@ -123,6 +131,24 @@ public class Item extends OMSObject {
 	}
 	
 	
+	public Long getStationId() {
+		return stationId;
+	}
+	
+	public void setStationId( Long sid ) {
+		stationId = sid;
+	}
+
+
+	public String getStation() {
+		return station;
+	}
+
+	public void setStation(String station) {
+		this.station = station;
+	}
+
+	
 	public Long getTransferId() {
 		return transferId;
 	}
@@ -132,12 +158,12 @@ public class Item extends OMSObject {
 	}
 
 
-	public Long getStationId() {
-		return stationId;
+	public String getTransfer() {
+		return transfer;
 	}
-	
-	public void setStationId( Long sid ) {
-		stationId = sid;
+
+	public void setTransfer(String transfer) {
+		this.transfer = transfer;
 	}
 
 }

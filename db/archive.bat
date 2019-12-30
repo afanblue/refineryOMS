@@ -9,12 +9,13 @@ rem  thanks to Antonio Perez Ayala
 rem  https://stackoverflow.com/questions/11210997/windows-console-date-math
 
 pushd .
+echo -----------------------
 cd /d %OMS_HOME%\db\archive
 echo %date% >>archive.log
 set yy=%date:~10,4%
 set mm=%date:~4,2%
 set dd=%date:~7,2%
-echo %mm% >>archive.log
+rem echo %mm% >>archive.log
 set /a dd=10%dd% %% 100, mm=10%mm% %% 100
 set /a A=YY/100, B=A/4, C=2-A+B, E=36525*(YY+4716)/100, F=306*(MM+1)/10, JDN=C+DD+E+F-1524
 
@@ -26,7 +27,7 @@ IF %DD% LSS 10 SET DD=0%DD%
 IF %MM% LSS 10 SET MM=0%MM%
 set /a pd=%YY%%MM%%DD%
 
-echo %pd% >>archive.log
+rem echo %pd% >>archive.log
 
 mysqldump -uoms -p%1 oms history --no-create-info --where "create_dt < date_sub(sysdate(), interval %2 month)" --result-file=history.archive
 rename "history.archive" history-%pd%.arch
@@ -41,5 +42,15 @@ gzip transfer-%pd%.arch
 
 mysql -uoms -p%1 -Doms --execute="set @days=%2; delete from transfer where create_dt < date_sub(sysdate(), interval %2 month) and transfer_type_id = (select id from transfer_type_vw where code='X')"
 mysql -uoms -p%1 -Doms -E --execute="select min(create_dt) as 'minTransferDate' from transfer where transfer_type_id = (select id from transfer_type_vw where code='X');" >>archive.log
+
+mysqldump -uoms -p$pwd oms shipment_item --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active not in ('A','P')" --result-file=$XFERNM
+
+mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from shipment_item where create_dt < date_sub(sysdate(), interval @months month) and active not in ('A','P')"
+mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minOrderItemDate' from shipment_item" >>archive.log
+
+mysqldump -uoms -p$pwd oms shipment --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active = 'A')" --result-file=$XFERNM
+
+mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from shipment where create_dt < date_sub(sysdate(), interval @months month) and shipment_id not in (select shipment_id from shipment_item)"
+mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minOrderDate' from shipment" >>archive.log
 
 popd
