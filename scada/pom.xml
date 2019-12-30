@@ -5,7 +5,7 @@
   <name>xfer</name>
   
   <properties>
-    <spring.version>5.0.7.RELEASE</spring.version>
+    <spring.version>5.2.2.RELEASE</spring.version>
     <slf4j.version>1.7.25</slf4j.version>
     <mybatis.version>3.4.5</mybatis.version>
     <mysql.connector.version>8.0.11</mysql.connector.version>
