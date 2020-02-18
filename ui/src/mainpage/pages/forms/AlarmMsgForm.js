@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class AlarmMsgForm extends Component {
@@ -24,15 +26,27 @@ class AlarmMsgForm extends Component {
     super(props);
     this.state={};
   }
-  
+
+   static get propTypes() {
+      return {
+          msg: PropTypes.object,
+          id: PropTypes.number,
+          abbr: PropTypes.string,
+          message: PropTypes.string,
+          handleQuit: PropTypes.func,
+          fieldChange: PropTypes.func,
+          msgUpdate: PropTypes.func
+      }
+  }
+
   render() {
     const msg         = this.props.msg;
 //    const types       = this.props.types;
     const handleQuit  = this.props.handleQuit;
     const fieldChange = this.props.fieldChange;
     const msgUpdate   = this.props.msgUpdate;
-    
-    return (
+
+   return (
       <div className="oms-tabs">
         <form id="msgForm" name="msgForm" >
           <table>
@@ -47,16 +61,16 @@ class AlarmMsgForm extends Component {
                 <td className="oms-spacing-90">&nbsp;Abbr:&nbsp;</td>
                 <td className="oms-spacing-240">
                   <input type="hidden" id="id" name="id" value={msg.id} />
-                  <input type="text" id="message" name="message" value={msg.abbr} 
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                  <input type="text" id="message" name="message" value={msg.abbr}
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} size="10" maxLength="4" />
                 </td>
               </tr>
               <tr>
                 <td className="oms-spacing-90">&nbsp;Message:&nbsp;</td>
                 <td className="oms-spacing-240">
-                  <input type="text" id="message" name="message" value={msg.message} 
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                  <input type="text" id="message" name="message" value={msg.message}
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} size="30" maxLength="120" />
                 </td>
               </tr>
@@ -72,10 +86,10 @@ class AlarmMsgForm extends Component {
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value="Quit" className="oms-spacing"
                          onClick={(e) => {handleQuit(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {msgUpdate(e)}}/>
                 </td>

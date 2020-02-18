@@ -101,7 +101,7 @@ public class TransferRestController {
 		} else {
 			if( "T".equals(x.getTransferType())) {
 				Tag t = new Tag(0L,x.getName().substring(0,10));
-				t.setActive("Y");
+				t.setActive(Tag.ACTIVE);
 				t.setDescription("Transfer from "+x.getSource()+" to "+x.getDestination());
 				t.setTagTypeCode(Tag.TRANSFER);
 				Long tagId = tagService.insertTag(t);

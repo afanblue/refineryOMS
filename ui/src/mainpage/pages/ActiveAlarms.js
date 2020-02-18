@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import ActiveAlarmList from './lists/ActiveAlarmList.js';
 import DefaultContents from './DefaultContents.js';
@@ -49,28 +52,22 @@ class ActiveAlarms extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null,
-                      alarmList:null });
-    }
+  static getDerivedStateFromProps(nextProps, prevState) {
+	let state = prevState;
+    return state;
   }
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   componentDidMount() {
     this.fetchList();
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );    
+    this.setState( {unitTimer: myTimerID } );
   }
-  
+
   componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
@@ -78,13 +75,13 @@ class ActiveAlarms extends Component {
       default:
     }
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
   }
-    
+
   fetchList() {
     const clsMthd = "ActiveAlarms.fetchList";
     const myRequest = SERVERROOT + "/alarm/active/all";
@@ -98,16 +95,16 @@ class ActiveAlarms extends Component {
              });
           const json = await response.json();
           var almList = [];
-          json.map( function(n,x) { 
+          json.map( function(n,x) {
             var t = new Tag( n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
                            , n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId, null
                            , null, null, null, null, 'Y');
             var a = new Alarm( n.id, t, n.almOccurred, n.acknowledged, n.active, n.priority
-                             , n.alarmCode, n.color, n.message, n.value); 
-            return almList.push( a ); 
+                             , n.alarmCode, n.color, n.message, n.value);
+            return almList.push( a );
           } );
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched",
                           alarmList: almList } );
@@ -120,7 +117,7 @@ class ActiveAlarms extends Component {
       request();
     }
   }
-  
+
   handleSelect(event) {
 //    event.preventDefault();
     const clsMthd = "ActiveAlarms.select";

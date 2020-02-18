@@ -109,8 +109,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
         case "Users":
           return <UserAdmin stage={stage} />
         default:
-          return <DefaultContents pageName={pageName}/>    
-      }     
+          return <DefaultContents pageName={pageName}/>
+      }
     case "Orders" :
       option = (((option==="")||(option===null))?"Active":option);
       Log.info("Orders: "+option);
@@ -170,7 +170,7 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
             return <PlotGroupVars stage={stage}
                               id={option}
                               source={"id"} />
-          }    
+          }
       }
     case "ProcessUnits" :
       option = (((option==="")||(option===null))?"ProcessUnits":option);
@@ -180,7 +180,7 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
                                   menuSelect={menuSelect} />
         default:
           return <ProcessUnit stage={stage}
-                              option={option} />    
+                              option={option} />
       }
     case "Schematics" :
       option = (((option==="")||(option===null))?"ListSchematics":option);
@@ -230,18 +230,20 @@ class Contents extends Component {
       returnedText: null
     };
   }
-  
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.selected !== this.state.categorySelected
-      || nextProps.option !== this.state.pageSelected ) {
-      this.setState({ categorySelected: nextProps.selected,
-                      pageSelected: nextProps.option,
-                      menuSelect: nextProps.handleMenuSelect,
-                      stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let state = prevState;
+    if( nextProps.selected !== prevState.categorySelected
+      || nextProps.option !== prevState.pageSelected ) {
+      state = { categorySelected: nextProps.selected,
+                pageSelected: nextProps.option,
+                menuSelect: nextProps.handleMenuSelect,
+                stage: nextProps.stage,
+                updateData: true,
+                updateDisplay: false,
+                returnedText: null };
     }
+    return state;
   }
 
   componentDidUpdate( prevProps, prevState ) {
@@ -253,7 +255,7 @@ class Contents extends Component {
 //    sts = sts || nextState.updateDisplay;
     return sts;
   }
-  
+
   render() {
     const option = this.props.option;
     const selected = this.props.selected;
@@ -264,7 +266,7 @@ class Contents extends Component {
       fetchContents( selected, option, stage, jsonData, menuSelect )
     )
   }
-     
+
 }
 
 export default Contents;

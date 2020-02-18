@@ -51,9 +51,18 @@ public class Simulator {
         TimerTask prett = new PseudoRandomEventSimulator();
         Timer preTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
+    	Integer psed = pseDelayInterval;
+        if( 0 < args.length ) {
+        	try {
+        		psed = new Integer(args[0]);
+        		if( 0 == psed ) { psed = pseDelayInterval; }
+        	} catch( Exception e ) {
+        		psed = pseDelayInterval;
+        	}
+        }
 //		run the pseudo random event simulator every delayInterval
         int calMin = cal.get(Calendar.MINUTE);
-        int delayMin = pseDelayInterval - calMin%pseDelayInterval - 1;
+        int delayMin = psed - calMin%psed - 1;
         int pseDelay = 1000 * (delayMin * 60 + (60 - cal.get(Calendar.SECOND)));
         preTimer.scheduleAtFixedRate(prett, pseDelay, pseDelayInterval*60*1000);
         log.debug("PSE scan started, delay: "+pseDelay+"/"+delayMin);

@@ -19,7 +19,7 @@ import datetime
 import re
 from dateutil.parser import parse
 import smtplib
-import MySQLdb
+import mariadb
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -52,9 +52,9 @@ timeDiff = (currentTime - lastTime).total_seconds()
 #print( "Diff: {}".format(timeDiff) )
 
 if timeDiff > 3600 :
-    config = { "user": "oms", "passwd": "omsx", "host": "127.0.0.1"
-              , "db": "oms", "use_unicode": True }
-    cnx = MySQLdb.connect(**config)
+    config = { "user": "oms", "password": "omsx", "host": "127.0.0.1"
+              , "database": "oms", "charset": "UTF-8" }
+    cnx = mariadb.connect(**config)
     dataTypeQuery = ("select item_name, item_value from config" 
                      " where item_name like 'SMTP%' or item_name like 'EMAIL%'")
 #    print (dataTypeQuery)

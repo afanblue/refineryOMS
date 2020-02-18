@@ -39,6 +39,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import us.avn.oms.domain.AnalogInput;
 import us.avn.oms.domain.ChildValue;
 import us.avn.oms.domain.Config;
 import us.avn.oms.domain.DigitalInput;
@@ -51,7 +52,8 @@ import us.avn.oms.domain.Tank;
 import us.avn.oms.domain.Transfer;
 import us.avn.oms.domain.Value;
 import us.avn.oms.domain.Watchdog;
-import us.avn.oms.domain.Xfer;
+import us.avn.oms.domain.RawData;
+import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.ConfigService;
 import us.avn.oms.service.DigitalInputService;
 import us.avn.oms.service.OrderService;
@@ -61,7 +63,7 @@ import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
 import us.avn.oms.service.VertexService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 /**
  * TransferUpdate provides the methods for updating transfers, i.e., starting,
@@ -78,23 +80,24 @@ public class TransferUpdate extends TimerTask {
     private Logger log = LogManager.getLogger(this.getClass());
 
     private ApplicationContext context = null;
+    private AnalogInputService ais = null;
     private ConfigService cfgs = null;
     private DigitalInputService dis = null;
     private OrderService ords = null;
     private ReferenceCodeService rcs = null;
+    private RawDataService rds = null;
     private TagService tgs = null;
     private TankService tks = null;
     private WatchdogService wds = null;
     private TransferService xfrs = null;
     private VertexService vtxs = null;
-    private XferService xfs = null;
 
     private HashMap<String,String> nameTemplates;
     private Integer newTransferHour;
     private Integer newTransferMinute;
     private Integer newTransferInterval;
-    private HashMap<String,Long> types;
-    private HashMap<String,Long> statuses;
+//    private HashMap<String,Long> types;
+//    private HashMap<String,Long> statuses;
     private ZonedDateTime tomorrow;
     private Vector<String> stations = new Vector<String>(3);
 
@@ -132,27 +135,57 @@ public class TransferUpdate extends TimerTask {
 		log.debug("run: Start transfer processing");
 		/*  */
 		if( context == null) { context = new ClassPathXmlApplicationContext("app-context.xml"); }
+		if( ais  == null ) { ais  = (AnalogInputService) context.getBean("analogInputService"); }
 		if( cfgs == null ) { cfgs = (ConfigService) context.getBean("configService"); }
 		if( dis  == null ) { dis  = (DigitalInputService) context.getBean("digitalInputService"); }
 		if( ords == null ) { ords = (OrderService) context.getBean("orderService"); }
 		if( rcs  == null ) { rcs  = (ReferenceCodeService) context.getBean("referenceCodeService"); }
+		if( rds  == null ) { rds  = (RawDataService) context.getBean("rawDataService" ); }
 		if( xfrs == null ) { xfrs = (TransferService) context.getBean("transferService"); }
 		if( tgs  == null ) { tgs  = (TagService) context.getBean("tagService"); }
 		if( tks  == null ) { tks  = (TankService) context.getBean("tankService"); }
 		if( wds  == null ) { wds  = (WatchdogService) context.getBean("watchdogService"); }
 		if( vtxs == null ) { vtxs = (VertexService) context.getBean("vertexService"); }
-		if( xfs  == null ) { xfs  = (XferService) context.getBean("xferService" ); }
 		
 		wds.updateWatchdog(Watchdog.TRANSFER);
 		
-		types = xfrs.getAllTransferTypes();
-		statuses = xfrs.getAllTransferStatuses();
+//		types = xfrs.getAllTransferTypes();
+//		statuses = xfrs.getAllTransferStatuses();
 		nameTemplates = cfgs.getAllConfigItems();
 		
 		try {
+			updateTransfers();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
+		try {
 			completeTransfers();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
+		try {
 			startTransfers();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
+		try {
 			runScheduledTransfers();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
+		try {
 			createTransfersFromOrders();
 		} catch( Exception e ) {
 			StringWriter sw = new StringWriter();
@@ -165,63 +198,68 @@ public class TransferUpdate extends TimerTask {
 	}
 
 	/**
+	 * Update the transfer and order items amount transferred, based on change
+	 * in level for the tank.  Each end point (source and destination) if it's
+	 * a tank is checked for a limit violation (source: LO, destination: HI) and
+	 * the end point is changed if the tank is too low (source) or too high (destination)
+	 */
+	private void updateTransfers() {
+		log.debug("updateTransfers");
+		Iterator<Transfer> ixat = xfrs.getActiveTransfers().iterator();
+		while( ixat.hasNext() ) {
+			Transfer xfr = ixat.next();
+			log.debug("updateTransfer "+xfr.getId()+"/"+xfr.getName());
+			Double delta = computeSourceChange(xfr.getSourceId());
+			if( null == delta ) {
+				delta = computeDestinationChange(xfr.getDestinationId());
+			}
+			Double newVolume = xfr.getActVolume()+(delta==null?0D:delta);
+			xfr.setActVolume(newVolume);
+			incrementOrderItem(xfr.getId(),delta);
+			checkEndPointTanks(xfr);
+			xfrs.updateTransfer(xfr);
+		}
+	}
+	
+	/**
 	 * Complete transfers that are active whose completion time 
 	 * has elapsed or volume has been transferred
 	 */
 	private void completeTransfers( ) {
+		log.debug("completeTransfers");
 		Iterator<Transfer> ixet = xfrs.getEndingTransfers().iterator();
 		while( ixet.hasNext() ) {
 			Transfer x = ixet.next();
-			log.debug("completeTransfers: check active transfer "+x.toString());
+			log.debug("completeTransfers: check active transfer "+x.getId()+"/"+x.getName());
+			Value v = new Value(x.getId(), "D", 0D);
 			if( x.getEndDiff() <= 0 ) {
 				log.debug("completeTransfer (time) "+x.getName() + "/" + x.getId());
 				changeTransferState(x,"OFF");
 				x.completeTransfer(xfrs);
-				undockCarrier(x);
+				ords.completeOrderItems(v);
 			} else if( x.getActVolume() >= x.getExpVolume() ) {
 				log.debug("completeTransfer (vol) "+x.getName() + "/" + x.getId());
 				changeTransferState(x,"OFF");
 				x.completeTransfer(xfrs);
-				undockCarrier(x);
+				ords.completeOrderItems(v);
 			}
 		}
 	}
 
 	/**
-	 * Create transfers from orders IFF the specific carriers are present
-	 * <br>
-	 * Notes:<ol><li>Only pending orders (status is changed to Active when transfer created)</li>
-	 *        <li>Carrier must be present (see CONFIG.SHIP-PRESENT-NAME, TANKCAR-PRESENT-NAME
-	 *            TANKTRUCK-PRESENT-NAME)</li>
-	 *        <li></li>
-	 *        </ol>
+	 * Start scheduled transfers whose starting time
+	 * is earlier than the current time
 	 */
-	private void createTransfersFromOrders() {
-		Iterator<Order> iord = ords.getPendingOrders().iterator();
-		while( iord.hasNext() ) {
-			Order order = iord.next();
-			Long id = order.getShipmentId();
-			order.setItems(ords.getPendingOrderItems(id));
-			log.debug("createTransfersFromOrders (order): "+order.toString());
-			Iterator<Item> ii = order.getItems().iterator();
-			while( ii.hasNext() ) {
-				Item item = ii.next();
-				Tag carrier = tgs.getTag(item.getCarrierId());
-				Tag dock = carrierPresent(item);
-				if( null != dock ) {
-					log.debug("createTransfersFromOrders: pending order item "+item.getItemNo());
-					Transfer xfr = createNewTransfer(order,item,carrier,dock);
-					if( null != xfr ) {
-						xfr.startTransfer(xfrs);
-						item.setActive(Order.ACTIVE);
-						item.setTransferId(xfr.getId());
-						ords.updateItem(item);
-					} else {
-						log.debug("No transfer created, see previous messages");
-					}
-				} else {
-					log.debug("createTransfersFromOrders: carrier not present at dock");
-				}
+	private void startTransfers() {
+		log.debug("startTransfers");
+		Iterator<Transfer> ixst = xfrs.getStartingTransfers().iterator();
+		while( ixst.hasNext() ) {
+			Transfer x = ixst.next();
+			log.debug("startTransfers: check scheduled transfer "+x.getId()+"/"+x.getName());
+			if( (x.getStartDiff() <= 0) && (x.getEndDiff() > 0) ) {
+				log.debug("startTransfer "+x.getName() + "/" + x.getId());
+				x.startTransfer(xfrs);
+				changeTransferState(x,"ON");
 			}
 		}
 	}
@@ -254,7 +292,7 @@ public class TransferUpdate extends TimerTask {
 
 		while( ixpt.hasNext() ) {
 			Transfer x = ixpt.next();
-			log.debug("runScheduledTransfer (transfer): "+x.toString());
+			log.debug("runScheduledTransfer (transfer): "+x.getId()+"/"+x.getName());
 			Tag src = tgs.getTag(x.getSourceId());
 			Tag dest = tgs.getTag(x.getDestinationId());
 			Transfer newX = new Transfer(x);
@@ -282,18 +320,41 @@ public class TransferUpdate extends TimerTask {
 	}
 	
 	/**
-	 * Start scheduled transfers whose starting time
-	 * is earlier than the current time
+	 * Create transfers from orders IFF the specific carriers are present
+	 * <br>
+	 * Notes:<ol><li>Only pending orders (status is changed to Active when transfer created)</li>
+	 *        <li>Carrier must be present (see CONFIG.SHIP-PRESENT-NAME, TANKCAR-PRESENT-NAME
+	 *            TANKTRUCK-PRESENT-NAME)</li>
+	 *        <li></li>
+	 *        </ol>
 	 */
-	private void startTransfers() {
-		Iterator<Transfer> ixst = xfrs.getStartingTransfers().iterator();
-		while( ixst.hasNext() ) {
-			Transfer x = ixst.next();
-			log.debug("startTransfers: check scheduled transfer "+x.toString());
-			if( (x.getStartDiff() <= 0) && (x.getEndDiff() > 0) ) {
-				log.debug("startTransfer "+x.getName() + "/" + x.getId());
-				x.startTransfer(xfrs);
-				changeTransferState(x,"ON");
+	private void createTransfersFromOrders() {
+		log.debug("createTransfersFromOrders");
+		Iterator<Order> iord = ords.getPendingOrders().iterator();
+		while( iord.hasNext() ) {
+			Order order = iord.next();
+			Long id = order.getShipmentId();
+			order.setItems(ords.getPendingOrderItems(id));
+			log.debug("createTransfersFromOrders (order): "+order.toString());
+			Iterator<Item> ii = order.getItems().iterator();
+			while( ii.hasNext() ) {
+				Item item = ii.next();
+				Tag carrier = tgs.getTag(item.getCarrierId());
+				Tag dock = carrierPresent(item);
+				if( null != dock ) {
+					log.debug("createTransfersFromOrders: pending order item "+item.getItemNo());
+					Transfer xfr = createNewTransfer(order,item,carrier,dock);
+					if( null != xfr ) {
+						xfr.startTransfer(xfrs);
+						item.setActive(Item.ACTIVE);
+						item.setTransferId(xfr.getId());
+						ords.updateItem(item);
+					} else {
+						log.debug("No transfer created, see previous messages");
+					}
+				} else {
+					log.debug("createTransfersFromOrders: carrier not present at dock");
+				}
 			}
 		}
 	}
@@ -307,13 +368,10 @@ public class TransferUpdate extends TimerTask {
 		/* ensure that tag ID points to transfer */
 		newX.setTagId(x.getTagId());
 		/* Change transfer type id & status id */
-		DateTimeFormatter ldtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate ld = LocalDate.of( tomorrow.get(ChronoField.YEAR)
 				                   , tomorrow.get(ChronoField.MONTH_OF_YEAR)
 				                   , tomorrow.get(ChronoField.DAY_OF_MONTH));
 		newX.setName(newX.getName()+ld.toString());
-		newX.setTransferTypeId(types.get(Transfer.EXECUTABLE));
-		newX.setStatusId(statuses.get(Transfer.SCHEDULED));
 		/* source check */
 		newX.checkSource( tgs, tks );
 		/* destination check */
@@ -322,12 +380,8 @@ public class TransferUpdate extends TimerTask {
 		newX.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
 		newX.setExpStartTime(x.getNewStartTime());
 		newX.setExpEndTime(newX.getNewEndTime());
-		log.debug("insertNewTransfer: "+newX.toString());
+		log.debug("insertNewTransfer: "+newX.getId()+"/"+newX.getName());
 		xfrs.insertTransfer(newX);		
-	}
-	
-	private void undockCarrier( Transfer x ) {
-		
 	}
 	
 	/**
@@ -341,9 +395,9 @@ public class TransferUpdate extends TimerTask {
 			ChildValue cv = xin.next();
 			if( outputAllowed(cv) ) {
 				Double outval = getValue(cv.getInpTagId(), newState );
-				Xfer xfr = new Xfer(cv.getInpTagId(),outval);
+				RawData xfr = new RawData(cv.getInpTagId(),outval);
 				log.debug("changeTransferState: Transfer "+newState+" output: "+cv.getInpTagId()+" - "+xfr);
-				xfs.updateXfer(xfr);
+				rds.updateRawData(xfr);
 			}
 		}
 		
@@ -355,9 +409,9 @@ public class TransferUpdate extends TimerTask {
 			ChildValue cv = xout.next();
 			if( outputAllowed(cv) ) {
 				Double outval = getValue(cv.getInpTagId(), newState );
-				Xfer xfr = new Xfer(cv.getInpTagId(),outval);
+				RawData xfr = new RawData(cv.getInpTagId(),outval);
 				log.debug("changeTransferState: Transfer "+newState+" output: "+cv.getInpTagId()+" - "+xfr);
-				xfs.updateXfer(xfr);
+				rds.updateRawData(xfr);
 			}
 		}
 		
@@ -455,52 +509,177 @@ public class TransferUpdate extends TimerTask {
 			String templateName = baseName.replace("ProdCd",i.getContentCd());
 			log.debug("createNewTransfer: template "+templateName+" for dock "+dock.getName()); 
 			Transfer template = xfrs.getTemplate(templateName);
-			log.debug("createNewTransfer: template for dock "+dock.getName()+" "+template.toString()); 
-			Tag src = tgs.getTag(template.getSourceId());
-			Tag dest = tgs.getTag(template.getDestinationId());
-			String name = "";
-			String today = DateTimeFormatter.ofPattern("yyyyMMddHHmm").format(ZonedDateTime.now());
-			//		Calendar cal = Calendar.getInstance();
-			xfr.setId(0L);
-			xfr.setTagId(template.getId());
+			if( null != template ) {
+				log.debug("createNewTransfer: template for dock "+dock.getName()+" "+template.toString()); 
+				Tag src = tgs.getTag(template.getSourceId());
+				Tag dest = tgs.getTag(template.getDestinationId());
+				String name = "";
+				String today = DateTimeFormatter.ofPattern("yyyyMMddHHmm").format(ZonedDateTime.now());
+				//		Calendar cal = Calendar.getInstance();
+				xfr.setId(0L);
+				xfr.setTagId(template.getTagId());
 
-			if( Tag.DOCK.equals(src.getTagTypeCode()) ) {
-				String srcName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
-						.replace("STN",i.getItemNo().toString());
-				src = tgs.getTagByName(srcName, "STN");
-			}
-			xfr.setSourceId(src.getId());
+				if( Tag.DOCK.equals(src.getTagTypeCode()) ) {
+					String srcName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
+							.replace("STN",i.getItemNo().toString());
+					src = tgs.getTagByName(srcName, Tag.STATION);
+				}
+				xfr.setSourceId(src.getId());
 
-			if( Tag.DOCK.equals(dest.getTagTypeCode()) ) {
-				String destName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
-						.replace("STN",i.getItemNo().toString());
-				dest = tgs.getTagByName(destName, "STN");
-			}
-			xfr.setDestinationId(template.getDestinationId());
+				if( Tag.DOCK.equals(dest.getTagTypeCode()) ) {
+					String destName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
+							.replace("STN",i.getItemNo().toString());
+					dest = tgs.getTagByName(destName, Tag.STATION);
+				}
+				xfr.setDestinationId(template.getDestinationId());
 
-			if( Order.PURCHASE.equals(order.getPurchase())) {
-				name = dock.getName() + "-" + i.getItemNo() + "to" + i.getContentCd() + "-" + today;
+				if( Order.PURCHASE.equals(order.getPurchase())) {
+					name = dock.getName() + "-" + i.getItemNo() + "to" + i.getContentCd() + "-" + today;
+				} else {
+					name = i.getContentCd() + "to" + dock.getName() + i.getItemNo() + "-" + today;
+				}
+
+				xfr.checkSource(tgs, tks);
+				xfr.checkDestination(tgs, tks);
+				xfr.setName(name);
+				xfr.setContentsCode(i.getContentCd());
+				xfr.setStatusId(xfrs.getTransferStatusId(Transfer.ACTIVE));
+				xfr.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
+				xfr.setDelta(0);
+				xfr.setExpVolume(i.getExpVolumeMax());
+				xfr.setExpStartTime(Timestamp.from(Instant.now()));
+				Double transferTime = Math.ceil(i.getExpVolumeMax()/Transfer.SLOW);
+				Instant et = Instant.now().plus(transferTime.longValue(), ChronoUnit.MINUTES );
+				xfr.setExpEndTime( Timestamp.from(et) );
+				xfrs.insertTransfer(xfr);
 			} else {
-				name = i.getContentCd() + "to" + dock.getName() + i.getItemNo() + "-" + today;
+				log.debug("No transfer template found for "+templateName);
 			}
-
-			xfr.checkSource(tgs, tks);
-			xfr.checkDestination(tgs, tks);
-			xfr.setName(name);
-			xfr.setContentsCode(i.getContentCd());
-			xfr.setStatusId(xfrs.getTransferStatusId(Transfer.ACTIVE));
-			xfr.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
-			xfr.setDelta(0);
-			xfr.setExpVolume(i.getExpVolumeMax());
-			xfr.setExpStartTime(Timestamp.from(Instant.now()));
-			Double transferTime = Math.ceil(i.getExpVolumeMax()/Transfer.SLOW);
-			Instant et = Instant.now().plus(transferTime.longValue(), ChronoUnit.DAYS );
-			xfr.setExpEndTime( Timestamp.from(et) );
-			xfrs.insertTransfer(xfr);
 		} else {
 			log.debug("No transfer template set up for dock "+dock.getName());
 		}
 		return xfr;
 	}
 	
+	/**
+	 * compute the change in volume for the source tank
+	 * If it's not a tank, no change is necessary
+	 * @{code Notes: This doesn't currently correct for temperature differences
+	 * 		 IF the source is a tank
+	 * 		.. get the current level
+	 * 		.. compute the current volume
+	 * 		.. compute the previous volume
+	 * 		.. volume transferred = previous volume - current volume
+	 * 		END IF
+	 * }
+	 * @param srcId
+	 * @return amount source tank changed 
+	 */
+	private Double computeSourceChange( Long srcId ) {
+		log.debug("computeSourceChange: "+srcId);
+		Double sourceVolume = null;
+		Tag t = tgs.getTag(srcId);
+		if( Tag.TANK.equals(t.getTagTypeCode()) ) {
+			Tank tk = tks.getTank(srcId);
+			AnalogInput l = ais.getAnalogInput(tk.getLevelId());
+			Double volume = tk.computeVolume( l.getScanValue() );
+			Double prevVolume = tk.computeVolume( l.getPrevValue() );
+			sourceVolume = prevVolume-volume;
+		}
+		return sourceVolume;
+	}
+
+	/**
+	 * Correct the level for the tank based on the
+	 * change in volume; If it's not a tank, no change
+	 * is necessary
+	 * {@code
+	 * Notes: This doesn't currently correct for temperature differences
+	 * 		IF the source is a tank
+	 * 		.. get the current level
+	 * 		.. compute the current volume
+	 * 		.. add in the change 
+	 * 		.. compute the new level (don't let it go above the max level)
+	 * 		.. update the level tag
+	 * 		END IF
+	 * }
+	 * 
+	 * @param destId	ID of transfer destination
+	 * @return change in volume
+	 */
+	private Double computeDestinationChange( Long destId ) {
+		log.debug("computeDestinationChange: "+destId);
+		Double volumeChange = null;
+		Tag t = tgs.getTag(destId);
+		if( Tag.TANK.equals(t.getTagTypeCode()) ) {
+			Tank tk = tks.getTank(destId);
+			AnalogInput l = ais.getAnalogInput(tk.getLevelId());
+			Double volume = tk.computeVolume( l.getScanValue());
+			Double prevVolume = tk.computeVolume(l.getPrevValue());
+			volumeChange = volume - prevVolume;
+		}
+		return volumeChange;
+	}
+	
+	/**
+	 * Increment the actual volume for an order Item.
+	 * <br/>
+	 * Look up the order item associated with this transfer.  Then, if found,
+	 * increment the actual volume and update the item.
+	 * @param id transfer ID
+	 * @param delta Amount of transfer to increase
+	 */
+	private void incrementOrderItem(Long id, Double delta ) {
+		Item i = ords.getOrderItemByTransferId(id);
+		if( i != null ) {
+			i.setActVolume(delta+i.getActVolume());
+			ords.updateItem(i);
+		}
+	}
+	
+	/**
+	 * check the end point tanks and verify that the level has not exceeded
+	 * the low limit (source) or the high limit (destination).
+	 * @param xfr transfer to check
+	 */
+	private void checkEndPointTanks( Transfer xfr ) {
+		log.debug("Check endpoints: "+xfr.getId()+"/"+xfr.getName());
+		Tag src = tgs.getTag(xfr.getSourceId());
+		Tag dest = tgs.getTag(xfr.getDestinationId());
+		if( Tag.TANK.equals(src.getTagTypeCode()) ) {
+			Long newSrcId = checkTank( "S", src );
+			if( null != newSrcId ) {
+				xfr.setSourceId(newSrcId);
+//				xfrs.updateTransfer(xfr);  // shouldn't be needed
+			}
+		}
+		if( Tag.TANK.equals(dest.getTagTypeCode()) ) {
+			Long newDestId = checkTank( "D", dest );
+			if( null != newDestId ) {
+				xfr.setDestinationId(newDestId);
+//				xfrs.updateTransfer(xfr);  // shouldn't be needed
+			}
+		}
+	}
+
+	private Long checkTank( String option, Tag endPoint ) {
+		Tank tk = tks.getTank( endPoint.getId() );
+		AnalogInput l = ais.getAnalogInput(tk.getLevelId());
+		Long newTankId = null;
+		if( "S".equals(option) ) {
+			Double almLimit = l.getLo()!=null?l.getLo():(l.getLl()!=null?l.getLl():0D);
+			if(l.getScanValue() <= almLimit ) {
+				Value v = tks.getFullestTankForContent(endPoint.getMisc());
+				newTankId = v.getId();
+			}
+		} else if( "D".equals(option) && (l.getScanValue() >= l.getHi() )) {
+			Double almLimit = l.getHi()!=null?l.getHi():(l.getHh()!=null?l.getHh():Double.MAX_VALUE);
+			if(l.getScanValue() >= almLimit ) {
+				Value v = tks.getEmptiestTankForContent(endPoint.getMisc());
+				newTankId = v.getId();				
+			}
+		}
+		return newTankId;
+	}
+
 }

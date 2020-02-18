@@ -97,51 +97,60 @@
   </select>
   
   <select id="getEmptiestTankForContent" resultMap="valueMap">
-    select t.id, content_type_code, round(0.17811*pi()*diameter*diameter*max(height-scan_value)/4,0) value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
+    select tk.id, tk.content_type_code, round(0.17811*pi()*tk.diameter*tk.diameter*max(tk.height-ai.scan_value)/4,0) value
+      from tank tk join tank_level_vw tlv on tk.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     where t.content_type_code= #{param1}    
-     group by content_type_code
+     where tk.content_type_code= #{param1}    
+     group by tk.content_type_code
   </select>
   
   <select id="getFullestTankForContent" resultMap="valueMap">
-    select t.id, content_type_code, round(0.17811*pi()*diameter*diameter*min(height-scan_value)/4,0) value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
+    select tk.id, tk.content_type_code, round(0.17811*pi()*tk.diameter*tk.diameter*min(tk.height-ai.scan_value)/4,0) value
+      from tank tk join tank_level_vw tlv on tk.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     where t.content_type_code= #{param1}   
-     group by content_type_code
+     where tk.content_type_code= #{param1}   
+     group by tk.content_type_code
   </select>
   
   <select id="getTotalTankCapacitiesForContents" resultMap="valueMap">
-    select content_type_code code, round(sum(0.17811*pi()*diameter*diameter*height/4),4) value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id
-     group by content_type_code
+    select tk.content_type_code code, round(sum(0.17811*pi()*tk.diameter*tk.diameter*tk.height/4),4) value
+      from tank tk join tank_level_vw tlv on tk.id=tlv.tank_id
+     group by tk.content_type_code
   </select>
   
   <select id="getTotalTankVolumesForContents" resultMap="valueMap">
-    select content_type_code code, round(sum(0.17811*pi()*diameter*diameter*scan_value/4),4) value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
+    select tk.content_type_code code, round(sum(0.17811*pi()*tk.diameter*tk.diameter*ai.scan_value/4),4) value
+      from tank tk join tank_level_vw tlv on tk.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     group by content_type_code
+     group by tk.content_type_code
   </select>
   
   <select id="getTankCapacitiesForContents" resultMap="valueMap">
-    select tank_id id, round( 0.17811*pi()*diameter*diameter*height/4,0) value
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
-      join analog_input ai on ai.tag_id=tlv.level_id 
-     where t.content_type_code=#{param1}
+    select tk.id id, tk.content_type_code code
+         , round( 0.17811*pi()*tk.diameter*tk.diameter*tk.height/4,0) value
+      from tank tk 
+     where tk.content_type_code=#{param1}
   </select>
   
-  <select id="getTankVolumesForContents" resultMap="valueMap">
-    select tank_id id
-         , round(  0.17811*pi()*diameter*diameter*scan_value/4, 0) value 
-      from tank t join tank_level_vw tlv on t.id=tlv.tank_id 
+  <select id="getUnusedTankVolumesForContents" resultMap="valueMap">
+    select tk.id id
+        , tk.content_type_code code
+         , round(  0.17811*pi()*tk.diameter*tk.diameter*ai.scan_value/4, 0) value 
+      from tank tk join tank_level_vw tlv on tk.id=tlv.tank_id 
       join analog_input ai on ai.tag_id=tlv.level_id 
-     where t.content_type_code=#{param1}
+     where tk.content_type_code=#{param1}
+       and tk.id not in (select source_id from transfer 
+                          where status_id in (select value from transfer_status_vw
+                                               where name in ('Scheduled','Active'))
+                         union 
+                         select destination_id from transfer 
+                          where status_id in (select value from transfer_status_vw 
+                                               where name in('Scheduled','Active')))
   </select>
   
   <select id="getUnusedTankVolumesForUnit" resultMap="valueMap">
     select tk.id
+         , tk.content_type_code code
          , round(0.178 * pi() * ai.scan_value * tk.diameter * tk.diameter /4,2) value
       from rel_tag_tag rtt 
            join tag t on rtt.parent_tag_id = t.id

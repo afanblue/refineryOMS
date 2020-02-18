@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import Log             from '../requests/Log.js';
 import DefaultContents from './DefaultContents.js';
@@ -48,7 +51,13 @@ class RoleAdmin extends Component {
     this.finishPrivsFetch = this.finishPrivsFetch.bind(this);
     this.finishRolePrivsFetch  = this.finishRolePrivsFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -56,16 +65,10 @@ class RoleAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -76,20 +79,20 @@ class RoleAdmin extends Component {
     const role = new Role(rd.id,rd.name,rd.active,this.state.privs,null);
     this.setState({stage: "itemRetrieved", updateDisplay: true, role: role });
   }
-  
+
   finishPrivsFetch(req) {
     let privs = [];
     req.map(function(n,x){ return privs.push(n.id); } )
     let rnew = Object.assign({},this.state.role);
-    rnew.privs = privs;    
+    rnew.privs = privs;
     this.setState({stage: "itemRetrieved", updateDisplay: true, role: rnew, privs: privs });
   }
-  
+
   finishRolePrivsFetch(req) {
     let privList = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, privList: privList });
   }
-  
+
   fetchFormData(id) {
     const loc = "RoleAdmin.select";
     let req0 = new OMSRequest(loc, SERVERROOT + "/role/" + id,
@@ -100,7 +103,7 @@ class RoleAdmin extends Component {
     req2.fetchData();
     let req3 = new OMSRequest(loc, SERVERROOT + "/privilege/all",
                             "Problem retrieving privilege list", this.finishRolePrivsFetch);
-    req3.fetchData();    
+    req3.fetchData();
   }
 
   handleRoleSelect(event) {
@@ -133,19 +136,20 @@ class RoleAdmin extends Component {
     }
     request();
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
+
+/*  componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
         break;
       default:
     }
   }
-  
+*/
+
   handleRoleChange(event) {
     const target = event.target;
     const value = parseInt(target.value,10);
@@ -158,7 +162,7 @@ class RoleAdmin extends Component {
         let tLength = (rnew.privs===null?0:rnew.privs.length);
         for( var i=0; i<tLength; i++) {
             let v = rnew.privs.shift();
-            if( v === value ) { 
+            if( v === value ) {
                 f = i;
             } else {
                 tNew.push(v);
@@ -177,7 +181,7 @@ class RoleAdmin extends Component {
     }
     this.setState({role: rnew } );
   }
-  
+
   fetchList() {
     const clsMthd = "RoleAdmin.fetchList";
     const myRequest = SERVERROOT + "/role/all";
@@ -186,32 +190,32 @@ class RoleAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem fetching role list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
     }
   }
-  
+
   handleRoleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <RoleList returnedText = {this.state.returnedText}

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}       from '../../Parameters.js';
 import Log                from '../requests/Log.js';
 import DefaultContents    from './DefaultContents.js';
@@ -28,10 +31,10 @@ import {PlotDetails}      from './objects/PlotGroup.js';
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
-	 from field f join tag t on f.id = t.id 
+	 from field f join tag t on f.id = t.id
 	where t.name='DeCity';
-	
-	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk 
+
+	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk
 	 where ftv.child_tag_id=tk.id and ftv.field_tag_id= 1;
  */
 
@@ -53,7 +56,14 @@ class ProcessUnit extends Component {
     this.handleQuit = this.handleQuit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          option: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -61,19 +71,20 @@ class ProcessUnit extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    clearInterval(this.state.itemTimer);
-    if( nextProps.option !== this.state.option ) {
-      this.setState({option: nextProps.option});
+  static getDerivedStateFromProps(nextProps, state) {
+    clearInterval(state.itemTimer);
+    if( nextProps.option !== state.option ) {
+//      this.setState({option: nextProps.option});
       this.fetchList(nextProps.option);
     }
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   handleItemSelect(event) {
     const id = (event.z1 != null?event.z1:(event.z2 != null?event.z2:event.z3));
     this.fetchItemData(id);
@@ -82,7 +93,7 @@ class ProcessUnit extends Component {
     this.setState( {itemTimer: myTimerID,
                     id: id } );
   }
-  
+
   fetchItemData( id ) {
     const noDays = this.state.plotDetails.numberDays;
     const myRequest=SERVERROOT + "/ai/history/" + id + "/" + noDays;
@@ -99,23 +110,23 @@ class ProcessUnit extends Component {
         }
         this.setState( {returnedText: json,
                         plotDetails: pdNew,
-                        updateData: false, 
+                        updateData: false,
                         updateDisplay:true,
                         stage: "itemRetrieved" } );
       } catch( e ) {
-        const emsg = "Problem selecting process unit id "+id; 
+        const emsg = "Problem selecting process unit id "+id;
         alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
+        Log.error(emsg+" - " + e, clsMthd);
       }
     }
     request();
   }
-  
+
   handleQuit() {
     this.fetchList(this.state.option);
     clearInterval(this.state.itemTimer);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );    
+    this.setState( {unitTimer: myTimerID } );
   }
 
   fetchList(opt) {
@@ -126,14 +137,14 @@ class ProcessUnit extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
-          const emsg = "Problem selecting process unit list"; 
+          const emsg = "Problem selecting process unit list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
@@ -142,12 +153,12 @@ class ProcessUnit extends Component {
 
   componentDidMount() {
     let pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
-    if( this.state.plotDetails !== null ) { pd = this.state.plotDetails; } 
+    if( this.state.plotDetails !== null ) { pd = this.state.plotDetails; }
     this.fetchList(this.state.option);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
     this.setState( {plotDetails:pd, unitTimer: myTimerID } );
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
@@ -156,7 +167,7 @@ class ProcessUnit extends Component {
       clearInterval(this.state.itemTimer);
     }
   }
-  
+
   handleFieldChange(event) {
     event.preventDefault();
     const target = event.target;

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH}    from '../../Parameters.js';
 import PipeList        from './lists/PipeList.js';
 import PipeForm        from './forms/PipeForm.js';
@@ -57,7 +60,13 @@ class PipeAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -65,16 +74,10 @@ class PipeAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -105,7 +108,7 @@ class PipeAdmin extends Component {
   finishSiteFetch(req) {
     this.setState({stage: "pipeRetrieved", updateDisplay: true, siteLocation:req });
   }
-  
+
   finishCntntsFetch(req) {
     var cList = [];
     var mt = {};
@@ -120,11 +123,11 @@ class PipeAdmin extends Component {
              } )
     this.setState({stage: "pipeRetrieved", updateDisplay: true, contentsList:cList });
   }
-  
+
   finishSensorFetch(req) {
     this.setState({stage: "pipeRetrieved", updateDisplay: true, sensorList: req });
   }
-  
+
   handlePipeSelect(event) {
     const id = event.z;
     const loc = "PipeAdmin.pipeSelect";
@@ -182,15 +185,10 @@ class PipeAdmin extends Component {
   componentDidMount() {
     this.fetchList("P");
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -206,23 +204,23 @@ class PipeAdmin extends Component {
   finishListFetch( req ) {
     this.setState( {stage:"dataFetched", updateDisplay:true, returnedText: req } );
   }
-    
+
   fetchList(type) {
     let loc = "PipeAdmin.fetchList";
     let req0 = new OMSRequest(loc, SERVERROOT + "/tag/type/" + type,
                             "Problem selecting tag list", this.finishListFetch);
     req0.fetchData();
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList(this.state.type);
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
-  
+
   handleMouseUp(event) {
     const e = event;
     const t = e.evt;
@@ -242,7 +240,7 @@ class PipeAdmin extends Component {
       this.setState( {pipe: pnew} );
     }
   }
-  
+
   clearEndPtsList(event) {
     event.preventDefault();
     let pnew = Object.assign({},this.state.pipe);
@@ -250,10 +248,10 @@ class PipeAdmin extends Component {
     pnew.vtxList = pts;
     this.setState( {pipe: pnew} );
   }
- 
+
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <PipeList returnedText = {this.state.returnedText}
@@ -261,7 +259,7 @@ class PipeAdmin extends Component {
       case "pipeRetrieved":
         if( (this.state.pipe === null)  || (this.state.siteLocation===null) ||
             (this.state.types === null) || (this.state.contentsList===null) ||
-            (this.state.sensorList === null) ) 
+            (this.state.sensorList === null) )
         {
           return <Waiting />
         } else {

@@ -30,7 +30,7 @@ There are a number of features which have not (yet) been implemented.  These inc
 The application is built using a Java-based REST data source (Tomcat/Spring) which references a MySQL database.  The UI is implemented in react.  Underlying the UI and the database are some ancillary programs, all implemented in Java.  
 
 -  The transfer service automatically creates transfers based on transfer templates
--  The SCADA/PMC service transfers values between the XFER table to the appropriate type table (analog/digital input/output) and saves the data
+-  The SCADA/PMC service transfers values between the RAW_DATA table to the appropriate type table (analog/digital input/output) and saves the data
 -  The simulator generates semi-realistic values for the values based on the temperature (fetched from the USWS), the transfer definitions, and the refinery output fractions.  Both the temperature location and the refinery output fractions are defined in the CONFIG table and are accessible via the admin UI.  Note that "real" data could be provided from actual devices if the simulator was replaced with a scanner to read those devices.
 -  The watchdog checks the watchdog table to verify that the update count is changing on the active records.  If not, it sends an email to the contents of the CONFIG WATCHDOG_EMAIL.  There are additional parameters used to configure the watchdog email:   EMAIL_FROM, EMAIL_PWD, EMAIL_USER, SMTP_HOST, and SMTP_PORT.  In the utility to extract the data from the CONFIG table (ExtractDB.php), these values are all set to lower case versions of their item name.
 
@@ -47,7 +47,7 @@ There are additional files provided to enable creation of the services for Windo
 
 The following are assumed to be installed:
 
-    -  mysql
+    -  MariaDB
     -  Java (Version 8 or greater)
     -  Tomcat 8
     -  node/npm
@@ -92,12 +92,12 @@ There is also an assumption that whoever's doing this is conversant w/the above 
             <param-value>true</param-value>
         </init-param>
    ```
-
-   1.  The simulator actually retrieves the current weather conditions from the US weather service, i.e., https://w1.weather.gov/xml/current_obs/KILG.xml.  The "KILG" is the code for the Wilmington/New Castle County, DE airport.  This is defined in the config table w/item_name='WEATHER_LOCATION' and can be changed in the System Configuration Admin.  See http://w1.weather.gov/xml/current_obs/seek.php to locate XML weather observation feeds available.  Eh, might be KTME, the Katy, TX executive airport.  NOAA has a new API, https://api.weather.gov/stations/XXXX/observations/current which has been configured here to use the JSON data return.  See https://www.weather.gov/documentation/services-web-api for additional information.
    
 To configure this 
        
    1.  If you don't like my colors, the background and text color are defined in the oms.css file and in various js and html files.  The alarm colors can be changed in the System  Configuration Admin page, as NORMCOLOR, HHCOLOR, HICOLOR, LOCOLOR, LLCOLOR.  The background color is "midnightblue"
+   
+   1.  The I/O devices are configured using the ```device``` table.  The simulator should always be device id 1.  The weather station device actually retrieves the current weather conditions from the US weather service, e.g., https://w1.weather.gov/xml/current_obs/KILG.xml. The "KILG" is the code for the Wilmington/New Castle County, DE airport.  This is defined in the config table w/item_name='WEATHER_LOCATION' and can be changed in the System Configuration Admin.  See http://w1.weather.gov/xml/current_obs/seek.php to locate XML weather observation feeds available.  Eh, might be KTME, the Katy, TX executive airport.  NOAA has a new API, https://api.weather.gov/stations/XXXX/observations/current which has been configured here to use the JSON data return.  See https://www.weather.gov/documentation/services-web-api for additional information.   The weather station is defined in its own package.
 
 ### To Install:
 

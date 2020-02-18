@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class RoleForm extends Component {
@@ -25,6 +27,19 @@ class RoleForm extends Component {
     this.state = {  };
   }
 
+  static get propTypes() {
+      return {
+          privList: PropTypes.array,
+          role: PropTypes.object,
+          active: PropTypes.string,
+          id: PropTypes.number,
+          name: PropTypes.string,
+          privs: PropTypes.array,
+          handleQuit: PropTypes.func,
+          roleChange: PropTypes.func,
+          roleUpdate: PropTypes.func
+      }
+  }
 
   render() {
     const r          = this.props.role;
@@ -35,7 +50,7 @@ class RoleForm extends Component {
     const roleChange = this.props.roleChange;
     var midStyle = {verticalAlign:'middle'};
 
-    
+
     return(
       <div className="oms-tabs">
       <table>
@@ -44,20 +59,20 @@ class RoleForm extends Component {
             <td className="oms-top">
 
       <form id="roleForm" >
-        Please enter your role information 
+        Please enter your role information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/>
             </td>
           </tr>
           <tr>
             <th className="oms-spacing-180">Role name (30):</th>
             <td className="oms-spacing">
-              <input type="hidden" name="id" value={r.id} />            
-              <input type="text" id="name" name="name" value={r.name} 
+              <input type="hidden" name="id" value={r.id} />
+              <input type="text" id="name" name="name" value={r.name}
                      className={["oms-spacing-180","oms-fontsize-12"].join(' ')}  size="32" maxLength="32"
                      onChange={roleChange} />
             </td>
@@ -65,7 +80,7 @@ class RoleForm extends Component {
           <tr>
             <td className="oms-spacing-180">Active:</td>
             <td className="oms-spacing">
-              <select id="active" name="active" value={r.active} 
+              <select id="active" name="active" value={r.active}
                       onChange={roleChange} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -75,9 +90,9 @@ class RoleForm extends Component {
           <tr>
             <td className="oms-spacing-180" style={midStyle}>Privileges:</td>
             <td className="oms-spacing">
-              <select id="privs" name="privs" value={r.privs} 
+              <select id="privs" name="privs" value={r.privs}
                       onChange={roleChange} multiple={true} size={10}>
-                {privList.map( 
+                {privList.map(
                   function(n,x){
                     return <option key={x} value={n.id}>{n.name}</option>
                   } )
@@ -92,9 +107,9 @@ class RoleForm extends Component {
           <tbody>
           <tr  className="oms-spacing">
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {handleQuit(e)}}  />
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {roleUpdate(e)}} />
             </td>
           </tr>
@@ -106,12 +121,12 @@ class RoleForm extends Component {
           </tr>
         </tbody>
       </table>
-      
+
       </div>
-    );    
-      
+    );
+
   }
-  
+
 }
 
 export default RoleForm;

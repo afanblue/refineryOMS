@@ -18,6 +18,12 @@ public class Item extends OMSObject {
     private String  station;
     private Long    transferId;
     private String  transfer;
+    
+	public static final String ACTIVE = "A";
+	public static final String COMPLETE = "C";
+	public static final String DONE = "D";
+	public static final String PENDING = "P";
+	
    
 	public Item() {	
 		shipmentId = 0L; 

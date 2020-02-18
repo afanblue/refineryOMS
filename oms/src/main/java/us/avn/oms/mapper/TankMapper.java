@@ -42,7 +42,15 @@ public interface TankMapper {
 
 	Collection<Value> getTankCapacitiesForContents( String t );
 	
-	Collection<Value> getTankVolumesForContents( String t );
+	/**
+	 * get id and volume for all unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank volumes for the given contents code  
+	 *
+	 * @param t (String) contents code
+	 * @return Collection of value objects (tank ID, contents, max possible volume) for all the 
+	 * 			tanks containing the given contents
+	 */
+	Collection<Value> getUnusedTankVolumesForContents( String t );
 	
 	/**
 	 * Get list of tanks in Unit not involved in Active or Scheduled transfers

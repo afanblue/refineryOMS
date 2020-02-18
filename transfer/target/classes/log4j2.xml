@@ -16,7 +16,7 @@
             <Policies>
                 <CronTriggeringPolicy schedule="59 23 0 * * ?" evaluateOnStartup="true" />
             </Policies>
-            <DefaultRolloverStrategy max="5" />
+q            <DefaultRolloverStrategy max="5" />
         </RollingFile>
 
     </Appenders>
@@ -28,7 +28,7 @@
         <Logger name="us.avn.oms" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
-        <Logger name="us.avn.oms.mapper" level="ERROR" additivity="false">
+        <Logger name="us.avn.oms.mapper" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
         <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">

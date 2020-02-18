@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import Log             from '../requests/Log.js';
@@ -26,10 +29,10 @@ import FieldDisplay    from './displays/FieldDisplay.js';
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
-	 from field f join tag t on f.id = t.id 
+	 from field f join tag t on f.id = t.id
 	where t.name='DeCity';
-	
-	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk 
+
+	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk
 	 where ftv.child_tag_id=tk.id and ftv.field_tag_id= 1;
  */
 
@@ -50,24 +53,26 @@ class Field extends Component {
       itemTimer: null
     };
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          field: PropTypes.any,
+          tankType: PropTypes.any
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
     }
     return response;
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.fetchSite(nextProps.field);
-    this.setState({ stage: nextProps.stage,
-                    fieldName: nextProps.field,
-                    tankType: nextProps.tankType,
-                    updateData: true,
-                    updateDisplay: false,
-                    returnedText: null });
+
+  static getDerivedStateFromProps(nextProps, state) {
+	return state;
   }
-  
+
   fetchSite(fn) {
     const clsMthd = "Field.fetchList";
     const myRequest = SERVERROOT + "/field/objects/"+fn;
@@ -78,14 +83,14 @@ class Field extends Component {
           const json = await response.json();
           this.setState( {field: json.field,
                           tags: json.tags,
-                          siteLoc: json.siteLocation, 
-                          updateData: false, 
+                          siteLoc: json.siteLocation,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
-          let emsg = "Problem fetching field objects for field "+fn; 
+          let emsg = "Problem fetching field objects for field "+fn;
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - "+e, clsMthd);        
+          Log.error(emsg+" - "+e, clsMthd);
         }
       }
       request();
@@ -95,9 +100,9 @@ class Field extends Component {
   componentDidMount() {
     this.fetchSite(this.state.fieldName);
     var myTimerID = setInterval(() => {this.fetchSite(this.state.fieldName)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );    
+    this.setState( {unitTimer: myTimerID } );
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);

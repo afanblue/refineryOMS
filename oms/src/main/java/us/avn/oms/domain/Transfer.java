@@ -450,8 +450,6 @@ public class Transfer extends OMSObject implements Serializable {
 					this.sourceId = aiv.getId();
 				}
 			}
-		} else if( Tag.DOCK.equals(src.getTagTypeCode())) {
-			
 		}
 	}
 	

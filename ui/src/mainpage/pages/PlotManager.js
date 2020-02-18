@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import Log             from '../requests/Log.js';
@@ -35,16 +38,16 @@ import {PlotGroup}     from './objects/PlotGroup.js';
  * As each item is selected, in the handleChange function I get the history for
  * the selected item and store it away in a state variable, d1, d2, d3, or d4.
  *
- * this creates some problems if an item is dropped, since i have to replace 
+ * this creates some problems if an item is dropped, since i have to replace
  * the history data as well.  it turns out this isn't a big problem, since the
  * new item is always the last one.
  *
  * Anyway, once the submit button is clicked, we generate the plot form.
  *
- * Notice I broke from my usual form by adding the form into the admin script. 
+ * Notice I broke from my usual form by adding the form into the admin script.
  */
 
-cont FORM = "PlotManager";
+const FORM = "PlotManager";
 
 
 class PlotManager extends Component {
@@ -69,7 +72,13 @@ class PlotManager extends Component {
     this.finishPGFetch = this.finishPGFetch.bind(this);
     this.finishAIListFetch = this.finishAIListFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -77,16 +86,10 @@ class PlotManager extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -105,15 +108,15 @@ class PlotManager extends Component {
     this.setState({stage: "itemRetrieved",
                    updateDisplay: true,
                    updateData: false,
-                   plotGroup: pg                 
+                   plotGroup: pg
                   });
   }
-  
+
   finishAIListFetch(req) {
     let aiList = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, aiList: aiList });
   }
-  
+
   fetchFormData(id) {
     const loc = FORM+".pgSelect";
     let req0 = new OMSRequest(loc, SERVERROOT + "/plotGroup/" + id,
@@ -144,9 +147,9 @@ class PlotManager extends Component {
            case 3:  this.setState({d2:fd}); break;
            default: this.setState({d3:fd}); break;
          }
-      }).catch(function(error) { 
+      }).catch(function(error) {
          alert("Problem selecting AdHoc id "+id+"\n"+error);
-         Log.error("Error - " + error,FORM+".fetchHistory");  
+         Log.error("Error - " + error,FORM+".fetchHistory");
       });
     }
   }
@@ -164,19 +167,14 @@ class PlotManager extends Component {
     this.setState({stage: "generatePlot",
                    unitTimer: myTimerID});
   }
-  
+
   componentDidMount() {
     this.fetchFormData(0);
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -189,7 +187,7 @@ class PlotManager extends Component {
       let tLength = (pgnew.aiList===null?0:pgnew.aiList.length);
       for( var i=0; i<tLength; i++) {
         let v = pgnew.aiList.shift();
-        if( v === value ) { 
+        if( v === value ) {
           f = i;
         } else {
           tNew.push(v);
@@ -206,9 +204,9 @@ class PlotManager extends Component {
       }
       this.setState({plotGroup: pgnew } );
     }
-    
+
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     if( this.state.unitTimer !== null ) {
@@ -220,18 +218,18 @@ class PlotManager extends Component {
     pgnew.aiList = tNew;
     this.setState({plotGroup: pgnew, stage: "itemRetrieved" } );
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
   }
-  
+
 
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "generatePlot":
         return <GroupPlot d0 = {this.state.d0}

@@ -35,6 +35,8 @@ public class TankCar implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
+	public static final long VOLUME = 820L;
+	
 	private Long   id;
 	private Tag    tag;
 	private Double quantity;

@@ -15,14 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class ControlBlockForm extends Component {
   constructor(props) {
     super(props);
     this.state = {  };
+  }
+
+  static get propTypes() {
+      return {
+          allAIins: PropTypes.array,
+          allDIins: PropTypes.array,
+          allOuts: PropTypes.array,
+          cb: PropTypes.object,
+          blockType: PropTypes.string,
+          co: PropTypes.any,
+          id: PropTypes.number,
+          pvId: PropTypes.number,
+          spId: PropTypes.number,
+          newCB: PropTypes.boolean,
+          cbUpdate: PropTypes.func,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func
+      }
   }
 
   render() {
@@ -65,12 +85,12 @@ class ControlBlockForm extends Component {
             <tr>
               <td className="oms-top">
         <form id="ctrlBlkForm" >
-          Please enter your control block information 
+          Please enter your control block information
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
-                <td className="oms-spacing-180"><img src="images/spacer.png" 
+                <td className="oms-spacing-180"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
@@ -98,17 +118,17 @@ class ControlBlockForm extends Component {
                   {ctrlBlk.blockType}
                 </td>
               </tr>
-  
+
             </tbody>
           </table>
           <table className="oms-spacing">
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value="Quit" className="oms-spacing"
                          onClick={(e) => {handleQuit(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {ctrlBlkUpdate(e)}}/>
                 </td>
@@ -116,16 +136,16 @@ class ControlBlockForm extends Component {
             </tbody>
           </table>
         </form>
-  
+
               </td>
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     );
   }
-  
+
 }
 
 export default ControlBlockForm;

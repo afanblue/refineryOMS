@@ -16,14 +16,20 @@
  *******************************************************************************/
 package us.avn.oms.sim;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 //import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TimerTask;
 import java.util.Vector;
 
@@ -53,7 +59,7 @@ import us.avn.oms.domain.Transfer;
 import us.avn.oms.domain.Value;
 import us.avn.oms.domain.Watchdog;
 import us.avn.oms.service.CarrierService;
-//import us.avn.oms.domain.Xfer;
+//import us.avn.oms.domain.RawData;
 //import us.avn.oms.service.AnalogInputService;
 //import us.avn.oms.service.AnalogOutputService;
 import us.avn.oms.service.ConfigService;
@@ -120,16 +126,27 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	private  static TransferService xfrs = null;
 	private  Collection<Tag> dockList = null;
 
-	private Calendar cal;
+//	private Calendar cal;
 
-	static final double WEEKS_ASPHALT  = 7  *   2000D;
-	static final double MONTHS_CRUDE   = 30 * 120000D;
-	static final double WEEKS_FUELOIL  = 7  *  36000D;
-	static final double WEEKS_GASOLINE = 7  *  55000D;
-	static final double WEEKS_JETFUEL  = 7  *  12000D;
-	static final double WEEKS_LUBES    = 7  *   1200D;
-	static final double WEEKS_NAPTHA   = 7  *   2000D;
-	static final double WEEKS_WAX      = 7  *   1200D;
+	static final Double WEEKS_ASPHALT  = 7  *   2000D;
+	static final Double MONTHS_CRUDE   = 30 * 120000D;
+	static final Double WEEKS_FUELOIL  = 7  *  36000D;
+	static final Double WEEKS_GASOLINE = 7  *  55000D;
+	static final Double WEEKS_JETFUEL  = 7  *  12000D;
+	static final Double WEEKS_LUBES    = 7  *   1200D;
+	static final Double WEEKS_NAPTHA   = 7  *   2000D;
+	static final Double WEEKS_WAX      = 7  *   1200D;
+	
+	private class TwoLongs { 
+		public Long carrierId;
+		public Long shipmentId;
+		
+		public TwoLongs( Long c, Long s ) {
+			this.carrierId = c;
+			this.shipmentId = s;
+		}
+		
+	}
 
 	public void run( ) {
 
@@ -148,60 +165,99 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 
 		log.debug("Start PRE processing");
 		wds.updateWatchdog(Watchdog.PRE);
-		cal = Calendar.getInstance();
+//		cal = Calendar.getInstance();
 		
 		/*	*/
-		dockList = tgs.getAllTagsByType(Tag.DOCK);
-		createNeededOrders();
-		addCarrierPresentForOrders();
-		undockCarriersFromOrders();
+		try {
+			dockList = tgs.getAllTagsByType(Tag.DOCK);
+			undockCarriersFromOrders();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
+		try {
+			createNeededOrders();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
+		try {
+			addCarrierPresentForOrders();
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String eas = sw.toString();
+			log.error(eas);			
+		}
 		/* */
 		log.debug("End PRE processing");
 	}
 
 	private void createNeededOrders() {
-		Iterator<Value> itv = tks.getTotalTankVolumesForContents().iterator();
-		while( itv.hasNext() ) {
-			Value tv = itv.next();
-			Order o = null;
-			log.debug("PRE: create order for product "+tv.getCode());
-			switch (tv.getCode()) {
-			case Tank.ASPHALT :
-				o = createRefinedOrder(tv, Tank.ASPHALT, WEEKS_ASPHALT );
-				break;
-			case Tank.CRUDE :
-				o = createCrudeOrder(tv);
-				break;
-			case Tank.FUEL_OIL :
-				o = createRefinedOrder(tv, Tank.FUEL_OIL, WEEKS_FUELOIL );
-				break;
-			case Tank.GASOLINE :
-				o = createRefinedOrder(tv, Tank.GASOLINE, WEEKS_GASOLINE );
-				break;
-			case Tank.JET_FUEL :
-				o = createRefinedOrder(tv, Tank.JET_FUEL, WEEKS_JETFUEL);
-				break;
-			case Tank.LUBRICANT :
-				o = createRefinedOrder(tv, Tank.LUBRICANT, WEEKS_LUBES );
-				break;
-			case Tank.NAPTHA :
-				o = createRefinedOrder(tv, Tank.NAPTHA, WEEKS_NAPTHA );
-				break;
-			case Tank.WAX :
-				o = createRefinedOrder(tv,Tank.WAX, WEEKS_WAX );
-				break;
-			}
-			if( null != o ) {
-				log.debug("PRE create order - "+o.toString());
-				os.insertOrder(o);
-				Iterator<Item> ii = o.getItems().iterator();
-				while( ii.hasNext() ) {
-					Item i = ii.next();
-					i.setShipmentId(o.getShipmentId());
-					os.insertItem(i);
+		Iterator<Value> ittv = tks.getTotalTankVolumesForContents().iterator();
+		Map<String,Double> mttc = mapVolumes(tks.getTotalTankCapacitiesForContents());
+		Map<String,Double> mov = mapVolumes(os.getOrderVolumesForContents());
+		while( ittv.hasNext() ) {
+			Value tv = ittv.next();
+			if( ! orderPending(tv.getCode())) {
+				Double orderAmount =mov.get(tv.getCode())==null?0D:mov.get(tv.getCode());
+				Double capacity = Math.max(mttc.get(tv.getCode()),0D);
+				Double curVolume = Math.max( tv.getValue(), 0D);
+				Order o = null;
+				log.debug("PRE: create order for product "+tv.getCode());
+				switch (tv.getCode()) {
+				case Tank.ASPHALT :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_ASPHALT );
+					break;
+				case Tank.CRUDE :
+					o = createCrudeOrder(capacity, curVolume, orderAmount, Tank.CRUDE, Tag.TRAIN, MONTHS_CRUDE );
+					break;
+				case Tank.FUEL_OIL :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TRAIN, WEEKS_FUELOIL );
+					if( null == o ) {
+						o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_FUELOIL );
+					}
+					break;
+				case Tank.GASOLINE :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TRAIN, WEEKS_GASOLINE );
+					if( null == o ) {
+						o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_GASOLINE );
+					}
+					break;
+				case Tank.JET_FUEL :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TRAIN, WEEKS_JETFUEL);
+					if( null == o ) {
+						o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_JETFUEL);
+					}
+					break;
+				case Tank.LUBRICANT :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_LUBES );
+					break;
+				case Tank.NAPTHA :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_NAPTHA );
+					break;
+				case Tank.WAX :
+					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_WAX );
+					break;
+				}
+				if( null != o ) {
+					log.debug("PRE create order - "+o.toString());
+					os.insertOrder(o);
+					Iterator<Item> ii = o.getItems().iterator();
+					while( ii.hasNext() ) {
+						Item i = ii.next();
+						i.setShipmentId(o.getShipmentId());
+						os.insertItem(i);
+					}
+				} else {
+					log.debug("PRE: No order made for product "+tv.getCode());
 				}
 			} else {
-				log.debug("PRE: No order made for product "+tv.getCode());
+				log.debug("PRE: order for product "+tv.getCode()+" already pending.  Nothing created");
 			}
 		}
 	}
@@ -226,101 +282,104 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 				Tag carrier = tgs.getTag(i.getCarrierId());	
 				if( ! carrierIds.contains(carrier.getId()) ) {
 					carrierIds.add(carrier.getId());
-					Tag dock = getDockForCarrier(carrier);
-					if( null != dock ) {
-						RelTagTag rtt = new RelTagTag(carrier.getId(), dock.getId(), Tag.DOCK);
+					Long dockId = getDockForCarrier(carrier);
+					if( dockId.compareTo(0L) > 0 ) {
+						log.debug("addCarrierPresent: dock "+dockId
+								 +" found for carrier "+carrier.getName());
+						RelTagTag rtt = new RelTagTag(carrier.getId(), dockId, Tag.DOCK);
 						tgs.insertRelationship(rtt);
 //						i.setDockId(dock.getId());
 //						os.updateItem(i);
+					} else if( dockId.equals(0L) ) {
+						log.debug("addCarrierPresent: No available dock for carrier "
+								 +carrier.getName()+" for order "+o.getShipmentId());;
 					} else {
-						log.debug("No available dock for carrier "+carrier.getName()+" for order "+o.getShipmentId());;
+						log.debug("addCarrierPresent: carrier "+i.getCarrierId()+"already docked"
+								 +"at dock ID "+dockId);
 					}
+				} else {
+					log.debug("addCarrierPresent: carrier "+i.getCarrierId()+"already docked");
 				}
 			}
+			carrierIds = null;
 		}
 	}
 	
 	/**
-	 * Check the transfers for all of the active orders.  If any is complete, then we
-	 * can undock the carrier, which means deleting the REL_TAG_TAG record for the carrier
+	 * Check the transfers for all of the active order items.  
+	 * If any is complete, then we can mark the item as complete.
+	 * If all of the order items for this shipment are complete, then we can undock 
+	 * the carriers, which means deleting the REL_TAG_TAG record for the carriers.
 	 */
 	private void undockCarriersFromOrders() {
 		log.debug("Undock carriers");
-		Iterator<Order> iao = os.getActiveOrders().iterator();
+		Iterator<Long> iao = os.getOrderListByStatus(Item.DONE).iterator();
+		Vector<TwoLongs> carrierIds = new Vector<TwoLongs>();
 		while( iao.hasNext() ) {
-			Order o = iao.next();
-			Iterator<Item> iit = os.getOrderItems(o.getShipmentId()).iterator();
-			Vector<Long> carrierIds = new Vector<Long>();
-			while( iit.hasNext() ) {
-				Item it = iit.next();
+			Long orderId = iao.next();
+			log.debug("undockCarriers? for order "+orderId);
+//			Order order = os.getOrder(orderId);
+			Iterator<Item> ii = os.getOrderItems(orderId).iterator();
+			while( ii.hasNext() ) {
+				Item it = ii.next();
 				if( null != it.getTransferId() ) {
 					Transfer x = xfrs.getTransfer(it.getTransferId());
-					if( x.getStatusId() != xfrs.getTransferStatusId(Transfer.COMPLETE) ) {
-						Iterator<RelTagTag> irtt = tgs.getChildrenOfType(it.getCarrierId(), Tag.DOCK).iterator();
-						while( irtt.hasNext() ) {
-							RelTagTag rtt = irtt.next();
-							carrierIds.add(rtt.getParentTagId());
+					if( x.getStatusId() == xfrs.getTransferStatusId(Transfer.COMPLETE) ) {
+						if(it.getActive().equals(Item.DONE) ) {
+							log.debug("undockCarriers: transfer "+x.getId()
+							+" complete, order item "+it.getShipmentId()+"/"+it.getItemNo());
+							it.setActive(Item.COMPLETE);
+							os.updateItem(it);
+							TwoLongs tl = new TwoLongs(it.getCarrierId(),orderId);
+							if( ! carrierIds.contains(tl) ) {
+								carrierIds.add(tl);
+							}
 						}
+					} else {
+						log.debug("undockCarriers: order item "+it.getShipmentId()
+						+"/"+it.getItemNo()+" already complete");
 					}
 				}
+			}			
+		}
+		log.debug("Number of carriers to remove? "+carrierIds.size());
+		Iterator<TwoLongs> icid = carrierIds.iterator();
+		while( icid.hasNext() ) {
+			TwoLongs cid = icid.next();
+			Long count = os.getNumberActiveItems(cid.shipmentId, cid.carrierId );
+			if( count == 0L ) {
+				log.debug("undockCarriers: carrierId "+cid.carrierId+" for shipment "+cid.shipmentId);
+				tgs.deleteChildTagsOfType(cid.carrierId, Tag.DOCK);
 			}
-			Iterator<Long> icid = carrierIds.iterator();
-			while( icid.hasNext() ) {
-				Long cid = icid.next();
-				tgs.deleteChildTagsOfType(cid, Tag.DOCK);
-			}
-			carrierIds = null;
-			iit = null;
 		}
 	}
 	
 	/**
-	 * Create an order for crude oil.
+	 * Create an order for crude oil if the current amount in inventory plus the total
+	 * amount ordered is less than the amount needed to run the refinery for a month.
+	 * We also limit the order amount to the quantity the carrier can hold.  Just in case.
 	 * @param tv Value object specifying current amount in inventory for given product
-	 * @return 
+	 * @param orderVolume 
+	 * @param productCode product code
+	 * @param carrierType carrier type 
+	 * @param limit volume limit for contents
+	 * @return order object ready to insert
 	 */
-	private Order createCrudeOrder( Value tv ) {
+	private Order createCrudeOrder( Double capacity, Double curVolume, Double orderVolume
+								  , String productCode, String carrierType, Double limit ) {
 		Order o = null;
-		if( tv.getValue() < MONTHS_CRUDE ) {
-			log.debug("PRE: createCrudeOrder for type "+tv.getCode());
-			o = new Order();
-			Tag carrier = getCrudeCarrier();
+		log.debug("PRE: createCrudeOrder: capacity="+capacity+", curVolume="+curVolume+", orderVolume="+orderVolume
+				+", limit="+limit);
+		if( (capacity + curVolume + orderVolume) < limit ) {
+			log.debug("PRE: createCrudeOrder: room enough and time ");
+			Carrier carrier = getCrudeCarrier();
 			if( null != carrier ) {
 				Carrier s = crs.getCarrier(carrier.getId());
 				Customer cust = getCustomer();
 				if( null != cust ) {
-					o.setCustomerId(cust.getId());
-					o.setCustomer(cust.getName());
-//					o.setCarrier(carrier.getName());
-//					o.setCarrierId(carrier.getId());
-					o.setPurchase(Order.PURCHASE);
-
-					Double amt = s.getQuantity();
-					o.setExpVolume(amt);
-
-					Duration oneDay = Duration.ofDays(1L);
-					Instant expDate = Instant.now().plus(oneDay);
-//					o.setExpDate(Timestamp.from(expDate));
-					o.setExpDate(expDate);
-
-					Collection<Item> ci = new Vector<Item>();
-					Iterator<Hold> ch = s.getHolds().iterator();
-					Long itemNo = 0L;
-					while( ch.hasNext() ) {
-						Hold h = ch.next();
-						itemNo++;
-						Item item = new Item(0L,itemNo,"A");
-						item.setContentCd(Tank.CRUDE);
-						item.setExpVolumeMax(h.getVolume());
-						item.setExpVolumeMin(h.getVolume());
-						item.setNewItem("F");
-						item.setActive("P");
-						item.setActVolume(0D);
-						item.setCarrierId(carrier.getId());
-						item.setCarrier(carrier.getName());
-						ci.add(item);
-					}
-					o.setItems(ci);
+					Long orderDuration = 24L;
+					o = buildNewOrder(s, cust, Order.PURCHASE, Tank.CRUDE, 
+									  Math.min(orderVolume,s.getQuantity()), orderDuration );
 				} else {
 					o = null;
 					log.debug("PRE: no customer found");
@@ -329,62 +388,90 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 				o = null;
 				log.debug("PRE: no crude carrier found");
 			}
+		} else {
+			log.debug("PRE: no need for new crude order");
 		}
 		return o;
 	}
 
-	private Order createRefinedOrder( Value tv, String type, double limit ) {
+	/**
+	 * Create an order for the refined product given by the code in the value parameter
+	 * if the current volume plus the order volume < the limit
+	 * @param capacity total capacity of tanks  
+	 * @param curVolume total current volume of tanks with content code 
+	 * @param orderVolume volume of contents currently on order
+	 * @param productCode product code
+	 * @param carrierType carrier type 
+	 * @param limit volume limit for contents
+	 * @return order object ready to insert
+	 */
+	private Order createRefinedOrder( Double capacity, Double curVolume, Double orderVolume
+									, String productCode, String carrierType, Double limit ) {
 		Order o = null;
-		if( tv.getValue() > limit ) {
-			log.debug("PRE: createRefinedOrder for type "+type);
-			Tag carrier = getProductCarrier(type);
+		Double expectedVolume = curVolume + orderVolume;
+		log.debug("PRE: createRefinedOrder, product code "+productCode+": curVol="+curVolume
+				+", orderVolume="+orderVolume+", expectedVolume="+expectedVolume+", limit="+limit);
+		if( expectedVolume < limit ) {
+			log.debug("PRE: createRefinedOrder for "+productCode);
+			Carrier carrier = getProductCarrier( carrierType, productCode, 
+									expectedVolume-limit  );
 			if( null != carrier ) {
-				Carrier s = crs.getCarrier(carrier.getId());
+				Carrier s = crs.getCarrier(carrier.getId() );
 				Customer cust = getCustomer();
 				if( null != cust ) {
-					o = new Order();
-					o.setCustomerId(cust.getId());
-					o.setCustomer(cust.getName());
-//					o.setCarrier(carrier.getName());
-//					o.setCarrierId(carrier.getId());
-					o.setPurchase(Order.SALE);
-
-					Double amt = s.getQuantity();
-					o.setExpVolume(amt);
-
-					Duration delay = Duration.ofHours(2L);
-					Instant expDate = Instant.now().plus(delay);
-//					o.setExpDate(Timestamp.from(expDate));
-					o.setExpDate(expDate);
-
-					Collection<Item> ci = new Vector<Item>();
-					Iterator<Hold> ch = s.getHolds().iterator();
-					Long itemNo = 0L;
-					while( ch.hasNext() ) {
-						Hold h = ch.next();
-						itemNo++;
-						Item item = new Item(0L,itemNo,"A");
-						item.setContentCd(type);
-						item.setExpVolumeMax(h.getVolume());
-						item.setExpVolumeMin(h.getVolume());
-						item.setNewItem("F");
-						item.setActive("P");
-						item.setActVolume(0D);
-						ci.add(item);
-					}
-					o.setItems(ci);
-					if( ci.isEmpty() ) {
-						o = null;
-						log.debug("PRE: problem, no holds found for carrier "+carrier.getName());
-					}
+					Long orderDuration = 2L;
+					o = buildNewOrder(s, cust, Order.SALE, productCode, orderVolume, orderDuration );
 				} else {
 					o = null;
 					log.debug("PRE: no customer found");
 				}
 			} else {
 				o = null;
-				log.debug("PRE: No carrier found for product "+type);
+				log.debug("PRE: No carrier found for product "+productCode);
 			}
+		} else {
+			log.debug("PRE: no need for new order for product "+productCode);
+		}
+		return o;
+	}
+
+	private Order buildNewOrder( Carrier s, Customer cust, String orderType, String productCode
+							   , Double orderVolume, Long orderDuration )
+	{
+		Order o = new Order();
+		o.setCustomerId(cust.getId());
+		o.setCustomer(cust.getName());
+		o.setPurchase(orderType);
+
+		Double amt = s.getQuantity();
+		o.setExpVolume(amt);
+
+		Duration delay = Duration.ofHours(orderDuration);
+		Instant expDate = Instant.now().plus(delay);
+//		o.setExpDate(Timestamp.from(expDate));
+		o.setExpDate(expDate);
+
+		Collection<Item> ci = new Vector<Item>();
+		Iterator<Hold> ch = s.getHolds().iterator();
+		Long itemNo = 0L;
+		while( ch.hasNext() ) {
+			Hold h = ch.next();
+			itemNo++;
+			Item item = new Item(0L,itemNo,Item.ACTIVE);
+			item.setContentCd(productCode);
+			item.setExpVolumeMax(h.getVolume()*h.getNoDuplicates());
+			item.setExpVolumeMin(h.getVolume()*h.getNoDuplicates());
+			item.setNewItem("F");
+			item.setActive(Item.PENDING);
+			item.setActVolume(0D);
+//			item.setCarrier(carrier.getName());
+			item.setCarrierId(s.getId());
+			ci.add(item);
+		}
+		o.setItems(ci);
+		if( ci.isEmpty() ) {
+			o = null;
+			log.debug("PRE: problem, no holds found for carrier "+s.getName());
 		}
 		return o;
 	}
@@ -395,16 +482,17 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	 * 
 	 * @return
 	 */
-	private Tag getCrudeCarrier() {
-		Tag t = null;
+	private Carrier getCrudeCarrier() {
+		Carrier t = null;
 		Iterator<Tag> it = tgs.getTagsByTypeRandom(Tag.SHIP).iterator();
-		log.debug("PRE: getCrudeCarrier "+(it.hasNext()?"not mt":"mt") );
+		log.debug("PRE: getCrudeCarrier "+(it.hasNext()?"not empty":"empty") );
 		while( it.hasNext() ) {
 			Tag xt = it.next();
 			Collection<RelTagTag> crtt = tgs.getChildrenOfType(xt.getId(), Tag.DOCK);
-			log.debug("PRE: getCrudeCarrier "+xt.getId()+" "+(crtt.isEmpty()?"mt":"not mt"));
+			log.debug("PRE: getCrudeCarrier "+xt.getId()+" "+(crtt.isEmpty()?"empty":"not empty"));
 			if( crtt.isEmpty() ) {
-				t = xt;
+				log.debug("Crude carrier "+xt.getName()+" found");
+				t = new Carrier(xt);
 				break;
 			}
 		}
@@ -417,27 +505,90 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	 * product carrier.
 	 * <br>
 	 * Ships are not currently being used
-	 * @param productType 
+	 * @param carrierType carrier type (Train - T, TankTruck - TT)
+	 * @param productType product (contents) code
+	 * @param volRequired volume of material we need to ship.
 	 * @return
 	 */
-	private Tag getProductCarrier( String productType ) {
-		Tag t = null;
+	private Carrier getProductCarrier( String carrierType, String productType, Double volRequired ) {
+		Carrier t = null;
+		if( carrierType.equals(Tag.TRAIN) ) {
+			t = getTrain(productType, volRequired);
+		} else {
+			t = getTruck(productType);
+		}
+		return t;
+	}
+	
+	/**
+	 * Return a train for use as a carrier.  Create an imaginary Train to determine 
+	 * if there's already a train present.  If not, then we can create the train with a 
+	 * maximum of 100 tank cars.
+	 * @param productType product (contents) code
+	 * @param volRequired amount of product needed to be shipped
+	 * @return
+	 */
+	private Carrier getTrain( String productType, Double volRequired ) {
+		String trainName = "TR".concat(DateTimeFormatter.ofPattern("yyyyMMdd").format(ZonedDateTime.now()));
+		Carrier carrier = null;
+		Tag t = tgs.getTagByName(trainName, Tag.TRAIN);
+		if( t == null ) {
+			t = new Tag(0L,trainName,Tag.TRAIN);
+			Long dockId = getDockForCarrier( t );
+			if( dockId.compareTo(0L) > 0 ) {
+				t.setDescription("PRE: getTrain, train "+trainName+" for "+productType);
+				t.setMisc(productType);
+				t.setActive(Tag.ACTIVE);
+				tgs.insertTag(t);
+				Hold h = new Hold();
+				h.setCarrierId(t.getId());
+				Long noCars = 1 + Math.min(volRequired.longValue()/Carrier.TANK_CAR,100L);
+				h.setHoldNo(1L);
+				h.setVolume(new Double(Carrier.TANK_CAR));
+				h.setNoDuplicates(noCars);
+				crs.insertHold(h);
+				carrier = new Carrier(t);
+				Collection<Hold> holds = new Vector<Hold>();
+				holds.add(h);
+				carrier.setHolds(holds);
+			} else {
+				log.debug("PRE: getTrain, train already present");
+				carrier = null;
+			}
+		}
+		return carrier;
+	}
+	
+	/**
+	 * Get a truck for the specified product type. 
+	 * @param productType
+	 * @return
+	 */
+	private Carrier getTruck( String productType ) {
+		Carrier carrier = null;
 		Iterator<Tag> it = tgs.getTagsByTypeRandom(Tag.TANK_TRUCK).iterator();
-		log.debug("PRE: getProductCarrier "+(it.hasNext()?"not mt":"mt") );
+		log.debug("PRE: getTruck, list "+(it.hasNext()?"not empty":"empty") );
 		while( it.hasNext()) {
 			Tag xt = it.next();
 			if( xt.getMisc().equals(productType) ) {
 				Collection<RelTagTag> crtt = tgs.getChildrenOfType(xt.getId(), Tag.DOCK);
-				log.debug("PRE: getProductCarrier "+xt.getId()+" "+(crtt.isEmpty()?"mt":"not mt"));
+				log.debug("PRE: getTruck "+xt.getId()+", truck "
+						 +(crtt.isEmpty()?"not":"already")+" docked");
 				if( crtt.isEmpty() ) {
-					t = xt;
+					log.debug("PRE: getTruck, product "+productType+" carrier found");
+					carrier = new Carrier(xt);
+					carrier.setHolds(crs.getHolds(xt.getId()));
 					break;
 				}
 			}
 		}
-		return t;
+		return carrier;
 	}
 
+	/**
+	 * Get a random customer to serve as the buyer/seller of an order 
+	 * @return customer
+	 */
 	private Customer getCustomer() {
 		Customer c = null;
 		Collection<Customer> cc = css.getAllCustomers();
@@ -462,29 +613,66 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	 *   (no REL_TAG_TAG records where carrier is parent w/CODE=Tag.DOCK)
 	 * - the dock isn't already occupied
 	 *   (no REL_TAG_TAG records where dock is child and CODE=Tag.DOCK)
-	 * }		
+	 * }
+	 * If the carrier is already docked, return the object for that dock.
 	 * @param c Tag for carrier
-	 * @return Tag for available dock
+	 * @return ID for selected dock; 0 => no dock found; >0 ID of dock found
 	 */
-	private Tag getDockForCarrier( Tag c ) {
-		Tag t = null;
-		Iterator<Tag> it = dockList.iterator();
-		while( it.hasNext() ) {
-			Tag d = it.next();
-			// can dock handle carrier? (same type?)
-			if( d.getMisc().equals(c.getTagTypeCode())) {
-				// check to make sure carrier isn't docked
-				Collection<RelTagTag> crtt = tgs.getChildrenOfType(c.getId(), Tag.DOCK );
-				if( crtt==null || crtt.isEmpty() ) {
+	private Long getDockForCarrier( Tag c ) {
+		log.debug("Get dock for carrier "+c.getName());
+		Long t = 0L;
+		// check to make sure carrier isn't docked
+		Collection<RelTagTag> crtt = tgs.getChildrenOfType(c.getId(), Tag.DOCK );
+		if( crtt==null || crtt.isEmpty() ) {
+			Iterator<Tag> it = dockList.iterator();
+			while( it.hasNext() ) {
+				Tag d = it.next();
+				// can dock handle carrier? (same type?)
+				if( d.getMisc().equals(c.getTagTypeCode())) {
+					// verify that dock isn't already occupied
 					Collection<RelTagTag> prtt = tgs.getParentOfType(d.getId(), Tag.DOCK );					
 					if( prtt==null || prtt.isEmpty() ) {
-						t = d;
+						t = d.getId();
 						break;
 					}
 				}
 			}
+		} else {
+			log.debug(c.getName()+" already docked");
+			// already docked.  Make sure it isn't docked twice
+			if( 1 == crtt.size() ) {
+				Iterator<RelTagTag> icrtt = crtt.iterator();
+				RelTagTag rtt = icrtt.next();
+				t = - rtt.getChildTagId();
+			}
 		}
 		return t;
+	}
+	
+	private HashMap<String,Double> mapVolumes( Collection<Value> tv ) {
+		HashMap<String,Double> ov = new HashMap<String,Double>();
+		Iterator<Value> cov = tv.iterator();
+		while( cov.hasNext() ) {
+			Value v = cov.next();
+			ov.put(v.getCode(), v.getValue());
+		}
+		return ov;
+	}
+	
+	/**
+	 * Determine if there's an order already pending, but not active for this
+	 * product code
+	 * @param productCode product code to look for
+	 * @return true if there is a pending order for this product code
+	 */
+	private  boolean orderPending( String productCode ) {
+		boolean pending = false;
+		Long count = os.getPendingOrderCountForContent(productCode);
+		log.debug("PRE: orderPending "+count+" for product "+productCode);
+		if( ! count.equals(0L) ) {
+			pending = true;
+		}
+		return pending;
 	}
 	
 }

@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 import {AIValue}  from '../objects/AIValue.js';
 import {IL3}      from '../objects/ListObjects.js';
@@ -35,13 +37,23 @@ class ProcessUnitDisplay extends Component {
       itemSelect: props.itemSelect
     };
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState({ option: nextProps.option,
-                    items: nextProps.items,
-                    itemSelect: nextProps.itemSelect });
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          option: PropTypes.string,
+          items: PropTypes.array,
+          itemSelect: PropTypes.func
+      }
   }
-  
+
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
+//    this.setState({ option: nextProps.option,
+//                    items: nextProps.items,
+//                    itemSelect: nextProps.itemSelect });
+  }
+
   render () {
     let itemSelect = this.state.itemSelect;
     let it = this.state.items;
@@ -74,7 +86,7 @@ class ProcessUnitDisplay extends Component {
       let il = new IL3(AIV0,AIV1,AIV2);
       puColumns.push(il);
     }
- 
+
     var n = new Date();
     var now = n.toLocaleString('en-US');
     return(
@@ -88,34 +100,34 @@ class ProcessUnitDisplay extends Component {
       <table className={"scrollTable"}>
         <thead className={"fixedHeader"}>
           <tr>
-	        <td className={"oms-spacing-120"}>
-	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-	          Tag
-	        </td>
-	        <td className={"oms-spacing-90"}>
-	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-	          Value
-	        </td>
-	        <td className={"oms-spacing-120"}>
-	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-	          Tag
-	        </td>
-	        <td className={"oms-spacing-90"}>
-	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-	          Value
-	        </td>
             <td className={"oms-spacing-120"}>
-	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-	          Tag
-	        </td>
-	        <td className={"oms-spacing-90"}>
-	          <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-	          Value
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Tag
+            </td>
+            <td className={"oms-spacing-90"}>
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Value
+            </td>
+            <td className={"oms-spacing-120"}>
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Tag
+            </td>
+            <td className={"oms-spacing-90"}>
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Value
+            </td>
+            <td className={"oms-spacing-120"}>
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Tag
+            </td>
+            <td className={"oms-spacing-90"}>
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Value
             </td>
           </tr>
         </thead>
         <tbody className={"scrollContent"}>
-          {puColumns.map( 
+          {puColumns.map(
             function(n,x) {
               let ztc = "#C3C2B9";
               let zx1 = n.i1;

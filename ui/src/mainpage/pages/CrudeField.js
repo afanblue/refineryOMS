@@ -15,22 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
-import {SERVERROOT}    from '../../Parameters.js';
+import PropTypes          from 'prop-types';
+
+//import {SERVERROOT}    from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
-import Log             from '../requests/Log.js';
+//import Log             from '../requests/Log.js';
 import Waiting         from './Waiting.js';
-import {Field}         from './objects/Field.js';
-import {Tag}           from './objects/Tag.js';
+//import {Field}         from './objects/Field.js';
+//import {Tag}           from './objects/Tag.js';
 
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
-	 from field f join tag t on f.id = t.id 
+	 from field f join tag t on f.id = t.id
 	where t.name='DeCity';
-	
-	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk 
+
+	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk
 	 where ftv.child_tag_id=tk.id and ftv.field_tag_id= 1;
  */
 
@@ -44,7 +47,13 @@ class CrudeField extends Component {
       returnedText: null
     };
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   render() {
     switch (this.state.stage) {
       case "begin":

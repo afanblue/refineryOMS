@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 import {AlarmMsg}      from './objects/Alarm.js';
 import {SERVERROOT}    from '../../Parameters.js';
@@ -45,7 +47,13 @@ class AlarmMsgAdmin extends Component {
     this.finishTypesFetch  = this.finishTypesFetch.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -53,16 +61,10 @@ class AlarmMsgAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+	return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -74,12 +76,12 @@ class AlarmMsgAdmin extends Component {
     const am = new AlarmMsg(amd.id,amd.abbr,amd.message);
     this.setState({stage: "itemRetrieved", msg: am });
   }
-  
+
   finishTypesFetch(req) {
     let types = req;
     this.setState({stage: "itemRetrieved", types: types });
   }
-  
+
   handleMsgSelect(event) {
     const id = event.z;
     const loc = "AlarmMsgAdmin.typeSelect";
@@ -114,19 +116,14 @@ class AlarmMsgAdmin extends Component {
     }
     request();
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -136,7 +133,7 @@ class AlarmMsgAdmin extends Component {
     msgnew[field] = value;
     this.setState({msg: msgnew } );
   }
-  
+
   fetchList() {
     const myRequest = SERVERROOT + "/alarm/message/all";
     let clsMthd = "AlarmMsgAdmin.fetchList";
@@ -145,8 +142,8 @@ class AlarmMsgAdmin extends Component {
         try {
           const resp = await fetch(myRequest);
           const json = await resp.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
@@ -158,12 +155,12 @@ class AlarmMsgAdmin extends Component {
       request();
     }
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     msg: null,
                     stage: "begin" } );

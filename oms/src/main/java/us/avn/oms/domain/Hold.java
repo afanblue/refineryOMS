@@ -23,11 +23,11 @@ public class Hold extends OMSObject {
 	}
 
 	
-	public Long getOrderNo() {
+	public Long getHoldNo() {
 		return holdNo;
 	}
 
-	public void setOrderNo(Long holdNo) {
+	public void setHoldNo(Long holdNo) {
 		this.holdNo = holdNo;
 	}
 	

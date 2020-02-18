@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 import {Stage, Layer, Line} from 'react-konva';
 
@@ -30,14 +33,41 @@ class PipeForm extends Component {
     this.noResponse = this.noResponse.bind(this);
     this.scale = this.scale.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          pipe: PropTypes.object,
+          active: PropTypes.string,
+          description: PropTypes.string,
+          id: PropTypes.number,
+          inTagId: PropTypes.number,
+          misc: PropTypes.string,
+          name: PropTypes.string,
+          tagTypeCode: PropTypes.string,
+          siteLoc: PropTypes.object,
+          c1Lat: PropTypes.number,
+          c1Long: PropTypes.number,
+          c2Lat: PropTypes.number,
+          c2Long: PropTypes.number,
+          contentsList: PropTypes.array,
+          vtxList: PropTypes.array,
+          sensorList: PropTypes.array,
+          types: PropTypes.array,
+          clearEndPts: PropTypes.func,
+          handleMouseUp: PropTypes.func,
+          handleQuit: PropTypes.func,
+          fieldChange: PropTypes.func,
+          pipeUpdate: PropTypes.func
+      }
+  }
+
   noResponse( event ) {
   }
 
   scale( tagLoc, siteLoc, scaleFactor ) {
     return Math.round(scaleFactor * (tagLoc - siteLoc));
   }
-  
+
   render() {
     let p = this.props.pipe;
     let site = this.props.siteLoc;
@@ -45,7 +75,7 @@ class PipeForm extends Component {
     let cList = this.props.contentsList;
     let sList = this.props.sensorList;
     let vtxList = p.vtxList;
-    
+
     let pup = this.props.pipeUpdate;
     let fc  = this.props.fieldChange;
     let mu  = this.props.handleMouseUp
@@ -102,10 +132,10 @@ class PipeForm extends Component {
       ht = this.scale( p.c2Lat,  site.c1Lat,  yScale) - ynw;
     }
     let pts = [0, 0, wd, ht ];
-*/    
+*/
 
     var color = "red";
-    
+
     var paddedStyle  = { margin: '5px', padding: '4px' };
 
     return(
@@ -116,19 +146,19 @@ class PipeForm extends Component {
               <td className="oms-top">
 
       <form id="pipeForm" onSubmit={(e) => {pup(e)}} >
-        Please enter your pipe information 
+        Please enter your pipe information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/></td>
           </tr>
           <tr>
             <th className="oms-spacing-180">Name (10 chars):</th>
             <td className="oms-spacing">
               <input type="hidden" name="id" value={p.id} />
-              <input type="text" id="name" name="name" value={p.name} 
+              <input type="text" id="name" name="name" value={p.name}
                      className="oms-spacing-80" size="10" maxLength="10"
                      onChange={fc} />
             </td>
@@ -144,9 +174,9 @@ class PipeForm extends Component {
           <tr>
             <th className="oms-spacing-180">Tag Type:</th>
             <td className="oms-spacing">
-              <select id="tagTypeCode" name="tagTypeCode" value={p.tagTypeCode} 
+              <select id="tagTypeCode" name="tagTypeCode" value={p.tagTypeCode}
                       onChange={nr} >
-                { types.map( 
+                { types.map(
                   function(n,x){
                     return <option key={x} value={n.code}>{n.name}</option>
                   } )
@@ -157,7 +187,7 @@ class PipeForm extends Component {
           <tr>
             <th className="oms-spacing-180">Active:</th>
             <td className="oms-spacing">
-              <select id="active" name="active" value={p.active} 
+              <select id="active" name="active" value={p.active}
                       onChange={fc} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -167,9 +197,9 @@ class PipeForm extends Component {
           <tr>
             <th className="oms-spacing-180">Contents: </th>
             <td className="oms-spacing">
-              <select id="misc" name="misc" value={p.misc} 
+              <select id="misc" name="misc" value={p.misc}
                       onChange={fc} >
-               { cList.map( 
+               { cList.map(
                   function(n,x){
                     return <option key={x} value={n.id}>{n.name}</option>
                   } )
@@ -180,9 +210,9 @@ class PipeForm extends Component {
           <tr>
             <th className="oms-spacing-180">Pipe State Tag: </th>
             <td className="oms-spacing">
-              <select id="inTagId" name="inTagId" value={p.inTagId} 
+              <select id="inTagId" name="inTagId" value={p.inTagId}
                       onChange={fc} >
-               { sList.map( 
+               { sList.map(
                   function(n,x){
                     return <option key={x} value={n.id}>{n.name}</option>
                   } )
@@ -200,17 +230,17 @@ class PipeForm extends Component {
           <tr>
             <td colSpan="2" style={paddedStyle}>
               <img src="images/spacer.png" alt="" height="2px" width="45px"/>
-              <input type="submit" id="clearEndPts"  name="clearEndPts"  
+              <input type="submit" id="clearEndPts"  name="clearEndPts"
                            value="Clear End Points" onClick={(e) => {cep(e)}}/>
             </td>
           </tr>
           <tr>
             <td colSpan="2" style={paddedStyle}>
               <img src="images/spacer.png" alt="" height="2px" width="15px"/>
-              <input type="submit" id="closeForm"  name="closeForm"  
+              <input type="submit" id="closeForm"  name="closeForm"
                      value="Quit" onClick={(e) => {hq(e)}}/>
               <img src="images/spacer.png" alt="" height="2px" width="15px"/>
-              <input type="submit" id="submitForm" name="submitForm" 
+              <input type="submit" id="submitForm" name="submitForm"
                      value="Submit" onClick={(e) => {pup(e)}} />
             </td>
           </tr>
@@ -242,11 +272,11 @@ export default PipeForm;
            <tr>
             <th className="oms-spacing-90">End Point (NW)</th>
             <td className="oms-spacing">
-              <input type="text" id="c1Lat" name="c1Lat" value={p.c1Lat} 
+              <input type="text" id="c1Lat" name="c1Lat" value={p.c1Lat}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
               &nbsp;
-              <input type="text" id="tag.c1Long" name="c1Long" value={p.c1Long} 
+              <input type="text" id="tag.c1Long" name="c1Long" value={p.c1Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
             </td>
@@ -256,11 +286,11 @@ export default PipeForm;
               <img src="images/spacer.png" alt="" height="2px" width="55px"/>(SE)
             </td>
             <td>
-              <input type="text" id="c2Lat" name="c2Lat" value={p.c2Lat} 
+              <input type="text" id="c2Lat" name="c2Lat" value={p.c2Lat}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
               &nbsp;
-              <input type="text" id="tag.c2Long" name="tag.c2Long" value={p.c2Long} 
+              <input type="text" id="tag.c2Long" name="tag.c2Long" value={p.c2Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
             </td>

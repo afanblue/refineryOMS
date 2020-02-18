@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "acorn": "^7.1.0",
-    "ajv": "^6.10.2",
+    "ajv": "^6.11.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
@@ -15,25 +15,27 @@
     "debug": "^4.1.1",
     "enzyme": "^3.11.0",
     "kleur": "^3.0.3",
-    "konva": "^4.1.0",
+    "konva": "^3.2.3",
+    "micromatch": "^4.0.2",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-calendar": "^2.19.2",
     "react-datetime": "^2.16.3",
-    "react-datetime-picker": "^2.8.0",
+    "react-datetime-picker": "^2.9.0",
     "react-dom": "^16.12.0",
-    "react-konva": "^16.10.1-0",
+    "react-konva": "^16.8.6",
     "react-moment": "^0.9.7",
     "react-scripts": "^3.3.0",
     "react-start": "^1.1.2",
     "recharts": "^2.0.0-beta.1",
-    "resolve": "^1.14.1",
-    "typescript": "^3.7.4",
-    "victory": "^34.0.0"
+    "resolve": "^1.15.0",
+    "typescript": "^3.7.5",
+    "victory": "^34.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    "lint": "eslint **/*.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
@@ -43,5 +45,18 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-eslint": "^6.0.0",
+    "eslint-plugin-react": "^7.18.3"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "shared-node-browser": true
+    }
+  }
 }

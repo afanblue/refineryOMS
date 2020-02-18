@@ -193,13 +193,13 @@ I like to think of these as intuitively obvious, but there are some properties o
 
 The ```pmc``` processor
  
-   1.  Transfers the values from the XFER table to the ANALOG_INPUT table
+   1.  Transfers the values from the RAW_DATA table to the ANALOG_INPUT table
    1.  Checks for an alarm violation
    1.  Updates the historical data as needed
 
 #### Accumulator
 
-The Accumulator type is based on the AcuRite rain gauge behavior, which is based on a "rainfall event".  Once it starts raining, the value increases, according to the manual, until it stops raining for 8 hours or it stops raining for 1 hour and the pressure rises by 0.03 in Hg.  What we do is check the RAW value to the current value provided from the XFER table (the "new value").  If the values are equal, no change is made.  If the new value is greater than the RAW value, the difference is added to the current scan_value for the record and the new value is stored as the raw value.  If the new value is zero (which means that the rain event is over), the raw value is set to 0.
+The Accumulator type is based on the AcuRite rain gauge behavior, which is based on a "rainfall event".  Once it starts raining, the value increases, according to the manual, until it stops raining for 8 hours or it stops raining for 1 hour and the pressure rises by 0.03 in Hg.  What we do is check the RAW value to the current value provided from the RAW_DATA table (the "new value or.  If the values are equal, no change is made.  If the new value is greater than the RAW value, the difference is added to the current scan_value for the record and the new value is stored as the raw value.  If the new value is zero (which means that the rain event is over), the raw value is set to 0.
 
 #### Calculated Variables
 
@@ -288,15 +288,15 @@ This is how the processing works:
 **Analogs**
 -   somehow, a setpoint gets written to the setpoint (```SP```) value in the ANALOG_INPUT table.  this would either be a manual update from the UI or a programmatic change from a model (not part of this implementation)
 -   The control processor (part of the ```pmc``` process) writes the setpoint (```SP```) to the scan value in ANALOG_OUTPUT table.
--   The analog output processor (also part of the ```pmc``` process) writes the setpoint to the XFER table
--   The simulation process (the ```sim``` process) writes the value in the XFER table for the output tag (```CO```) to the value in the XFER table for the related input tag.  The related input tag is defined in the SIM_IO table.
--   The analog input processor (part of the ```pmc``` process) then gets the value from the XFER table for the ```PV```.
+-   The analog output processor (also part of the ```pmc``` process) writes the setpoint to the RAW_DATA table
+-   The simulation process (the ```sim``` process) writes the value in the RAW_DATA table for the output tag (```CO```) to the value in the RAW_DATA table for the related input tag.  The related input tag is defined in the SIM_IO table.
+-   The analog input processor (part of the ```pmc``` process) then gets the value from the RAW_DATA table for the ```PV```.
 
 **Digitals**
 -   somehow, a setpoint gets written to the output (```CO```) value in the DIGITAL_OUTPUT table.  this would either be a manual update from the UI or a programmatic change from a model (not part of this implementation).
--   The digital output processor (also part of the ```pmc``` process) writes the output to the XFER table
--   The simulation process (the ```sim``` process) writes the value in the XFER table for the output tag (```CO```) to the value in the XFER table for the related input tag.  The related input tag is defined in the SIM_IO table.
--   The digital input processor (part of the ```pmc``` process) then gets the value from the XFER table for the ```PV```.
+-   The digital output processor (also part of the ```pmc``` process) writes the output to the RAW_DATA table
+-   The simulation process (the ```sim``` process) writes the value in the RAW_DATA table for the output tag (```CO```) to the value in the RAW_DATA table for the related input tag.  The related input tag is defined in the SIM_IO table.
+-   The digital input processor (part of the ```pmc``` process) then gets the value from the RAW_DATA table for the ```PV```.
 
 ### Docks
 
@@ -354,7 +354,7 @@ Containers specify the discrete holds in a ship or a train (the tank cars).  As 
 Ships tie up at docks at which they are unloaded or loaded.  Also, a ship has multiple holds from which/to which product is transferred.
 
 Ships (tag type = "S")  
-Trains (tag type = "TR")
+Trains (tag type = "T")
 Trucks (tag type = "TT")
 
 All three of these are implemented as tags.  Their owner is specified in a relationship where the ship/train/truck ID is the parent tag ID and the customer ID is the child tag ID.  The value of the code is "C". 
@@ -413,6 +413,21 @@ Currently, there is no temperature compensation for volume so that the volumes a
 
 The volume is computed using interpolations with the VOLUME table.  The units are bbl, barrels.
 
+### Shipments (Orders)
+
+Shipments (Orders) are requests for material.  They are either a purchase of crude oil or a sale of refined product.  Orders are placed manually or automagically by the simulator based on either a lack of crude oil or the refined product tanks being full.
+
+The processing is 
+
+Create Order | Manual, Simulator
+Create the Transfer | Transfer
+Dock Carrier | Manual, Simulator
+Start the Transfer | Transfer
+Update the volume transferred | DevIO
+End the Transfer | Transfer 
+Undock the Carrier | Simulator
+
+
 ### Transfers
 
 Transfers are the objects that define how oil and refined products are transferred from one place to another.  This could be from a ship to a tank, from a crude oil tank to a refining unit, from a refining unit to a refined products tank, from a refined project tank to a ship or a tank car or a tank truck, or even from one tank to another tank which has the same contents.  (NB, not sure that check is made...).
@@ -432,13 +447,13 @@ Transfers also have a status,
 Transfers are somewhat different from other objects, e.g., Analog Inputs or Digital Inputs, in that only templates or ad hoc transfers have a record in the TAG table.  All scheduled transfers assume the tag ID of the template that they were created from.  This is implemented with a TAG_ID field in the TRANSFER table.
 
 Events that should create a transfer
- - vessel (tag type: S=ship; T=train; TT=tank truck) appears at dock
+ - vessel (tag type: S=ship; T=train; TT=tank truck) appears at dock w/associated order (shipment)
  - daily transfer from crude tank to refining unit
  - daily transfer from refining unit to product tanks
 
 Daily transfers are based on templates which start at midnight and last for one day.  At the end of the day, they are completed and new ones begun, assuming that the refinery unit is on.  The transfer from the crude unit(s) is done FROM the two fullest tanks to the refinery units.  The transfers to the product tanks is done TO the emptiest product tanks.  The transfers to the product tanks for a given product should NOT be to the same tank.
 
-If a vessel appears at a dock, then there must be an order associated with it.
+If a vessel appears at a dock, then there must be an order (shipment) associated with it.
 
 How do we know that the vessel is present at the dock?
 - there is a vessel (tag type: T, TT, S) which has a REL_TAG_TAG record as a child to the dock (parent).  This record is created manually by an operator (!) or automagically by the simulator. 

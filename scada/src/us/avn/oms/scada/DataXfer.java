@@ -41,7 +41,7 @@ import us.avn.oms.domain.ControlBlock;
 import us.avn.oms.domain.DigitalInput;
 import us.avn.oms.domain.DigitalOutput;
 import us.avn.oms.domain.Watchdog;
-import us.avn.oms.domain.Xfer;
+import us.avn.oms.domain.RawData;
 import us.avn.oms.service.AlarmService;
 import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.AnalogOutputService;
@@ -51,7 +51,7 @@ import us.avn.oms.service.DigitalInputService;
 import us.avn.oms.service.DigitalOutputService;
 import us.avn.oms.service.HistoryService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 import us.avn.rpn2.RPN2;
 
 public class DataXfer extends TimerTask {
@@ -67,7 +67,7 @@ public class DataXfer extends TimerTask {
     private DigitalOutputService dos = null;
     private HistoryService hs = null;
     private WatchdogService wds = null;
-    private XferService xs = null;
+    private RawDataService rds = null;
 
     private HashMap<String,AlarmType> almTypes = null;
  
@@ -87,16 +87,16 @@ public class DataXfer extends TimerTask {
 
 /*  */
 		ApplicationContext context = new ClassPathXmlApplicationContext("app-context.xml");
-		if( ais== null) { ais = (AnalogInputService) context.getBean("analogInputService"); }
-		if( aos== null) { aos = (AnalogOutputService) context.getBean("analogOutputService"); }
-		if( dis== null) { dis = (DigitalInputService) context.getBean("digitalInputService"); }
-		if( dos== null) { dos = (DigitalOutputService) context.getBean("digitalOutputService"); }
-		if( xs == null) { xs = (XferService) context.getBean("xferService"); }
-		if( as == null) { as = (AlarmService) context.getBean("alarmService"); }
-		if( hs == null) { hs = (HistoryService) context.getBean("historyService"); }
-		if( wds== null) { wds = (WatchdogService) context.getBean("watchdogService"); }
-		if( cvs== null) { cvs = (CalcVariableService) context.getBean("calcVariableService"); }
-		if( cbs== null) { cbs = (ControlBlockService) context.getBean("controlBlockService"); }
+		if( ais == null) { ais = (AnalogInputService) context.getBean("analogInputService"); }
+		if( aos == null) { aos = (AnalogOutputService) context.getBean("analogOutputService"); }
+		if( dis == null) { dis = (DigitalInputService) context.getBean("digitalInputService"); }
+		if( dos == null) { dos = (DigitalOutputService) context.getBean("digitalOutputService"); }
+		if( rds == null) { rds = (RawDataService) context.getBean("rawDataService"); }
+		if( as  == null) { as = (AlarmService) context.getBean("alarmService"); }
+		if( hs  == null) { hs = (HistoryService) context.getBean("historyService"); }
+		if( wds == null) { wds = (WatchdogService) context.getBean("watchdogService"); }
+		if( cvs == null) { cvs = (CalcVariableService) context.getBean("calcVariableService"); }
+		if( cbs == null) { cbs = (ControlBlockService) context.getBean("controlBlockService"); }
 		
 		almTypes = getAlarmTypes(as);
 		
@@ -121,14 +121,14 @@ public class DataXfer extends TimerTask {
 	
 	private void processAnalogInputs() {
 		wds.updateWatchdog(Watchdog.AI);
-//		Update the analog inputs (check the xfer table, get and process the values)
+//		Update the analog inputs (check the raw data table, get and process the values)
 		Iterator<AnalogInput> iai = ais.getAllUpdatedAItags().iterator();
 		while( iai.hasNext() ) {
 			AnalogInput ai = iai.next();
 			log.debug("AnalogInput: "+ai.toString());
 			log.debug("Processing AI tag "+ai.getTag().getName() + "/" + ai.getTagId());
 			processAIValue( ai, ai.getSimValue(), ai.getSimScanTime());
-			xs.clearUpdated(ai.getTagId());
+			rds.clearUpdated(ai.getTagId());
 		}
 		log.debug("Completed processing analog inputs");
 	}
@@ -146,7 +146,7 @@ public class DataXfer extends TimerTask {
 				Double result = new Double(di.getSimValue());
 				processDIValue(di, result, now );
 			}
-			xs.clearUpdated(di.getTagId());
+			rds.clearUpdated(di.getTagId());
 		}
 	}
 	
@@ -213,8 +213,8 @@ public class DataXfer extends TimerTask {
 		while( iao.hasNext()) {
 			AnalogOutput ao = iao.next();
 			log.debug("Processing AnalogOutput: "+ao.toString());
-			Xfer x = new Xfer(ao.getTagId(), ao.getScanValue() );
-			xs.updateXfer(x);
+			RawData x = new RawData(ao.getTagId(), ao.getScanValue() );
+			rds.updateRawData(x);
 			aos.clearAOupdate(ao.getTagId());
 		}
 		log.debug("Completed processing analog outputs");
@@ -226,8 +226,8 @@ public class DataXfer extends TimerTask {
 		while( ido.hasNext()) {
 			DigitalOutput d = ido.next();
 			log.debug("Processing DigitalOutput: "+d.toString());
-			Xfer x = new Xfer(d.getTagId(), d.getScanValue() );
-			xs.updateXfer(x);
+			RawData x = new RawData(d.getTagId(), d.getScanValue() );
+			rds.updateRawData(x);
 			dos.clearDOupdate(d.getTagId());
 		}
 		log.debug("Completed processing digital outputs");

@@ -24,22 +24,23 @@ class ActiveAlarmList extends Component {
     super(props);
     this.state = {alarmList: props.alarmList};
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState({ alarmList: nextProps.alarmList });
-  }
-  
 
-  
+  static getDerivedStateFromProps(nextProps, state) {
+	return state;
+//    this.setState({ alarmList: nextProps.alarmList });
+  }
+
+
+
   render() {
     var almList = this.state.alarmList;
     let handleSelect  = this.props.handleSelect;
     var now = (new Date()).toLocaleString('en-US', {hour12:false});
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div>
           <img src="./images/spacer.png" alt="" width="30px" height="2px"/>
-          Alarm List 
+          Alarm List
           <img src="./images/spacer.png" alt="" width="50px" height="2px"/>
           {now}
         </div></h2>
@@ -67,7 +68,7 @@ class ActiveAlarmList extends Component {
               var occ = moment.unix(n.almOccurred).format("YYYY-MM-DD HH:mm:ss");
               return (
                 <tr key={x}>
-                  <td className={["oms-spacing-90","oms-cursor-pointer"].join(' ')} 
+                  <td className={["oms-spacing-90","oms-cursor-pointer"].join(' ')}
                       style={{"color":ackColor}}>
                     <button type="button" className="link-button"
                             onClick={() => {handleSelect({z})}} >{n.tagId.name}
@@ -93,7 +94,7 @@ class ActiveAlarmList extends Component {
                   </td>
                 </tr>
                 );
-              } 
+              }
             )
           }
           </tbody>
@@ -101,7 +102,7 @@ class ActiveAlarmList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default ActiveAlarmList;

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 import {Stage, Layer} from 'react-konva';
 
@@ -28,6 +31,36 @@ class TankForm extends Component {
   constructor(props) {
     super(props);
     this.state = {  };
+  }
+
+  static get propTypes() {
+      return {
+          contentTypes: PropTypes.array,
+          levels: PropTypes.array,
+          siteLocation: PropTypes.object,
+          tank: PropTypes.object,
+          contentTypeCode: PropTypes.string,
+          density: PropTypes.number,
+          diameter: PropTypes.number,
+          height: PropTypes.number,
+          id: PropTypes.number,
+          levelId: PropTypes.number,
+          tag: PropTypes.object,
+          active: PropTypes.string,
+          c1Lat: PropTypes.number,
+          c1Long: PropTypes.number,
+          c2Lat: PropTypes.number,
+          c2Long: PropTypes.number,
+          description: PropTypes.string,
+          name: PropTypes.string,
+          tempId: PropTypes.number,
+          units: PropTypes.string,
+          temperatures: PropTypes.array,
+          fieldChange: PropTypes.func,
+          handleMouseUp: PropTypes.func,
+          handleQuit: PropTypes.func,
+          tankUpdate: PropTypes.func
+      }
   }
 
   scaleX( tkLong, tLong, xScale ) {
@@ -70,19 +103,19 @@ class TankForm extends Component {
             <tr>
               <td className="oms-top">
         <form id="tankForm" >
-          Please enter your tank information 
+          Please enter your tank information
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
-                <td className="oms-spacing"><img src="images/spacer.png" 
+                <td className="oms-spacing"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-90">Field name:</th>
                 <td className="oms-spacing">
                   <input type="hidden" name="id" value={this.props.tank.id} />
-                  <input type="text" id="tag.name" name="tag.name" value={this.props.tank.tag.name} 
+                  <input type="text" id="tag.name" name="tag.name" value={this.props.tank.tag.name}
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')} size="10" maxLength="10"
                          onChange={fc} />
                 </td>
@@ -95,11 +128,11 @@ class TankForm extends Component {
                          onChange={fc} />
                 </td>
               </tr>
-            
+
               <tr>
                 <td className="oms-spacing-90">Active:</td>
                 <td className="oms-spacing">
-                  <select id="active" name="active" value={this.props.tank.tag.active} 
+                  <select id="active" name="active" value={this.props.tank.tag.active}
                           onChange={fc} >
                     <option value="N">N</option>
                     <option value="Y">Y</option>
@@ -111,7 +144,7 @@ class TankForm extends Component {
                 <td className="oms-spacing">
                   <select id="contentTypeCode" name="contentTypeCode" value={this.props.tank.contentTypeCode}
                           onChange={fc} >
-                    { ct.map( 
+                    { ct.map(
                       function(n,x){
                         return <option key={x} value={n.code}>{n.name}</option>
                       } )
@@ -122,11 +155,11 @@ class TankForm extends Component {
               <tr>
                 <th className="oms-spacing-90">Corners (NW)</th>
                 <td className="oms-spacing">
-                  <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={this.props.tank.tag.c1Lat} 
+                  <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={this.props.tank.tag.c1Lat}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                   &nbsp;
-                  <input type="text" id="tag.c1Long" name="tag.c1Long" value={this.props.tank.tag.c1Long} 
+                  <input type="text" id="tag.c1Long" name="tag.c1Long" value={this.props.tank.tag.c1Long}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                 </td>
@@ -134,11 +167,11 @@ class TankForm extends Component {
               <tr>
                 <td className="oms-spacing-90">&nbsp;&nbsp;&nbsp;(SE)</td>
                 <td>
-                  <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={this.props.tank.tag.c2Lat} 
+                  <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={this.props.tank.tag.c2Lat}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                   &nbsp;
-                  <input type="text" id="tag.c2Long" name="tag.c2Long" value={this.props.tank.tag.c2Long} 
+                  <input type="text" id="tag.c2Long" name="tag.c2Long" value={this.props.tank.tag.c2Long}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                 </td>
@@ -147,7 +180,7 @@ class TankForm extends Component {
                 <td className="oms-spacing-90">Density:</td>
                 <td className="oms-spacing">
                   <input type="text" id="density" name="density" value={this.props.tank.density} maxLength="10"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                 </td>
               </tr>
@@ -164,7 +197,7 @@ class TankForm extends Component {
                 <td className="oms-spacing-90">Height:</td>
                 <td className="oms-spacing">
                   <input type="text" id="height" name="height" value={this.props.tank.height} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                 </td>
               </tr>
@@ -172,7 +205,7 @@ class TankForm extends Component {
                 <td className="oms-spacing-90">Diameter:</td>
                 <td className="oms-spacing">
                   <input type="text" id="diameter" name="diameter" value={this.props.tank.diameter} size="8"
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fc} />
                 </td>
               </tr>
@@ -181,7 +214,7 @@ class TankForm extends Component {
                 <td className="oms-spacing">
                   <select id="levelId" name="levelId" value={this.props.tank.levelId}
                           onChange={fc} >
-                    { ll.map( 
+                    { ll.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -194,25 +227,25 @@ class TankForm extends Component {
                 <td className="oms-spacing">
                   <select id="tempId" name="tempId" value={this.props.tank.tempId}
                           onChange={fc} >
-                    { tl.map( 
+                    { tl.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
                     }
                   </select>
-  	  		  </td>
+                  </td>
               </tr>
-            
+
             </tbody>
           </table>
           <table className="oms-spacing">
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value="Quit" className="oms-spacing"
                          onClick={(e) => {hq(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {tu(e)}}/>
                 </td>
@@ -220,7 +253,7 @@ class TankForm extends Component {
             </tbody>
           </table>
         </form>
-  
+
               </td>
               <td>
                 <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
@@ -236,11 +269,11 @@ class TankForm extends Component {
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     );
   }
-  
+
 }
 
 export default TankForm;

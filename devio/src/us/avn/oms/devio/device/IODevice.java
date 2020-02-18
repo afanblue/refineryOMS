@@ -30,7 +30,7 @@ import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 /**
  *	This is the abstract class for defining IODevices for processing their inputs.
@@ -38,6 +38,8 @@ import us.avn.oms.service.XferService;
  *	The current (2019-11-06) thinking is that this will be used for polling devices
  *	to retrieve their values.  I need to think about how to implement exception-based
  *	devices.
+ *
+ * The timing for get and set analog and get and set digital can be 
  *
  *	@author	AVN  2019-11-06
  *
@@ -53,10 +55,10 @@ public abstract class IODevice {
 	protected DigitalInputService dis;
 	protected DigitalOutputService dos;
 	protected OrderService ords;
+	protected RawDataService rds;
 	protected TagService tgs;
 	protected TankService tks;
 	protected TransferService tfs;
-	protected XferService xs;
 	
 	public IODevice() {
 		// TODO Auto-generated constructor stub
@@ -65,8 +67,8 @@ public abstract class IODevice {
 	public IODevice( Device d, AddressService adrs, AnalogInputService ais
 			, AnalogOutputService aos, ConfigService cs, ControlBlockService cbs
 			, DigitalInputService dis, DigitalOutputService dos
-			, OrderService ords, TagService tgs
-			, TankService tks, TransferService tfs, XferService xs )
+			, OrderService ords, RawDataService rds, TagService tgs
+			, TankService tks, TransferService tfs )
 	{
 		this.device = d;
 		this.adrs = adrs;
@@ -77,10 +79,10 @@ public abstract class IODevice {
 		this.dis = dis;
 		this.dos = dos;
 		this.ords = ords;
+		this.rds = rds;
 		this.tgs = tgs;
 		this.tks = tks;
 		this.tfs = tfs;
-		this.xs = xs;
 	}
 
 	public Device getDevice() {
@@ -173,16 +175,26 @@ public abstract class IODevice {
 	}
 
 	
-	public XferService getXs() {
-		return xs;
+	public RawDataService getRds() {
+		return rds;
 	}
 
-	public void setXs(XferService xs) {
-		this.xs = xs;
+	public void setRds(RawDataService rds) {
+		this.rds = rds;
 	}
 
+	/**
+	 * Get all the analog inputs for the current scan interval.  This should
+	 * retrieves the data values from the field devices and updates the raw_data table
+	 * @param sec current second, which defines the scan offset.
+	 */
 	public abstract void getAnalogInputs( Integer sec );
 	
+	/**
+	 * Set all the analog output values for the current scan interval.  This
+	 * transfers the data values from the raw_data table to the field devices
+	 * @param sec current second, which defines the scan offset
+	 */
 	public abstract void setAnalogOutputs( Integer sec );
 	
 	public abstract void getDigitalInputs( Integer sec );

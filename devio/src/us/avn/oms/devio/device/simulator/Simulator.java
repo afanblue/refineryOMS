@@ -1,6 +1,7 @@
 package us.avn.oms.devio.device.simulator;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +21,7 @@ import us.avn.oms.domain.Tag;
 import us.avn.oms.domain.Tank;
 import us.avn.oms.domain.Transfer;
 import us.avn.oms.domain.Watchdog;
-import us.avn.oms.domain.Xfer;
+import us.avn.oms.domain.RawData;
 import us.avn.oms.service.AddressService;
 import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.AnalogOutputService;
@@ -34,7 +35,7 @@ import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 public class Simulator extends IODevice {
 
@@ -53,9 +54,9 @@ public class Simulator extends IODevice {
 			, AnalogInputService ais, AnalogOutputService aos
 			, ConfigService cs, ControlBlockService cbs
 			, DigitalInputService dis, DigitalOutputService dos
-			, OrderService ords, TagService tgs
-			, TankService tks, TransferService tfs, XferService xs) {
-		super(d, adrs, ais, aos, cs, cbs, dis, dos, ords, tgs, tks, tfs, xs);
+			, OrderService ords, RawDataService rds, TagService tgs
+			, TankService tks, TransferService tfs) {
+		super(d, adrs, ais, aos, cs, cbs, dis, dos, ords, rds, tgs, tks, tfs);
 		
 		
 		configuration = cs.getAllConfigItems();
@@ -77,6 +78,9 @@ public class Simulator extends IODevice {
 		currentTags.put(currentPrecipTag,    1.0D);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void getAnalogInputs( Integer sec ) {
 		log.debug("Start Simulator AI processing");
@@ -86,14 +90,14 @@ public class Simulator extends IODevice {
 		while( iai.hasNext() ) {
 			Address adr = iai.next();
 			AnalogInput ai = ais.getAnalogInput(adr.getIaddr1());
-			Xfer x = new Xfer();
+			RawData x = new RawData();
 			x.setId(ai.getTagId());
 			String aiTypeCode = ai.getAnalogTypeCode();
 			String aiName = ai.getTag().getName();
 //     	    fake the collected data
-			if( currentTempTime.compareTo(ai.getScanTime()) >= 0 ) {
-				log.debug("Processing AI tag "+aiName + "/" + ai.getTagId());
-				if( "T".equals(ai.getAnalogTypeCode())) {
+			if( "T".equals(ai.getAnalogTypeCode())) {
+				if( currentTempTime.plus(2L,ChronoUnit.HOURS).compareTo(ai.getScanTime()) >= 0 ) {
+					log.debug("Processing AI tag "+aiName + "/" + ai.getTagId());
 					Double nv = (ai.getScanValue()!=null)?ai.getScanValue():AMBIENT_TEMPERATURE;
 					Double ct = (currentTemp!=null?currentTemp:nv);
 					log.debug("Recorded scan value (id="+x.getId()+"): "+nv+", from web: "+ct);
@@ -101,10 +105,12 @@ public class Simulator extends IODevice {
 					x.setFloatValue(nv);
 					x.setScanTime(currentScanTime);
 //					Updated simulated data
-					xs.updateXfer(x);
+					rds.updateRawData(x);
+				} else {
+					log.debug("Ignore "+aiName+" - "+currentTempTime+" < scan time ("+ai.getScanTime()+")");
 				}
 			} else {
-//				don't update Calculated or Manual analog types or the 
+//				don't update Calculated or Manual analog types or the current weather tags
 				if( ! AnalogInput.CALCULATED.equals(aiTypeCode) && 
 					! AnalogInput.MANUAL.equals(aiTypeCode) ) {
 					if( ! currentTags.containsKey(aiName) ) {
@@ -112,8 +118,12 @@ public class Simulator extends IODevice {
 //						(this will be overwritten by transfer levels)
 						x.setFloatValue(ai.getScanValue());
 						x.setScanTime(currentScanTime);
-						xs.updateXfer(x);
+						rds.updateRawData(x);
+					} else {
+						log.debug("Ignore: "+aiName+", current weather tag");
 					}
+				} else {
+					log.debug(aiTypeCode+" ignored: "+aiName);
 				}
 			}
 		}
@@ -130,13 +140,13 @@ public class Simulator extends IODevice {
 			Address addr = iadr.next();
 			if( null != addr.getScanValue() && addr.getUpdated() == 1 ) {
 				log.debug("Update: "+addr.getIaddr1()+" from "+addr.getId());
-				Xfer x = new Xfer();
+				RawData x = new RawData();
 				x.setId(addr.getIaddr1());
 //     	    	fake the collected data
 //				set the value to the current value of the input
 				x.setFloatValue(addr.getScanValue());
-				xs.updateXfer(x);
-				xs.clearUpdated(addr.getId());
+				rds.updateRawData(x);
+				rds.clearUpdated(addr.getId());
 			}
 		}
 		log.debug("End Simulator AO processing");
@@ -150,8 +160,8 @@ public class Simulator extends IODevice {
 		while( idi.hasNext() ) {
 			Address di = idi.next();
 /*
-			Xfer x = new Xfer(di.getIaddr1(), di.getScanValue());
-			xs.updateXfer(x);
+			RawData rd = new RawData(di.getIaddr1(), di.getScanValue());
+			rds.updateRawData(rd);
 */
 		}
 		log.debug("End Simulator DI processing");
@@ -166,29 +176,30 @@ public class Simulator extends IODevice {
 			Address addr = iadr.next();
 			if( null != addr.getScanValue() && addr.getUpdated() == 1 ) {
 				log.debug("Update: "+addr.getIaddr1()+" from "+addr.getId());
-				Xfer x = new Xfer(addr.getIaddr1(), addr.getScanValue());
+				RawData x = new RawData(addr.getIaddr1(), addr.getScanValue());
 //     	    	fake the collected data
 //				set the value to the current value of the input
-				xs.updateXfer(x);
-				xs.clearUpdated(addr.getId());
+				rds.updateRawData(x);
+				rds.clearUpdated(addr.getId());
 			}
 		}
 /* */
 		log.debug("End Simulator DO processing");
 	}
 	
+	/**
+	 * Check the active transfers to be able to set the changes in the 
+	 * analog values for the tank levels.  No changes are made to the transfer
+	 */
 	private void checkTransfers( ) {
 		Iterator<Transfer> ix = tfs.getActiveTransfers().iterator();
 		while( ix.hasNext() ) {
 			Transfer x = ix.next();
 			log.debug("checkTransfers: Transfer "+x.toString());
-			Double delta = computeChange( x );
+			Double delta = specifyVolumeChange( x );
 			log.debug("Transfer "+x.getName()+"/"+x.getId()+" - Change: "+delta);
 			decrementSource( x.getSourceId(), delta );
 			incrementDestination( x.getDestinationId(), delta );
-			incrementOrderItem(ords.getOrderItemByTransferId(x.getId()),delta);
-			x.setActVolume(x.getActVolume()+delta);
-			tfs.updateTransfer(x);
 		}
 	}
 
@@ -197,9 +208,11 @@ public class Simulator extends IODevice {
 	 * Determine the change in volume! for a transfer
 	 * {@code This is where the magic occurs!
 	 *      * Transfers are only allowed between refinery units (RU),
-	 *        tanks (TK), and docking stations (STN).
+	 *        tanks (TK), and docks (DK) 
+	 *        [should probably be docking stations (STN), but the logic
+	 *         is still evading me].
 	 *      * Docking stations exist for Ships, Tank Trucks and Tank Cars
-	 *      * If the docking station is a source, it MUST be crude and the 
+	 *      * If the dock (docking station) is a source, it MUST be crude and the 
 	 *        destination MUST be a crude tank.
 	 *      * We assume that this is called once a minute and 
 	 *        returns the appropriate value
@@ -235,7 +248,7 @@ public class Simulator extends IODevice {
 	 * @param x transfer to update
 	 * @return volume change (from source to destination)
 	 */
-	private Double computeChange( Transfer x ) {
+	private Double specifyVolumeChange( Transfer x ) {
 		Double delta;
 		log.debug("computeChange for transfer "+x.toString());
 		Tag src = tgs.getTag(x.getSourceId());
@@ -269,11 +282,11 @@ public class Simulator extends IODevice {
 				if ( Tank.CRUDE.equals(srcTk.getContentTypeCode()) ) {
 					delta = 0D;
 				} else {
-					if ( Tag.STATION.equals(dest.getMisc())) {
+					if ( Tag.DOCK.equals(dest.getTagTypeCode())) {
 						delta = Transfer.FAST;
-					} else if ( Tag.TANK_CAR.equals(dest.getMisc())) {
+					} else if ( Tag.TANK_CAR.equals(dest.getTagTypeCode())) {
 						delta = Transfer.FAST;
-					} else if ( Tag.TANK_TRUCK.equals(dest.getMisc())) {
+					} else if ( Tag.TANK_TRUCK.equals(dest.getTagTypeCode())) {
 						delta = Transfer.SLOW;
 					} else {
 						delta = 0D;
@@ -295,6 +308,7 @@ public class Simulator extends IODevice {
 			}
 			break;
 		case Tag.STATION :
+		case Tag.DOCK :
 			Tank dstTk = tks.getTank(x.getDestinationId());
 			if( Tag.TANK.equals(dest.getTagTypeCode())) {
 				if( Tank.CRUDE.equals(dstTk.getContentTypeCode())) {
@@ -320,14 +334,14 @@ public class Simulator extends IODevice {
 	 * 				change in volume; If it's not a tank, no change
 	 * 				is necessary
 	 * Notes: This doesn't currently correct for temperature differences
-	 * 		IF the source is a tank
+	 * {@code IF the source is a tank
 	 * 		.. get the current level
 	 * 		.. compute the current volume
 	 * 		.. subtract out the change (don't let it go below zero)
 	 * 		.. compute the new level
 	 * 		.. update the level tag
 	 * 		END IF
-	 * 		
+	 * }	
 	 * @param srcId
 	 * @param vol
 	 */
@@ -341,11 +355,11 @@ public class Simulator extends IODevice {
 				Double volume = tk.computeVolume( l.getScanValue() );
 				volume = (volume-vol>0)?(volume-vol):0D;
 				Double lvl = tk.computeLevel( volume );
-				Xfer x = new Xfer();
-				x.setId(tk.getLevelId());
-				x.setFloatValue(lvl);
-				log.debug("Update xfer (decrement): "+x.toString());
-				xs.updateXfer(x);
+				RawData rd = new RawData();
+				rd.setId(tk.getLevelId());
+				rd.setFloatValue(lvl);
+				log.debug("Update raw data (decrement): "+rd.toString());
+				rds.updateRawData(rd);
 			}
 		}
 	}
@@ -381,31 +395,13 @@ public class Simulator extends IODevice {
 				volume += vol;
 				Double lvl = tk.computeLevel( volume );
 				lvl = (lvl>l.getMaxValue())?l.getMaxValue():lvl;
-				Xfer x = new Xfer();
-				x.setId(tk.getLevelId());
-				x.setFloatValue(lvl);
-				log.debug("Update xfer (increment): "+x.toString());
-				xs.updateXfer(x);
+				RawData rd = new RawData();
+				rd.setId(tk.getLevelId());
+				rd.setFloatValue(lvl);
+				log.debug("Update raw data (increment): "+rd.toString());
+				rds.updateRawData(rd);
 			}
 		}
 	}
-	
-	/**
-	 * Increment the actual volume for an order Item.
-	 * <br/>
-	 * So we check to see if there is an order Item associated with this
-	 * transfer.  If so, we increment the actual volume and update the item.
-	 * @param ci Collection of items w/that transfer ID (should only be one)
-	 * @param delta Amount of transfer to increase
-	 */
-	private void incrementOrderItem(Collection<Item> ci, Double delta ) {
-		if( ci != null && ! ci.isEmpty() ) {
-			Iterator<Item> ii = ci.iterator();
-			Item i = ii.next();
-			i.setActVolume(delta+i.getActVolume());
-			ords.updateItem(i);
-		}
-	}
-
 
 }

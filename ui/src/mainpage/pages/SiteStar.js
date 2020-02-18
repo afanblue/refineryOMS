@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {Stage, Layer, Group, Circle, Text} from 'react-konva';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import Log     from '../requests/Log.js';
@@ -39,7 +42,15 @@ class SiteStar extends Component {
       unitTimer: null
      }
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          field: PropTypes.any,
+          tankType: PropTypes.any
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -54,8 +65,8 @@ class SiteStar extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( error ) {
@@ -72,9 +83,9 @@ class SiteStar extends Component {
   componentDidMount() {
     this.fetchSiteValues();
     var myTimerID = setInterval(() => {this.fetchSiteValues()}, 60000 );
-    this.setState( {unitTimer: myTimerID } );    
+    this.setState( {unitTimer: myTimerID } );
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
@@ -106,7 +117,7 @@ class SiteStar extends Component {
                     var xp = cpx + v * r * Math.cos(theta);
                     var yp = cpy + v * r * Math.sin(theta);
                     return <Circle key={x} radius={2} stroke={n.alarmColor} fill={n.alarmColor} x={xp} y={yp} />
-                  } 
+                  }
                 ) }
               </Group>
             </Layer>

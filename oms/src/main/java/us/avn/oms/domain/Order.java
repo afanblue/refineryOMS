@@ -25,13 +25,25 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * For an order, Sales are the transfer of product to a buyer and Purchases
+ * are transfer of crude oil from a seller
+ * 
+ * Order status is determined, to the extent that we need to know it,
+ * by the collective state of its items.  Items transition through the
+ * following
+ * <ol>
+ * <li>P - pending, when the item has been created before the transfer is created</li>
+ * <li>A - active, when the transfer for that item has been created</li>
+ * <li>D - done, when the transfer for that item has been completed</li>
+ * <li>C - complete, when the carrier has been undocked</li>
+ * </ol>
+ * @author Allan
+ *
+ */
 public class Order extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282165329859742L;
-	
-	public static final String ACTIVE = "A";
-	public static final String PENDING = "P";
-	public static final String COMPLETE = "C";
 	
 	public static final String SALE = "S";
 	public static final String PURCHASE = "P";

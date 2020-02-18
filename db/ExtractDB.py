@@ -10,7 +10,7 @@ to actually generate the csv files are provided here.
 @author: Allan
 '''
 # import os, sysconfig
-import MySQLdb
+import mariadb
 
 # Function definition is here
 
@@ -33,7 +33,7 @@ def addData( crsr, tbl, qry, hdr, prt ) :
     for row in results:
         sep = ""
         for item in row:
-            if item == "None" :
+            if item == "None" or item == None :
                 item = "NULL"
             tblFile.write("{}{}".format(sep,item))
             sep = ","
@@ -44,13 +44,13 @@ def addData( crsr, tbl, qry, hdr, prt ) :
 
 config = {
   "user": "oms",
-  "passwd": "omsx",
+  "password": "omsx",
   "host": "127.0.0.1",
-  "db": "oms",
-  "use_unicode": True
+  "database": "oms",
+  "charset": "UTF-8"
 }
 
-cnx = MySQLdb.connect(**config)
+cnx = mariadb.connect(**config)
 crsr = cnx.cursor()
 
 ''' config '''
@@ -179,7 +179,6 @@ addData( crsr, tbl, qry, hdr, False )
 tbl = "menu"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
-        "page_id,page,id,name",
         "menu_type_id,reference_code,id,code",
         "Data,,,")
 qry = ("select rc.code menu_type_id, m.text, m.order_no, m.active "
@@ -193,7 +192,7 @@ addData( crsr, tbl, qry, hdr, False )
 tbl = "menu"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
-        "page,id,name,page_id",
+        "page_id,page,id,name",
         "menu_type_id,reference_code,id,code",
         "category_id,horizontal_menu_vw,id,text",
         "Data,,,")
@@ -395,7 +394,7 @@ tbl = "analog_input"
 hdr = ( "Table,"+tbl+",,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
-        "unit,id,name,unit_id",
+        "unit_id,unit,id,name",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, u.name unit_id, analog_type_code"
        ", scan_int, scan_offset"
@@ -467,12 +466,15 @@ addData( crsr, tbl, qry, hdr, False )
 tbl = "address"
 hdr = ( "Table,"+tbl+",,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "id,tag,id,name,tag,tag_type_code,tag_type_code",
         "device_id,device,id,type,device,model,model",
         "Data,,,")
-qry = ("select a.id, concat(d.type,'|',d.model) device_id, a.cycle_time, a.offset, "
+qry = ("select concat(t.name,'|',t.tag_type_code) id, "
+       "concat(d.type,'|',d.model) device_id, a.cycle_time, a.offset, "
        "a.iaddr1, a.iaddr2, a.iaddr3, a.iaddr4, a.iaddr5, a.iaddr6, "
        "a.saddr1, a.saddr2, a.saddr3, a.saddr4, a.saddr5, a.saddr6 "
-       "from address a join device d on a.device_id=d.id ")
+       "from address a join tag t on a.id=t.id "
+       "join device d on a.device_id=d.id ")
 addData(crsr, tbl, qry, hdr, False )
 
 
@@ -515,7 +517,7 @@ qry = ("select concat(t.name,'|',t.tag_type_code) tank_id, level, volume "
 addData( crsr, tbl, qry, hdr, False )
 
 
-''' transfer '''
+''' transfer (but only the Templates and Active transfers)'''
 tbl = "transfer"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
@@ -535,16 +537,17 @@ qry    = ("select x.name, tsv.name status_id, ttv.name transfer_type_id"
           "join tag td on x.destination_id=td.id "
           "join tag tt on x.tag_id=tt.id "
           "join transfer_status_vw tsv on x.status_id = tsv.value "
-          "join transfer_type_vw ttv on x.transfer_type_id = ttv.value" )
+          "join transfer_type_vw ttv on x.transfer_type_id = ttv.value "
+          "where tsv.code!='C'" )
 addData( crsr, tbl, qry, hdr, False )
 
 
-''' xfer '''
-tbl = "xfer"
+''' raw_data '''
+tbl = "raw_data"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
-qry    = "select x.id from xfer x"
+qry    = "select x.id from raw_data x"
 addData( crsr, tbl, qry, hdr, False )
 
 ''' carriers loaded as Tags '''
@@ -591,7 +594,7 @@ qry = ( "select concat(t1.name,'|',t1.tag_type_code) id"
         "join tag t1 on sio.id=t1.id join tag t2 on sio.in_id=t2.id")
 addData( crsr, tbl, qry, hdr, False )
 
-''' These are ACTIVE data files, not configuration and are best not backed up here '''
+''' These are ACTIVE data files, and may be large, but this only has the data since the last archive '''
 
 ''' alarm '''
 tbl = "alarm"
@@ -609,7 +612,7 @@ qry = ( "select at.code alarm_type_id, tt.code tag_type_id"
         "join tag t on a.tag_id = t.id "
         "join alarm_message am on a.alarm_msg_id=am.id "
         "join tag_type tt on a.tag_type_id = tt.id "  )
-''' addData( crsr, tbl, qry, hdr, False ) '''
+addData( crsr, tbl, qry, hdr, False )
 
 
 ''' history '''
@@ -621,7 +624,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ( "select id, concat(t.name,'|',t.tag_type_code) tag_id"
         ", scan_value, scan_time, h.create_dt "
         "from history h join tag t on h.tag_id = t.id " )
-''' addData( crsr, tbl, qry, hdr, False ) '''
+addData( crsr, tbl, qry, hdr, False )
 
 
 ''' shipment '''
@@ -631,11 +634,9 @@ hdr = ( "Table,"+tbl+",,",
         "customer_id,customer,id,name",
         "carrier_id,tag,id,name,tag,tag_type_code,tag_type_code"
         "Data,,,")
-qry = ( "select c.name customer_id, concat(t.name,'|',t.tag_type_code) carrier_id"
-        ", purchase, exp_date, act_date, s.create_dt "
-        "from shipment s join customer c on s.customer_id = c.id "
-        "join tag t on s.carrier_id = t.id " )
-''' addData( crsr, tbl, qry, hdr, False ) '''
+qry = ( "select c.name customer_id, purchase, exp_date, act_date, s.create_dt "
+        "from shipment s join customer c on s.customer_id = c.id " )
+addData( crsr, tbl, qry, hdr, False )
 
 
 ''' shipment_item '''
@@ -644,9 +645,10 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ( "select si.shipment_id, si.item_no, si.active, si.content_cd, "
-        "si.exp_volume_min, si.exp_volume_max, si.act_volume, si.create_dt "
-        "from shipment_item si " )
-''' addData( crsr, tbl, qry, hdr, False ) '''
+        "si.exp_volume_min, si.exp_volume_max, si.act_volume, si.carrier_id, "
+        "si.station_id, si.transfer_id, si.create_dt from shipment_item si "
+        "join shipment s on s.shipment_id=si.shipment_id "  )
+addData( crsr, tbl, qry, hdr, False )
 
 
 

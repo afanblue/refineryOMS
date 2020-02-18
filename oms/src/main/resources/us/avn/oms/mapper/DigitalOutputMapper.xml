@@ -63,7 +63,7 @@
          , x.updated, x.scan_time pmc_scan_time, x.float_value
       from digital_output d join tag t on d.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
-           join xfer x on t.id = x.id 
+           join raw_data x on t.id = x.id 
      where t.active = 'Y'
      order by 2
   </select>

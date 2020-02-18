@@ -92,7 +92,7 @@ public class DigitalInputServiceImpl implements DigitalInputService {
 		if( id == 0L ) {
 			di.setTagId(0L);
 			Tag t = new Tag(0L,"New DI");
-			t.setActive("Y");
+			t.setActive(Tag.ACTIVE);
 			t.setTagTypeCode("DI");
 			di.setTag(t);
 			di.setHistTypeCode("");

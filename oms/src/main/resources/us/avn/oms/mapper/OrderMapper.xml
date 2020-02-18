@@ -33,7 +33,29 @@
     <result property="station"        column="station"/>
     <result property="transferId"     column="transfer_id"/>
   </resultMap>
+  
+    <resultMap id="valueMap" type="Value">
+    <result property="id"          column="id" />
+    <result property="code"        column="code" />
+    <result property="value"       column="value" />
+  </resultMap>
 
+  
+  
+  <select id="countActiveItems" parameterType="Long" resultType="Long">
+    select count(*) actives from shipment_item where active="A" and shipment_id=#{param1}
+  </select>
+
+  <select id="getOrderListByStatus" parameterType="String" resultType="Long">
+    select distinct shipment_id from shipment_item where active = #{param1}
+  </select>
+  
+  <select id="getNumberActiveItems" resultType="Long">
+    select count(*) from shipment_item 
+     where active not in ('C','D')
+       and shipment_id=#{param1} and carrier_id=#{param2} 
+  </select>
+  
   <select id="getOrder" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
@@ -41,6 +63,10 @@
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
      where s.shipment_id = #{param1}
      order by s.exp_date desc
+  </select>
+  
+  <select id="getOrderVolumesForContents" resultMap="valueMap">
+    select content_cd code, sum(exp_volume_max) value from shipment_item group by content_cd
   </select>
   
   <select id="getOrderItems" resultMap="itemMap">
@@ -78,7 +104,7 @@
   <select id="getActiveOrders" resultMap="ordmap">
     select distinct s.shipment_id, s.customer_id, c.name customer
     	 , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-    	 , ovv.act_volume, ovv.transfer_id
+    	 , ovv.act_volume
       from shipment s join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
       join active_order_vw aov on s.shipment_id = aov.shipment_id
@@ -93,7 +119,7 @@
       join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
      where si.active = 'P'
-     order by s.exp_date desc;
+     order by s.exp_date
   </select>
   
   <select id="getPendingOrderItems" resultMap="itemMap">
@@ -103,9 +129,13 @@
          , coalesce(si.exp_volume_max,0) max_vol
          , coalesce(si.act_volume,0) act_vol
       from shipment_item si
-      right outer join tag t on si.carrier_id=t.id 
-     where t.active = 'P'
-       and si.shipment_id = #{parm1}
+      left outer join tag t on si.carrier_id=t.id 
+     where si.active = 'P'
+       and si.shipment_id = #{param1}
+  </select>
+  
+  <select id="getPendingOrderCountForContent" resultType="Long">
+    select count(*) from shipment_item where active='P' and content_cd = #{param1}
   </select>
 
   <select id="getOrdersByType" resultMap="ordmap">
@@ -186,5 +216,11 @@
           , transfer_id = #{transferId}
           , station_id = #{stationId}
   </insert>
+  
+  <update id="completeOrderItems" parameterType="Value">
+    update shipment_item
+       set active = #{code}
+     where transfer_id = #{id}
+  </update>
   
 </mapper>

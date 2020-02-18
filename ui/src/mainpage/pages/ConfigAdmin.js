@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import ConfigList      from './lists/ConfigList.js';
 import DefaultContents from './DefaultContents.js';
@@ -24,7 +27,7 @@ import Log             from '../requests/Log.js';
 import Waiting         from './Waiting.js';
 
 
-function ConfigItem(i,k,v) { this.id=i; this.key=k; this.value=v; };
+function ConfigItem(i,k,v) { this.id=i; this.key=k; this.value=v; }
 
 class ConfigAdmin extends Component {
   constructor(props) {
@@ -42,6 +45,12 @@ class ConfigAdmin extends Component {
     this.handleQuit = this.handleQuit.bind(this);
   }
 
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -49,33 +58,23 @@ class ConfigAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, prevState) {
+	let state = prevState;
+    return state;
   }
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -90,7 +89,7 @@ class ConfigAdmin extends Component {
     }
     this.setState({configItems: cfg } );
   }
-  
+
   fetchList() {
     const clsMthd = "ConfigAdmin.fetchList";
     const myRequest = SERVERROOT + "/config/all";
@@ -102,16 +101,16 @@ class ConfigAdmin extends Component {
           var itemList = [];
           var c = new ConfigItem(0,"Add new item","");
           itemList.push(c);
-          json.map( function(n,x) { var ci = new ConfigItem(n.id,n.key,n.value); 
+          json.map( function(n,x) { var ci = new ConfigItem(n.id,n.key,n.value);
                                     return itemList.push( ci ); } );
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched",
                           configItems: itemList } );
         } catch( e ) {
           alert("Problem fetching system configuration list\n"+e);
-          Log.error("Error - " + e, clsMthd);        
+          Log.error("Error - " + e, clsMthd);
         }
       }
       request();
@@ -120,13 +119,13 @@ class ConfigAdmin extends Component {
 
   handleConfigUpdate(event) {
     event.preventDefault();
-    let clsMthd = "ConfigAdmin.configUpdate"; 
+    let clsMthd = "ConfigAdmin.configUpdate";
     let method = "PUT";
     let url = SERVERROOT + "/config/update";
     let cfg = [];
-    if(  (this.state.configItems[0].key==="Add new item") 
+    if(  (this.state.configItems[0].key==="Add new item")
       || (this.state.configItems[0].value==="" )) {
-        cfg = this.state.configItems.splice(1);        
+        cfg = this.state.configItems.splice(1);
     } else {
         cfg = this.state.configItems.splice(0);
     }
@@ -137,7 +136,7 @@ class ConfigAdmin extends Component {
         alert("Update/insert complete for system configuration")
       } catch( error ) {
         alert("Problem updating system configuration\n"+error);
-        Log.error("Error - " + error,clsMthd);  
+        Log.error("Error - " + error,clsMthd);
       }
     }
     request();
@@ -146,8 +145,8 @@ class ConfigAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     configItems: null,
                     stage: "begin" } );

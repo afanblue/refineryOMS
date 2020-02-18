@@ -37,6 +37,7 @@ import us.avn.oms.domain.IdName;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Role;
 import us.avn.oms.domain.RolePriv;
+import us.avn.oms.domain.Tag;
 import us.avn.oms.service.PrivilegeService;
 import us.avn.oms.service.RoleService;
 
@@ -71,7 +72,7 @@ public class RoleRestController {
 		} else {
 			r.setId(0L);
 			r.setName("New Role");
-			r.setActive("N");
+			r.setActive(Tag.ACTIVE);
 		}
 		return r;
 	}

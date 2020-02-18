@@ -1,3 +1,4 @@
+/* eslint-env node, browser, es6 */
 
 
 export function Request(u,a) { this.uri = u; this.action=a; }

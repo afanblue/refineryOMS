@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import Log             from '../requests/Log.js';
 import OMSRequest      from '../requests/OMSRequest.js';
@@ -35,7 +38,7 @@ class AlarmTypeAdmin extends Component {
       updateData: false,
       updateDisplay: true,
       msgs: null,
-      type: null      
+      type: null
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
@@ -44,7 +47,7 @@ class AlarmTypeAdmin extends Component {
     this.finishMsgsFetch  = this.finishMsgsFetch.bind(this);
     this.handleQuit       = this.handleQuit.bind(this);
   }
-  
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -61,7 +64,7 @@ class AlarmTypeAdmin extends Component {
                    type: at
                   });
   }
-  
+
   finishMsgsFetch(req) {
     let msgs = req;
     this.setState({stage: "itemRetrieved",
@@ -69,7 +72,7 @@ class AlarmTypeAdmin extends Component {
                    msgs: msgs
                   });
   }
-  
+
   handleTypeSelect(event) {
     const id = event.z;
     const loc = "AlarmTypeAdmin.typeSelect";
@@ -98,13 +101,13 @@ class AlarmTypeAdmin extends Component {
         alert("Update/insert complete on alarm type # "+id)
       } catch( error ) {
         alert("Problem updating alarm type id "+id+"\n"+error);
-        Log.error("Error - " + error,clsMthd);  
+        Log.error("Error - " + error,clsMthd);
       }
     }
     request();
   }
-  
-  
+
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -123,8 +126,8 @@ class AlarmTypeAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
@@ -138,21 +141,18 @@ class AlarmTypeAdmin extends Component {
   }
 
 
-  componentDidUpdate( prevProps, prevState ) {
-    if( this.state.updateData ) {
-      this.fetchList();
-    }
-  }
-  
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   componentDidMount() {
     this.fetchList();
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     type: null,
                     stage: "begin" } );

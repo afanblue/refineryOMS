@@ -37,7 +37,7 @@ class Field extends Component {
       returnedText: null
     };
   }
-  
+
   componentDidMount() {
     const img = new window.Image();
     var field = this.state.field;
@@ -45,12 +45,9 @@ class Field extends Component {
     img.onload = () => { this.setState( {img:img} ); }
 
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState( {field: nextProps.field,
-                    tags:  nextProps.tags,
-                    siteLoc: nextProps.siteLoc,
-                    tankType: nextProps.tankType} );
+
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
 
   handleErrors(response) {
@@ -59,7 +56,7 @@ class Field extends Component {
     }
     return response;
   }
- 
+
   scaleX( tkLong, tLong, xScale ) {
     return Math.round(xScale * (tkLong - tLong));
   }
@@ -97,7 +94,7 @@ class Field extends Component {
               var tkHt = Math.abs(ht*n.level/n.maxLevel);
               var color= n.levelColor;
               var tkName = n.name;
-              return ( 
+              return (
                 <Tank key = {x} xp = {xnw} yp = {ynw}
                       width = {wid}   height = {ht}
                       name = {tkName}
@@ -105,13 +102,13 @@ class Field extends Component {
                       tankType = {tType} color={color}
                       level = {n.levelText} temp={n.tempText} />
               );
-            } 
+            }
           )}
         </Layer>
       </Stage>
       </div>
     );
-  } 
+  }
 }
 
 export default Field;

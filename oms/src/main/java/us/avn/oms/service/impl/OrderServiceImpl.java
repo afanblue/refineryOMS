@@ -21,6 +21,7 @@ import java.util.Collections;
 
 import us.avn.oms.domain.Item;
 import us.avn.oms.domain.Order;
+import us.avn.oms.domain.Value;
 import us.avn.oms.mapper.OrderMapper;
 import us.avn.oms.service.OrderService;
 
@@ -31,6 +32,52 @@ public class OrderServiceImpl implements OrderService {
 	
 	public void setOrderMapper( OrderMapper om ) {
 		this.orderMapper = om;
+	}
+	
+	/**
+	 * Get the number of order items for a given transfer which are not complete
+	 * @param xfrId Transfer ID
+	 * @return number of order items
+	 */
+	public Long countActiveItems( Long xfrId ) {
+		return orderMapper.countActiveItems(xfrId);
+	}
+	
+	/**
+	 * Get the number of pending orders for a given content type
+	 * @param type content code
+	 * @return number of pending orders
+	 */
+	public Long getPendingOrderCountForContent(String type) {
+		return orderMapper.getPendingOrderCountForContent(type);
+	}
+	
+	/**
+	 * Get the total volume ordered for all content types
+	 * @return order volumes by content type
+	 */
+	public Collection<Value> getOrderVolumesForContents() {
+		return orderMapper.getOrderVolumesForContents();
+	}
+	
+	/**
+	 * Get the number of active items for a shipment ID and carrier ID
+	 * Active is where the shipment_item.active not in ('C','D')
+	 * @param shipmentId ID for given order
+	 * @param carrierId ID for given carrier
+	 * @return number of active items
+	 */
+	public Long getNumberActiveItems( Long shipmentId, Long carrierId ) {
+		return orderMapper.getNumberActiveItems(shipmentId, carrierId);
+	}
+
+	/**
+	 * Get a collection of the shipment ID's which have an item of the specified state
+	 * @param sts ("A","C","D","P") to retrieve list 
+	 * @return shipment IDs
+	 */
+	public Collection<Long> getOrderListByStatus( String sts ) {
+		return orderMapper.getOrderListByStatus( sts );
 	}
 	
 	/**
@@ -68,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @return all items w/ specified transfer ID (should only be one)
 	 */
 	@Override
-	public Collection<Item> getOrderItemByTransferId( Long id ) {
+	public Item getOrderItemByTransferId( Long id ) {
 		return orderMapper.getOrderItemByTransferId(id);
 	}
 	
@@ -174,4 +221,14 @@ public class OrderServiceImpl implements OrderService {
 		orderMapper.updateItem(i);
 	}
 
+	/**
+	 * Update the item record to mark the item with the specified code
+	 * for the given  ID provided in the Value object
+	 * @param v value object with id and code 
+	 */
+	@Override
+	public void completeOrderItems( Value v ) {
+		orderMapper.completeOrderItems(v);
+	}
+	
 }

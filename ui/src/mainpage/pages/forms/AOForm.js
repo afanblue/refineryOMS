@@ -15,14 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class AOForm extends Component {
   constructor(props) {
     super(props);
     this.state = {  };
+  }
+
+  static get propTypes() {
+      return {
+          ao: PropTypes.object,
+          histTypes: PropTypes.any,
+          unitList: PropTypes.any,
+          tag: PropTypes.object,
+          tagId: PropTypes.number,
+          name: PropTypes.string,
+          description: PropTypes.string,
+          active: PropTypes.string,
+          zeroValue: PropTypes.number,
+          maxValue: PropTypes.number,
+          unitId: PropTypes.number,
+          histTypeCode: PropTypes.string,
+          percent: PropTypes.number,
+          aoUpdate: PropTypes.func,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func
+      }
   }
 
   render() {
@@ -40,19 +63,19 @@ class AOForm extends Component {
             <tr>
               <td className="oms-top">
         <form id="aoForm" >
-          Please enter your analog output information 
+          Please enter your analog output information
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
-                <td className="oms-spacing-180"><img src="images/spacer.png" 
+                <td className="oms-spacing-180"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-90">AO name:</th>
                 <td className="oms-spacing-180">
                   <input type="hidden" name="tagId" value={ao.tagId} />
-                  <input type="text" id="tag.name" name="tag.name" value={ao.tag.name} 
+                  <input type="text" id="tag.name" name="tag.name" value={ao.tag.name}
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')} size="10" maxLength="10"
                          onChange={fieldChange} />
                 </td>
@@ -65,11 +88,11 @@ class AOForm extends Component {
                          onChange={fieldChange} />
                 </td>
               </tr>
-            
+
               <tr>
                 <td className="oms-spacing-90">Active:</td>
                 <td className="oms-spacing-180">
-                  <select id="tag.active" name="tag.active" value={ao.tag.active} 
+                  <select id="tag.active" name="tag.active" value={ao.tag.active}
                           className={["oms-spacing-180","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange} >
                     <option value="N">N</option>
@@ -97,11 +120,11 @@ class AOForm extends Component {
             <td >
               <select id="unitId" name="unitId" value={ao.unitId}
                       onChange={fieldChange}>
-                { unitList.map( 
+                { unitList.map(
                   function(n,x){
                     return <option key={x} value={n.id}>{n.code} ({n.name})</option>
                   } )
-                }                
+                }
               </select>
             </td>
           </tr>
@@ -110,32 +133,32 @@ class AOForm extends Component {
             <td >
               <select id="histTypeCode" name="histTypeCode" value={ao.histTypeCode}
                       onChange={fieldChange}>
-                { histTypes.map( 
+                { histTypes.map(
                   function(n,x){
                     return <option key={x} value={n.code}>{n.name}</option>
                   } )
-                }                
+                }
               </select>
             </td>
           </tr>
           <tr>
             <td className="oms-spacing-90">Percent:</td>
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
-              <input type="text" id="percent" name="percent" value={ao.percent} 
+              <input type="text" id="percent" name="percent" value={ao.percent}
                      onChange={fieldChange} maxLength="2" size="5"/>
             </td>
           </tr>
-  
+
             </tbody>
           </table>
           <table className="oms-spacing">
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value="Quit" className="oms-spacing"
                          onClick={(e) => {handleQuit(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {aoUpdate(e)}}/>
                 </td>
@@ -143,16 +166,16 @@ class AOForm extends Component {
             </tbody>
           </table>
         </form>
-  
+
               </td>
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     );
   }
-  
+
 }
 
 export default AOForm;

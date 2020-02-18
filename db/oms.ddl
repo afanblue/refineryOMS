@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.6.45, for Win64 (x86_64)
+-- MariaDB dump 10.17  Distrib 10.4.12-MariaDB, for Win64 (AMD64)
 --
 -- Host: localhost    Database: oms
 -- ------------------------------------------------------
--- Server version	5.6.45-log
+-- Server version	10.4.12-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,9 +23,10 @@ DROP TABLE IF EXISTS `active_order_vw`;
 /*!50001 DROP VIEW IF EXISTS `active_order_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `active_order_vw` AS SELECT 
- 1 AS `shipment_id`,
- 1 AS `sc`*/;
+/*!50001 CREATE TABLE `active_order_vw` (
+  `shipment_id` tinyint NOT NULL,
+  `sc` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -36,14 +37,15 @@ DROP TABLE IF EXISTS `active_vw`;
 /*!50001 DROP VIEW IF EXISTS `active_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `active_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `active_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -54,13 +56,14 @@ DROP TABLE IF EXISTS `ad_value_vw`;
 /*!50001 DROP VIEW IF EXISTS `ad_value_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `ad_value_vw` AS SELECT 
- 1 AS `tag_id`,
- 1 AS `scan_value`,
- 1 AS `scan_time`,
- 1 AS `max_value`,
- 1 AS `zero_value`,
- 1 AS `alarm_color`*/;
+/*!50001 CREATE TABLE `ad_value_vw` (
+  `tag_id` tinyint NOT NULL,
+  `scan_value` tinyint NOT NULL,
+  `scan_time` tinyint NOT NULL,
+  `max_value` tinyint NOT NULL,
+  `zero_value` tinyint NOT NULL,
+  `alarm_color` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -73,8 +76,8 @@ DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `id` int(11) NOT NULL,
   `device_id` int(11) DEFAULT NULL,
-  `cycle_time` int(11) DEFAULT '60',
-  `offset` int(11) DEFAULT '0',
+  `cycle_time` int(11) DEFAULT 60,
+  `offset` int(11) DEFAULT 0,
   `iaddr1` int(11) DEFAULT NULL,
   `iaddr2` int(11) DEFAULT NULL,
   `iaddr3` int(11) DEFAULT NULL,
@@ -158,7 +161,7 @@ CREATE TABLE `alarm` (
   CONSTRAINT `alarm_ibfk_1` FOREIGN KEY (`alarm_type_id`) REFERENCES `alarm_type` (`id`),
   CONSTRAINT `alarm_ibfk_2` FOREIGN KEY (`alarm_msg_id`) REFERENCES `alarm_message` (`id`),
   CONSTRAINT `alarm_tag_fk` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2550 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2552 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -206,10 +209,11 @@ DROP TABLE IF EXISTS `alarm_color_list_vw`;
 /*!50001 DROP VIEW IF EXISTS `alarm_color_list_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `alarm_color_list_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `item_name`,
- 1 AS `item_value`*/;
+/*!50001 CREATE TABLE `alarm_color_list_vw` (
+  `id` tinyint NOT NULL,
+  `item_name` tinyint NOT NULL,
+  `item_value` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -220,13 +224,14 @@ DROP TABLE IF EXISTS `alarm_color_vw`;
 /*!50001 DROP VIEW IF EXISTS `alarm_color_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `alarm_color_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `ll_color`,
- 1 AS `lo_color`,
- 1 AS `norm_color`,
- 1 AS `hi_color`,
- 1 AS `hh_color`*/;
+/*!50001 CREATE TABLE `alarm_color_vw` (
+  `id` tinyint NOT NULL,
+  `ll_color` tinyint NOT NULL,
+  `lo_color` tinyint NOT NULL,
+  `norm_color` tinyint NOT NULL,
+  `hi_color` tinyint NOT NULL,
+  `hh_color` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -237,17 +242,18 @@ DROP TABLE IF EXISTS `alarm_info`;
 /*!50001 DROP VIEW IF EXISTS `alarm_info`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `alarm_info` AS SELECT 
- 1 AS `id`,
- 1 AS `tag_id`,
- 1 AS `alm_occurred`,
- 1 AS `acknowledged`,
- 1 AS `active`,
- 1 AS `alarm_msg_id`,
- 1 AS `priority`,
- 1 AS `code`,
- 1 AS `color`,
- 1 AS `value`*/;
+/*!50001 CREATE TABLE `alarm_info` (
+  `id` tinyint NOT NULL,
+  `tag_id` tinyint NOT NULL,
+  `alm_occurred` tinyint NOT NULL,
+  `acknowledged` tinyint NOT NULL,
+  `active` tinyint NOT NULL,
+  `alarm_msg_id` tinyint NOT NULL,
+  `priority` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `color` tinyint NOT NULL,
+  `value` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -264,7 +270,7 @@ CREATE TABLE `alarm_message` (
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -313,7 +319,7 @@ DROP TABLE IF EXISTS `alarm_type`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `alarm_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `priority` int(11) NOT NULL DEFAULT '0' COMMENT '0 is lowest, priority increases',
+  `priority` int(11) NOT NULL DEFAULT 0 COMMENT '0 is lowest, priority increases',
   `alarm_msg_id` int(11) NOT NULL COMMENT 'default alarm message',
   `code` char(4) DEFAULT NULL,
   `last_modified_dt` timestamp NULL DEFAULT NULL,
@@ -321,7 +327,7 @@ CREATE TABLE `alarm_type` (
   PRIMARY KEY (`id`),
   KEY `altype_msg_fk` (`alarm_msg_id`),
   CONSTRAINT `alarm_type_ibfk_1` FOREIGN KEY (`alarm_msg_id`) REFERENCES `alarm_message` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -369,11 +375,12 @@ DROP TABLE IF EXISTS `all_fields`;
 /*!50001 DROP VIEW IF EXISTS `all_fields`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `all_fields` AS SELECT 
- 1 AS `id`,
- 1 AS `name`,
- 1 AS `parent_id`,
- 1 AS `parent`*/;
+/*!50001 CREATE TABLE `all_fields` (
+  `id` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `parent_id` tinyint NOT NULL,
+  `parent` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -387,14 +394,14 @@ CREATE TABLE `analog_input` (
   `tag_id` int(11) NOT NULL,
   `unit_id` int(11) NOT NULL,
   `analog_type_code` char(3) NOT NULL COMMENT 'analog tag type',
-  `scan_int` int(11) DEFAULT '60' COMMENT 'iterations between scans',
-  `scan_offset` int(11) DEFAULT '0' COMMENT 'iteration offset from 0',
-  `current_scan` int(11) DEFAULT '0' COMMENT 'current scan interation',
-  `zero_value` double DEFAULT '0' COMMENT 'min point of input',
-  `max_value` double DEFAULT '100' COMMENT 'max value of input',
+  `scan_int` int(11) DEFAULT 60 COMMENT 'iterations between scans',
+  `scan_offset` int(11) DEFAULT 0 COMMENT 'iteration offset from 0',
+  `current_scan` int(11) DEFAULT 0 COMMENT 'current scan interation',
+  `zero_value` double DEFAULT 0 COMMENT 'min point of input',
+  `max_value` double DEFAULT 100 COMMENT 'max value of input',
   `hist_type_code` char(3) DEFAULT NULL COMMENT 'Boxcar/Linear/<null>',
-  `percent` double DEFAULT '2' COMMENT 'percent variation allowed before hist logging',
-  `slope` double DEFAULT '0' COMMENT 'slope of history value',
+  `percent` double DEFAULT 2 COMMENT 'percent variation allowed before hist logging',
+  `slope` double DEFAULT 0 COMMENT 'slope of history value',
   `raw_value` double DEFAULT NULL COMMENT 'raw value (before scaling)',
   `scan_value` double DEFAULT NULL COMMENT 'value of most recent scan',
   `scan_time` timestamp NULL DEFAULT NULL COMMENT 'time of most recent scan',
@@ -461,8 +468,8 @@ DROP TABLE IF EXISTS `analog_output`;
 CREATE TABLE `analog_output` (
   `tag_id` int(11) NOT NULL,
   `hist_type_code` char(3) DEFAULT NULL COMMENT 'future? everything is future',
-  `unit_id` int(11) DEFAULT '0',
-  `is_new` int(11) DEFAULT '0' COMMENT '1 => new value needs to be output; 0 => no output needed',
+  `unit_id` int(11) DEFAULT 0,
+  `is_new` int(11) DEFAULT 0 COMMENT '1 => new value needs to be output; 0 => no output needed',
   `scan_value` double DEFAULT NULL COMMENT 'value to output',
   `scan_time` timestamp NULL DEFAULT NULL COMMENT 'time output done',
   `zero_value` double DEFAULT NULL COMMENT 'minimum value output',
@@ -526,14 +533,15 @@ DROP TABLE IF EXISTS `analog_type_vw`;
 /*!50001 DROP VIEW IF EXISTS `analog_type_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `analog_type_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `analog_type_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -602,14 +610,15 @@ DROP TABLE IF EXISTS `calculation_type_vw`;
 /*!50001 DROP VIEW IF EXISTS `calculation_type_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `calculation_type_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `calculation_type_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -620,13 +629,14 @@ DROP TABLE IF EXISTS `carrier_vw`;
 /*!50001 DROP VIEW IF EXISTS `carrier_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `carrier_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `code`,
- 1 AS `name`,
- 1 AS `description`,
- 1 AS `js_draw_file`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `carrier_vw` (
+  `id` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `js_draw_file` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -637,22 +647,23 @@ DROP TABLE IF EXISTS `child_value_vw`;
 /*!50001 DROP VIEW IF EXISTS `child_value_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `child_value_vw` AS SELECT 
- 1 AS `parent_id`,
- 1 AS `rel_tag_id`,
- 1 AS `id`,
- 1 AS `name`,
- 1 AS `description`,
- 1 AS `tag_type_code`,
- 1 AS `active`,
- 1 AS `c1_lat`,
- 1 AS `c1_long`,
- 1 AS `c2_lat`,
- 1 AS `c2_long`,
- 1 AS `child_tag_id`,
- 1 AS `child_tag_name`,
- 1 AS `child_value`,
- 1 AS `child_time`*/;
+/*!50001 CREATE TABLE `child_value_vw` (
+  `parent_id` tinyint NOT NULL,
+  `rel_tag_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `tag_type_code` tinyint NOT NULL,
+  `active` tinyint NOT NULL,
+  `c1_lat` tinyint NOT NULL,
+  `c1_long` tinyint NOT NULL,
+  `c2_lat` tinyint NOT NULL,
+  `c2_long` tinyint NOT NULL,
+  `child_tag_id` tinyint NOT NULL,
+  `child_tag_name` tinyint NOT NULL,
+  `child_value` tinyint NOT NULL,
+  `child_time` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -669,7 +680,7 @@ CREATE TABLE `config` (
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -717,14 +728,15 @@ DROP TABLE IF EXISTS `content_type_vw`;
 /*!50001 DROP VIEW IF EXISTS `content_type_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `content_type_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `content_type_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -799,7 +811,7 @@ CREATE TABLE `customer` (
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -856,14 +868,14 @@ CREATE TABLE `device` (
   `param2` char(64) DEFAULT NULL,
   `param3` char(64) DEFAULT NULL,
   `param4` char(64) DEFAULT NULL,
-  `cycle_time` int(11) NOT NULL DEFAULT '60' COMMENT 'How often (in seconds) the device is scanned.  The default is every minute.  Obvious caveat: if this number is not a factor/multiple of 60, it will be scanned at weird intervals.',
-  `offset` int(11) DEFAULT '0' COMMENT 'How many seconds from the hour that the scan starts.  So if the value is 0, then the scan starts at the hour, on the hour.  If the value is 330, it starts at 5 min 30 seconds after the hour.  Your call on how weird to make it.',
+  `cycle_time` int(11) NOT NULL DEFAULT 60 COMMENT 'How often (in seconds) the device is scanned.  The default is every minute.  Obvious caveat: if this number is not a factor/multiple of 60, it will be scanned at weird intervals.',
+  `offset` int(11) DEFAULT 0 COMMENT 'How many seconds from the hour that the scan starts.  So if the value is 0, then the scan starts at the hour, on the hour.  If the value is 330, it starts at 5 min 30 seconds after the hour.  Your call on how weird to make it.',
   `seq_no` int(11) DEFAULT NULL COMMENT 'Order to scan in.  This is used primarily to force the data simulation to run after everthing else.',
   `active` char(1) DEFAULT 'Y',
   `last_modified_dt` timestamp(3) NULL DEFAULT NULL,
   `create_dt` timestamp(3) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='This table specifies the I/O devices from which we collect data.		';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='This table specifies the I/O devices from which we collect data.		';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -914,9 +926,9 @@ DROP TABLE IF EXISTS `digital_input`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `digital_input` (
   `tag_id` int(11) NOT NULL,
-  `scan_int` int(11) DEFAULT '60' COMMENT 'iterations between scans',
-  `scan_offset` int(11) DEFAULT '0' COMMENT 'iteration offset from 0',
-  `current_scan` int(11) DEFAULT '0' COMMENT 'current scan interation',
+  `scan_int` int(11) DEFAULT 60 COMMENT 'iterations between scans',
+  `scan_offset` int(11) DEFAULT 0 COMMENT 'iteration offset from 0',
+  `current_scan` int(11) DEFAULT 0 COMMENT 'current scan interation',
   `hist_type_code` char(3) DEFAULT NULL COMMENT 'one of the values of HIST_TYPE_VW',
   `scan_value` double DEFAULT NULL COMMENT 'value of most recent scan (0/1)',
   `scan_time` timestamp NULL DEFAULT NULL COMMENT 'time of most recent scan',
@@ -981,7 +993,7 @@ DROP TABLE IF EXISTS `digital_output`;
 CREATE TABLE `digital_output` (
   `tag_id` int(11) NOT NULL,
   `hist_type_code` varchar(3) DEFAULT NULL COMMENT 'future? everything is future',
-  `is_new` int(11) DEFAULT '0' COMMENT '1 => new value needs to be output; 0 => no output needed',
+  `is_new` int(11) DEFAULT 0 COMMENT '1 => new value needs to be output; 0 => no output needed',
   `scan_value` double DEFAULT NULL COMMENT 'value to output (0/1)',
   `scan_time` timestamp NULL DEFAULT NULL COMMENT 'time of most recent scan',
   `prev_value` double DEFAULT NULL COMMENT 'value of previous output',
@@ -1041,14 +1053,15 @@ DROP TABLE IF EXISTS `dynamic_menu_items_vw`;
 /*!50001 DROP VIEW IF EXISTS `dynamic_menu_items_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `dynamic_menu_items_vw` AS SELECT 
- 1 AS `text`,
- 1 AS `order_no`,
- 1 AS `uri`,
- 1 AS `viewpriv`,
- 1 AS `execpriv`,
- 1 AS `category`,
- 1 AS `menuname`*/;
+/*!50001 CREATE TABLE `dynamic_menu_items_vw` (
+  `text` tinyint NOT NULL,
+  `order_no` tinyint NOT NULL,
+  `uri` tinyint NOT NULL,
+  `viewpriv` tinyint NOT NULL,
+  `execpriv` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `menuname` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1113,9 +1126,10 @@ DROP TABLE IF EXISTS `field_tag_deep_vw`;
 /*!50001 DROP VIEW IF EXISTS `field_tag_deep_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `field_tag_deep_vw` AS SELECT 
- 1 AS `field_tag_id`,
- 1 AS `child_tag_id`*/;
+/*!50001 CREATE TABLE `field_tag_deep_vw` (
+  `field_tag_id` tinyint NOT NULL,
+  `child_tag_id` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1126,9 +1140,10 @@ DROP TABLE IF EXISTS `field_tag_vw`;
 /*!50001 DROP VIEW IF EXISTS `field_tag_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `field_tag_vw` AS SELECT 
- 1 AS `field_tag_id`,
- 1 AS `child_tag_id`*/;
+/*!50001 CREATE TABLE `field_tag_vw` (
+  `field_tag_id` tinyint NOT NULL,
+  `child_tag_id` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1149,7 +1164,7 @@ CREATE TABLE `history` (
   KEY `hist_tag_nuk` (`tag_id`),
   KEY `hist_stime_nuk` (`scan_time`),
   CONSTRAINT `history_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1407551 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1407567 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1197,14 +1212,15 @@ DROP TABLE IF EXISTS `history_type_vw`;
 /*!50001 DROP VIEW IF EXISTS `history_type_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `history_type_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `history_type_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1216,9 +1232,9 @@ DROP TABLE IF EXISTS `hold`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `hold` (
   `carrier_id` int(11) NOT NULL COMMENT 'ID for carrier to which this hold is linked',
-  `hold_no` int(11) NOT NULL DEFAULT '1',
+  `hold_no` int(11) NOT NULL DEFAULT 1,
   `volume` double NOT NULL COMMENT 'in barrels',
-  `no_duplicates` int(11) NOT NULL DEFAULT '1' COMMENT 'traiN, Ship, trucK',
+  `no_duplicates` int(11) NOT NULL DEFAULT 1 COMMENT 'traiN, Ship, trucK',
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`carrier_id`,`hold_no`)
@@ -1272,14 +1288,15 @@ DROP TABLE IF EXISTS `horizontal_menu_vw`;
 /*!50001 DROP VIEW IF EXISTS `horizontal_menu_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `horizontal_menu_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `menu_type_id`,
- 1 AS `category_id`,
- 1 AS `text`,
- 1 AS `page_id`,
- 1 AS `order_no`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `horizontal_menu_vw` (
+  `id` tinyint NOT NULL,
+  `menu_type_id` tinyint NOT NULL,
+  `category_id` tinyint NOT NULL,
+  `text` tinyint NOT NULL,
+  `page_id` tinyint NOT NULL,
+  `order_no` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1304,7 +1321,7 @@ CREATE TABLE `hot_spot` (
   PRIMARY KEY (`id`),
   KEY `hs_field_fk` (`field_id`),
   CONSTRAINT `hot_spot_ibfk_1` FOREIGN KEY (`field_id`) REFERENCES `field` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1368,7 +1385,7 @@ CREATE TABLE `menu` (
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`menu_type_id`) REFERENCES `reference_code` (`id`),
   CONSTRAINT `menu_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `menu` (`id`),
   CONSTRAINT `menu_ibfk_3` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1416,14 +1433,15 @@ DROP TABLE IF EXISTS `menu_type_vw`;
 /*!50001 DROP VIEW IF EXISTS `menu_type_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `menu_type_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `menu_type_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1434,14 +1452,15 @@ DROP TABLE IF EXISTS `off_on_vw`;
 /*!50001 DROP VIEW IF EXISTS `off_on_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `off_on_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `off_on_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1452,14 +1471,15 @@ DROP TABLE IF EXISTS `on_off_vw`;
 /*!50001 DROP VIEW IF EXISTS `on_off_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `on_off_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `on_off_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1470,12 +1490,13 @@ DROP TABLE IF EXISTS `order_volume_vw`;
 /*!50001 DROP VIEW IF EXISTS `order_volume_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `order_volume_vw` AS SELECT 
- 1 AS `shipment_id`,
- 1 AS `content_cd`,
- 1 AS `transfer_id`,
- 1 AS `exp_volume`,
- 1 AS `act_volume`*/;
+/*!50001 CREATE TABLE `order_volume_vw` (
+  `shipment_id` tinyint NOT NULL,
+  `content_cd` tinyint NOT NULL,
+  `transfer_id` tinyint NOT NULL,
+  `exp_volume` tinyint NOT NULL,
+  `act_volume` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1499,7 +1520,7 @@ CREATE TABLE `page` (
   KEY `page_ex_priv_fk` (`exec_priv_id`),
   CONSTRAINT `page_ibfk_1` FOREIGN KEY (`view_priv_id`) REFERENCES `privilege` (`id`),
   CONSTRAINT `page_ibfk_2` FOREIGN KEY (`exec_priv_id`) REFERENCES `privilege` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1547,9 +1568,10 @@ DROP TABLE IF EXISTS `pending_order_vw`;
 /*!50001 DROP VIEW IF EXISTS `pending_order_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `pending_order_vw` AS SELECT 
- 1 AS `shipment_id`,
- 1 AS `sc`*/;
+/*!50001 CREATE TABLE `pending_order_vw` (
+  `shipment_id` tinyint NOT NULL,
+  `sc` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1632,7 +1654,7 @@ CREATE TABLE `privilege` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1673,6 +1695,60 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Table structure for table `raw_data`
+--
+
+DROP TABLE IF EXISTS `raw_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `raw_data` (
+  `id` int(11) NOT NULL,
+  `updated` int(11) DEFAULT 0 COMMENT '0 => not updated',
+  `integer_value` int(11) DEFAULT 0,
+  `float_value` float DEFAULT 0,
+  `scan_time` timestamp NULL DEFAULT NULL,
+  `last_modified_dt` timestamp NULL DEFAULT NULL,
+  `create_dt` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `raw_data_tag_fk` FOREIGN KEY (`id`) REFERENCES `tag` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`raw_data_bi_trg` BEFORE INSERT ON `raw_data` FOR EACH ROW
+BEGIN
+  if new.create_dt is null then set new.create_dt=utc_timestamp(); end if;
+  set new.last_modified_dt = utc_timestamp();
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 trigger raw_data_bu_trg before update ON `raw_data` for each row set new.last_modified_dt = utc_timestamp() */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
 -- Table structure for table `reference_code`
 --
 
@@ -1691,7 +1767,7 @@ CREATE TABLE `reference_code` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `refcd_code_uk` (`category`,`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1750,7 +1826,7 @@ CREATE TABLE `rel_tag_tag` (
   KEY `tag_child_fk` (`child_tag_id`),
   CONSTRAINT `rel_tag_tag_ibfk_2` FOREIGN KEY (`parent_tag_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `rel_tag_tag_ibfk_3` FOREIGN KEY (`child_tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4276 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5875 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1810,7 +1886,7 @@ CREATE TABLE `role` (
   UNIQUE KEY `name` (`name`),
   KEY `role_ibfk_1` (`parent_id`),
   CONSTRAINT `role_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1914,15 +1990,16 @@ DROP TABLE IF EXISTS `rtt_vw`;
 /*!50001 DROP VIEW IF EXISTS `rtt_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `rtt_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `parent_tag_id`,
- 1 AS `parent`,
- 1 AS `parent_type`,
- 1 AS `child_tag_id`,
- 1 AS `child`,
- 1 AS `child_type`,
- 1 AS `code`*/;
+/*!50001 CREATE TABLE `rtt_vw` (
+  `id` tinyint NOT NULL,
+  `parent_tag_id` tinyint NOT NULL,
+  `parent` tinyint NOT NULL,
+  `parent_type` tinyint NOT NULL,
+  `child_tag_id` tinyint NOT NULL,
+  `child` tinyint NOT NULL,
+  `child_type` tinyint NOT NULL,
+  `code` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1933,14 +2010,15 @@ DROP TABLE IF EXISTS `scm_object_vw`;
 /*!50001 DROP VIEW IF EXISTS `scm_object_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `scm_object_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `scm_object_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1951,17 +2029,18 @@ DROP TABLE IF EXISTS `sco_ref_tag_row_vw`;
 /*!50001 DROP VIEW IF EXISTS `sco_ref_tag_row_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `sco_ref_tag_row_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `gc_rel_tag_id`,
- 1 AS `gc_tag_id`,
- 1 AS `gc_tag_name`,
- 1 AS `gc_type_code`,
- 1 AS `gc_value`,
- 1 AS `gc_time`,
- 1 AS `max_value`,
- 1 AS `zero_value`,
- 1 AS `alarm_color`*/;
+/*!50001 CREATE TABLE `sco_ref_tag_row_vw` (
+  `id` tinyint NOT NULL,
+  `gc_rel_tag_id` tinyint NOT NULL,
+  `gc_tag_id` tinyint NOT NULL,
+  `gc_tag_name` tinyint NOT NULL,
+  `gc_type_code` tinyint NOT NULL,
+  `gc_value` tinyint NOT NULL,
+  `gc_time` tinyint NOT NULL,
+  `max_value` tinyint NOT NULL,
+  `zero_value` tinyint NOT NULL,
+  `alarm_color` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1972,24 +2051,25 @@ DROP TABLE IF EXISTS `sco_ref_tag_vw`;
 /*!50001 DROP VIEW IF EXISTS `sco_ref_tag_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `sco_ref_tag_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `inp_rel_tag_id`,
- 1 AS `inp_id`,
- 1 AS `inp_tag`,
- 1 AS `inp_type`,
- 1 AS `inp_value`,
- 1 AS `inp_max`,
- 1 AS `inp_zero`,
- 1 AS `inp_alm_color`,
- 1 AS `out_rel_tag_id`,
- 1 AS `out_id`,
- 1 AS `out_tag`,
- 1 AS `out_type`,
- 1 AS `out_value`,
- 1 AS `out_max`,
- 1 AS `out_zero`,
- 1 AS `out_alm_color`*/;
+/*!50001 CREATE TABLE `sco_ref_tag_vw` (
+  `id` tinyint NOT NULL,
+  `inp_rel_tag_id` tinyint NOT NULL,
+  `inp_id` tinyint NOT NULL,
+  `inp_tag` tinyint NOT NULL,
+  `inp_type` tinyint NOT NULL,
+  `inp_value` tinyint NOT NULL,
+  `inp_max` tinyint NOT NULL,
+  `inp_zero` tinyint NOT NULL,
+  `inp_alm_color` tinyint NOT NULL,
+  `out_rel_tag_id` tinyint NOT NULL,
+  `out_id` tinyint NOT NULL,
+  `out_tag` tinyint NOT NULL,
+  `out_type` tinyint NOT NULL,
+  `out_value` tinyint NOT NULL,
+  `out_max` tinyint NOT NULL,
+  `out_zero` tinyint NOT NULL,
+  `out_alm_color` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2061,12 +2141,12 @@ DROP TABLE IF EXISTS `shipment_item`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shipment_item` (
   `shipment_id` int(11) NOT NULL,
-  `item_no` int(11) NOT NULL DEFAULT '1',
+  `item_no` int(11) NOT NULL DEFAULT 1,
   `active` varchar(1) DEFAULT 'P',
   `content_cd` varchar(3) NOT NULL DEFAULT 'C',
-  `exp_volume_min` double DEFAULT '0',
-  `exp_volume_max` double DEFAULT '100000',
-  `act_volume` double DEFAULT '0',
+  `exp_volume_min` double DEFAULT 0,
+  `exp_volume_max` double DEFAULT 100000,
+  `act_volume` double DEFAULT 0,
   `carrier_id` int(11) DEFAULT NULL,
   `station_id` int(11) DEFAULT NULL COMMENT 'The station within the dock to/from which this particular item sends/gets its content.',
   `transfer_id` int(11) DEFAULT NULL COMMENT 'ID of transfer created to handle this order',
@@ -2130,8 +2210,8 @@ CREATE TABLE `sim_io` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `in_id_xfer_fk_idx` (`in_id`),
-  CONSTRAINT `id_xfer_fk` FOREIGN KEY (`id`) REFERENCES `xfer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `in_id_xfer_fk` FOREIGN KEY (`in_id`) REFERENCES `xfer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `id_xfer_fk` FOREIGN KEY (`id`) REFERENCES `raw_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `in_id_xfer_fk` FOREIGN KEY (`in_id`) REFERENCES `raw_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table is used by the SIMULATION routine as a "connection" between the tags to be output and the tags which reflect the effects of the output.  So, an analog/digital output is specified by the ID field and the corresponding analog/digital input is specifed by the IN_ID field.\n\nFor control blocks, this can be generated with a record where ID is the control block ID and the IN_ID is the control block PV_ID.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -2196,7 +2276,7 @@ CREATE TABLE `tag` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag_name_ui` (`name`,`tag_type_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2817 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4279 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2274,7 +2354,7 @@ CREATE TABLE `tag_type` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tt_code_ui` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2381,9 +2461,10 @@ DROP TABLE IF EXISTS `tank_level_vw`;
 /*!50001 DROP VIEW IF EXISTS `tank_level_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tank_level_vw` AS SELECT 
- 1 AS `tank_id`,
- 1 AS `level_id`*/;
+/*!50001 CREATE TABLE `tank_level_vw` (
+  `tank_id` tinyint NOT NULL,
+  `level_id` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2394,17 +2475,18 @@ DROP TABLE IF EXISTS `tank_ref_tag_row_vw`;
 /*!50001 DROP VIEW IF EXISTS `tank_ref_tag_row_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tank_ref_tag_row_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `rtt_id`,
- 1 AS `child_tag_id`,
- 1 AS `child`,
- 1 AS `analog_type_code`,
- 1 AS `value`,
- 1 AS `value_text`,
- 1 AS `max_value`,
- 1 AS `zero_value`,
- 1 AS `alarm_color`*/;
+/*!50001 CREATE TABLE `tank_ref_tag_row_vw` (
+  `id` tinyint NOT NULL,
+  `rtt_id` tinyint NOT NULL,
+  `child_tag_id` tinyint NOT NULL,
+  `child` tinyint NOT NULL,
+  `analog_type_code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `value_text` tinyint NOT NULL,
+  `max_value` tinyint NOT NULL,
+  `zero_value` tinyint NOT NULL,
+  `alarm_color` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2415,24 +2497,25 @@ DROP TABLE IF EXISTS `tank_ref_tag_vw`;
 /*!50001 DROP VIEW IF EXISTS `tank_ref_tag_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tank_ref_tag_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `level_tag`,
- 1 AS `level_tag_id`,
- 1 AS `level_rtt_id`,
- 1 AS `level`,
- 1 AS `level_text`,
- 1 AS `level_max`,
- 1 AS `level_zero`,
- 1 AS `level_alm_color`,
- 1 AS `temp_tag`,
- 1 AS `temp_tag_id`,
- 1 AS `temp_rtt_id`,
- 1 AS `temp`,
- 1 AS `temp_text`,
- 1 AS `temp_max`,
- 1 AS `temp_zero`,
- 1 AS `temp_alm_color`*/;
+/*!50001 CREATE TABLE `tank_ref_tag_vw` (
+  `id` tinyint NOT NULL,
+  `level_tag` tinyint NOT NULL,
+  `level_tag_id` tinyint NOT NULL,
+  `level_rtt_id` tinyint NOT NULL,
+  `level` tinyint NOT NULL,
+  `level_text` tinyint NOT NULL,
+  `level_max` tinyint NOT NULL,
+  `level_zero` tinyint NOT NULL,
+  `level_alm_color` tinyint NOT NULL,
+  `temp_tag` tinyint NOT NULL,
+  `temp_tag_id` tinyint NOT NULL,
+  `temp_rtt_id` tinyint NOT NULL,
+  `temp` tinyint NOT NULL,
+  `temp_text` tinyint NOT NULL,
+  `temp_max` tinyint NOT NULL,
+  `temp_zero` tinyint NOT NULL,
+  `temp_alm_color` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2443,9 +2526,10 @@ DROP TABLE IF EXISTS `tank_tag_vw`;
 /*!50001 DROP VIEW IF EXISTS `tank_tag_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tank_tag_vw` AS SELECT 
- 1 AS `parent_tag_id`,
- 1 AS `child_tag_id`*/;
+/*!50001 CREATE TABLE `tank_tag_vw` (
+  `parent_tag_id` tinyint NOT NULL,
+  `child_tag_id` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2456,9 +2540,10 @@ DROP TABLE IF EXISTS `tank_temperature_vw`;
 /*!50001 DROP VIEW IF EXISTS `tank_temperature_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tank_temperature_vw` AS SELECT 
- 1 AS `tank_id`,
- 1 AS `temperature_id`*/;
+/*!50001 CREATE TABLE `tank_temperature_vw` (
+  `tank_id` tinyint NOT NULL,
+  `temperature_id` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2469,14 +2554,15 @@ DROP TABLE IF EXISTS `tf_vw`;
 /*!50001 DROP VIEW IF EXISTS `tf_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tf_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `tf_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2490,14 +2576,14 @@ CREATE TABLE `transfer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag_id` int(11) DEFAULT NULL,
   `name` char(24) NOT NULL,
-  `status_id` int(11) NOT NULL DEFAULT '0',
+  `status_id` int(11) NOT NULL DEFAULT 0,
   `transfer_type_id` int(11) NOT NULL,
   `source_id` int(11) NOT NULL,
   `destination_id` int(11) NOT NULL,
   `exp_start_time` timestamp NULL DEFAULT NULL,
   `exp_end_time` timestamp NULL DEFAULT NULL,
   `exp_volume` double(16,4) DEFAULT NULL,
-  `delta` int(11) NOT NULL DEFAULT '0',
+  `delta` int(11) NOT NULL DEFAULT 0,
   `act_start_time` timestamp NULL DEFAULT NULL,
   `act_end_time` timestamp NULL DEFAULT NULL,
   `act_volume` double(16,4) DEFAULT NULL,
@@ -2508,7 +2594,7 @@ CREATE TABLE `transfer` (
   KEY `transfer_dest_id_fk` (`destination_id`),
   CONSTRAINT `transfer_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `transfer_ibfk_4` FOREIGN KEY (`destination_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2855 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5729 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2610,14 +2696,15 @@ DROP TABLE IF EXISTS `transfer_status_vw`;
 /*!50001 DROP VIEW IF EXISTS `transfer_status_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `transfer_status_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `transfer_status_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2628,14 +2715,15 @@ DROP TABLE IF EXISTS `transfer_type_vw`;
 /*!50001 DROP VIEW IF EXISTS `transfer_type_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `transfer_type_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `category`,
- 1 AS `name`,
- 1 AS `code`,
- 1 AS `value`,
- 1 AS `description`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `transfer_type_vw` (
+  `id` tinyint NOT NULL,
+  `category` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `code` tinyint NOT NULL,
+  `value` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2646,19 +2734,20 @@ DROP TABLE IF EXISTS `transfer_vw`;
 /*!50001 DROP VIEW IF EXISTS `transfer_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `transfer_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `name`,
- 1 AS `status`,
- 1 AS `type`,
- 1 AS `source`,
- 1 AS `destination`,
- 1 AS `exp_start_time`,
- 1 AS `exp_end_time`,
- 1 AS `exp_volume`,
- 1 AS `act_start_time`,
- 1 AS `act_end_time`,
- 1 AS `act_volume`*/;
+/*!50001 CREATE TABLE `transfer_vw` (
+  `id` tinyint NOT NULL,
+  `name` tinyint NOT NULL,
+  `status` tinyint NOT NULL,
+  `type` tinyint NOT NULL,
+  `source` tinyint NOT NULL,
+  `destination` tinyint NOT NULL,
+  `exp_start_time` tinyint NOT NULL,
+  `exp_end_time` tinyint NOT NULL,
+  `exp_volume` tinyint NOT NULL,
+  `act_start_time` tinyint NOT NULL,
+  `act_end_time` tinyint NOT NULL,
+  `act_volume` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2679,7 +2768,7 @@ CREATE TABLE `unit` (
   UNIQUE KEY `unit_code_uk` (`code`),
   KEY `unit_type_fk` (`unit_type_id`),
   CONSTRAINT `unit_ibfk_1` FOREIGN KEY (`unit_type_id`) REFERENCES `unit_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2730,8 +2819,8 @@ CREATE TABLE `unit_conversion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_id` int(11) NOT NULL,
   `to_id` int(11) NOT NULL,
-  `offset` double NOT NULL DEFAULT '0',
-  `factor` double NOT NULL DEFAULT '1',
+  `offset` double NOT NULL DEFAULT 0,
+  `factor` double NOT NULL DEFAULT 1,
   `last_modified_dt` datetime DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -2739,7 +2828,7 @@ CREATE TABLE `unit_conversion` (
   KEY `uc_from_fk` (`from_id`),
   CONSTRAINT `unit_conversion_ibfk_1` FOREIGN KEY (`to_id`) REFERENCES `unit` (`id`),
   CONSTRAINT `unit_conversion_ibfk_2` FOREIGN KEY (`from_id`) REFERENCES `unit` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2793,7 +2882,7 @@ CREATE TABLE `unit_type` (
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2854,7 +2943,7 @@ CREATE TABLE `user` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `alias` (`alias`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2902,9 +2991,10 @@ DROP TABLE IF EXISTS `user_priv`;
 /*!50001 DROP VIEW IF EXISTS `user_priv`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `user_priv` AS SELECT 
- 1 AS `user`,
- 1 AS `privilege`*/;
+/*!50001 CREATE TABLE `user_priv` (
+  `user` tinyint NOT NULL,
+  `privilege` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2981,7 +3071,7 @@ CREATE TABLE `vertex` (
   PRIMARY KEY (`id`),
   KEY `vertex_ibfk_1` (`tag_id`),
   CONSTRAINT `vertex_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=213 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=425 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3029,14 +3119,15 @@ DROP TABLE IF EXISTS `vertical_menu_vw`;
 /*!50001 DROP VIEW IF EXISTS `vertical_menu_vw`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vertical_menu_vw` AS SELECT 
- 1 AS `id`,
- 1 AS `menu_type_id`,
- 1 AS `category_id`,
- 1 AS `text`,
- 1 AS `page_id`,
- 1 AS `order_no`,
- 1 AS `active`*/;
+/*!50001 CREATE TABLE `vertical_menu_vw` (
+  `id` tinyint NOT NULL,
+  `menu_type_id` tinyint NOT NULL,
+  `category_id` tinyint NOT NULL,
+  `text` tinyint NOT NULL,
+  `page_id` tinyint NOT NULL,
+  `order_no` tinyint NOT NULL,
+  `active` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3048,7 +3139,7 @@ DROP TABLE IF EXISTS `volume`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `volume` (
   `tank_id` int(11) NOT NULL COMMENT 'id of tank',
-  `level` double(4,2) NOT NULL DEFAULT '0.00',
+  `level` double(4,2) NOT NULL DEFAULT 0.00,
   `volume` double(16,4) DEFAULT NULL,
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
@@ -3104,12 +3195,12 @@ DROP TABLE IF EXISTS `watchdog`;
 CREATE TABLE `watchdog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(30) DEFAULT NULL,
-  `updated` int(11) DEFAULT '0',
+  `updated` int(11) DEFAULT 0,
   `active` varchar(1) DEFAULT 'Y',
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3150,73 +3241,20 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
--- Table structure for table `xfer`
---
-
-DROP TABLE IF EXISTS `xfer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `xfer` (
-  `id` int(11) NOT NULL,
-  `updated` int(11) DEFAULT '0' COMMENT '0 => not updated',
-  `integer_value` int(11) DEFAULT '0',
-  `float_value` float DEFAULT '0',
-  `scan_time` timestamp NULL DEFAULT NULL,
-  `last_modified_dt` timestamp NULL DEFAULT NULL,
-  `create_dt` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `xfer_ibfk_1` FOREIGN KEY (`id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`xfer_bi_trg` BEFORE INSERT ON `xfer` FOR EACH ROW
-BEGIN
-  if new.create_dt is null then set new.create_dt=utc_timestamp(); end if;
-  set new.last_modified_dt = utc_timestamp();
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 trigger xfer_bu_trg before update on xfer for each row set new.last_modified_dt = utc_timestamp() */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
 -- Final view structure for view `active_order_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `active_order_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `active_order_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `active_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where (`shipment_item`.`active` <> 'C') group by `shipment_item`.`shipment_id` */;
+/*!50001 VIEW `active_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` <> 'C' group by `shipment_item`.`shipment_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3225,16 +3263,17 @@ DELIMITER ;
 -- Final view structure for view `active_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `active_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `active_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `active_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'ACTIVE') order by `reference_code`.`name` */;
+/*!50001 VIEW `active_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ACTIVE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3243,6 +3282,7 @@ DELIMITER ;
 -- Final view structure for view `ad_value_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `ad_value_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `ad_value_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3252,7 +3292,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `ad_value_vw` AS select `ai`.`tag_id` AS `tag_id`,round(`ai`.`scan_value`,2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`analog_input` `ai` left join `alarm_info` `an` on((`ai`.`tag_id` = `an`.`tag_id`))) join `alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,`di`.`scan_value` AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_input` `di` join `alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,`ao`.`scan_value` AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`analog_output` `ao` join `alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,round(`d`.`scan_value`,2) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_output` `d` join `alarm_color_vw` `acv`) */;
+/*!50001 VIEW `ad_value_vw` AS select `ai`.`tag_id` AS `tag_id`,round(`ai`.`scan_value`,2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`analog_input` `ai` left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,`di`.`scan_value` AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_input` `di` join `alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,`ao`.`scan_value` AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`analog_output` `ao` join `alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,round(`d`.`scan_value`,2) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_output` `d` join `alarm_color_vw` `acv`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3261,6 +3301,7 @@ DELIMITER ;
 -- Final view structure for view `alarm_color_list_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `alarm_color_list_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `alarm_color_list_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3270,7 +3311,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `alarm_color_list_vw` AS select 1 AS `id`,substr(`config`.`item_name`,1,(length(`config`.`item_name`) - 5)) AS `item_name`,`config`.`item_value` AS `item_value` from `config` where (`config`.`item_name` like '%COLOR') */;
+/*!50001 VIEW `alarm_color_list_vw` AS select 1 AS `id`,substr(`config`.`item_name`,1,octet_length(`config`.`item_name`) - 5) AS `item_name`,`config`.`item_value` AS `item_value` from `config` where `config`.`item_name` like '%COLOR' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3279,6 +3320,7 @@ DELIMITER ;
 -- Final view structure for view `alarm_color_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `alarm_color_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `alarm_color_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3288,7 +3330,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `alarm_color_vw` AS select `x`.`id` AS `id`,max((case when (`x`.`item_name` = 'LL') then `x`.`item_value` else NULL end)) AS `ll_color`,max((case when (`x`.`item_name` = 'LO') then `x`.`item_value` else NULL end)) AS `lo_color`,max((case when (`x`.`item_name` = 'NORM') then `x`.`item_value` else NULL end)) AS `norm_color`,max((case when (`x`.`item_name` = 'HI') then `x`.`item_value` else NULL end)) AS `hi_color`,max((case when (`x`.`item_name` = 'HH') then `x`.`item_value` else NULL end)) AS `hh_color` from `alarm_color_list_vw` `x` group by `x`.`id` */;
+/*!50001 VIEW `alarm_color_vw` AS select `x`.`id` AS `id`,max(case when `x`.`item_name` = 'LL' then `x`.`item_value` else NULL end) AS `ll_color`,max(case when `x`.`item_name` = 'LO' then `x`.`item_value` else NULL end) AS `lo_color`,max(case when `x`.`item_name` = 'NORM' then `x`.`item_value` else NULL end) AS `norm_color`,max(case when `x`.`item_name` = 'HI' then `x`.`item_value` else NULL end) AS `hi_color`,max(case when `x`.`item_name` = 'HH' then `x`.`item_value` else NULL end) AS `hh_color` from `alarm_color_list_vw` `x` group by `x`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3297,6 +3339,7 @@ DELIMITER ;
 -- Final view structure for view `alarm_info`
 --
 
+/*!50001 DROP TABLE IF EXISTS `alarm_info`*/;
 /*!50001 DROP VIEW IF EXISTS `alarm_info`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3306,7 +3349,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `alarm_info` AS select `a`.`id` AS `id`,`a`.`tag_id` AS `tag_id`,`a`.`alm_occurred` AS `alm_occurred`,`a`.`acknowledged` AS `acknowledged`,`a`.`active` AS `active`,ifnull(`a`.`alarm_msg_id`,`at`.`alarm_msg_id`) AS `alarm_msg_id`,`at`.`priority` AS `priority`,`at`.`code` AS `code`,`acl`.`item_value` AS `color`,`ai`.`scan_value` AS `value` from (((`alarm` `a` join `alarm_type` `at` on((`a`.`alarm_type_id` = `at`.`id`))) join `alarm_color_list_vw` `acl` on((`at`.`code` = `acl`.`item_name`))) join `analog_input` `ai` on((`a`.`tag_id` = `ai`.`tag_id`))) where (`a`.`active` = 'Y') */;
+/*!50001 VIEW `alarm_info` AS select `a`.`id` AS `id`,`a`.`tag_id` AS `tag_id`,`a`.`alm_occurred` AS `alm_occurred`,`a`.`acknowledged` AS `acknowledged`,`a`.`active` AS `active`,ifnull(`a`.`alarm_msg_id`,`at`.`alarm_msg_id`) AS `alarm_msg_id`,`at`.`priority` AS `priority`,`at`.`code` AS `code`,`acl`.`item_value` AS `color`,`ai`.`scan_value` AS `value` from (((`alarm` `a` join `alarm_type` `at` on(`a`.`alarm_type_id` = `at`.`id`)) join `alarm_color_list_vw` `acl` on(`at`.`code` = `acl`.`item_name`)) join `analog_input` `ai` on(`a`.`tag_id` = `ai`.`tag_id`)) where `a`.`active` = 'Y' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3315,6 +3358,7 @@ DELIMITER ;
 -- Final view structure for view `all_fields`
 --
 
+/*!50001 DROP TABLE IF EXISTS `all_fields`*/;
 /*!50001 DROP VIEW IF EXISTS `all_fields`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3324,7 +3368,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `all_fields` AS select `f`.`id` AS `id`,`t`.`name` AS `name`,`f`.`id` AS `parent_id`,`t`.`name` AS `parent` from (`field` `f` join `tag` `t`) where ((`f`.`id` = `t`.`id`) and (`t`.`active` = 'Y') and (`t`.`tag_type_code` = 'FLD') and (not(`t`.`id` in (select `rel_tag_tag`.`child_tag_id` from `rel_tag_tag`)))) union select `t`.`id` AS `id`,`t`.`name` AS `name`,`tp`.`id` AS `pid`,`tp`.`name` AS `pname` from ((`rel_tag_tag` `rtt` join `tag` `t` on((`rtt`.`child_tag_id` = `t`.`id`))) join `tag` `tp` on((`rtt`.`parent_tag_id` = `tp`.`id`))) where ((`t`.`tag_type_code` = 'FLD') and (`tp`.`tag_type_code` = 'FLD')) */;
+/*!50001 VIEW `all_fields` AS select `f`.`id` AS `id`,`t`.`name` AS `name`,`f`.`id` AS `parent_id`,`t`.`name` AS `parent` from (`field` `f` join `tag` `t`) where `f`.`id` = `t`.`id` and `t`.`active` = 'Y' and `t`.`tag_type_code` = 'FLD' and !(`t`.`id` in (select `rel_tag_tag`.`child_tag_id` from `rel_tag_tag`)) union select `t`.`id` AS `id`,`t`.`name` AS `name`,`tp`.`id` AS `pid`,`tp`.`name` AS `pname` from ((`rel_tag_tag` `rtt` join `tag` `t` on(`rtt`.`child_tag_id` = `t`.`id`)) join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) where `t`.`tag_type_code` = 'FLD' and `tp`.`tag_type_code` = 'FLD' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3333,16 +3377,17 @@ DELIMITER ;
 -- Final view structure for view `analog_type_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `analog_type_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `analog_type_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `analog_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'ANALOG-TYPE') order by `reference_code`.`name` */;
+/*!50001 VIEW `analog_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ANALOG-TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3351,16 +3396,17 @@ DELIMITER ;
 -- Final view structure for view `calculation_type_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `calculation_type_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `calculation_type_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `calculation_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'CALCULATION_TYPE') order by `reference_code`.`name` */;
+/*!50001 VIEW `calculation_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'CALCULATION_TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3369,6 +3415,7 @@ DELIMITER ;
 -- Final view structure for view `carrier_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `carrier_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `carrier_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3378,7 +3425,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `carrier_vw` AS select `tag_type`.`id` AS `id`,`tag_type`.`code` AS `code`,`tag_type`.`name` AS `name`,`tag_type`.`description` AS `description`,`tag_type`.`js_draw_file` AS `js_draw_file`,`tag_type`.`active` AS `active` from `tag_type` where (`tag_type`.`code` in ('TT','S','T')) */;
+/*!50001 VIEW `carrier_vw` AS select `tag_type`.`id` AS `id`,`tag_type`.`code` AS `code`,`tag_type`.`name` AS `name`,`tag_type`.`description` AS `description`,`tag_type`.`js_draw_file` AS `js_draw_file`,`tag_type`.`active` AS `active` from `tag_type` where `tag_type`.`code` in ('TT','S','T') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3387,6 +3434,7 @@ DELIMITER ;
 -- Final view structure for view `child_value_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `child_value_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `child_value_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3396,7 +3444,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `child_value_vw` AS select `tp`.`id` AS `parent_id`,`rtt`.`id` AS `rel_tag_id`,`tc`.`id` AS `id`,`tc`.`name` AS `name`,`tc`.`description` AS `description`,`tc`.`tag_type_code` AS `tag_type_code`,`tc`.`active` AS `active`,`tc`.`c1_lat` AS `c1_lat`,`tc`.`c1_long` AS `c1_long`,`tc`.`c2_lat` AS `c2_lat`,`tc`.`c2_long` AS `c2_long`,`tt`.`id` AS `child_tag_id`,`tt`.`name` AS `child_tag_name`,`pv`.`scan_value` AS `child_value`,`pv`.`scan_time` AS `child_time` from (((((`tag` `tp` join `rel_tag_tag` `rtt` on((`tp`.`id` = `rtt`.`parent_tag_id`))) join `tag` `tc` on((`rtt`.`child_tag_id` = `tc`.`id`))) join `rel_tag_tag` `rtt1` on((`rtt1`.`parent_tag_id` = `tc`.`id`))) join `tag` `tt` on((`rtt1`.`child_tag_id` = `tt`.`id`))) join `ad_value_vw` `pv` on((`tt`.`id` = `pv`.`tag_id`))) order by `tp`.`id`,`tc`.`id` */;
+/*!50001 VIEW `child_value_vw` AS select `tp`.`id` AS `parent_id`,`rtt`.`id` AS `rel_tag_id`,`tc`.`id` AS `id`,`tc`.`name` AS `name`,`tc`.`description` AS `description`,`tc`.`tag_type_code` AS `tag_type_code`,`tc`.`active` AS `active`,`tc`.`c1_lat` AS `c1_lat`,`tc`.`c1_long` AS `c1_long`,`tc`.`c2_lat` AS `c2_lat`,`tc`.`c2_long` AS `c2_long`,`tt`.`id` AS `child_tag_id`,`tt`.`name` AS `child_tag_name`,`pv`.`scan_value` AS `child_value`,`pv`.`scan_time` AS `child_time` from (((((`tag` `tp` join `rel_tag_tag` `rtt` on(`tp`.`id` = `rtt`.`parent_tag_id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) join `rel_tag_tag` `rtt1` on(`rtt1`.`parent_tag_id` = `tc`.`id`)) join `tag` `tt` on(`rtt1`.`child_tag_id` = `tt`.`id`)) join `ad_value_vw` `pv` on(`tt`.`id` = `pv`.`tag_id`)) order by `tp`.`id`,`tc`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3405,16 +3453,17 @@ DELIMITER ;
 -- Final view structure for view `content_type_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `content_type_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `content_type_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `content_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'CONTENT-TYPE') order by `reference_code`.`name` */;
+/*!50001 VIEW `content_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'CONTENT-TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3423,6 +3472,7 @@ DELIMITER ;
 -- Final view structure for view `dynamic_menu_items_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `dynamic_menu_items_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `dynamic_menu_items_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3432,7 +3482,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `dynamic_menu_items_vw` AS select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/processunit/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where ((`t`.`tag_type_code` = 'PU') and (`t`.`active` = 'Y') and (`p`.`name` = 'View Process Units') and (`m`.`text` = 'Process Units')) union select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/field/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where ((`t`.`tag_type_code` = 'FLD') and (`t`.`active` = 'Y') and (`p`.`name` = 'View Fields') and (`m`.`text` = 'Field Displays')) */;
+/*!50001 VIEW `dynamic_menu_items_vw` AS select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/processunit/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where `t`.`tag_type_code` = 'PU' and `t`.`active` = 'Y' and `p`.`name` = 'View Process Units' and `m`.`text` = 'Process Units' union select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/field/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where `t`.`tag_type_code` = 'FLD' and `t`.`active` = 'Y' and `p`.`name` = 'View Fields' and `m`.`text` = 'Field Displays' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3441,6 +3491,7 @@ DELIMITER ;
 -- Final view structure for view `field_tag_deep_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `field_tag_deep_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `field_tag_deep_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3450,7 +3501,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `field_tag_deep_vw` AS select `ft`.`field_tag_id` AS `field_tag_id`,`ft`.`child_tag_id` AS `child_tag_id` from (`field_tag_vw` `ft` join `tag` `t` on((`ft`.`child_tag_id` = `t`.`id`))) where (`t`.`tag_type_code` <> 'FLD') union select `ft1`.`field_tag_id` AS `field_tag_id`,`ft2`.`child_tag_id` AS `child_tag_id` from (((`field_tag_vw` `ft1` join `field_tag_vw` `ft2` on((`ft1`.`child_tag_id` = `ft2`.`field_tag_id`))) join `tag` `t1` on((`ft1`.`child_tag_id` = `t1`.`id`))) join `tag` `t2` on((`ft2`.`child_tag_id` = `t2`.`id`))) where (`t1`.`tag_type_code` = 'FLD') */;
+/*!50001 VIEW `field_tag_deep_vw` AS select `ft`.`field_tag_id` AS `field_tag_id`,`ft`.`child_tag_id` AS `child_tag_id` from (`field_tag_vw` `ft` join `tag` `t` on(`ft`.`child_tag_id` = `t`.`id`)) where `t`.`tag_type_code` <> 'FLD' union select `ft1`.`field_tag_id` AS `field_tag_id`,`ft2`.`child_tag_id` AS `child_tag_id` from (((`field_tag_vw` `ft1` join `field_tag_vw` `ft2` on(`ft1`.`child_tag_id` = `ft2`.`field_tag_id`)) join `tag` `t1` on(`ft1`.`child_tag_id` = `t1`.`id`)) join `tag` `t2` on(`ft2`.`child_tag_id` = `t2`.`id`)) where `t1`.`tag_type_code` = 'FLD' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3459,6 +3510,7 @@ DELIMITER ;
 -- Final view structure for view `field_tag_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `field_tag_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `field_tag_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3468,7 +3520,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `field_tag_vw` AS select `rt`.`parent_tag_id` AS `field_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where ((`rt`.`parent_tag_id` = `t`.`id`) and (`t`.`tag_type_code` = 'FLD')) */;
+/*!50001 VIEW `field_tag_vw` AS select `rt`.`parent_tag_id` AS `field_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where `rt`.`parent_tag_id` = `t`.`id` and `t`.`tag_type_code` = 'FLD' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3477,16 +3529,17 @@ DELIMITER ;
 -- Final view structure for view `history_type_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `history_type_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `history_type_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `history_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'HISTORY-TYPE') order by `reference_code`.`name` */;
+/*!50001 VIEW `history_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'HISTORY-TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3495,6 +3548,7 @@ DELIMITER ;
 -- Final view structure for view `horizontal_menu_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `horizontal_menu_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `horizontal_menu_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3504,7 +3558,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `horizontal_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on((`m`.`menu_type_id` = `rc`.`id`))) where ((`rc`.`category` = 'MENU_TYPE') and (`rc`.`code` = 'HT')) */;
+/*!50001 VIEW `horizontal_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on(`m`.`menu_type_id` = `rc`.`id`)) where `rc`.`category` = 'MENU_TYPE' and `rc`.`code` = 'HT' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3513,16 +3567,17 @@ DELIMITER ;
 -- Final view structure for view `menu_type_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `menu_type_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `menu_type_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `menu_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'MENU_TYPE') order by `reference_code`.`name` */;
+/*!50001 VIEW `menu_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'MENU_TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3531,16 +3586,17 @@ DELIMITER ;
 -- Final view structure for view `off_on_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `off_on_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `off_on_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `off_on_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'OFF-ON') order by `reference_code`.`name` */;
+/*!50001 VIEW `off_on_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'OFF-ON' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3549,16 +3605,17 @@ DELIMITER ;
 -- Final view structure for view `on_off_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `on_off_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `on_off_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `on_off_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'ON-OFF') order by `reference_code`.`name` */;
+/*!50001 VIEW `on_off_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ON-OFF' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3567,13 +3624,14 @@ DELIMITER ;
 -- Final view structure for view `order_volume_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `order_volume_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `order_volume_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `order_volume_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,`shipment_item`.`content_cd` AS `content_cd`,`shipment_item`.`transfer_id` AS `transfer_id`,sum(`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`shipment_item`.`act_volume`) AS `act_volume` from `shipment_item` group by `shipment_item`.`shipment_id`,`shipment_item`.`content_cd`,`shipment_item`.`transfer_id` */;
@@ -3585,16 +3643,17 @@ DELIMITER ;
 -- Final view structure for view `pending_order_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `pending_order_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `pending_order_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `pending_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where (`shipment_item`.`active` = 'P') group by `shipment_item`.`shipment_id` */;
+/*!50001 VIEW `pending_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` = 'P' group by `shipment_item`.`shipment_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3603,16 +3662,17 @@ DELIMITER ;
 -- Final view structure for view `rtt_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `rtt_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `rtt_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `rtt_vw` AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code` from ((`rel_tag_tag` `rtt` join `tag` `tp` on((`rtt`.`parent_tag_id` = `tp`.`id`))) join `tag` `tc` on((`rtt`.`child_tag_id` = `tc`.`id`))) order by `tp`.`name` */;
+/*!50001 VIEW `rtt_vw` AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code` from ((`rel_tag_tag` `rtt` join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3621,16 +3681,17 @@ DELIMITER ;
 -- Final view structure for view `scm_object_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `scm_object_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `scm_object_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `scm_object_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'SCM_OBJECT') order by `reference_code`.`name` */;
+/*!50001 VIEW `scm_object_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'SCM_OBJECT' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3639,6 +3700,7 @@ DELIMITER ;
 -- Final view structure for view `sco_ref_tag_row_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `sco_ref_tag_row_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `sco_ref_tag_row_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3648,7 +3710,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `sco_ref_tag_row_vw` AS select `tc`.`id` AS `id`,`rtt1`.`id` AS `gc_rel_tag_id`,`tt`.`id` AS `gc_tag_id`,`tt`.`name` AS `gc_tag_name`,`tt`.`tag_type_code` AS `gc_type_code`,round(`pv`.`scan_value`,2) AS `gc_value`,`pv`.`scan_time` AS `gc_time`,`pv`.`max_value` AS `max_value`,`pv`.`zero_value` AS `zero_value`,`pv`.`alarm_color` AS `alarm_color` from (((`tag` `tc` join `rel_tag_tag` `rtt1` on((`rtt1`.`parent_tag_id` = `tc`.`id`))) join `tag` `tt` on((`rtt1`.`child_tag_id` = `tt`.`id`))) join `ad_value_vw` `pv` on((`tt`.`id` = `pv`.`tag_id`))) where (`tc`.`tag_type_code` = 'SCO') */;
+/*!50001 VIEW `sco_ref_tag_row_vw` AS select `tc`.`id` AS `id`,`rtt1`.`id` AS `gc_rel_tag_id`,`tt`.`id` AS `gc_tag_id`,`tt`.`name` AS `gc_tag_name`,`tt`.`tag_type_code` AS `gc_type_code`,round(`pv`.`scan_value`,2) AS `gc_value`,`pv`.`scan_time` AS `gc_time`,`pv`.`max_value` AS `max_value`,`pv`.`zero_value` AS `zero_value`,`pv`.`alarm_color` AS `alarm_color` from (((`tag` `tc` join `rel_tag_tag` `rtt1` on(`rtt1`.`parent_tag_id` = `tc`.`id`)) join `tag` `tt` on(`rtt1`.`child_tag_id` = `tt`.`id`)) join `ad_value_vw` `pv` on(`tt`.`id` = `pv`.`tag_id`)) where `tc`.`tag_type_code` = 'SCO' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3657,6 +3719,7 @@ DELIMITER ;
 -- Final view structure for view `sco_ref_tag_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `sco_ref_tag_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `sco_ref_tag_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3666,7 +3729,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `sco_ref_tag_vw` AS select `srtrv`.`id` AS `id`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`gc_rel_tag_id` end)) AS `inp_rel_tag_id`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`gc_tag_id` end)) AS `inp_id`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`gc_tag_name` end)) AS `inp_tag`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`gc_type_code` end)) AS `inp_type`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`gc_value` end)) AS `inp_value`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`max_value` end)) AS `inp_max`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`zero_value` end)) AS `inp_zero`,max((case when (`srtrv`.`gc_type_code` in ('AI','DI')) then `srtrv`.`alarm_color` end)) AS `inp_alm_color`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`gc_rel_tag_id` end)) AS `out_rel_tag_id`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`gc_tag_id` end)) AS `out_id`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`gc_tag_name` end)) AS `out_tag`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`gc_type_code` end)) AS `out_type`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`gc_value` end)) AS `out_value`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`max_value` end)) AS `out_max`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`zero_value` end)) AS `out_zero`,max((case when (`srtrv`.`gc_type_code` in ('AO','DO')) then `srtrv`.`alarm_color` end)) AS `out_alm_color` from `sco_ref_tag_row_vw` `srtrv` group by `srtrv`.`id` */;
+/*!50001 VIEW `sco_ref_tag_vw` AS select `srtrv`.`id` AS `id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_rel_tag_id` end) AS `inp_rel_tag_id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_tag_id` end) AS `inp_id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_tag_name` end) AS `inp_tag`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_type_code` end) AS `inp_type`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_value` end) AS `inp_value`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`max_value` end) AS `inp_max`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`zero_value` end) AS `inp_zero`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`alarm_color` end) AS `inp_alm_color`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_rel_tag_id` end) AS `out_rel_tag_id`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_tag_id` end) AS `out_id`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_tag_name` end) AS `out_tag`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_type_code` end) AS `out_type`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_value` end) AS `out_value`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`max_value` end) AS `out_max`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`zero_value` end) AS `out_zero`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`alarm_color` end) AS `out_alm_color` from `sco_ref_tag_row_vw` `srtrv` group by `srtrv`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3675,6 +3738,7 @@ DELIMITER ;
 -- Final view structure for view `tank_level_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `tank_level_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `tank_level_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3684,7 +3748,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_level_vw` AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `level_id` from ((`tank` `t` join `rel_tag_tag` `rtt`) join `analog_input` `ai`) where ((`t`.`id` = `rtt`.`parent_tag_id`) and (`rtt`.`child_tag_id` = `ai`.`tag_id`) and (`ai`.`analog_type_code` = 'L')) */;
+/*!50001 VIEW `tank_level_vw` AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `level_id` from ((`tank` `t` join `rel_tag_tag` `rtt`) join `analog_input` `ai`) where `t`.`id` = `rtt`.`parent_tag_id` and `rtt`.`child_tag_id` = `ai`.`tag_id` and `ai`.`analog_type_code` = 'L' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3693,6 +3757,7 @@ DELIMITER ;
 -- Final view structure for view `tank_ref_tag_row_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `tank_ref_tag_row_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `tank_ref_tag_row_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3702,7 +3767,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_ref_tag_row_vw` AS select `rtt`.`parent_tag_id` AS `id`,`rtt`.`id` AS `rtt_id`,`t`.`id` AS `child_tag_id`,`t`.`name` AS `child`,`ai`.`analog_type_code` AS `analog_type_code`,round(`ai`.`scan_value`,2) AS `value`,concat(convert(format(`ai`.`scan_value`,2) using utf8),' ',`u`.`code`) AS `value_text`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from (((((`rel_tag_tag` `rtt` join `tag` `t` on((`t`.`id` = `rtt`.`child_tag_id`))) join `analog_input` `ai` on((`t`.`id` = `ai`.`tag_id`))) join `unit` `u` on((`ai`.`unit_id` = `u`.`id`))) left join `alarm_info` `an` on((`ai`.`tag_id` = `an`.`tag_id`))) join `alarm_color_vw` `acv`) */;
+/*!50001 VIEW `tank_ref_tag_row_vw` AS select `rtt`.`parent_tag_id` AS `id`,`rtt`.`id` AS `rtt_id`,`t`.`id` AS `child_tag_id`,`t`.`name` AS `child`,`ai`.`analog_type_code` AS `analog_type_code`,round(`ai`.`scan_value`,2) AS `value`,concat(convert(format(`ai`.`scan_value`,2) using utf8),' ',`u`.`code`) AS `value_text`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from (((((`rel_tag_tag` `rtt` join `tag` `t` on(`t`.`id` = `rtt`.`child_tag_id`)) join `analog_input` `ai` on(`t`.`id` = `ai`.`tag_id`)) join `unit` `u` on(`ai`.`unit_id` = `u`.`id`)) left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3711,6 +3776,7 @@ DELIMITER ;
 -- Final view structure for view `tank_ref_tag_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `tank_ref_tag_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `tank_ref_tag_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3720,7 +3786,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_ref_tag_vw` AS select `trtrv`.`id` AS `id`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`child` end)) AS `level_tag`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`child_tag_id` end)) AS `level_tag_id`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`rtt_id` end)) AS `level_rtt_id`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`value` end)) AS `level`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`value_text` end)) AS `level_text`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`max_value` end)) AS `level_max`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`zero_value` end)) AS `level_zero`,max((case when (`trtrv`.`analog_type_code` = 'L') then `trtrv`.`alarm_color` end)) AS `level_alm_color`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`child` end)) AS `temp_tag`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`child_tag_id` end)) AS `temp_tag_id`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`rtt_id` end)) AS `temp_rtt_id`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`value` end)) AS `temp`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`value_text` end)) AS `temp_text`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`max_value` end)) AS `temp_max`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`zero_value` end)) AS `temp_zero`,max((case when (`trtrv`.`analog_type_code` = 'T') then `trtrv`.`alarm_color` end)) AS `temp_alm_color` from `tank_ref_tag_row_vw` `trtrv` group by `trtrv`.`id` */;
+/*!50001 VIEW `tank_ref_tag_vw` AS select `trtrv`.`id` AS `id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`child` end) AS `level_tag`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`child_tag_id` end) AS `level_tag_id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`rtt_id` end) AS `level_rtt_id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`value` end) AS `level`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`value_text` end) AS `level_text`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`max_value` end) AS `level_max`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`zero_value` end) AS `level_zero`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`alarm_color` end) AS `level_alm_color`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`child` end) AS `temp_tag`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`child_tag_id` end) AS `temp_tag_id`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`rtt_id` end) AS `temp_rtt_id`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`value` end) AS `temp`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`value_text` end) AS `temp_text`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`max_value` end) AS `temp_max`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`zero_value` end) AS `temp_zero`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`alarm_color` end) AS `temp_alm_color` from `tank_ref_tag_row_vw` `trtrv` group by `trtrv`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3729,6 +3795,7 @@ DELIMITER ;
 -- Final view structure for view `tank_tag_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `tank_tag_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `tank_tag_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3738,7 +3805,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_tag_vw` AS select `rt`.`parent_tag_id` AS `parent_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where ((`rt`.`parent_tag_id` = `t`.`id`) and (`t`.`tag_type_code` = 'TK')) */;
+/*!50001 VIEW `tank_tag_vw` AS select `rt`.`parent_tag_id` AS `parent_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where `rt`.`parent_tag_id` = `t`.`id` and `t`.`tag_type_code` = 'TK' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3747,6 +3814,7 @@ DELIMITER ;
 -- Final view structure for view `tank_temperature_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `tank_temperature_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `tank_temperature_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3756,7 +3824,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_temperature_vw` AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `temperature_id` from ((`tank` `t` join `rel_tag_tag` `rtt`) join `analog_input` `ai`) where ((`t`.`id` = `rtt`.`parent_tag_id`) and (`rtt`.`child_tag_id` = `ai`.`tag_id`) and (`ai`.`analog_type_code` = 'T')) */;
+/*!50001 VIEW `tank_temperature_vw` AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `temperature_id` from ((`tank` `t` join `rel_tag_tag` `rtt`) join `analog_input` `ai`) where `t`.`id` = `rtt`.`parent_tag_id` and `rtt`.`child_tag_id` = `ai`.`tag_id` and `ai`.`analog_type_code` = 'T' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3765,16 +3833,17 @@ DELIMITER ;
 -- Final view structure for view `tf_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `tf_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `tf_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tf_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'TF') order by `reference_code`.`name` */;
+/*!50001 VIEW `tf_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TF' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3783,16 +3852,17 @@ DELIMITER ;
 -- Final view structure for view `transfer_status_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `transfer_status_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `transfer_status_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transfer_status_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'TRANSFER_STATUS') order by `reference_code`.`name` */;
+/*!50001 VIEW `transfer_status_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TRANSFER_STATUS' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3801,16 +3871,17 @@ DELIMITER ;
 -- Final view structure for view `transfer_type_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `transfer_type_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `transfer_type_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = cp850 */;
+/*!50001 SET character_set_results     = cp850 */;
+/*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transfer_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where (`reference_code`.`category` = 'TRANSFER_TYPE') order by `reference_code`.`name` */;
+/*!50001 VIEW `transfer_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TRANSFER_TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3819,6 +3890,7 @@ DELIMITER ;
 -- Final view structure for view `transfer_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `transfer_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `transfer_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3828,7 +3900,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transfer_vw` AS select `t`.`id` AS `id`,`t`.`name` AS `name`,`tsv`.`code` AS `status`,`ttv`.`code` AS `type`,`ts`.`name` AS `source`,`td`.`name` AS `destination`,`t`.`exp_start_time` AS `exp_start_time`,`t`.`exp_end_time` AS `exp_end_time`,`t`.`exp_volume` AS `exp_volume`,`t`.`act_start_time` AS `act_start_time`,`t`.`act_end_time` AS `act_end_time`,`t`.`act_volume` AS `act_volume` from ((((`transfer` `t` join `transfer_status_vw` `tsv` on((`t`.`status_id` = `tsv`.`id`))) join `transfer_type_vw` `ttv` on((`t`.`transfer_type_id` = `ttv`.`id`))) join `tag` `ts` on((`t`.`source_id` = `ts`.`id`))) join `tag` `td` on((`t`.`destination_id` = `td`.`id`))) */;
+/*!50001 VIEW `transfer_vw` AS select `t`.`id` AS `id`,`t`.`name` AS `name`,`tsv`.`code` AS `status`,`ttv`.`code` AS `type`,`ts`.`name` AS `source`,`td`.`name` AS `destination`,`t`.`exp_start_time` AS `exp_start_time`,`t`.`exp_end_time` AS `exp_end_time`,`t`.`exp_volume` AS `exp_volume`,`t`.`act_start_time` AS `act_start_time`,`t`.`act_end_time` AS `act_end_time`,`t`.`act_volume` AS `act_volume` from ((((`transfer` `t` join `transfer_status_vw` `tsv` on(`t`.`status_id` = `tsv`.`id`)) join `transfer_type_vw` `ttv` on(`t`.`transfer_type_id` = `ttv`.`id`)) join `tag` `ts` on(`t`.`source_id` = `ts`.`id`)) join `tag` `td` on(`t`.`destination_id` = `td`.`id`)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3837,6 +3909,7 @@ DELIMITER ;
 -- Final view structure for view `user_priv`
 --
 
+/*!50001 DROP TABLE IF EXISTS `user_priv`*/;
 /*!50001 DROP VIEW IF EXISTS `user_priv`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3846,7 +3919,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `user_priv` AS select `u`.`alias` AS `user`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where ((`ur`.`user_id` = `u`.`id`) and (`ur`.`role_id` = `r`.`id`) and (`rp`.`role_id` = `r`.`id`) and (`rp`.`priv_id` = `p`.`id`)) union select `u`.`alias` AS `alias`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where ((`ur`.`user_id` = `u`.`id`) and (`rp`.`role_id` = `r`.`id`) and (`rp`.`priv_id` = `p`.`id`) and `r`.`parent_id` in (select `r`.`id` from ((`user` `u` join `role` `r`) join `user_role` `ur`) where ((`ur`.`user_id` = `u`.`id`) and (`ur`.`role_id` = `r`.`id`)))) */;
+/*!50001 VIEW `user_priv` AS select `u`.`alias` AS `user`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where `ur`.`user_id` = `u`.`id` and `ur`.`role_id` = `r`.`id` and `rp`.`role_id` = `r`.`id` and `rp`.`priv_id` = `p`.`id` union select `u`.`alias` AS `alias`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where `ur`.`user_id` = `u`.`id` and `rp`.`role_id` = `r`.`id` and `rp`.`priv_id` = `p`.`id` and `r`.`parent_id` in (select `r`.`id` from ((`user` `u` join `role` `r`) join `user_role` `ur`) where `ur`.`user_id` = `u`.`id` and `ur`.`role_id` = `r`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3855,6 +3928,7 @@ DELIMITER ;
 -- Final view structure for view `vertical_menu_vw`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vertical_menu_vw`*/;
 /*!50001 DROP VIEW IF EXISTS `vertical_menu_vw`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -3864,7 +3938,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = cp850_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vertical_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on((`m`.`menu_type_id` = `rc`.`id`))) where ((`rc`.`category` = 'MENU_TYPE') and (`rc`.`code` = 'VT')) */;
+/*!50001 VIEW `vertical_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on(`m`.`menu_type_id` = `rc`.`id`)) where `rc`.`category` = 'MENU_TYPE' and `rc`.`code` = 'VT' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3878,4 +3952,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-30  0:30:03
+-- Dump completed on 2020-02-18 11:10:42

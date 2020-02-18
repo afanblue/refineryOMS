@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class TransferForm extends Component {
@@ -25,6 +27,32 @@ class TransferForm extends Component {
     this.state = {selected: "Properties"  };
   }
 
+  static get propTypes() {
+      return {
+          option: PropTypes.string,
+          sources: PropTypes.array,
+          statuses: PropTypes.array,
+          transfer: PropTypes.object,
+          actEndTime: PropTypes.string,
+          actStartTime: PropTypes.string,
+          actVolume: PropTypes.number,
+          delta: PropTypes.number,
+          destinationId: PropTypes.number,
+          expEndTime: PropTypes.string,
+          expStartTime: PropTypes.string,
+          expVolume: PropTypes.number,
+          id: PropTypes.number,
+          name: PropTypes.string,
+          sourceId: PropTypes.number,
+          statusId: PropTypes.number,
+          transferTypeId: PropTypes.number,
+          transferTypes: PropTypes.array,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          transferCopy: PropTypes.func,
+          transferUpdate: PropTypes.func
+      }
+  }
 
   render() {
     var x        = this.props.transfer;
@@ -39,30 +67,30 @@ class TransferForm extends Component {
         <tbody>
         <tr>
           <td>
-                    
+
               <form id="transferForm" >
-                Please enter your transfer information 
+                Please enter your transfer information
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
                 <th className="oms-spacing-120">&nbsp;</th>
-                <td className="oms-spacing"><img src="images/spacer.png" 
+                <td className="oms-spacing"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-120">Transfer name:</th>
                 <td className="oms-spacing">
                   <input type="hidden" name="id" value={x.id} />
-                  <input type="text" id="name" name="name" value={x.name} 
+                  <input type="text" id="name" name="name" value={x.name}
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          size="20" maxLength="20" onChange={fc} />
                 </td>
-              </tr>            
+              </tr>
               <tr>
                 <th className="oms-spacing-120">Status:</th>
                 <td className="oms-spacing">
                   <select id="statusId" name="statusId" value={x.statusId} onChange={fc} >
-                    { st.map( 
+                    { st.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -73,9 +101,9 @@ class TransferForm extends Component {
               <tr>
                 <th className="oms-spacing-120">Transfer Type:</th>
                 <td className="oms-spacing">
-                  <select id="transferTypeId" name="transferTypeId" value={x.transferTypeId} 
+                  <select id="transferTypeId" name="transferTypeId" value={x.transferTypeId}
                           onChange={fc} >
-                    { tt.map( 
+                    { tt.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -86,9 +114,9 @@ class TransferForm extends Component {
               <tr>
                 <th className="oms-spacing-120">Source:</th>
                 <td className="oms-spacing">
-                  <select id="sourceId" name="sourceId" value={x.sourceId} 
+                  <select id="sourceId" name="sourceId" value={x.sourceId}
                           onChange={fc} >
-                    { srcs.map( 
+                    { srcs.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -99,9 +127,9 @@ class TransferForm extends Component {
               <tr>
                 <th className="oms-spacing-120">Destination:</th>
                 <td className="oms-spacing">
-                  <select id="destinationId" name="destinationId" value={x.destinationId} 
+                  <select id="destinationId" name="destinationId" value={x.destinationId}
                           onChange={fc} >
-                    { dests.map( 
+                    { dests.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -113,7 +141,7 @@ class TransferForm extends Component {
                 <th className="oms-spacing-120">Expected Start:</th>
                 <td className="oms-spacing">
                   <input type="text" id="expStartTime" name="expStartTime" value={x.expStartTime}
-                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')}
                          size="20" maxLength="20" onChange={fc} />
                 </td>
               </tr>
@@ -121,7 +149,7 @@ class TransferForm extends Component {
                 <th className="oms-spacing-120">Expected End:</th>
                 <td className="oms-spacing">
                   <input type="text" id="expEndTime" name="expEndTime" value={x.expEndTime}
-                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')}
                          size="20" maxLength="20" onChange={fc} />
                 </td>
               </tr>
@@ -129,7 +157,7 @@ class TransferForm extends Component {
                 <td className="oms-spacing-120">Expected Volume:</td>
                 <td className="oms-spacing">
                   <input type="text" id="expVolume" name="expVolume" value={x.expVolume}
-                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          size="20" maxLength="10" onChange={fc} />
                 </td>
               </tr>
@@ -154,7 +182,7 @@ class TransferForm extends Component {
               <tr>
                 <td className="oms-spacing-120">Actual Start Time:</td>
                 <td className="oms-spacing">
-                  {x.actStartTime} 
+                  {x.actStartTime}
                 </td>
               </tr>
               <tr>
@@ -167,9 +195,9 @@ class TransferForm extends Component {
                 <td className="oms-spacing-120">Actual Volume:</td>
                 <td className="oms-spacing">
                   {x.actVolume}
-     	  		</td>
+                   </td>
               </tr>
-            
+
             </tbody>
           </table>
 
@@ -177,30 +205,30 @@ class TransferForm extends Component {
                   <tbody>
                     <tr className="oms-spacing">
                       <td>
-                        <input type="submit" id="closeForm"  name="closeForm"  
+                        <input type="submit" id="closeForm"  name="closeForm"
                                value=" Quit " className="oms-spacing"
                                onClick={(e) => {this.props.handleQuit(e)}} />
-                        &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                        &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                      value=" Submit " className="oms-spacing"
                                      onClick={(e) => {this.props.transferUpdate(e)}}/>
-                        &nbsp;<input type="submit" id="copyForm" name="copyForm" 
+                        &nbsp;<input type="submit" id="copyForm" name="copyForm"
                                      value=" Copy " className="oms-spacing"
                                      onClick={(e) => {this.props.transferCopy(e)}}/>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                
+
               </form>
 
           </td>
         </tr>
         </tbody>
       </table>
-   
+
      )
   }
-  
+
 }
 
 export default TransferForm;

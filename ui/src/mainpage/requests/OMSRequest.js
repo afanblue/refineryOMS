@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import Log          from './Log.js';
 
 class OMSRequest {
   constructor(id,uri,erm,fComplete) {
-//    Log.info( "Request: " + props.stage ); 
-    this.uri = uri; 
+//    Log.info( "Request: " + props.stage );
+    this.uri = uri;
     this.identifier= id;
     this.errMsg = erm;
     this.fetchData = this.fetchData.bind(this);
@@ -29,7 +30,7 @@ class OMSRequest {
     this.fc = fComplete;
     this.handleErrors = this.handleErrors.bind(this);
   }
-  
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -38,7 +39,7 @@ class OMSRequest {
   }
 
 
-  
+
   fetchData() {
     const ermsg = this.errMsg;
     const ident = this.identifier;
@@ -52,7 +53,7 @@ class OMSRequest {
       throw new Error(erm+"\n"+response.status);
     }
     request();
--- */  
+-- */
 /* */
     return fetch(this.uri)
       .then(this.handleErrors)
@@ -65,9 +66,9 @@ class OMSRequest {
     }).then(json => {
         let x = json;
         this.fc(x);
-    }).catch(function(error) { 
+    }).catch(function(error) {
         alert(ermsg+"\n"+error);
-        Log.error(ermsg+" - " + error,ident);  
+        Log.error(ermsg+" - " + error,ident);
     });
 /* */
   }

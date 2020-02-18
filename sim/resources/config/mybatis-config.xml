@@ -33,6 +33,7 @@
      	<typeAlias alias="Order"          type="us.avn.oms.domain.Order" />
      	<typeAlias alias="PlotGroup"      type="us.avn.oms.domain.PlotGroup" />
      	<typeAlias alias="ProcessUnit"    type="us.avn.oms.domain.ProcessUnit" />
+        <typeAlias alias="RawData"        type="us.avn.oms.domain.RawData" />
         <typeAlias alias="ReferenceCode"  type="us.avn.oms.domain.ReferenceCode" />
         <typeAlias alias="RelTagTag"      type="us.avn.oms.domain.RelTagTag" />
         <typeAlias alias="Role"           type="us.avn.oms.domain.Role" />
@@ -55,7 +56,6 @@
         <typeAlias alias="Vertex"         type="us.avn.oms.domain.Vertex"/>
         <typeAlias alias="Volume"         type="us.avn.oms.domain.Volume" />
         <typeAlias alias="Watchdog"       type="us.avn.oms.domain.Watchdog" />
-        <typeAlias alias="Xfer"           type="us.avn.oms.domain.Xfer" />
      </typeAliases>
          
     <mappers> 

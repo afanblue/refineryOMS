@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {Stage, Layer, Image, Text} from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 
@@ -29,19 +32,26 @@ class DefaultContents extends Component {
        onMouseUp: props.handleMouseUp
      }
   }
-  
+
+  static get propTypes() {
+      return {
+          handleMouseUp: PropTypes.func,
+          pageName: PropTypes.string
+      }
+  }
+
   componentDidMount() {
     const img = new window.Image();
     img.src = "images/delcity.png";
     img.onload = () => { this.setState( {img:img} ); }
   }
-  
+
   render () {
     let pageName = this.props.pageName;
     return (
        <Stage height={IMAGEHEIGHT+20} width={IMAGEWIDTH}>
          <Layer>
-           <Text text={pageName} 
+           <Text text={pageName}
                  fontSize={12}
                  x={80}
                  y={1}

@@ -62,7 +62,7 @@
   
   <select id="getHolds" resultMap="holdResultMap">
 	select carrier_id, hold_no, volume, no_duplicates
-	  from hold where carrier_id = #{parm1}
+	  from hold where carrier_id = #{param1}
   </select>
   
   <update id="updateHold" parameterType="Hold">
@@ -77,10 +77,10 @@
   <insert id="insertHold" parameterType="Hold" >
     insert hold
           ( carrier_id,   hold_no,   volume,    no_duplicates )
-    values( #{carrierID}, #{holdNo}, #{volume}, #{noDuplicates} )
+    values( #{carrierId}, #{holdNo}, #{volume}, #{noDuplicates} )
     on duplicate key update
-            volume = volume
-          , no_duplicates = noDuplicates
+            volume = #{volume}
+          , no_duplicates = #{noDuplicates}
   </insert>
 
 </mapper>

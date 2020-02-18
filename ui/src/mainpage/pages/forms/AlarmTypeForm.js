@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class AlarmTypeForm extends Component {
@@ -24,14 +26,28 @@ class AlarmTypeForm extends Component {
     super(props);
     this.state={};
   }
-  
+
+  static get propTypes() {
+      return {
+          type: PropTypes.any,
+          msgs: PropTypes.array,
+          id: PropTypes.number,
+          priority: PropTypes.any,
+          code: PropTypes.string,
+          alarmMsgId: PropTypes.number,
+          handleQuit: PropTypes.func,
+          FieldChange: PropTypes.func,
+          typeUpdate: PropTypes.func
+      }
+  }
+
   render() {
     const type   = this.props.type;
     const msgs   = this.props.msgs;
     const typeUpdate  = this.props.typeUpdate;
     const handleQuit  = this.props.handleQuit;
     const fieldChange = this.props.FieldChange;
-    
+
     return (
       <div className="oms-tabs">
         <form id="typeForm" name="typeForm" >
@@ -48,16 +64,16 @@ class AlarmTypeForm extends Component {
                 <td className="oms-spacing-180">
                   <input type="hidden" name="id" value={type.id}
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')} />
-                   <input type="text" id="priority" name="priority" value={type.priority} 
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                   <input type="text" id="priority" name="priority" value={type.priority}
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} size="5" maxLength="2" />
                 </td>
               </tr>
               <tr>
                 <td className="oms-spacing-90">&nbsp;Code:&nbsp;</td>
                 <td className={["oms-spacing-80","oms-fontsize-12"].join(' ')} >
-                   <input type="text" id="code" name="code" value={type.code} 
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                   <input type="text" id="code" name="code" value={type.code}
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} size="8" maxLength="4" />
                </td>
               </tr>
@@ -65,13 +81,13 @@ class AlarmTypeForm extends Component {
                 <td className="oms-spacing-90">&nbsp;Message:&nbsp;</td>
                 <td className="oms-spacing-180">
                   <select id="alarmMsgId" name="alarmMsgId" value={type.alarmMsgId}
-                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange}>
-                    { msgs.map( 
+                    { msgs.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.message}</option>
                       } )
-                    }                
+                    }
                   </select>
                 </td>
               </tr>
@@ -81,10 +97,10 @@ class AlarmTypeForm extends Component {
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value="Quit" className="oms-spacing"
                          onClick={(e) => {handleQuit(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {typeUpdate(e)}}/>
                 </td>

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {Stage, Layer} from 'react-konva';
 
 import SiteImage from '../SiteImage.js';
@@ -27,6 +30,34 @@ class DIForm extends Component {
   constructor(props) {
     super(props);
     this.state = {  };
+  }
+
+  static get propTypes() {
+      return {
+          di: PropTypes.object,
+          alarmCode: PropTypes.string,
+          alarmState: PropTypes.string,
+          histTypeCode: PropTypes.string,
+          scanInt: PropTypes.number,
+          scanOffset: PropTypes.number,
+          tag: PropTypes.object,
+          active: PropTypes.string,
+          c1Lat: PropTypes.number,
+          c1Long: PropTypes.number,
+          c2Lat: PropTypes.number,
+          c2Long: PropTypes.number,
+          description: PropTypes.string,
+          name: PropTypes.string,
+          tagId: PropTypes.number,
+          valueView: PropTypes.any,
+          valueViews: PropTypes.any,
+          histTypes: PropTypes.any,
+          diCopy: PropTypes.func,
+          diUpdate: PropTypes.func,
+          fieldChange: PropTypes.func,
+          handleMouseUp: PropTypes.func,
+          handleQuit: PropTypes.func
+      }
   }
 
   render() {
@@ -46,19 +77,19 @@ class DIForm extends Component {
             <tr>
               <td className="oms-top">
         <form id="diForm" >
-          Please enter your digital input information 
+          Please enter your digital input information
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
-                <td className="oms-spacing"><img src="images/spacer.png" 
+                <td className="oms-spacing"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-90">DI name:</th>
                 <td className="oms-spacing">
                   <input type="hidden" name="tagId" value={di.tagId} />
-                  <input type="text" id="tag.name" name="tag.name" value={di.tag.name} 
+                  <input type="text" id="tag.name" name="tag.name" value={di.tag.name}
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')} size="10" maxLength="10"
                          onChange={fieldChange} />
                 </td>
@@ -71,11 +102,11 @@ class DIForm extends Component {
                          onChange={fieldChange} />
                 </td>
               </tr>
-            
+
               <tr>
                 <td className="oms-spacing-90">Active:</td>
                 <td className="oms-spacing">
-                  <select id="active" name="active" value={di.tag.active} 
+                  <select id="active" name="active" value={di.tag.active}
                           className={["oms-spacing-100","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange} >
                     <option value="N">N</option>
@@ -91,7 +122,7 @@ class DIForm extends Component {
                       onChange={fieldChange} maxLength="2" size="5"/>
               </td>
           </tr>
-          <tr>            
+          <tr>
             <td className="oms-spacing-90">ScanOffset:</td>
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
               <input type="text" id="scanOffset" name="scanOffset" value={di.scanOffset}
@@ -117,11 +148,11 @@ class DIForm extends Component {
             <td >
               <select id="histTypeCode" name="histTypeCode" value={di.histTypeCode}
                       onChange={fieldChange}>
-                { histTypes.map( 
+                { histTypes.map(
                   function(n,x){
                     return <option key={x} value={n.code}>{n.name}</option>
                   } )
-                }                
+                }
               </select>
             </td>
           </tr>
@@ -130,23 +161,23 @@ class DIForm extends Component {
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
               <select id="valueView" name="valueView" value={di.valueView}
                       onChange={fieldChange}>
-                { views.map( 
+                { views.map(
                   function(n,x){
                     return <option key={x} value={n}>{n}</option>
                   } )
-                }                
+                }
               </select>
             </td>
           </tr>
-  
+
               <tr>
                 <th className="oms-spacing-90" >Corners (NW)</th>
                 <td className="oms-spacing">
-                  <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={di.tag.c1Lat} 
+                  <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={di.tag.c1Lat}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                   &nbsp;
-                  <input type="text" id="tag.c1Long" name="tag.c1Long" value={di.tag.c1Long} 
+                  <input type="text" id="tag.c1Long" name="tag.c1Long" value={di.tag.c1Long}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                 </td>
@@ -154,29 +185,29 @@ class DIForm extends Component {
               <tr>
                 <td className="oms-spacing-90" >&nbsp;&nbsp;&nbsp;(SE)</td>
                 <td>
-                  <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={di.tag.c2Lat} 
+                  <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={di.tag.c2Lat}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                   &nbsp;
-                  <input type="text" id="tag.c2Long" name="tag.c2Long" value={di.tag.c2Long} 
+                  <input type="text" id="tag.c2Long" name="tag.c2Long" value={di.tag.c2Long}
                          className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                 </td>
               </tr>
-            
+
             </tbody>
           </table>
           <table className="oms-spacing">
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value=" Quit " className="oms-spacing"
                          onClick={(e) => {handleQuit(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {diUpdate(e)}}/>
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value=" Copy " className="oms-spacing"
                                onClick={(e) => {diCopy(e)}}/>
                 </td>
@@ -184,7 +215,7 @@ class DIForm extends Component {
             </tbody>
           </table>
         </form>
-  
+
               </td>
               <td>
                 <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
@@ -196,11 +227,11 @@ class DIForm extends Component {
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     );
   }
-  
+
 }
 
 export default DIForm;

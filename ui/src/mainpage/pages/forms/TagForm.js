@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 import {Stage, Layer, Rect} from 'react-konva';
 
@@ -28,16 +31,41 @@ class TagForm extends Component {
     super(props);
     this.state={};
     this.noAction=this.noAction.bind(this);
-  }  
+  }
+
+  static get propTypes() {
+      return {
+          contentsList: PropTypes.array,
+          equipList: PropTypes.array,
+          sensorList: PropTypes.array,
+          siteLoc: PropTypes.object,
+          tag: PropTypes.object,
+          active: PropTypes.string,
+          description: PropTypes.string,
+          id: PropTypes.number,
+          inTagId: PropTypes.number,
+          inTagList: PropTypes.array,
+          misc: PropTypes.string,
+          name: PropTypes.string,
+          outTagId: PropTypes.number,
+          outTagList: PropTypes.array,
+          tagTypeCode: PropTypes.string,
+          tagTypes: PropTypes.array,
+          fieldChange: PropTypes.func,
+          handleMouseUp: PropTypes.func,
+          handleQuit: PropTypes.func,
+          tagUpdate: PropTypes.func
+      }
+  }
 
   scale( tagLoc, siteLoc, scaleFactor ) {
     return Math.round(scaleFactor * (tagLoc - siteLoc));
   }
-  
+
   noAction(e) {
     e.preventDefault();
   }
-  
+
   render() {
     let t = this.props.tag;
     let types        = this.props.tagTypes;
@@ -113,19 +141,19 @@ class TagForm extends Component {
               <td className="oms-top">
 
       <form id="tagForm" onSubmit={(e) => {tup(e)}} >
-        Please enter your tag information 
+        Please enter your tag information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/></td>
           </tr>
           <tr>
             <th className="oms-spacing-180">Name (10 chars):</th>
             <td className="oms-spacing">
               <input type="hidden" name="id" value={t.id} />
-              <input type="text" id="name" name="name" value={t.name} 
+              <input type="text" id="name" name="name" value={t.name}
                      className="oms-spacing-80" size="10" maxLength="10"
                      onChange={fc} />
             </td>
@@ -143,7 +171,7 @@ class TagForm extends Component {
             <td className="oms-spacing">
               <select id="tagTypeCode" name="tagTypeCode" value={t.tagTypeCode}
                       onChange={fc} >
-                { types.map( 
+                { types.map(
                   function(n,x){
                     return <option key={x} value={n.code}>{n.name}</option>
                   } )
@@ -158,11 +186,11 @@ class TagForm extends Component {
           <tr>
             <th className="oms-spacing-90">Corners (NW)</th>
             <td className="oms-spacing">
-              <input type="text" id="c1Lat" name="c1Lat" value={t.c1Lat} 
+              <input type="text" id="c1Lat" name="c1Lat" value={t.c1Lat}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
               &nbsp;
-              <input type="text" id="c1Long" name="c1Long" value={t.c1Long} 
+              <input type="text" id="c1Long" name="c1Long" value={t.c1Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
             </td>
@@ -170,11 +198,11 @@ class TagForm extends Component {
           <tr>
             <td className="oms-spacing-90">&nbsp;&nbsp;&nbsp;(SE)</td>
             <td>
-              <input type="text" id="c2Lat" name="c2Lat" value={t.c2Lat} 
+              <input type="text" id="c2Lat" name="c2Lat" value={t.c2Lat}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
               &nbsp;
-              <input type="text" id="c2Long" name="c2Long" value={t.c2Long} 
+              <input type="text" id="c2Long" name="c2Long" value={t.c2Long}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}
                      onChange={fc} />
             </td>
@@ -182,7 +210,7 @@ class TagForm extends Component {
           <tr>
             <th className="oms-spacing-180">Active:</th>
             <td className="oms-spacing">
-              <select id="active" name="active" value={t.active} 
+              <select id="active" name="active" value={t.active}
                       onChange={fc} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -207,9 +235,9 @@ class TagForm extends Component {
           </tr>
           <tr>
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {hq(e)}}/>
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {tup(e)}} />
             </td>
           </tr>

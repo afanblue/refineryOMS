@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import DefaultContents from './DefaultContents.js';
@@ -63,7 +66,13 @@ class TankAdmin extends Component {
     this.finishLevelFetch  = this.finishLevelFetch.bind(this);
     this.finishCntntsFetch = this.finishCntntsFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -71,16 +80,10 @@ class TankAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -126,7 +129,7 @@ class TankAdmin extends Component {
   fetchTankData(id) {
     const loc = "TankAdmin.fetchTank";
     const myRequest=SERVERROOT + "/tank/" + id;
-    let req0 = new OMSRequest(loc, myRequest, 
+    let req0 = new OMSRequest(loc, myRequest,
                             "Problem selecting tank "+myRequest, this.finishTankFetch);
     req0.fetchData();
     let req1 = new OMSRequest(loc, SERVERROOT + "/config/site",
@@ -138,11 +141,11 @@ class TankAdmin extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/ai/all/L",
                             "Problem retrieving level tag list", this.finishLevelFetch);
     req3.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})
     let req4 = new OMSRequest(loc, SERVERROOT + "/tank/contentTypes",
                             "Problem retrieving content types list", this.finishCntntsFetch);
     req4.fetchData();
-    this.setState({tank:null, siteLocation:null, temperatures:null, levels:null, contentTypes:null})    
+    this.setState({tank:null, siteLocation:null, temperatures:null, levels:null, contentTypes:null})
   }
 
 
@@ -176,18 +179,17 @@ class TankAdmin extends Component {
     }
     request();
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   handleClick() {
-    
-  };
-  
+  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -203,7 +205,7 @@ class TankAdmin extends Component {
     }
     this.setState({tank: tknew } );
   }
-  
+
   handleMouseUp(event) {
       const e = event;
       const t = e.evt;
@@ -224,11 +226,11 @@ class TankAdmin extends Component {
       } else {
         tknew.tag.c2Lat = lat;
         tknew.tag.c2Long = long;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
       this.setState( {tank: tknew, nextCorner:nextCorner} );
   }
- 
+
   fetchList() {
     const clsMthd = "TankAdmin.fetchList";
     const myRequest = SERVERROOT + "/tank/all";
@@ -237,14 +239,14 @@ class TankAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "TankAdmin.fetchList: Fetching tank list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
@@ -254,8 +256,8 @@ class TankAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     tank: null,
                     stage: "begin" } );
@@ -263,7 +265,7 @@ class TankAdmin extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+        case "begin":
         return <Waiting />
       case "dataFetched":
         return <TankList tankData = {this.state.returnedText}
@@ -271,8 +273,8 @@ class TankAdmin extends Component {
                          handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.tank===null) || (this.state.siteLocation===null) || 
-            (this.state.temperatures===null) || (this.state.levels===null) || 
+        if( (this.state.tank===null) || (this.state.siteLocation===null) ||
+            (this.state.temperatures===null) || (this.state.levels===null) ||
             (this.state.contentTypes===null) ) {
           return <Waiting />
         } else {

@@ -17,7 +17,7 @@ import us.avn.oms.domain.AnalogInput;
 import us.avn.oms.domain.Config;
 import us.avn.oms.domain.Device;
 import us.avn.oms.domain.Tag;
-import us.avn.oms.domain.Xfer;
+import us.avn.oms.domain.RawData;
 import us.avn.oms.service.AddressService;
 import us.avn.oms.service.AnalogInputService;
 import us.avn.oms.service.AnalogOutputService;
@@ -31,7 +31,7 @@ import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 import us.avn.ws.WeatherStation;
 import us.avn.ws.WeatherStationFactory;
@@ -78,18 +78,20 @@ public class WS extends IODevice {
 	 * @param dis - digital input service
 	 * @param dos - digital output service
 	 * @param ords - order service 
+	 * @param rds - raw data service
 	 * @param tgs - tag service
 	 * @param tks - tank service
 	 * @param tfs - transfer service
-	 * @param xs - xfer service
+	 * 
+	 * d, adrs, ais, aos, cs, cbs, dis, dos, tgs, tks, tfs, xs 
 	 */
 	public WS(Device d, AddressService adrs
 			, AnalogInputService ais, AnalogOutputService aos
 			, ConfigService cs, ControlBlockService cbs
 			, DigitalInputService dis, DigitalOutputService dos
-			, OrderService ords, TagService tgs
-			, TankService tks, TransferService tfs, XferService xs) {
-		super(d, adrs, ais, aos, cs, cbs, dis, dos, ords, tgs, tks, tfs, xs);
+			, OrderService ords, RawDataService rds, TagService tgs
+			, TankService tks, TransferService tfs ) {
+		super(d, adrs, ais, aos, cs, cbs, dis, dos, ords, rds, tgs, tks, tfs);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -157,8 +159,8 @@ public class WS extends IODevice {
 			Address addr = iadr.next();
 			log.debug("Scan "+addr);
 			AnalogInput ai = ais.getAnalogInput(addr.getId() );
-			Xfer x = new Xfer();
-			x.setId(ai.getTagId());
+			RawData rd = new RawData();
+			rd.setId(ai.getTagId());
 			String aiTypeCode = ai.getAnalogTypeCode();
 			String aiName = ai.getTag().getName();
 //     	    fake the collected data
@@ -168,10 +170,11 @@ public class WS extends IODevice {
 					Double currentValue = currentTags.get(aiName); 
 					log.debug(aiName+"-"+currentValue);
 					if( null != currentValue ) {
-						x.setFloatValue(currentValue);
-						x.setScanTime(cst);
-						log.debug(x.toString());
-						xs.updateXfer(x);
+						rd.setUpdated(1);
+						rd.setFloatValue(currentValue);
+						rd.setScanTime(cst);
+						log.debug(rd.toString());
+						rds.updateRawData(rd);
 					}
 				}
 			}

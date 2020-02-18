@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import Log             from '../requests/Log.js';
@@ -34,19 +37,19 @@ import {PlotGroup}     from './objects/PlotGroup.js';
  * As each item is selected, in the handleChange function I get the history for
  * the selected item and store it away in a state variable, d1, d2, d3, or d4.
  *
- * this creates some problems if an item is dropped, since i have to replace 
+ * this creates some problems if an item is dropped, since i have to replace
  * the history data as well.  it turns out this isn't a big problem, since the
  * new item is always the last one.
  *
  * Anyway, once the submit button is clicked, we generate the plot form.
  *
- * Notice I broke from my usual form by adding the form into the admin script. 
+ * Notice I broke from my usual form by adding the form into the admin script.
  */
 
 class AdHocForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       aiList: props.ailist,
       itl: props.itl,
       imgLeft: null,
@@ -56,14 +59,24 @@ class AdHocForm extends Component {
     this.moveRight = this.moveRight.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ plotGroup: nextProps.plotGroup,
-                    aiList: nextProps.aiList,
-                    updateData: true,
-                    updateDisplay: false,
-                    returnedText: null });
+  static get propTypes() {
+      return {
+          aiList: PropTypes.array
+      }
   }
-  
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+	let state = { plotGroup: nextProps.plotGroup,
+                  aiList: nextProps.aiList,
+                  itl: nextProps.itl,
+                  updateData: true,
+                  updateDisplay: false,
+                  returnedText: null,
+                  imgLeft: prevState.imgLeft,
+                  imgRight: prevState.imgRight };
+    return state;
+  }
+
   componentDidMount() {
     let imgLeft  = new window.Image();
     let imgRight = new window.Image();
@@ -72,7 +85,7 @@ class AdHocForm extends Component {
     imgRight.src = "images/rightArrow.png";
     imgRight.onload = () => { this.setState( {imgRight:imgRight} ); }
   }
-  
+
   moveLeft(event) {
     event.preventDefault();
     let itl = this.props.rtl;
@@ -95,7 +108,7 @@ class AdHocForm extends Component {
       }
     } else {
       alert("A maximum of four (4) tags are graphed at once");
-    }  
+    }
   }
 
   moveRight(event) {
@@ -137,11 +150,11 @@ class AdHocForm extends Component {
     const moveRight = this.moveRight;
     const imgLeft = "images/leftArrow.png";
     const imgRight = "images/rightArrow.png";
-    
+
     var midStyle   = { verticalAlign: 'middle'};
     var leftStyle  = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
     var rightStyle = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
-    
+
     return(
       <div className="oms-tabs">
       <table>
@@ -161,7 +174,7 @@ class AdHocForm extends Component {
                 <tr>
                   <td>
                     <select name="ltl" id="ltl" ref="ltl" size={10}
-                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')}
                            onChange={handleChange}>
                       {ltl.map(function(n,x) {
                           return <option key={x} value={n.id}>{n.name}</option>
@@ -190,7 +203,7 @@ class AdHocForm extends Component {
                 </tr>
                 </tbody>
               </table>
-            </td>            
+            </td>
           </tr>
           </tbody>
         </table>
@@ -198,7 +211,7 @@ class AdHocForm extends Component {
           <tbody>
           <tr  className="oms-spacing">
             <td colSpan="2">
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {handleUpdate(e)}} />
             </td>
           </tr>
@@ -210,12 +223,12 @@ class AdHocForm extends Component {
           </tr>
         </tbody>
       </table>
-      
+
       </div>
-    );    
-      
+    );
+
   }
-  
+
 }
 
 /**
@@ -252,7 +265,7 @@ class AdHocAdmin extends Component {
     this.finishAIListFetch = this.finishAIListFetch.bind(this);
     this.requestRender = this.requestRender.bind(this);
   }
-  
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -260,21 +273,15 @@ class AdHocAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+	return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   requestRender(ltl, rtl, aiList) {
     this.setState({ ltl:ltl, rtl:rtl, aiList:aiList });
   }
@@ -292,14 +299,14 @@ class AdHocAdmin extends Component {
     this.setState({stage: "itemRetrieved",
                    updateDisplay: true,
                    updateData: false,
-                   plotGroup: pg                 
+                   plotGroup: pg
                   });
   }
-  
+
   finishAIListFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, rtl: req });
   }
-  
+
   fetchFormData(id) {
     const loc = "AdHoc.pgSelect";
     let req0 = new OMSRequest(loc, SERVERROOT + "/plotGroup/" + id,
@@ -327,11 +334,11 @@ class AdHocAdmin extends Component {
     this.setState({stage: "generatePlot",
                    plotGroup: pg});
   }
-  
+
   componentDidMount() {
     this.fetchFormData(0);
   }
-  
+
   componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
@@ -339,7 +346,7 @@ class AdHocAdmin extends Component {
       default:
     }
   }
-  
+
   handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -352,7 +359,7 @@ class AdHocAdmin extends Component {
       let tLength = (pgnew.aiList===null?0:pgnew.aiList.length);
       for( var i=0; i<tLength; i++) {
         let v = pgnew.aiList.shift();
-        if( v === tv ) { 
+        if( v === tv ) {
           f = i;
         } else {
           tNew.push(v);
@@ -369,9 +376,9 @@ class AdHocAdmin extends Component {
       }
       this.setState({plotGroup: pgnew } );
     }
-    
+
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     if( this.state.unitTimer !== null ) {
@@ -383,13 +390,13 @@ class AdHocAdmin extends Component {
     pgnew.aiList = tNew;
     this.setState({plotGroup: pgnew, stage: "itemRetrieved" } );
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
   }
-  
+
   handleClick(event) {
     event.preventDefault();
     Log.info("",'AdHoc.click');
@@ -397,11 +404,11 @@ class AdHocAdmin extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "itemRetrieved":
         if( (this.state.plotGroup===null) || (this.state.rtl===null)) {
-          return <Waiting />        
+          return <Waiting />
         } else {
           let ltl = (this.state.ltl===null)?[]:this.state.ltl;
           return <AdHocForm plotGroup    = {this.state.plotGroup}

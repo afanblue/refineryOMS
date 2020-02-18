@@ -40,6 +40,9 @@ public class Tag extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
+	public static final String ACTIVE = "Y";
+	public static final String INACTIVE = "N";
+	
 	public static final String ANALOG_INPUT = "AI";
 	public static final String ANALOG_OUTPUT = "AO";
 	public static final String CALCULATED = "C";

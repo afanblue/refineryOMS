@@ -29,6 +29,18 @@ set /a pd=%YY%%MM%%DD%
 
 rem echo %pd% >>archive.log
 
+rem extract and purge the alarm table
+
+mysqldump -uoms -p%1 oms alarm --no-create-info --where "create_dt < date_sub(sysdate(), interval %2 month) and acknowledged = 'Y'" --result-file=alarm.archive
+rename "alarm.archive" alarm-%pd%.arch
+gzip alarm-%pd%.arch
+
+mysql -uoms -p%1 -Doms --execute="set @days=%2; delete from alarm where create_dt < date_sub(sysdate(), interval %2 month) and acknowledged = 'Y'"
+mysql -uoms -p%1 -Doms -E --execute="select min(create_dt) as 'minAlarmDate' from alarm;" >>archive.log
+
+
+rem extract and purge the history table
+
 mysqldump -uoms -p%1 oms history --no-create-info --where "create_dt < date_sub(sysdate(), interval %2 month)" --result-file=history.archive
 rename "history.archive" history-%pd%.arch
 gzip history-%pd%.arch
@@ -36,19 +48,31 @@ gzip history-%pd%.arch
 mysql -uoms -p%1 -Doms --execute="set @days=%2; delete from history where create_dt < date_sub(sysdate(), interval %2 month)"
 mysql -uoms -p%1 -Doms -E --execute="select min(create_dt) as 'minHistoryDate' from history;" >>archive.log
 
+rem extract and purge the transfer table
+
 mysqldump -uoms -p%1 oms transfer --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval %2 month) and transfer_type_id <> 7" --result-file=transfer.archive
+
 rename "transfer.archive" transfer-%pd%.arch
 gzip transfer-%pd%.arch
 
 mysql -uoms -p%1 -Doms --execute="set @days=%2; delete from transfer where create_dt < date_sub(sysdate(), interval %2 month) and transfer_type_id = (select id from transfer_type_vw where code='X')"
+
 mysql -uoms -p%1 -Doms -E --execute="select min(create_dt) as 'minTransferDate' from transfer where transfer_type_id = (select id from transfer_type_vw where code='X');" >>archive.log
 
-mysqldump -uoms -p$pwd oms shipment_item --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active not in ('A','P')" --result-file=$XFERNM
+rem extract and purge the shipment_item table
+
+mysqldump -uoms -p$pwd oms shipment_item --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active not in ('A','P')" --result-file=shipment_item.archive
+rename "shipment_item.archive" shipment_item-%pd%.arch
+gzip shipment_item-%pd%.arch
 
 mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from shipment_item where create_dt < date_sub(sysdate(), interval @months month) and active not in ('A','P')"
 mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minOrderItemDate' from shipment_item" >>archive.log
 
-mysqldump -uoms -p$pwd oms shipment --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active = 'A')" --result-file=$XFERNM
+rem extract and purge the shipment table
+
+mysqldump -uoms -p$pwd oms shipment --no-create-info --compact --where "create_dt < date_sub(sysdate(), interval $int month) and active = 'A')" --result-file=shipment.archive
+rename shipment.archive shipment-%pd%.arch
+gzip shipment-%pd%.arch
 
 mysql -uoms -p$pwd -Doms --execute="set @months=$int; delete from shipment where create_dt < date_sub(sysdate(), interval @months month) and shipment_id not in (select shipment_id from shipment_item)"
 mysql -uoms -pomsx -Doms -E -e"select min(create_dt) as 'minOrderDate' from shipment" >>archive.log

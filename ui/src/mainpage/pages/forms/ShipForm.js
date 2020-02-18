@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class ShipForm extends Component {
@@ -24,16 +26,31 @@ class ShipForm extends Component {
     super(props);
     this.state={};
     this.noAction=this.noAction.bind(this);
-  }  
+  }
+
+  static get propTypes() {
+      return {
+          dockList: PropTypes.array,
+          ship: PropTypes.object,
+          active: PropTypes.string,
+          description: PropTypes.string,
+          id: PropTypes.number,
+          inTagId: PropTypes.number,
+          name: PropTypes.string,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          shipUpdate: PropTypes.func
+      }
+  }
 
   scale( tagLoc, siteLoc, scaleFactor ) {
     return Math.round(scaleFactor * (tagLoc - siteLoc));
   }
-  
+
   noAction(e) {
     e.preventDefault();
   }
-  
+
   render() {
     let t = this.props.ship;
     let dockList = this.props.dockList;
@@ -49,19 +66,19 @@ class ShipForm extends Component {
               <td className="oms-top">
 
       <form id="tagForm" onSubmit={(e) => {tup(e)}} >
-        Please enter your tag information 
+        Please enter your tag information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/></td>
           </tr>
           <tr>
             <th className="oms-spacing-180">Name (10 chars):</th>
             <td className="oms-spacing">
               <input type="hidden" name="id" value={t.id} />
-              <input type="text" id="name" name="name" value={t.name} 
+              <input type="text" id="name" name="name" value={t.name}
                      className="oms-spacing-80" size="10" maxLength="10"
                      onChange={fc} />
             </td>
@@ -85,7 +102,7 @@ class ShipForm extends Component {
           <tr>
             <th className="oms-spacing-180">Active:</th>
             <td className="oms-spacing">
-              <select id="active" name="active" value={t.active} 
+              <select id="active" name="active" value={t.active}
                       onChange={fc} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -94,9 +111,9 @@ class ShipForm extends Component {
           </tr>
           <tr>
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {hq(e)}}/>
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {tup(e)}} />
             </td>
           </tr>

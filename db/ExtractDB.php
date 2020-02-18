@@ -592,13 +592,13 @@ $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );
 
-/* xfer */
-$t = "xfer";
+/* raw_data */
+$t = "raw_data";
 echo "Extracting $t \n";
 $a = array( "Table,$t,,",
 		"ConstraintTable,ConstraintField,ConstraintEquivalence,ColumnConstrained",
 		"Data,,,");
-$q	= "select x.id from xfer x";
+$q	= "select x.id from raw_data x";
 $b = addData( $q, $a );
 $a[] = "End";
 createFile( "$t.csv", $a );

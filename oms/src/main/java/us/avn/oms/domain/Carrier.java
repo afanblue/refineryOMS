@@ -30,11 +30,32 @@ import java.util.Collection;
  */
 public class Carrier extends Tag implements Serializable {
 	
+	// all specfied in bbls (barrels)
+	
 	private static final long serialVersionUID = 8751282105532159742L;
+	
+	public static final long TT_SMALL = 115;
+	public static final long TT_LARGE = 275;
+	public static final long TANK_CAR = 820;
+	public static final long SHIP_GENPURPOSE_SMALL = 10000;
+	public static final long SHIP_GENPURPOSE_LARGE = 25000;
+	public static final long SHIP_MEDIUM = 45000;
+	public static final long SHIP_PANAMAX = 80000;
+	public static final long SHIP_AFRAMAX = 120000;
+	public static final long SHIP_SUEX_MAX = 200000;
+	public static final long SHIP_VLCC = 320000;
+	public static final long SHIP_ULCC = 550000;
 
 	private Double   quantity;
 	private Collection<Hold> holds;
     
+	public Carrier() {
+		super();
+	}
+	
+	public Carrier( Tag t ) {
+		super(t);
+	}
 	
 	public Double getQuantity() {
 		return quantity;

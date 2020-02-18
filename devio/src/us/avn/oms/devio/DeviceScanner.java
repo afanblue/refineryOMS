@@ -39,12 +39,13 @@ import us.avn.oms.service.ControlBlockService;
 import us.avn.oms.service.DeviceService;
 import us.avn.oms.service.DigitalInputService;
 import us.avn.oms.service.DigitalOutputService;
+import us.avn.oms.service.OrderService;
 import us.avn.oms.service.SimIOService;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 public class DeviceScanner extends TimerTask {
 	
@@ -62,12 +63,12 @@ public class DeviceScanner extends TimerTask {
     private DeviceService devs = null;
     private DigitalInputService dis = null;
     private DigitalOutputService dos = null;
-    private SimIOService sios = null;
+    private OrderService ords = null;
+    private RawDataService rds = null;
     private TagService tgs = null;
     private TankService tks = null;
     private TransferService tfs = null;
     private WatchdogService wds = null;
-    private XferService xs = null;
      
 	public void run( ) {
 
@@ -80,18 +81,18 @@ public class DeviceScanner extends TimerTask {
 		if( devs == null ) { devs = (DeviceService) context.getBean("deviceService"); }
 		if( dis  == null ) { dis  = (DigitalInputService) context.getBean("digitalInputService"); }
 		if( dos  == null ) { dos  = (DigitalOutputService) context.getBean("digitalOutputService"); }
-		if( sios == null ) { sios = (SimIOService) context.getBean("simioService"); }
+		if( ords == null ) { ords = (OrderService) context.getBean("orderService"); }
 		if( tgs  == null ) { tgs  = (TagService) context.getBean("tagService"); }
 		if( tks  == null ) { tks  = (TankService) context.getBean("tankService"); }
 		if( tfs  == null ) { tfs  = (TransferService) context.getBean("transferService"); }
-		if( xs   == null ) { xs   = (XferService) context.getBean("xferService"); }
+		if( rds  == null ) { rds  = (RawDataService) context.getBean("rawDataService"); }
 		if( wds  == null ) { wds  = (WatchdogService) context.getBean("watchdogService"); }
 		
 		Iterator<Device> idev = devs.getAllActiveDevices().iterator();
 	    IODeviceFactory iodf = new IODeviceFactory();
 		while( idev.hasNext() ) {
 			Device d = idev.next();
-	        IODevice iodev = iodf.getIODevice(d, adrs, ais, aos, cbs, cs, dis, dos, sios, tgs, tks, tfs, xs);
+	        IODevice iodev = iodf.getIODevice(d, adrs, ais, aos, cbs, cs, dis, dos, ords, rds, tgs, tks, tfs);
 	        iodevs.put(d.getSeqNo(), iodev);
 		}
 		

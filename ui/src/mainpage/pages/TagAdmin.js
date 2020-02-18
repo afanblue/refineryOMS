@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH}    from '../../Parameters.js';
 import TagList         from './lists/TagList.js';
 import TagForm         from './forms/TagForm.js';
@@ -63,7 +66,13 @@ class TagAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleQuit        = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -71,16 +80,10 @@ class TagAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -102,15 +105,15 @@ class TagAdmin extends Component {
    finishTypesFetch(req) {
     this.setState({stage: "tagRetrieved", updateDisplay: true, tagTypes: req });
   }
-  
+
    finishEqpFetch(req) {
     this.setState({stage: "tagRetrieved", updateDisplay: true, equipList: req });
   }
-  
+
    finishSensorFetch(req) {
     this.setState({stage: "tagRetrieved", updateDisplay: true, sensorList: req });
   }
-  
+
   finishCntntsFetch(req) {
     var cList = [];
     var mt = {};
@@ -125,7 +128,7 @@ class TagAdmin extends Component {
              } )
     this.setState({stage: "tagRetrieved", updateDisplay: true, contentsList:cList });
   }
-  
+
   handleTagSelect(event) {
     const id = event.z;
     const loc = "TagAdmin.tagSelect";
@@ -147,7 +150,7 @@ class TagAdmin extends Component {
     let req5 = new OMSRequest(loc, SERVERROOT + "/referencecode/category/content-type",
                              "Problem retrieving contents list ", this.finishCntntsFetch);
     req5.fetchData();
-    
+
   }
 
   handleTagUpdate(event) {
@@ -178,15 +181,16 @@ class TagAdmin extends Component {
   componentDidMount() {
     this.fetchList("ALL");
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
+
+/*  componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
         break;
       default:
     }
   }
-  
+*/
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -237,7 +241,7 @@ class TagAdmin extends Component {
   finishListFetch( req ) {
     this.setState( {stage:"dataFetched", updateDisplay:true, returnedText: req } );
   }
-    
+
   finishTypes2Fetch(req) {
     this.setState({stage:"dataFetched", updateDisplay:true, tagTypes: req });
   }
@@ -262,16 +266,16 @@ class TagAdmin extends Component {
       req2.fetchData();
     }
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList(this.state.type);
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
-  
+
   handleMouseUp(event) {
     const e = event;
     const t = e.evt;
@@ -292,15 +296,15 @@ class TagAdmin extends Component {
     } else {
       tnew.c2Lat = lat;
       tnew.c2Long = long;
-      nextCorner = 1;        
+      nextCorner = 1;
     }
     this.setState( {tag: tnew, nextCorner:nextCorner} );
   }
- 
+
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+        case "begin":
         return <Waiting />
       case "dataFetched":
         if( (this.state.returnedText===null) || (this.state.tagTypes===null)  ||
@@ -316,7 +320,7 @@ class TagAdmin extends Component {
       case "tagRetrieved":
         if( (this.state.tag === null)        || (this.state.tagTypes === null) ||
             (this.state.equipList===null)    || (this.state.sensorList === null) ||
-            (this.state.siteLocation===null) || (this.state.contentsList === null) ) 
+            (this.state.siteLocation===null) || (this.state.contentsList === null) )
         {
           return <Waiting />
         } else {

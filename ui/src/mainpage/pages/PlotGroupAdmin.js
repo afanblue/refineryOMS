@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT} from '../../Parameters.js';
 
 import DefaultContents from './DefaultContents.js';
@@ -47,7 +50,13 @@ class PlotGroupAdmin extends Component {
     this.finishPGFetch     = this.finishPGFetch.bind(this);
     this.finishAIListFetch = this.finishAIListFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -55,16 +64,10 @@ class PlotGroupAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -83,15 +86,15 @@ class PlotGroupAdmin extends Component {
     this.setState({stage: "itemRetrieved",
                    updateDisplay: true,
                    updateData: false,
-                   plotGroup: pg                 
+                   plotGroup: pg
                   });
   }
-  
+
   finishAIListFetch(req) {
     let aiVarList = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, aiVarList: aiVarList });
   }
-  
+
   fetchFormData(id) {
     const loc = "PlotGroupAdmin.pgSelect";
     let req0 = new OMSRequest(loc, SERVERROOT + "/plotGroup/" + id,
@@ -135,25 +138,20 @@ class PlotGroupAdmin extends Component {
     }).then(this.handleErrors)
       .then(response => {
         this.fetchFormData(id);
-    }).catch(function(error) { 
+    }).catch(function(error) {
         alert("Problem "+(id===0?"inserting":"updating")+" PlotGroup "
              +"id "+id+"\n"+error);
-        Log.error("PlotGroupAdmin.PlotGroupUpdate: Error - " + error);  
+        Log.error("PlotGroupAdmin.PlotGroupUpdate: Error - " + error);
     });
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -167,7 +165,7 @@ class PlotGroupAdmin extends Component {
       let nVal = parseInt(value,10);
       for( var i=0; i<tLength; i++) {
         let v = parseInt(pgnew.aiList.shift(),10);
-        if( v === nVal ) { 
+        if( v === nVal ) {
           f = i;
         } else {
           tNew.push(v);
@@ -186,7 +184,7 @@ class PlotGroupAdmin extends Component {
     }
     this.setState({plotGroup: pgnew } );
   }
-  
+
   fetchList() {
     const clsMthd = "PlotGroupAdmin.fetchList";
     const myRequest = SERVERROOT + "/plotGroup/all";
@@ -195,14 +193,14 @@ class PlotGroupAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem fetching PlotGroup list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
@@ -212,15 +210,15 @@ class PlotGroupAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <PlotGroupList returnedText = {this.state.returnedText}

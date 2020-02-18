@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import DockList        from './lists/DockList.js';
@@ -58,7 +61,13 @@ class DockAdmin extends Component {
     this.handleFieldChange   = this.handleFieldChange.bind(this);
     this.handleQuit          = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -66,16 +75,10 @@ class DockAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -90,27 +93,27 @@ class DockAdmin extends Component {
     this.setState({stage: "tagRetrieved", updateDisplay: true, tag: t });
   }
 
- 
+
   finishCarrierFetch(req) {
     let blankItem = {};
     blankItem.id = null;
-    blankItem.name = '---';       
+    blankItem.name = '---';
     req.unshift(blankItem);
     this.setState({stage: "tagRetrieved", updateDisplay: true, carrierList: req });
   }
-  
+
   finishSensorFetch(req) {
     let blankItem = {};
     blankItem.id = null;
-    blankItem.name = '---';       
+    blankItem.name = '---';
     req.unshift(blankItem);
     this.setState({stage: "tagRetrieved", updateDisplay: true, sensorList: req });
   }
-  
+
   finishStnListFetch(req) {
     this.setState({stage: "tagRetrieved", updateDisplay: true, stationList: req });
   }
-  
+
   finishCntntsFetch(req) {
     var cList = [];
     var mt = {};
@@ -125,7 +128,7 @@ class DockAdmin extends Component {
              } )
     this.setState({stage: "tagRetrieved", updateDisplay: true, contentsList:cList });
   }
-  
+
   handleTagSelect(event) {
     const id = event.z;
     const loc = "DockAdmin.tagSelect";
@@ -145,7 +148,7 @@ class DockAdmin extends Component {
     let req5 = new OMSRequest(loc, SERVERROOT + "/referencecode/category/content-type",
                              "Problem retrieving contents list ", this.finishCntntsFetch);
     req5.fetchData();
-    
+
   }
 
   handleTagUpdate(event) {
@@ -176,15 +179,10 @@ class DockAdmin extends Component {
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//   }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -232,7 +230,7 @@ class DockAdmin extends Component {
   finishListFetch( req ) {
     this.setState( {stage:"dataFetched", updateDisplay:true, returnedText: req } );
   }
-    
+
 
   fetchList() {
     let loc = "DockAdmin.fetchList";
@@ -240,19 +238,19 @@ class DockAdmin extends Component {
                             "Problem selecting tag list", this.finishListFetch);
     req0.fetchData();
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
-  
+
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         if( (this.state.returnedText===null) ) {
@@ -263,7 +261,7 @@ class DockAdmin extends Component {
         }
       case "tagRetrieved":
         if( (this.state.tag === null)        || (this.state.carrierList===null)
-         || (this.state.sensorList === null) || (this.state.stationList === null) ) 
+         || (this.state.sensorList === null) || (this.state.stationList === null) )
         {
           return <Waiting />
         } else {

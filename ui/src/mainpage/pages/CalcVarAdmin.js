@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import {CalcVar}    from './objects/CalcVar.js';
@@ -49,7 +52,13 @@ class CalcVarAdmin extends Component {
     this.handleInpFetch  = this.handleInpFetch.bind(this);
     this.handleOutFetch  = this.handleOutFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -57,23 +66,15 @@ class CalcVarAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      calcVar: null,
-                      calcInpList: null,
-                      calcOutList: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+	return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   handleCVFetch( req ) {
     let cvd = req;
     const t = new Tag(cvd.id, cvd.tag.name, cvd.tag.description, cvd.tag.tagTypeCode, cvd.tag.tagTypeId
@@ -91,23 +92,23 @@ class CalcVarAdmin extends Component {
     this.setState({stage: "itemRetrieved",
                    updateDisplay: true,
                    updateData: false,
-                   calcVar: cv                 
+                   calcVar: cv
                   });
   }
-  
+
   handleInpFetch(req) {
     let calcInpList = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, calcInpList: calcInpList });
-  }  
+  }
 
   handleOutFetch(req) {
     let calcOutList = req;
     let blankItem = {};
     blankItem.id = null;
-    blankItem.name = '---';       
+    blankItem.name = '---';
     calcOutList.unshift(blankItem);
     this.setState({stage: "itemRetrieved", updateDisplay: true, calcOutList: calcOutList });
-  }  
+  }
 
   fetchFormData(id) {
     const loc = "PlotGroupAdmin.pgSelect";
@@ -127,7 +128,7 @@ class CalcVarAdmin extends Component {
     this.fetchFormData(id);
   }
 
-  /** 
+  /**
    * validateForm - x is an CalcVar object
    */
   validateForm( x ) {
@@ -184,24 +185,19 @@ class CalcVarAdmin extends Component {
       request();
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   requestRender() {
     let cvnew = Object.assign({},this.state.calcVar);
     this.setState({calcVar: cvnew } );
   }
-  
+
   handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -214,7 +210,7 @@ class CalcVarAdmin extends Component {
         let tLength = (cvnew.inputTagIds===null?0:cvnew.inputTagIds.length);
         for( var i=0; i<tLength; i++) {
             let v = cvnew.inputTagIds.shift();
-            if( v === parseInt(value,10) ) { 
+            if( v === parseInt(value,10) ) {
                 f = i;
             } else {
                 tNew.push(v);
@@ -233,7 +229,7 @@ class CalcVarAdmin extends Component {
     }
     this.setState({calcVar: cvnew } );
   }
-  
+
   fetchList() {
     const clsMthd = "CalcVarAdmin.fetchList";
     const myRequest = SERVERROOT + "/calcVariable/all";
@@ -242,8 +238,8 @@ class CalcVarAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
@@ -259,15 +255,15 @@ class CalcVarAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <CalcVarList returnedText = {this.state.returnedText}

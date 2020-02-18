@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}  from '../../Parameters.js';
 //import {ProcessUnit} from './objects/ProcessUnit.js';
 //import {Tag}         from './objects/Tag.js';
@@ -26,7 +29,7 @@ import PlotGroupVars from './PlotGroupVars.js';
 import SiteOverview  from './SiteOverview.js';
 import Waiting       from './Waiting.js';
 
-  
+
 
 class GroupList extends Component {
   constructor( props ) {
@@ -41,7 +44,13 @@ class GroupList extends Component {
     };
     this.menuSelect = this.menuSelect.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -56,8 +65,8 @@ class GroupList extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( error ) {
@@ -73,15 +82,15 @@ class GroupList extends Component {
   componentDidMount() {
     this.fetchList();
   }
-  
+
   menuSelect(event) {
     let z = event.z;
     if( z === undefined ) {z=event.z1;}
     if( z === undefined ) {z=event.z2;}
-    if( z === undefined ) {z=event.z3;}    
+    if( z === undefined ) {z=event.z3;}
     this.setState({option:z,activity:"begin" });
   }
-  
+
   generateList() {
     let menuSelect = this.menuSelect;
     let data = this.state.returnedText;
@@ -113,7 +122,7 @@ class GroupList extends Component {
       let il = new IL3(CE0,CE1,CE2);
       puColumns.push(il);
     }
-*/    
+*/
     return(
       <div>
       <h2>
@@ -128,11 +137,11 @@ class GroupList extends Component {
               <table>
                 <thead className={"fixedHeader"}>
                   <tr>
-      	            <td className={"oms-spacing-180"}>Group Name</td>
+                    <td className={"oms-spacing-180"}>Group Name</td>
                   </tr>
                 </thead>
                 <tbody className={"scrollContent-thin"}>
-                  {data.map( 
+                  {data.map(
                     function(n,x) {
                       const z1 = n.id;
                       return (

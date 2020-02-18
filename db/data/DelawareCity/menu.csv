@@ -1,6 +1,6 @@
 Table,menu,,
 ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
-page,id,name,page_id
+page_id,page,id,name
 menu_type_id,reference_code,id,code
 category_id,horizontal_menu_vw,id,text
 Data,,,

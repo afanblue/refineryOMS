@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}       from '../../Parameters.js';
 import OMSRequest         from '../requests/OMSRequest.js';
 import ActiveTransferList from './lists/ActiveTransferList.js';
@@ -57,7 +60,13 @@ class ActiveTransfers extends Component {
     this.finishStsFetch    = this.finishStsFetch.bind(this);
     this.finishSrcsFetch   = this.finishSrcsFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -65,16 +74,11 @@ class ActiveTransfers extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, prevState) {
+	let state = prevState;
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -93,11 +97,11 @@ class ActiveTransfers extends Component {
                    transfer: x
                   });
   }
-  
+
   finishTypesFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, transferTypes:req });
   }
-  
+
   finishStsFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, statuses: req });
   }
@@ -109,7 +113,7 @@ class ActiveTransfers extends Component {
   fetchFormData(id) {
     const loc = "TransferAdmin.select";
     let myRequest = SERVERROOT + "/transfer/" + id;
-    let req0 = new OMSRequest(loc, myRequest, 
+    let req0 = new OMSRequest(loc, myRequest,
                             "Problem selecting transfer "+myRequest,
                             this.finishXferFetch);
     req0.fetchData();
@@ -119,21 +123,21 @@ class ActiveTransfers extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/transfer/types",
                             "Problem retrieving input tag list", this.finishTypesFetch);
     req3.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})
     let req4 = new OMSRequest(loc, SERVERROOT + "/transfer/statuses",
                             "Problem retrieving output tag list", this.finishStsFetch);
     req4.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, outTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, outTags:null})
   }
-  
+
   handleSelect(event) {
     const id = event.z;
     this.fetchFormData(id);
   }
 
-/*  
+/*
   handleSelect(event) {
-    let method = "ActiveTransfers.transferSelect"; 
+    let method = "ActiveTransfers.transferSelect";
     const id = event.z;
     const myRequest=SERVERROOT + "/transfer/" + id;
     const request = async () => {
@@ -158,7 +162,7 @@ class ActiveTransfers extends Component {
                       });
       } catch( error ) {
          alert("Problem selecting transfer id "+id+"\n"+error);
-         Log.error("Error - " + error,method);  
+         Log.error("Error - " + error,method);
       }
     }
     request();
@@ -185,7 +189,7 @@ class ActiveTransfers extends Component {
     }
     if( ! doSubmit ) {
       msg += " must be selected!";
-      alert(msg);
+      window.alert(msg);
     }
     return doSubmit;
   }
@@ -217,20 +221,19 @@ class ActiveTransfers extends Component {
       request();
     }
   }
-  
+
   componentDidMount() {
     var myTimerID = setInterval(() => {this.fetchList()}, 60000 );
     this.fetchList();
     this.setState({unitTimer:myTimerID});
   }
-    
+
   componentDidUpdate( prevProps, prevState ) {
   }
 
   handleClick() {
-    
-  };
-  
+  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -246,8 +249,9 @@ class ActiveTransfers extends Component {
     }
     this.setState({transfer: tknew } );
   }
-  
- 
+
+
+
   fetchList() {
     let method = "ActiveTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/active";
@@ -256,8 +260,8 @@ class ActiveTransfers extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
@@ -274,8 +278,8 @@ class ActiveTransfers extends Component {
     event.preventDefault();
     var myTimerID = setInterval(() => {this.fetchList()}, 60000 );
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     transfer: null,
                     stage: "begin",
@@ -287,35 +291,35 @@ class ActiveTransfers extends Component {
       clearInterval(this.state.unitTimer);
     }
   }
-  
+
 
   render() {
      switch( this.state.stage ) {
-  	  case "begin":
-        return <Waiting />
-      case "dataFetched":
-        return <ActiveTransferList transferData = {this.state.returnedText}
-                                   transferSelect = {this.handleSelect}
-                                   handleQuit = {this.handleQuit}
-               />
-      case "itemRetrieved":
-        if( (this.state.transfer === null)  || (this.state.transferTypes === null) || 
-            (this.state.sources === null)   || (this.state.statuses === null)    ) {
-          return <Waiting />
-        } else {
-          return <TransferForm transfer       = {this.state.transfer}
-                               transferTypes  = {this.state.transferTypes}
-                               statuses       = {this.state.statuses}
-                               sources        = {this.state.sources}
-                               transferUpdate = {this.handleUpdate}
-                               fieldChange    = {this.handleFieldChange}
-                               handleQuit     = {this.handleQuit}
-                               handleClick    = {this.handleClick}
-                 />
-        }
-      default:
-        return <DefaultContents />
-    }
+       case "begin":
+         return <Waiting />
+       case "dataFetched":
+         return <ActiveTransferList transferData = {this.state.returnedText}
+                                    transferSelect = {this.handleSelect}
+                                    handleQuit = {this.handleQuit}
+                />
+       case "itemRetrieved":
+         if( (this.state.transfer === null)  || (this.state.transferTypes === null) ||
+             (this.state.sources === null)   || (this.state.statuses === null)    ) {
+           return <Waiting />
+         } else {
+           return <TransferForm transfer       = {this.state.transfer}
+                                transferTypes  = {this.state.transferTypes}
+                                statuses       = {this.state.statuses}
+                                sources        = {this.state.sources}
+                                transferUpdate = {this.handleUpdate}
+                                fieldChange    = {this.handleFieldChange}
+                                handleQuit     = {this.handleQuit}
+                                handleClick    = {this.handleClick}
+                  />
+         }
+       default:
+         return <DefaultContents />
+     }
   }
 }
 

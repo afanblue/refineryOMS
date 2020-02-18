@@ -26,12 +26,13 @@ import us.avn.oms.service.ConfigService;
 import us.avn.oms.service.ControlBlockService;
 import us.avn.oms.service.DigitalInputService;
 import us.avn.oms.service.DigitalOutputService;
+import us.avn.oms.service.OrderService;
 import us.avn.oms.service.SimIOService;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.TankService;
 import us.avn.oms.service.TransferService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 public class IODeviceFactory {
 
@@ -43,16 +44,16 @@ public class IODeviceFactory {
 			, AnalogInputService ais, AnalogOutputService aos
 			, ControlBlockService cbs, ConfigService cs
 			, DigitalInputService dis, DigitalOutputService dos
-			, SimIOService sios, TagService tgs
-			, TankService tks, TransferService tfs, XferService xs ) 
+			, OrderService ords, RawDataService rds, TagService tgs
+			, TankService tks, TransferService tfs ) 
 	{
 		if(d.getType() == null ) {
 			return null;
 		}	
 		if(d.getType().equalsIgnoreCase("WS")){
-			return new WS( d, adrs, ais, aos, cs, cbs, dis, dos, sios, tgs, tks, tfs, xs  );
+			return new WS( d, adrs, ais, aos, cs, cbs, dis, dos, ords, rds, tgs, tks, tfs );
 		} else if(d.getType().equalsIgnoreCase("SIM")){
-			return new Simulator( d, adrs, ais, aos, cs, cbs, dis, dos, sios, tgs, tks, tfs, xs );
+			return new Simulator( d, adrs, ais, aos, cs, cbs, dis, dos, ords, rds, tgs, tks, tfs );
 		}
 		return null;
 	}

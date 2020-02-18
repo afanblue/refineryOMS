@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class Waiting extends Component {
@@ -24,13 +26,19 @@ class Waiting extends Component {
     super(props);
     this.state = {stage: props.stage}
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   render () {
-    return (    
+    return (
     <table><tbody><tr>
       <td className="oms-padded-menu-text">Waiting ...</td>
       <td><img src="../../images/spacer.png" alt="" width="20px" height="480px" /></td>
-    </tr></tbody></table> 
+    </tr></tbody></table>
     )}
 }
 

@@ -17,20 +17,28 @@
  ***********************************************************************/
 
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 
 class ClassificationMenu extends Component {
   constructor(props) {
     super(props);
     this.stage={};
   }
-      
+
+  static get propTypes() {
+      return {
+          classifications: PropTypes.any,
+          selected: PropTypes.any,
+          handleCatSelect: PropTypes.func
+      }
+  }
+
   render() {
     var classList = this.props.classifications;
     var selected = this.props.selected;
     var catSelected = this.props.handleCatSelect;
     var lineStyle = { margin:0, border:0, height:3 };
-    return ( 
+    return (
       <div className="oms-tabs">
         <nav>
           <ul className="oms-tabs-nav">
@@ -48,8 +56,8 @@ class ClassificationMenu extends Component {
                          <button type="button" className="cat-button-selected" onClick={() => {catSelected({t})}} >
                            {n.text}
                          </button>
-                       </li>; 
-                } 
+                       </li>;
+                }
               )
             }
           </ul>

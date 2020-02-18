@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import Log             from '../requests/Log.js';
 import DefaultContents from './DefaultContents.js';
@@ -26,10 +29,10 @@ import Waiting         from './Waiting.js';
 
 /*
  * select f.id, f.satellite_image image, c1_lat, c1_long, c2_lat, c2_long
-	 from field f join tag t on f.id = t.id 
+	 from field f join tag t on f.id = t.id
 	where t.name='DeCity';
-	
-	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk 
+
+	select field_tag_id, child_tag_id from field_tag_vw ftv, tank tk
 	 where ftv.child_tag_id=tk.id and ftv.field_tag_id= 1;
  */
 
@@ -44,11 +47,18 @@ class SiteOverview extends Component {
       tankType: props.tankType
     };
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          tankType: PropTypes.any
+      }
+  }
+
   componentDidMount() {
     this.fetchSite();
   }
-  
+
 
   handleErrors(response) {
     if (!response.ok) {
@@ -56,9 +66,9 @@ class SiteOverview extends Component {
     }
     return response;
   }
-  
-  
-  
+
+
+
   fetchSite() {
     const clsMthd = "SiteOverview.fetchList";
     const myRequest = SERVERROOT + "/config/SITE";
@@ -67,20 +77,20 @@ class SiteOverview extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {site: json.value, 
-                          updateData: false, 
+          this.setState( {site: json.value,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
-          const emsg = "Problem fetching field list"; 
+          const emsg = "Problem fetching field list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
     }
   }
-  
+
   render() {
     switch (this.state.stage) {
       case "begin":

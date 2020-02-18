@@ -162,7 +162,7 @@
          , coalesce(UNIX_TIMESTAMP(exp_end_time) 
            - UNIX_TIMESTAMP(CURRENT_TIMESTAMP), 300) end_diff
       from transfer x join tag tx on x.tag_id = tx.id
-           join tag ts on x.tag_id=ts.id
+           join tag ts on x.source_id=ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.value
            join transfer_type_vw ttv on x.transfer_type_id = ttv.value

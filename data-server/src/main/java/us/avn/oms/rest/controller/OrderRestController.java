@@ -47,11 +47,11 @@ public class OrderRestController {
 	public Collection<Order> getActiveOrders( ) {
 		log.debug("get active orders");
 		Collection<Order> orders = orderService.getActiveOrders();
-		Iterator<Order> io = orders.iterator();
-		while( io.hasNext() ) {
-			Order o = io.next();
-			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-		}
+//		Iterator<Order> io = orders.iterator();
+//		while( io.hasNext() ) {
+//			Order o = io.next();
+//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+//		}
 		return orders;
 	}
 	
@@ -59,11 +59,11 @@ public class OrderRestController {
 	public Collection<Order> getOrdersByType( @PathVariable String type ) {
 		log.debug("get active orders of type "+type);
 		Collection<Order> orders = orderService.getOrdersByType(type);
-		Iterator<Order> io = orders.iterator();
-		while( io.hasNext() ) {
-			Order o = io.next();
-			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-		}
+//		Iterator<Order> io = orders.iterator();
+//		while( io.hasNext() ) {
+//			Order o = io.next();
+//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+//		}
 		return orders;
 	}
 	
@@ -72,11 +72,11 @@ public class OrderRestController {
 	public Collection<Order> getLastWeeksOrders( ) {
 		log.debug("get active orders");
 		Collection<Order> orders = orderService.getLastWeeksOrders();
-		Iterator<Order> io = orders.iterator();
-		while( io.hasNext() ) {
-			Order o = io.next();
-			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-		}
+//		Iterator<Order> io = orders.iterator();
+//		while( io.hasNext() ) {
+//			Order o = io.next();
+//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+//		}
 		return orders;
 	}
 	
@@ -84,11 +84,11 @@ public class OrderRestController {
 	public Collection<Order> getLastMonthOrders( ) {
 		log.debug("get active orders");
 		Collection<Order> orders = orderService.getLastMonthsOrders();
-		Iterator<Order> io = orders.iterator();
-		while( io.hasNext() ) {
-			Order o = io.next();
-			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-		}
+//		Iterator<Order> io = orders.iterator();
+//		while( io.hasNext() ) {
+//			Order o = io.next();
+//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+//		}
 		return orders;
 	}
 	

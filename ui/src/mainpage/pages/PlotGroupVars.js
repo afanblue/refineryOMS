@@ -15,17 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
- 
-import React, {Component} from 'react';
-import Log             from '../requests/Log.js';
+/* eslint-env node, browser, es6 */
 
+import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
+import Log             from '../requests/Log.js';
 import {SERVERROOT}    from '../../Parameters.js';
 import GroupPlot       from './displays/GroupPlot.js';
 import Waiting         from './Waiting.js';
 import {PlotDetails}   from './objects/PlotGroup.js';
 
-const CLASS = "PlotGroupVars";  
- 
+const CLASS = "PlotGroupVars";
+
 class PlotGroupVars extends Component {
   constructor(props) {
     super(props);
@@ -51,22 +53,32 @@ class PlotGroupVars extends Component {
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleClick       = this.handleClick.bind(this);
   }
-  
-  handleErrors(response) {
+
+   static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          id: PropTypes.any,
+          plotGroup: PropTypes.any,
+          source: PropTypes.any
+      }
+  }
+
+ handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
     }
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage && nextProps.stage === "begin")
+  static getDerivedStateFromProps(nextProps, state) {
+    if( nextProps.stage !== state.stage && nextProps.stage === "begin")
     {
-      if( this.state.unitTimer !== null ) { clearInterval(this.state.unitTimer); }
+      if( state.unitTimer !== null ) { clearInterval(state.unitTimer); }
       this.fetchData(nextProps.id);
     }
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay || nextState.updateData;
     return sts;
@@ -78,7 +90,7 @@ class PlotGroupVars extends Component {
     this.fetchHistory(pg.id3,3);
     this.fetchHistory(pg.id4,4);
   }
-  
+
   fetchData( id ) {
     const myRequest=SERVERROOT + "/plotGroup/" + id;
     const request = async () => {
@@ -128,21 +140,21 @@ class PlotGroupVars extends Component {
               }
               this.setState({stage: "generatePlot", d0:fd, plotDetails: pd});
               break;
-            case 2:  
+            case 2:
               if( pd.max1 === Infinity ) {
                 pd.min1 = fd.aiTag.zeroValue;
                 pd.max1 = fd.aiTag.maxValue;
               }
               this.setState({stage: "generatePlot", d1:fd, plotDetails: pd});
               break;
-            case 3:  
+            case 3:
               if( pd.max2 === Infinity ) {
                 pd.min2 = fd.aiTag.zeroValue;
                 pd.max2 = fd.aiTag.maxValue;
               }
               this.setState({stage: "generatePlot", d2:fd, plotDetails: pd});
               break;
-            default: 
+            default:
               if( pd.max3 === Infinity ) {
                 pd.min3 = fd.aiTag.zeroValue;
                 pd.max3 = fd.aiTag.maxValue;
@@ -152,14 +164,14 @@ class PlotGroupVars extends Component {
           }
         } catch( error ) {
            alert("Problem selecting history for AI id "+id+"\n"+error);
-           Log.error("Error - " + error, CLASS+".fetchHistory" );  
+           Log.error("Error - " + error, CLASS+".fetchHistory" );
         }
       }
       request();
     }
   }
 
-  
+
   componentDidMount() {
     if( this.state.stage === "begin" ) {
       this.fetchData(this.state.id);
@@ -171,20 +183,18 @@ class PlotGroupVars extends Component {
                      unitTimer: myTimerID});
     }
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-//    let i = this.state.id;
-//    let s = this.state.stage;
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
     }
   }
-  
+
   handleClick() {
-  };
+  }
 
   handleFieldChange(event) {
     event.preventDefault();
@@ -196,15 +206,15 @@ class PlotGroupVars extends Component {
     pdNew[name] = parseInt(value,10);
     this.setState( {plotDetails: pdNew} );
   }
-  
 
-  
+
+
   render() {
     switch( this.state.stage ) {
   	  case "begin":
         return <Waiting />
       case "generatePlot":
-        return <GroupPlot d0 = {this.state.d0} d1 = {this.state.d1} 
+        return <GroupPlot d0 = {this.state.d0} d1 = {this.state.d1}
                           d2 = {this.state.d2} d3 = {this.state.d3}
                           plotDetails = {this.state.plotDetails}
                           fieldChange = {this.handleFieldChange}

@@ -12,7 +12,7 @@ Load the csv file into the oms DB
 '''
 import sys
 import re
-import MySQLdb
+import mariadb 
 
 '''
  * Format of file:
@@ -54,7 +54,8 @@ import MySQLdb
 def GetDataType( tableName, colName) :
     global cnx;
     dataTypeQuery = ("select data_type, character_maximum_length from INFORMATION_SCHEMA.COLUMNS"
-                     " where column_name = \""+colName+"\" and table_name = \""+tableName+"\"")
+                     " where column_name = \""+colName+"\" and table_name = \""+tableName+"\""
+                     " and table_schema=\"oms\"")
 #    print (dataTypeQuery)
     crsr = cnx.cursor()
     dataType = 0
@@ -122,13 +123,13 @@ text = ( "Table", "ColumnConstrained", "Data", "x", "End" );
 
 config = {
   "user": "oms",
-  "passwd": args[1],
+  "password": args[1],
   "host": "127.0.0.1",
-  "db": "oms",
-  "use_unicode": True
+  "database": "oms",
+  "charset": "UTF-8"
 }
 
-cnx = MySQLdb.connect(**config)
+cnx = mariadb.connect(**config)
 crsr = cnx.cursor()
 
 file = open(args[2], "r")

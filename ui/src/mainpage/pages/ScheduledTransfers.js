@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT} from '../../Parameters.js';
 import Log          from '../requests/Log.js';
 
@@ -52,7 +55,7 @@ class ScheduledTransfers extends Component {
     this.handleQuit        = this.handleQuit.bind(this);
     this.handleClick       = this.handleClick.bind(this);
   }
-  
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -60,21 +63,15 @@ class ScheduledTransfers extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   handleTransferSelect(event) {
     const clsMthd = "ScheduledTransfers.transferSelect";
     const id = event.z;
@@ -98,7 +95,7 @@ class ScheduledTransfers extends Component {
       } catch( e ) {
         const emsg = "Problem fetching transfer, id "+id;
         alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
+        Log.error(emsg+" - " + e, clsMthd);
       }
     }
     request();
@@ -150,7 +147,7 @@ class ScheduledTransfers extends Component {
           await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
           alert("Update/insert complete on "+xfer.name)
         } catch( error ) {
-          const emsg = "Problem "+(id===0?"inserting":"updating")+" transfer, id="+id; 
+          const emsg = "Problem "+(id===0?"inserting":"updating")+" transfer, id="+id;
           alert(emsg+"\n"+error);
           Log.error(emsg+" - " + error,clsMthd);
         }
@@ -158,18 +155,17 @@ class ScheduledTransfers extends Component {
       request();
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   handleClick() {
-    
   };
-  
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -185,8 +181,8 @@ class ScheduledTransfers extends Component {
     }
     this.setState({transfer: tknew } );
   }
-  
- 
+
+
   fetchList() {
     const clsMthd = "ScheduledTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/scheduled";
@@ -195,14 +191,14 @@ class ScheduledTransfers extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem fetching transfer list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - "+e,clsMthd);        
+          Log.error(emsg+" - "+e,clsMthd);
         }
       }
       request();
@@ -212,8 +208,8 @@ class ScheduledTransfers extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     transfer: null,
                     stage: "begin" } );
@@ -221,7 +217,7 @@ class ScheduledTransfers extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <ScheduledTransferList transferData = {this.state.returnedText}

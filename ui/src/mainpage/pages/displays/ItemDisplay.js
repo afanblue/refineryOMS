@@ -42,14 +42,15 @@ class ItemDisplay extends Component {
 
     };
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState({ id: nextProps.id,
-                    items: nextProps.items,
-                    plotDetails: nextProps.plotDetails,
-                    quit:  nextProps.quit });
+
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
+//    this.setState({ id: nextProps.id,
+//                    items: nextProps.items,
+//                    plotDetails: nextProps.plotDetails,
+//                    quit:  nextProps.quit });
   }
-  
+
     getStyles() {
 //    const BLUE_COLOR = "#00a3de";
 //    const RED_COLOR = "#7c270b";
@@ -159,7 +160,7 @@ class ItemDisplay extends Component {
     let it = this.state.items.history;
     const quit = this.state.quit;
     let fc = this.props.fieldChange;
- 
+
     var n = new Date();
     var now = n.toLocaleString('en-US');
 
@@ -183,9 +184,9 @@ class ItemDisplay extends Component {
     LineZero  = <VictoryLine data={it} domain={{x: [minTime, maxTime], y: [zeroValue, maxValue] }}
                              interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
                              standalone={false} style={styles.lineZero} />
-    AxisTwo  = <VictoryAxis domain={[zeroValue, maxValue]} orientation="right" 
+    AxisTwo  = <VictoryAxis domain={[zeroValue, maxValue]} orientation="right"
                             standalone={false} style={styles.axisZero} tickValues={tick0Values} />;
-    
+
     return(
       <div>
       <h2>
@@ -199,27 +200,27 @@ class ItemDisplay extends Component {
             <td>Days to display:</td>
             <td colSpan={4}>
               <input className="oms-spacing-60" type={"text"} value={pd.numberDays}
-                     name="numberDays" id="numberDays" size="3" maxLength="3" 
+                     name="numberDays" id="numberDays" size="3" maxLength="3"
                      onChange={fc}/>
             </td>
           </tr>
           <tr>
             <td>Max value</td>
             <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.max0} 
+              <input className="oms-spacing-60" type={"text"} value={pd.max0}
                      name="max0" id="max0" size="5" maxLength="5" onChange={fc}/>
             </td>
           </tr>
           <tr>
             <td>Min value</td>
             <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.min0} 
+              <input className="oms-spacing-60" type={"text"} value={pd.min0}
                      name="min0" id="min0" size="5" maxLength="5" onChange={fc}/>
             </td>
           </tr>
           <tr>
             <td>
-              <input type="submit" id="closeForm"  name="closeForm"  
+              <input type="submit" id="closeForm"  name="closeForm"
                      value=" Quit " className="oms-spacing"
                      onClick={(e) => {quit(e)}} />
             </td>
@@ -269,8 +270,8 @@ export default ItemDisplay;
                domain={[bottom, top]}
                type="number"
                yAxisId="1" />
-        <Line  yAxisId="1" type='natural' dataKey='y' 
+        <Line  yAxisId="1" type='natural' dataKey='y'
                stroke="#C3C2B9" />
 
-      </LineChart>      
+      </LineChart>
 */

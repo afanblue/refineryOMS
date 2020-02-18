@@ -21,10 +21,10 @@
   
   <select id="getSimIOsToUpdate" resultMap="simIOMap" >
     select sio.id, sio.in_id, x.float_value sio_value
-      from xfer x join sim_io sio on x.id=sio.id
+      from raw_data x join sim_io sio on x.id=sio.id
       join tag t on x.id = t.id
-     where t.tag_type_code = #{param1}
-       and x.updated != 0
+     where x.updated != 0
+       and t.tag_type_code = #{param1}
   </select>
   
 </mapper>

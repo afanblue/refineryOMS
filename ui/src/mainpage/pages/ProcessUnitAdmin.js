@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import Log             from '../requests/Log.js';
@@ -50,7 +53,13 @@ class ProcessUnitAdmin extends Component {
     this.finishSiteFetch   = this.finishSiteFetch.bind(this);
     this.finishInpTagFetch = this.finishInpTagFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -58,16 +67,10 @@ class ProcessUnitAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -95,7 +98,7 @@ class ProcessUnitAdmin extends Component {
 
   fetchFormData(req) {
     const loc = "ProcessUnitAdmin.select";
-    let req0 = new OMSRequest(loc, req, 
+    let req0 = new OMSRequest(loc, req,
                             "Problem selecting process unit "+req, this.finishPUFetch);
     req0.fetchData();
     let req2 = new OMSRequest(loc, SERVERROOT + "/config/site",
@@ -104,15 +107,15 @@ class ProcessUnitAdmin extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/TK,AI,DI",
                             "Problem retrieving tag list", this.finishInpTagFetch);
     req3.fetchData();
-    this.setState({processUnit:null, siteLocation:null, inpTags:null})    
-  }    
-    
+    this.setState({processUnit:null, siteLocation:null, inpTags:null})
+  }
+
   handleSelect(event) {
     const id = event.z;
     const myRequest = SERVERROOT + "/processunit/" + id;
-    this.fetchFormData(myRequest); 
+    this.fetchFormData(myRequest);
   }
-  
+
   handleUpdate(event) {
     event.preventDefault();
     const id = this.state.processUnit.id;
@@ -147,19 +150,20 @@ class ProcessUnitAdmin extends Component {
     }
     request();
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
+
+/*  componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
         break;
       default:
     }
   }
-  
+*/
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -172,7 +176,7 @@ class ProcessUnitAdmin extends Component {
         let tLength = punew.tags.length;
         for( var i=0; i<tLength; i++) {
             let v = punew.tags.shift();
-            if( v === parseInt(value,10) ) { 
+            if( v === parseInt(value,10) ) {
                 f = i;
             } else {
                 tNew.push(v);
@@ -191,7 +195,7 @@ class ProcessUnitAdmin extends Component {
     }
     this.setState({processUnit: punew } );
   }
-  
+
   fetchList() {
     const myRequest = SERVERROOT + "/processunit/all";
     if( myRequest !== null ) {
@@ -199,8 +203,8 @@ class ProcessUnitAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
@@ -232,32 +236,32 @@ class ProcessUnitAdmin extends Component {
       } else {
         punew.c2Lat = lat;
         punew.c2Long = long;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
       this.setState( {tank: punew, nextCorner:nextCorner} );
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
-        return <ProcessUnitList 
+        return <ProcessUnitList
                    returnedText = {this.state.returnedText}
                    puSelect = {this.handleSelect} />
       case "itemRetrieved":
-        if( (this.state.processUnit === null) || (this.state.inpTags === null) 
+        if( (this.state.processUnit === null) || (this.state.inpTags === null)
           || (this.state.siteLocation === null) ) {
-          return <Waiting />        
+          return <Waiting />
         } else {
           return <ProcessUnitForm
                      returnedText = {this.state.returnedText}

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}  from '../../Parameters.js';
 import {CE, IL3}     from './objects/ListObjects.js';
 import Log           from '../requests/Log.js';
@@ -35,7 +38,14 @@ class ListSchematics extends Component {
       menuSelect: props.menuSelect
     };
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          menuSelect: PropTypes.func
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -51,14 +61,14 @@ class ListSchematics extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem retrieving schematic list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
@@ -68,12 +78,12 @@ class ListSchematics extends Component {
   componentDidMount() {
     this.fetchList();
   }
-  
+
   generateList() {
     let menuSelect = this.state.menuSelect;
     let data = this.state.returnedText;
     let scmColumns = [];
-    if( data.length !== 0 ) { 
+    if( data.length !== 0 ) {
 //    if( data[0].id === 0) { data.shift(1); }
       data.forEach((i,x) => {
         if( !((x+1) % 3) ) {
@@ -108,13 +118,13 @@ class ListSchematics extends Component {
       <table className={"scrollTable"}>
         <thead className={"fixedHeader"}>
           <tr>
-	        <td className={"oms-spacing-180"}> Name </td>
-	        <td className={"oms-spacing-180"}> Name </td>
+            <td className={"oms-spacing-180"}> Name </td>
+            <td className={"oms-spacing-180"}> Name </td>
             <td className={"oms-spacing-180"}> Name </td>
           </tr>
         </thead>
         <tbody className={"scrollContent"}>
-          {scmColumns.map( 
+          {scmColumns.map(
             function(n,x) {
               const z1 = n.i1.id;
               const nm1 = n.i1.name;

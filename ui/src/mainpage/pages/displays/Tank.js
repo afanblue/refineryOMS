@@ -29,7 +29,7 @@ class Tank extends Component {
     this.state = {
       updateData:    false,
       updateDisplay: true,
-      key  : props.key,
+      key  : null,
       name : props.name,
       xp   : props.xp,
       yp   : props.yp,
@@ -42,22 +42,24 @@ class Tank extends Component {
       color: props.color
     };
   }
-  
+
   componentDidMount() {
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState( {key  : nextProps.key,
-                    name : nextProps.name,
-                    xp   : nextProps.xp,
-                    yp   : nextProps.yp,
-                    ht   : nextProps.height,
-                    wd   : nextProps.width,
-                    tkHt : nextProps.tankHeight,
-                    tkType: nextProps.tankType,
-                    level : nextProps.level,
-                    temp  : nextProps.temp,
-                    color: nextProps.color} );
+
+  static getDerivedStateFromProps(nextProps, state) {
+    return { updateData:    false,
+             updateDisplay: true,
+             key  : state.key,
+             name : nextProps.name,
+             xp   : nextProps.xp,
+             yp   : nextProps.yp,
+             ht   : nextProps.height,
+             wd   : nextProps.width,
+             tkHt : nextProps.tankHeight,
+             tkType: nextProps.tankType,
+             level : nextProps.level,
+             temp  : nextProps.temp,
+             color: nextProps.color};
   }
 
   render() {
@@ -99,7 +101,7 @@ class Tank extends Component {
         var ybscl = yb - tkHt;
         var tpyn = yt - 16 + ht/2;
         var tpyl = yt + ht/2;
-        var tpyt = yt + 16 + ht/2; 
+        var tpyt = yt + 16 + ht/2;
 
 /*
         var r = 3 * h;
@@ -113,7 +115,7 @@ class Tank extends Component {
         var lp2 = [xp+w,yp, xp+w,yp+h];
         var tpyn = yp - 16 + h/2;
         var tpyl = yp + h/2;
-        var tpyt = yp + 16 + h/2; 
+        var tpyt = yp + 16 + h/2;
         var level = this.state.level;
         var temp = this.state.temp;
         var ir = tkHt < (r-xl)?(r-tkHt):xl;
@@ -121,9 +123,9 @@ class Tank extends Component {
         var wRect = tkHt<(r-xl)?1:w;
 */
 //      1st ellipse: Top of tank
-//      2nd ellipse: Bottom of tank 
+//      2nd ellipse: Bottom of tank
 //      Rectangle: body of tank ?
-//      4th ellipse: Top of tank contents 
+//      4th ellipse: Top of tank contents
 //      Lines:  sides of tank (1st is left; 2nd is right)
         return(
           <Group>

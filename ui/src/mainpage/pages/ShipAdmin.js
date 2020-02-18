@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}     from '../../Parameters.js';
 import ShipList         from './lists/ShipList.js';
 import ShipForm         from './forms/ShipForm.js';
@@ -50,7 +53,13 @@ class ShipAdmin extends Component {
     this.handleMouseUp      = this.handleMouseUp.bind(this);
     this.handleQuit         = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -58,16 +67,10 @@ class ShipAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -90,7 +93,7 @@ class ShipAdmin extends Component {
     req.unshift(mt);
     this.setState({stage: "shipRetrieved", updateDisplay: true, dockList: req });
   }
-  
+
   handleShipSelect(event) {
     const id = event.z;
     const loc = "ShipAdmin.shipSelect";
@@ -128,17 +131,17 @@ class ShipAdmin extends Component {
   }
 
   componentDidMount() {
-    this.fetchList("ALL");
+    this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
+
+/*  componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
         break;
       default:
     }
   }
-  
+*/
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -148,7 +151,7 @@ class ShipAdmin extends Component {
       tnew[name] = parseInt(value,10);
     } else {
       tnew[name] = value;
-    } 
+    }
     this.setState({ship:tnew} );
   }
 
@@ -156,36 +159,36 @@ class ShipAdmin extends Component {
   finishListFetch( req ) {
     this.setState( {stage:"dataFetched", updateDisplay:true, returnedText: req } );
   }
-    
-  fetchList(type) {
+
+  fetchList() {
     let loc = "ShipAdmin.fetchList";
     let req0 = new OMSRequest(loc, SERVERROOT + "/tag/type/S",
                             "Problem selecting ship list", this.finishListFetch);
     req0.fetchData();
   }
-  
+
   handleQuit(event) {
     event.preventDefault();
     this.fetchList(this.state.type);
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
-  
+
   handleMouseUp(event) {
   }
- 
+
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+        case "begin":
         return <Waiting />
       case "dataFetched":
         return <ShipList returnedText = {this.state.returnedText}
                          shipSelect   = {this.handleShipSelect} />
       case "shipRetrieved":
-        if( (this.state.ship === null) || (this.state.dockList===null)  ) 
+        if( (this.state.ship === null) || (this.state.dockList===null)  )
         {
           return <Waiting />
         } else {

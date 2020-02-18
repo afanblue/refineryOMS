@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import DOForm          from './forms/DOForm.js';
@@ -61,7 +64,13 @@ class DigitalOutputAdmin extends Component {
     this.finishSiteLocFetch = this.finishSiteLocFetch.bind(this);
     this.finishViewsFetch  = this.finishViewsFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -69,16 +78,10 @@ class DigitalOutputAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -94,22 +97,22 @@ class DigitalOutputAdmin extends Component {
                     , dod.lastHistValue, dod.lastHistTime );
     this.setState({stage: "itemRetrieved", updateDisplay: true, doObj: doObj });
   }
-  
+
   finishHistTypesFetch(req) {
     let histTypes = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, histTypes: histTypes });
   }
-  
+
   finishSiteLocFetch(req) {
     let sl = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, siteLoc: sl });
   }
-  
+
   finishViewsFetch(req) {
     let vv = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, valueViews: vv });
   }
-  
+
   handleSelect(event) {
     const id = event.z;
     const loc = "DigitalOutputAdmin.aiSelect";
@@ -121,13 +124,13 @@ class DigitalOutputAdmin extends Component {
     req2.fetchData();
     let req3 = new OMSRequest(loc, SERVERROOT + "/config/site",
                             "Problem retrieving siteLocation", this.finishSiteLocFetch);
-    req3.fetchData();    
+    req3.fetchData();
     let req4 = new OMSRequest(loc, SERVERROOT + "/config/views",
                             "Problem retrieving unit list", this.finishViewsFetch);
-    req4.fetchData();    
+    req4.fetchData();
   }
 
-  /** 
+  /**
    * validateForm - x is an AO object
    */
   validateForm( x ) {
@@ -177,18 +180,17 @@ class DigitalOutputAdmin extends Component {
       request();
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   handleClick() {
-    
-  };
-  
+  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -204,7 +206,7 @@ class DigitalOutputAdmin extends Component {
     }
     this.setState({doObj: donew } );
   }
-  
+
   handleMouseUp(event) {
       const e = event;
       const t = e.evt;
@@ -224,11 +226,11 @@ class DigitalOutputAdmin extends Component {
       } else {
         donew.tag.c2Lat = lat;
         donew.tag.c2Long = long;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
       this.setState( {doObj: donew, nextCorner:nextCorner} );
   }
- 
+
   fetchList() {
     let clsMthd = "DigitalOutputAdmin.fetchList";
     const myRequest = SERVERROOT + "/do/all";
@@ -237,13 +239,13 @@ class DigitalOutputAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           alert("Problem fetching digital output list\n"+e);
-          Log.error("Problem fetching digital output list - " + e, clsMthd);        
+          Log.error("Problem fetching digital output list - " + e, clsMthd);
         }
       }
       request();
@@ -253,8 +255,8 @@ class DigitalOutputAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     doObj: null,
                     stage: "begin" } );
@@ -262,7 +264,7 @@ class DigitalOutputAdmin extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <DOList doData = {this.state.returnedText}
@@ -270,9 +272,9 @@ class DigitalOutputAdmin extends Component {
                        handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.doObj === null) || (this.state.histTypes===null) || 
+        if( (this.state.doObj === null) || (this.state.histTypes===null) ||
             (this.state.valueViews===null) || (this.state.siteLoc===null) ) {
-          return <Waiting />        
+          return <Waiting />
         } else {
           return <DOForm doData      = {this.state.returnedText}
                          doObj       = {this.state.doObj}

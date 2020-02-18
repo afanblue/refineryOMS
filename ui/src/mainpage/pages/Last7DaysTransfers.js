@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 import {SERVERROOT}    from '../../Parameters.js';
 import Log             from '../requests/Log.js';
@@ -59,7 +61,13 @@ class Last7DaysTransfers extends Component {
     this.finishStsFetch    = this.finishStsFetch.bind(this);
     this.finishSrcsFetch   = this.finishSrcsFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -67,21 +75,15 @@ class Last7DaysTransfers extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   finishXferFetch( req ) {
     let xd = req;
     var x = new Transfer( xd.id,xd.name,xd.statusId,xd.source
@@ -95,11 +97,11 @@ class Last7DaysTransfers extends Component {
                    transfer: x
                   });
   }
-  
+
   finishTypesFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, transferTypes:req });
   }
-  
+
   finishStsFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, statuses: req });
   }
@@ -108,11 +110,11 @@ class Last7DaysTransfers extends Component {
     this.setState({stage: "itemRetrieved", updateDisplay: true, sources: req });
   }
 
-  
+
   fetchFormData(id) {
     const loc = "Last7DaysTransfers.select";
     let myRequest = SERVERROOT + "/transfer/" + id;
-    let req0 = new OMSRequest(loc, myRequest, 
+    let req0 = new OMSRequest(loc, myRequest,
                             "Problem selecting transfer "+myRequest,
                             this.finishXferFetch);
     req0.fetchData();
@@ -122,13 +124,13 @@ class Last7DaysTransfers extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/transfer/types",
                             "Problem retrieving input tag list", this.finishTypesFetch);
     req3.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})
     let req4 = new OMSRequest(loc, SERVERROOT + "/transfer/statuses",
                             "Problem retrieving output tag list", this.finishStsFetch);
     req4.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, outTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, outTags:null})
   }
-  
+
   handleSelect(event) {
     const id = event.z;
     this.fetchFormData(id);
@@ -189,18 +191,18 @@ class Last7DaysTransfers extends Component {
       request();
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   handleClick() {
-    
+
   };
-  
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -216,8 +218,8 @@ class Last7DaysTransfers extends Component {
     }
     this.setState({transfer: tknew } );
   }
-  
- 
+
+
   fetchList() {
     let clsMthd = "Last7DaysTransfers.fetchList";
     const myRequest = SERVERROOT + "/transfer/last/7";
@@ -226,13 +228,13 @@ class Last7DaysTransfers extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           alert("Problem fetching last 7 days list\n"+e);
-          Log.error("Error - " + e, clsMthd);        
+          Log.error("Error - " + e, clsMthd);
         }
       }
       request();
@@ -242,8 +244,8 @@ class Last7DaysTransfers extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     transfer: null,
                     stage: "begin" } );
@@ -251,7 +253,7 @@ class Last7DaysTransfers extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <Last7DaysTransferList transferData = {this.state.returnedText}
@@ -259,7 +261,7 @@ class Last7DaysTransfers extends Component {
                                       handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.transfer === null) || (this.state.transferTypes === null) || 
+        if( (this.state.transfer === null) || (this.state.transferTypes === null) ||
             (this.state.sources  === null) || (this.state.statuses === null)    ) {
           return <Waiting />
         } else {

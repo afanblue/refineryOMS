@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import Log             from '../requests/Log.js';
@@ -61,7 +64,14 @@ class SchematicAdmin extends Component {
     this.finishInpTagFetch      = this.finishInpTagFetch.bind(this);
     this.finishOutTagFetch      = this.finishOutTagFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          type: PropTypes.any
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -69,33 +79,9 @@ class SchematicAdmin extends Component {
     return response;
   }
 
-/*
-  getDerivedStateFromProps(nextProps,prevState) {
-    if(  (nextProps.stage !== prevState.stage) 
-      || (nextProps.type != prevState.type ) )
-    {
-      this.setState({ stage: nextProps.stage,
-                      type: nextProps.type,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps,prevState) {
+    return prevState;
   }
-*/
-/* */  
-  componentWillReceiveProps(nextProps) {
-    if(  (nextProps.stage !== this.state.stage) 
-      || (nextProps.type  !== this.state.type ) )
-    {
-//      this.fetchList();
-      this.setState({ stage: nextProps.stage,
-                      type: nextProps.type,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
-  }
-/* */
 
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
@@ -106,15 +92,15 @@ class SchematicAdmin extends Component {
 //    }
     return sts;
   }
-  
+
   /**
    * Notice that the vtxList for the Pipe SCO's comes in as a Vertex object from
    * the dataserver and leaves (!) as an array of [longitude+","+latitude] strings
    *
    * The Vertices get pasted into a TextArea as a long string of "longitude,latitude"
    * strings (note the comma) with embedded "\n" so it looks pretty on the page.
-   * 
-   * The  
+   *
+   * The
    */
   finishSCMFetch( req ) {
     let sd = req;
@@ -122,10 +108,10 @@ class SchematicAdmin extends Component {
                              , sd.misc, sd.c1Lat, sd.c1Long, sd.c2Lat, sd.c2Long, sd.childTags);
 //    ChildValue                i,n,d,a, tt,ttid,m, c1Lt,c1Lg,c2Lt,c2Lg,pid,rtid
 //                             ,itId,itName,itVal,itType,irtid,itMx,itz,iac
-//                             ,otId,otName,otVal,otType,ortid,otMx,otz,oac,vtl                           
+//                             ,otId,otName,otVal,otType,ortid,otMx,otz,oac,vtl
     const item = new ChildValue( 0, 'New Item', '', 'Y', 'SCO', 0, ''
                                , null, null, null, null, sd.id, null
-                               , 0, '', 0, '', 0, 0, 0, 'darkgreen' 
+                               , 0, '', 0, '', 0, 0, 0, 'darkgreen'
                                , 0, '', 0, '', 0, 0, 0, 'darkgreen', [] );
     let newt = Object.assign({},item);
     let cTags = [];
@@ -165,15 +151,15 @@ class SchematicAdmin extends Component {
     scm.childTags = cTags;
     this.setState({stage: "itemRetrieved", updateDisplay: true, schematic:scm, sco:item });
   }
-  
+
   finishTypesFetch(req) {
     let typeList = req;
 //    req.map(function(n,x){ return privs.push(n.id); } )
 //    let rnew = Object.assign({},this.state.role);
-//    rnew.privs = privs;    
+//    rnew.privs = privs;
     this.setState({stage: "itemRetrieved", updateDisplay: true, typeList:typeList });
   }
-  
+
   finishInpTagFetch(req) {
     let inpTags = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, inpTags: inpTags });
@@ -186,7 +172,7 @@ class SchematicAdmin extends Component {
 
   fetchFormData( myRequest ) {
     const loc = "SchematicAdmin.select";
-    let req0 = new OMSRequest(loc, myRequest, 
+    let req0 = new OMSRequest(loc, myRequest,
                             "Problem selecting schematic "+myRequest, this.finishSCMFetch);
     req0.fetchData();
     let req2 = new OMSRequest(loc, SERVERROOT + "/schematic/objTypeList",
@@ -195,18 +181,18 @@ class SchematicAdmin extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/tag/types/AI,DI",
                             "Problem retrieving input tag list", this.finishInpTagFetch);
     req3.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})
     let req4 = new OMSRequest(loc, SERVERROOT + "/tag/types/AO,DO",
                             "Problem retrieving output tag list", this.finishOutTagFetch);
     req4.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, outTags:null})    
+    this.setState({schematic:null, sco:null, typeList:null, outTags:null})
   }
 
-  
+
   handleSchematicSelect(event) {
     const id = event.z;
     const myRequest=SERVERROOT + "/schematic/" + id;
-    this.fetchFormData(myRequest); 
+    this.fetchFormData(myRequest);
   }
 
   validateForm( x ) {
@@ -275,14 +261,14 @@ class SchematicAdmin extends Component {
       try {
         let response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
         if( response.status !== 200 ) {
-          let es = "Response status is "+response.status; 
+          let es = "Response status is "+response.status;
           throw es;
-        }        
+        }
         alert("Update/insert complete on "+newt.name);
         const myRequest=SERVERROOT + "/schematic/" + id;
-        this.fetchFormData(myRequest); 
+        this.fetchFormData(myRequest);
      } catch( error ) {
-        const emsg = "Problem "+action+" schematic id="+id; 
+        const emsg = "Problem "+action+" schematic id="+id;
         alert(emsg+"\n"+error);
         Log.error(emsg+" - " + error,clsMthd);
       }
@@ -299,7 +285,7 @@ class SchematicAdmin extends Component {
       this.updateSchematic(id);
     }
   }
-  
+
   handleSchematicCopy(event) {
     event.preventDefault();
     let x = this.state.schematic;
@@ -309,13 +295,13 @@ class SchematicAdmin extends Component {
       this.updateSchematic(id);
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   handleMouseUp(event) {
     const e = event;
@@ -333,7 +319,7 @@ class SchematicAdmin extends Component {
       } else {
         sconew.c2Lat = y;
         sconew.c2Long = x;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
     } else {
       let sep = "";
@@ -342,7 +328,7 @@ class SchematicAdmin extends Component {
     }
     this.setState( {sco: sconew, nextCorner:nextCorner} );
   }
-  
+
   handleItemChange(id) {
     var sco = undefined;
     let cts = this.state.schematic.childTags;
@@ -355,8 +341,8 @@ class SchematicAdmin extends Component {
         }
     } );
     return sco;
-  };
-  
+  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value  = target.value;
@@ -374,7 +360,7 @@ class SchematicAdmin extends Component {
         } else if( fld === "c1Lat" ) {
           let v = parseInt(value,10);
           let v2 = v;
-          switch(sconew.misc) { 
+          switch(sconew.misc) {
             case "G" : v2 = v; break;
             case "P" : v2 = v; break;
             case "PB": v2 = v+10; break;
@@ -421,8 +407,8 @@ class SchematicAdmin extends Component {
     }
     this.setState({schematic: scmnew, sco: sconew } );
   }
-  
- 
+
+
   fetchList() {
     const clsMthd = "SchematicAdmin.fetchList";
     const myRequest = SERVERROOT + "/tag/type/SCM";
@@ -430,8 +416,8 @@ class SchematicAdmin extends Component {
       const request = async () => {
         const response = await fetch(myRequest);
         const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
+        this.setState( {returnedText: json,
+                        updateData: false,
                         updateDisplay:true,
                         stage: "dataFetched" } );
       }
@@ -440,7 +426,7 @@ class SchematicAdmin extends Component {
       } catch( e ) {
         const emsg = "Problem fetching schematic list";
         alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
+        Log.error(emsg+" - " + e, clsMthd);
       }
     }
   }
@@ -448,8 +434,8 @@ class SchematicAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     schematic: null,
                     stage: "begin" } );
@@ -462,7 +448,7 @@ class SchematicAdmin extends Component {
     if( sco.id === null || sco.id === undefined ) {
       sco.id = 0;
     }
-    if( sco.name === null || sco.name === "" || 
+    if( sco.name === null || sco.name === "" ||
         sco.name === "New Item" || sco.name === undefined ) {
       doSubmit = false;
       msg += delim + " name";
@@ -490,15 +476,15 @@ class SchematicAdmin extends Component {
         delim = ", ";
       }
     }
-    
+
     if( sco.misc !== 'P' ) {
-      if( (sco.c1Lat ===null?true:parseInt(sco.c1Lat,10)===0) || 
+      if( (sco.c1Lat ===null?true:parseInt(sco.c1Lat,10)===0) ||
           (sco.c1Long===null?true:parseInt(sco.c1Long,10)===0) ) {
         doSubmit = false;
         msg += delim + " NW Corner";
         delim = ", ";
       }
-      if( (sco.c2Lat ===null?true:parseInt(sco.c2Lat,10)===0) || 
+      if( (sco.c2Lat ===null?true:parseInt(sco.c2Lat,10)===0) ||
           (sco.c2Long===null?true:parseInt(sco.c2Long,10)===0) ) {
         doSubmit = false;
         msg += delim + " SE Corner";
@@ -532,8 +518,8 @@ class SchematicAdmin extends Component {
             , inpRelTagId:0, inpTagId:0, inpType:"", inpTagName:"", inpValue:0, inpMax:0, inpZero:0
             , outRelTagId:0, outTagId:0, outType:"", outTagName:"", outValue:0, outMax:0, outZero:0
             , vtxList:[] };
-      this.setState( {returnedText: null, 
-                      updateData: true, 
+      this.setState( {returnedText: null,
+                      updateData: true,
                       updateDisplay:true,
                       schematic: scm,
                       sco: sco,
@@ -566,7 +552,7 @@ class SchematicAdmin extends Component {
             if( sco.misc === "P" ) {
               let pts = [];
               let vtxList = sco.vtxList;
-              if( "object" === typeof vtxList ) { vtxList = vtxList.join(); } 
+              if( "object" === typeof vtxList ) { vtxList = vtxList.join(); }
               let first = true;
               let sep = "";
               let vl = vtxList.replace( /\n/gi, ",");
@@ -584,8 +570,8 @@ class SchematicAdmin extends Component {
 
           }
         }
-        this.setState( {returnedText: null, 
-                        updateData: true, 
+        this.setState( {returnedText: null,
+                        updateData: true,
                         updateDisplay:true,
                         schematic: scm,
                         sco: sco,
@@ -597,7 +583,7 @@ class SchematicAdmin extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <SchematicList schematicData   = {this.state.returnedText}
@@ -605,7 +591,7 @@ class SchematicAdmin extends Component {
                               handleQuit      = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.schematic === null) || (this.state.typeList === null) || 
+        if( (this.state.schematic === null) || (this.state.typeList === null) ||
             (this.state.inpTags === null)   || (this.state.outTags === null)   ) {
           return <Waiting />
         } else {

@@ -17,6 +17,7 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -156,15 +157,62 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Return a collection of tank volumes for the given contents 
-	 * 
+	 * get id and volume for the unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank with the most volume for the given contents code.  The 
+	 * volume computed here is a simple "volume of the cylinder" computation and should
+	 * not be used in any transfers. 
+	 *
 	 * @param t (String) contents code
-	 * @return Collection<Value> (tank ID, contents, max possible volume) for all the 
+	 * @return Value object (tank ID, contents, max volume) for all the 
+	 * 			tank with the  containing the given contents
+	 */
+	@Override
+	public Value getFullestUnusedTankVolumeForContents( String t ) {
+		Iterator<Value> ctv = tankMapper.getUnusedTankVolumesForContents(t).iterator();
+		Value v = new Value(0L,t,0D);
+		while( ctv.hasNext() ) {
+			Value vt = ctv.next();
+			if( vt.getValue() > v.getValue() ) {
+				v = vt;
+			}
+		}
+		return v;
+	}
+	
+	/**
+	 * get id and volume for the unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank with the least volume for the given contents code.  The 
+	 * volume computed here is a simple "volume of the cylinder" computation and should
+	 * not be used in any transfers.   
+	 *
+	 * @param t (String) contents code
+	 * @return Value object (tank ID, contents, min  volume) for all the 
+	 * 			tank with the least volume containing the given contents
+	 */
+	@Override
+	public Value getEmptiestUnusedTankVolumeForContents( String t ) {
+		Iterator<Value> ctv = tankMapper.getUnusedTankVolumesForContents(t).iterator();
+		Value v = new Value(0L,t,0D);
+		while( ctv.hasNext() ) {
+			Value vt = ctv.next();
+			if( vt.getValue() < v.getValue() ) {
+				v = vt;
+			}
+		}
+		return v;		
+	}
+	
+	/**
+	 * get id and volume for all unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank volumes for the given contents code  
+	 *
+	 * @param t (String) contents code
+	 * @return Collection of value objects (tank ID, contents, max possible volume) for all the 
 	 * 			tanks containing the given contents
 	 */
 	@Override
-	public Collection<Value> getTankVolumesForContents( String t ) {
-		return tankMapper.getTankVolumesForContents(t);
+	public Collection<Value> getUnusedTankVolumesForContents( String t ) {
+		return tankMapper.getUnusedTankVolumesForContents(t);
 	}
 	
 	/**

@@ -12,13 +12,20 @@
    <context:component-scan base-package="us.avn.oms" />
    <context:annotation-config />
    
-   
+   <bean id="appProperties"
+         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+         <list>
+            <value>classpath:config/database.properties</value>
+         </list>
+      </property>
+   </bean>
+      
    <bean id="mysqlDS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-      <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-      <property name="url" value="jdbc:mysql://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes"/>
-      <property name="username" value="oms"/>
-      <property name="password" value="omsx"/>
-      <property name="minEvictableIdleTimeMillis" value="30000" />
+      <property name="driverClassName" value="${db.driverClass}"/>
+      <property name="url" value="${db.url}"/>
+      <property name="username" value="${db.user}"/>
+      <property name="password" value="${db.pwd}"/>
    </bean>
 
    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -78,6 +85,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
    </bean>
 
+   <bean id="rawDataMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.RawDataMapper" />
+   </bean>
+
    <bean id="tagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface" value="us.avn.oms.mapper.TagMapper" />
@@ -91,11 +103,6 @@
    <bean id="wdogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface" value="us.avn.oms.mapper.WatchdogMapper" />
-   </bean>
-
-   <bean id="xferMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-      <property name="mapperInterface" value="us.avn.oms.mapper.XferMapper" />
    </bean>
 
 <!-- Define service beans -->
@@ -148,12 +155,12 @@
       <property name="orderMapper"         ref="orderMapper" />
    </bean>
    
-   <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">
-      <property name="watchdogMapper" ref="wdogMapper" />
+   <bean id="rawDataService"     class="us.avn.oms.service.impl.RawDataServiceImpl">
+      <property name="rawDataMapper"          ref="rawDataMapper" />
    </bean>
    
-   <bean id="xferService" class="us.avn.oms.service.impl.XferServiceImpl">
-      <property name="xferMapper" ref="xferMapper" />
+   <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">
+      <property name="watchdogMapper" ref="wdogMapper" />
    </bean>
    
 </beans>

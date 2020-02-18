@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {Stage, Layer} from 'react-konva';
 
 import SiteImage from '../SiteImage.js';
@@ -26,6 +29,38 @@ class AIForm extends Component {
   constructor(props) {
     super(props);
     this.state = {  };
+  }
+
+  static get propTypes() {
+      return {
+          ai: PropTypes.object,
+          aiTypes: PropTypes.any,
+          histTypes: PropTypes.any,
+          unitList: PropTypes.any,
+          tagId: PropTypes.number,
+          analogType: PropTypes.string,
+          zeroValue: PropTypes.number,
+          maxValue: PropTypes.number,
+          unitId: PropTypes.number,
+          histTypeCode: PropTypes.string,
+          percent: PropTypes.number,
+          hh: PropTypes.number,
+          hi: PropTypes.number,
+          lo: PropTypes.number,
+          ll: PropTypes.number,
+          tag: PropTypes.object,
+          name: PropTypes.string,
+          description: PropTypes.string,
+          active: PropTypes.string,
+          c1Lat: PropTypes.number,
+          c1Long: PropTypes.number,
+          c2Lat: PropTypes.number,
+          c2Long: PropTypes.number,
+          aiUpdate: PropTypes.func,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          handleMouseUp: PropTypes.func
+      }
   }
 
   render() {
@@ -44,19 +79,19 @@ class AIForm extends Component {
             <tr>
               <td className="oms-top">
         <form id="aiForm" >
-          Please enter your analog input information 
+          Please enter your analog input information
           <table>
             <tbody className="scrollContent-narrow">
               <tr>
                 <th className="oms-spacing-90">&nbsp;</th>
-                <td className="oms-spacing-180"><img src="images/spacer.png" 
+                <td className="oms-spacing-180"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
                 <th className="oms-spacing-90">AI name:</th>
                 <td className="oms-spacing-180">
                   <input type="hidden" name="tagId" value={ai.tagId} />
-                  <input type="text" id="tag.name" name="tag.name" value={ai.tag.name} 
+                  <input type="text" id="tag.name" name="tag.name" value={ai.tag.name}
                          className={["oms-spacing-80","oms-fontsize-12"].join(' ')} size="10" maxLength="10"
                          onChange={fieldChange} />
                 </td>
@@ -69,11 +104,11 @@ class AIForm extends Component {
                          onChange={fieldChange} />
                 </td>
               </tr>
-            
+
               <tr>
                 <td className="oms-spacing-90">Active:</td>
                 <td className="oms-spacing-180">
-                  <select id="tag.active" name="tag.active" value={ai.tag.active} 
+                  <select id="tag.active" name="tag.active" value={ai.tag.active}
                           className={["oms-spacing-180","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange} >
                     <option value="N">N</option>
@@ -87,7 +122,7 @@ class AIForm extends Component {
                   <select id="analogTypeCode" name="analogTypeCode" value={ai.analogTypeCode}
                           className={["oms-spacing-180","oms-fontsize-12"].join(' ')}
                           onChange={fieldChange} >
-                    { aitypes.map( 
+                    { aitypes.map(
                       function(n,x){
                         return <option key={x} value={n.code}>{n.name}</option>
                       } )
@@ -95,7 +130,7 @@ class AIForm extends Component {
                   </select>
                 </td>
               </tr>
- 
+
           <tr>
             <td className="oms-spacing-90">Zero Value:</td>
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
@@ -115,11 +150,11 @@ class AIForm extends Component {
             <td >
               <select id="unitId" name="unitId" value={ai.unitId}
                       onChange={fieldChange}>
-                { unitList.map( 
+                { unitList.map(
                   function(n,x){
                     return <option key={x} value={n.id}>{n.code} ({n.name})</option>
                   } )
-                }                
+                }
               </select>
             </td>
           </tr>
@@ -128,27 +163,27 @@ class AIForm extends Component {
             <td >
               <select id="histTypeCode" name="histTypeCode" value={ai.histTypeCode}
                       onChange={fieldChange}>
-                { histTypes.map( 
+                { histTypes.map(
                   function(n,x){
                     return <option key={x} value={n.code}>{n.name}</option>
                   } )
-                }                
+                }
               </select>
             </td>
           </tr>
           <tr>
             <td className="oms-spacing-90">Percent:</td>
             <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
-              <input type="text" id="percent" name="percent" value={ai.percent} 
+              <input type="text" id="percent" name="percent" value={ai.percent}
                      onChange={fieldChange} maxLength="2" size="5"/>
             </td>
           </tr>
-  
+
               <tr>
                 <td className="oms-spacing-90">Alarm Limits:</td>
                 <td className="oms-spacing-180">
                   HH: <input type="text" id="hh" name="hh" value={ai.hh} size="8"
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                 </td>
               </tr>
@@ -156,7 +191,7 @@ class AIForm extends Component {
                 <td className="oms-spacing-90">&nbsp;</td>
                 <td className="oms-spacing-180">
                   HI: <input type="text" id="hi" name="hi" value={ai.hi} size="8"
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                 </td>
               </tr>
@@ -164,7 +199,7 @@ class AIForm extends Component {
                 <td className="oms-spacing-90"></td>
                 <td className="oms-spacing-180">
                   LO: <input type="text" id="lo" name="lo" value={ai.lo} size="8"
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
                 </td>
               </tr>
@@ -172,18 +207,18 @@ class AIForm extends Component {
                 <td className="oms-spacing-90"></td>
                 <td className="oms-spacing-180">
                   LL: <input type="text" id="ll" name="ll" value={ai.ll} size="8"
-                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} />
-  	  		  </td>
+                  </td>
               </tr>
               <tr>
                 <th className="oms-spacing-90" >Corners (NW)</th>
                 <td className="oms-spacing-180">
-                  <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={ai.tag.c1Lat} 
+                  <input type="text" id="tag.c1Lat" name="tag.c1Lat" value={ai.tag.c1Lat}
                          className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} maxLength="11" size="10" />
                   &nbsp;
-                  <input type="text" id="tag.c1Long" name="tag.c1Long" value={ai.tag.c1Long} 
+                  <input type="text" id="tag.c1Long" name="tag.c1Long" value={ai.tag.c1Long}
                          className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange}  maxLength="11" size="10" />
                 </td>
@@ -192,25 +227,25 @@ class AIForm extends Component {
                 <td className="oms-spacing-90" >&nbsp;&nbsp;&nbsp;(SE)</td>
                 <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>
                   <input type="text" id="tag.c2Lat" name="tag.c2Lat" value={ai.tag.c2Lat}
-                         className={["oms-spacing-60","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange} maxLength="11" size="10" />
                   &nbsp;
-                  <input type="text" id="tag.c2Long" name="tag.c2Long" value={ai.tag.c2Long} 
+                  <input type="text" id="tag.c2Long" name="tag.c2Long" value={ai.tag.c2Long}
                          className={["oms-spacing-60","oms-fontsize-12"].join(' ')}
                          onChange={fieldChange}  maxLength="11" size="10" />
                 </td>
               </tr>
-            
+
             </tbody>
           </table>
           <table className="oms-spacing">
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value="Quit" className="oms-spacing"
                          onClick={(e) => {handleQuit(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value="Submit" className="oms-spacing"
                                onClick={(e) => {aiUpdate(e)}}/>
                 </td>
@@ -218,7 +253,7 @@ class AIForm extends Component {
             </tbody>
           </table>
         </form>
-  
+
               </td>
               <td>
                 <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
@@ -230,11 +265,11 @@ class AIForm extends Component {
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     );
   }
-  
+
 }
 
 export default AIForm;

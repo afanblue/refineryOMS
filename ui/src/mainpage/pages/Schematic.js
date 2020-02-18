@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import Log                from '../requests/Log.js';
 
 import {SERVERROOT}       from '../../Parameters.js';
@@ -41,7 +44,14 @@ class Schematic extends Component {
     this.handleMouseup = this.handleMouseup.bind(this);
     this.handleQuit    = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          option: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -49,20 +59,21 @@ class Schematic extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    clearInterval(this.state.itemTimer);
-    if( nextProps.option !== this.state.option ) {
-      this.setState({option: nextProps.option});
+  static getDerivedStateFromProps(nextProps, state) {
+    clearInterval(state.itemTimer);
+    if( nextProps.option !== state.option ) {
+//      this.setState({option: nextProps.option});
       this.fetchList(nextProps.option);
     }
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
 
-/* */ 
+/* */
   reqOut( id ) {
     const clsMthd = "Schematic.reqOut";
     const myRequest=SERVERROOT + "/tag/output/" + id;
@@ -86,13 +97,13 @@ class Schematic extends Component {
     let scos = scm.childTags;
     for( var i=0; i<scos.length; i++) {
       let e = scos[i];
-      if(   (y >= e.c1Lat)  && (y <= e.c2Lat) 
+      if(   (y >= e.c1Lat)  && (y <= e.c2Lat)
          && (x >= e.c1Long) && (x <= e.c2Long) ) {
         let outTagId = (e.outTagId===null)?undefined:e.outTagId;
         if( (outTagId !== undefined) && (e.outTagId !== 0)) {
           this.reqOut(outTagId);
         }
-      } 
+      }
     }
   }
 
@@ -101,7 +112,7 @@ class Schematic extends Component {
     this.fetchList(this.state.option);
     clearInterval(this.state.itemTimer);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );    
+    this.setState( {unitTimer: myTimerID } );
   }
 
   fetchList(opt) {
@@ -112,14 +123,14 @@ class Schematic extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem fetching schematic list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
@@ -131,7 +142,7 @@ class Schematic extends Component {
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
     this.setState( {unitTimer: myTimerID } );
   }
-  
+
   componentWillUnmount() {
     if( this.state.unitTimer !== null ) {
       clearInterval(this.state.unitTimer);
@@ -148,7 +159,7 @@ class Schematic extends Component {
       case "dataFetched":
         return <SchematicDisplay option = {this.state.option}
                                  schematic = {this.state.returnedText}
-                                 handleMouseup = {this.handleMouseup} 
+                                 handleMouseup = {this.handleMouseup}
                />
 //      case "itemRetrieved":
 //        return <ItemDisplay id    = {this.state.id}

@@ -79,7 +79,7 @@
          , di.last_hist_time, coalesce(x.float_value,0) sim_value
          , x.updated
       from digital_input di join tag t on di.tag_id = t.id
-           join xfer x on t.id = x.id
+           join raw_data x on t.id = x.id
      where t.active = 'Y'
      order by 2
   </select>
@@ -91,7 +91,7 @@
          , di.last_hist_time, coalesce(x.float_value,0) sim_value
          , x.updated, x.scan_time
       from digital_input di join tag t on di.tag_id = t.id
-           join xfer x on t.id = x.id
+           join raw_data x on t.id = x.id
      where t.active = 'Y'
        and x.updated = 1 
      order by 2
@@ -148,7 +148,7 @@
          , di.last_hist_time, coalesce(x.float_value,0) sim_value
          , x.updated
       from digital_input di join tag t on di.tag_id = t.id
-           join xfer x on t.id = x.id
+           join raw_data x on t.id = x.id
      where t.active = 'Y'
        and t.name like #{param1}
      order by 2

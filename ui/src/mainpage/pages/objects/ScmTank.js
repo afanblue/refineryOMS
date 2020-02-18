@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React from 'react';
+import PropTypes          from 'prop-types';
+
 import { Group, Ellipse, Line, Rect, Text } from 'react-konva';
 
 
@@ -34,27 +37,30 @@ export default class ScmTank extends React.Component {
       value: props.value
     };
   }
-  
-  static defaultProps = {
-    x: 0,
-    y: 0,
-    width:100,
-    height:100,
-    fill: "darkgreen",
-    stroke: "darkgreen",
-    strokeWidth:1,
-    value: 0
-  };
 
-  componentWillMount() {
+  static get propTypes() {
+    return {
+      x: PropTypes.integer,
+      y: PropTypes.integer,
+      max: PropTypes.integer,
+      zero: PropTypes.integer,
+      width: PropTypes.integer,
+      height: PropTypes.integer,
+      fill: PropTypes.string,
+      stroke: PropTypes.string,
+      strokeWidth: PropTypes.integer,
+      type: PropTypes.any,
+      value: PropTypes.any,
+      handleMouseup: PropTypes.func
+    }
   }
-  
+
   componentDidMount() {
   }
-  
+
   handleClick() {
   }
-  
+
   render() {
     var ch = 0.05 * this.props.height;
     ch = (ch===0?2:ch);
@@ -79,7 +85,7 @@ export default class ScmTank extends React.Component {
     var mu = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu}>
-      <Text x={x} y={y-18} height={10} width={30} text={val} 
+      <Text x={x} y={y-18} height={10} width={30} text={val}
             stroke={stroke} strokeWidth={1} fontSize={12} />
 
       <Ellipse x = {xt+rx} y = {yt} radius={rt} stroke={stroke}
@@ -92,10 +98,10 @@ export default class ScmTank extends React.Component {
 
       <Ellipse x = {xt+rx} y = {yb} radius={rt} stroke={stroke}
                strokeWidth={this.props.strokeWidth} fill={fill} />
-      
+
       <Rect x={xt} y={ybscl} width={wd} height={yscl}
             stroke={fill} fill={fill} strokeWidth={1} />
-                
+
       <Ellipse x = {xt+rx} y = {ybscl} radius={rt} stroke={stroke}
                strokeWidth={this.props.strokeWidth} fill={fill} />
 
@@ -105,3 +111,14 @@ export default class ScmTank extends React.Component {
     );
   }
 }
+
+ScmTank.defaultProps = {
+    x: 0,
+    y: 0,
+    width:100,
+    height:100,
+    fill: "darkgreen",
+    stroke: "darkgreen",
+    strokeWidth:1,
+    value: 0
+};

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React from 'react';
+import PropTypes          from 'prop-types';
+
 import { Group, Line, Circle } from 'react-konva';
 
 
@@ -34,26 +37,28 @@ export default class ScmPump extends React.Component {
       strokeWidth: props.strokeWidth
     };
   }
-  
-  static defaultProps = {
-    x: 0,
-    y: 0,
-    width:100,
-    height:100,
-    fill: null,
-    stroke: "darkgreen",
-    strokeWidth:1
-  };
 
-  componentWillMount() {
+  static get propTypes() {
+    return {
+      x: PropTypes.integer,
+      y: PropTypes.integer,
+      width: PropTypes.integer,
+      height: PropTypes.integer,
+      fill: PropTypes.any,
+      stroke: PropTypes.any,
+      strokeWidth: PropTypes.integer,
+      orient: PropTypes.any,
+      value: PropTypes.any,
+      handleMouseup: PropTypes.func
+    }
   }
-  
+
   componentDidMount() {
   }
-  
+
   handleClick() {
   }
-  
+
   render() {
     var rb = 8;             /* defines template radius */
     var plb = rb + 4;        /* defines template pipe length */
@@ -63,7 +68,7 @@ export default class ScmPump extends React.Component {
 
 //    var ht = this.props.height;
 //    var wd = this.props.width;
-    
+
 //    var htx = ht / hb;    /* defines vertical scale */
 //    var wdx = wd / wb;    /* defines horizontal scale */
     var r = rb;
@@ -71,7 +76,7 @@ export default class ScmPump extends React.Component {
     var pl = plb;
     var xt = this.props.x;
     var yt = this.props.y;
-    
+
 //  assume a vertical right orientation
     var orient = this.props.orient;
     var pts1 = [xt+psz/2    , yt          ,xt+psz/2    , yt+pl];
@@ -106,3 +111,13 @@ export default class ScmPump extends React.Component {
     );
   }
 }
+
+ScmPump.defaultProps = {
+    x: 0,
+    y: 0,
+    width:100,
+    height:100,
+    fill: null,
+    stroke: "darkgreen",
+    strokeWidth:1
+  };

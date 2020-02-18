@@ -43,13 +43,14 @@ class SchematicDisplay extends Component {
       handleMouseup: props.handleMouseup
     };
   }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState({ option: nextProps.option,
-                    scm: nextProps.schematic,
-                    handleMouseup: nextProps.handleMouseup });
+
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
+//    this.setState({ option: nextProps.option,
+//                    scm: nextProps.schematic,
+//                    handleMouseup: nextProps.handleMouseup });
   }
-  
+
   render () {
     let handleMouseup = this.state.handleMouseup;
     let scm = this.state.scm;
@@ -58,7 +59,7 @@ class SchematicDisplay extends Component {
     if( scm.tagTypeCode === 'XFR' ) {
       stkWid = 1;
     }
- 
+
     var n = new Date();
     var now = n.toLocaleString('en-US');
     return(
@@ -108,23 +109,23 @@ class SchematicDisplay extends Component {
                          }
                          switch( n.misc ) {
                            case "3VB":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                  value={cv} max={mx} zero={zero} fill={color} 
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                  value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"bottom"} handleMouseup={handleMouseup}/>
                            case "3VL":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                  value={cv} max={mx} zero={zero} fill={color} 
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                  value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"left"} handleMouseup={handleMouseup}/>
                            case "3VR":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                  value={cv} max={mx} zero={zero} fill={color} 
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                  value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"right"} handleMouseup={handleMouseup}/>
                            case "3VT":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                  value={cv} max={mx} zero={zero} fill={color} 
+                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                  value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"top"} handleMouseup={handleMouseup}/>
                            case "G":
-                             return <ScmGauge key={z} x={x} y={y} width={width} height={height} 
+                             return <ScmGauge key={z} x={x} y={y} width={width} height={height}
                                               value={cv} max={mx} zero={zero} fill={color}
                                               handleMouseup={handleMouseup}/>
                            case "P":
@@ -132,48 +133,48 @@ class SchematicDisplay extends Component {
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup} />
                            case "PB":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
-                                             value={cv} max={mx} zero={zero} fill={color} 
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
+                                             value={cv} max={mx} zero={zero} fill={color}
                                              orient={"PB"} handleMouseup={handleMouseup} />
                            case "PL":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              orient={"PL"} handleMouseup={handleMouseup}/>
                            case "PR":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              orient={"PR"} handleMouseup={handleMouseup}/>
                            case "PT":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height} 
-                                             value={cv} max={mx} zero={zero} fill={color} 
+                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
+                                             value={cv} max={mx} zero={zero} fill={color}
                                              orient={"PT"} handleMouseup={handleMouseup} />
                            case "RU":
-                             return <ScmRefUnit key={z} x={x} y={y} width={width} height={height} 
+                             return <ScmRefUnit key={z} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup} />
                            case "SH":
-                             return <ScmShip key={z} x={x} y={y} width={width} height={height} 
+                             return <ScmShip key={z} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup} />
                            case "TK":
                              return <ScmTank key={z} x={x} y={y} width={width} height={height}
-                                             value={cv} max={mx} zero={zero} fill={color} 
+                                             value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup}/>
                            case "TX":
-                             return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx} 
+                             return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx}
                                              strokeWidth={1} fontSize={14} fill={color}
                                              handleMouseup={handleMouseup}/>
                            case "VH":
-                             return <ScmValve key={z} x={x} y={y} width={width} height={height} 
-                                             value={cv} max={mx} zero={zero} fill={color} 
+                             return <ScmValve key={z} x={x} y={y} width={width} height={height}
+                                             value={cv} max={mx} zero={zero} fill={color}
                                              orient={"horizontal"} handleMouseup={handleMouseup} />
                            case "VV":
-                             return <ScmValve key={z} x={x} y={y} width={width} height={height} 
-                                             value={cv} max={mx} zero={zero} fill={color} 
+                             return <ScmValve key={z} x={x} y={y} width={width} height={height}
+                                             value={cv} max={mx} zero={zero} fill={color}
                                              orient={"vertical"} handleMouseup={handleMouseup} />
                            default:
                              return null
-                         } 
+                         }
                        } )
                      }
                 </Layer>

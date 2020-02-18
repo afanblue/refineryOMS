@@ -15,19 +15,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class CalcVarForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.inTagListRef=React.createRef();
+    this.state = {
       imgLeft: null,
       imgRight: null
     };
     this.moveLeft  = this.moveLeft.bind(this);
     this.moveRight = this.moveRight.bind(this);
+  }
+
+  static get propTypes() {
+      return {
+          calcInpList: PropTypes.any,
+          filter: PropTypes.any,
+          calcOutList: PropTypes.any,
+          calcVar: PropTypes.object,
+          definition: PropTypes.string,
+          inputTagIds: PropTypes.number,
+          inputTags: PropTypes.array,
+          id: PropTypes.number,
+          outputTagId: PropTypes.number,
+          tag: PropTypes.object,
+          name: PropTypes.string,
+          active: PropTypes.string,
+          description: PropTypes.string,
+          handleChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          handleUpdate: PropTypes.func,
+          requestRender: PropTypes.func
+      }
   }
 
   componentDidMount() {
@@ -38,11 +63,11 @@ class CalcVarForm extends Component {
     imgRight.src = "images/rightArrow.png";
     imgRight.onload = () => { this.setState( {imgRight:imgRight} ); }
   }
-  
+
   moveLeft(event) {
     event.preventDefault();
     let cv = this.props.calcVar;
-    let inpTagList = this.props.calcInpList;
+//    let inpTagList = this.props.calcInpList;
 //    let lft = this.refs.inputTags;
     let rit = this.refs.inputTagList;
     var ndx = rit.selectedIndex;
@@ -56,7 +81,7 @@ class CalcVarForm extends Component {
       cv.inputTags.push(option);
       inpTagList = inpTagList.filter(n => n.id !== id);
       this.props.requestRender();
-    }    
+    }
   }
 
   moveRight(event) {
@@ -92,13 +117,13 @@ class CalcVarForm extends Component {
     const moveRight = this.moveRight;
     const imgLeft = "images/leftArrow.png";
     const imgRight = "images/rightArrow.png";
-    
+
     var midStyle   = { verticalAlign: 'middle'};
     var leftStyle  = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
     var rightStyle = { height: '20px', width: '50px', margin: '5px', padding: '2px' };
-    
+
 //    const tag  = ud.tag;
-    
+
 
     return(
       <div className="oms-tabs">
@@ -108,20 +133,20 @@ class CalcVarForm extends Component {
             <td className="oms-top">
 
       <form id="CalcVarForm" >
-        Please enter your Calculated Variable information 
+        Please enter your Calculated Variable information
         <table>
           <tbody className="scrollContent-medium">
           <tr>
             <th className="oms-spacing-120">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/>
             </td>
           </tr>
           <tr>
             <th className="oms-spacing-120">Name (10 chars):</th>
             <td className="oms-spacing">
-              <input type="hidden" name="id" value={cv.id} />            
-              <input type="text" id="tag.name" name="tag.name" value={cv.tag.name} 
+              <input type="hidden" name="id" value={cv.id} />
+              <input type="text" id="tag.name" name="tag.name" value={cv.tag.name}
                      className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="25" maxLength="10"
                      onChange={handleChange} />
             </td>
@@ -129,7 +154,7 @@ class CalcVarForm extends Component {
           <tr>
             <td className="oms-spacing-120">Active:</td>
             <td className="oms-spacing">
-              <select id="tag.active" name="tag.active" value={cv.tag.active} 
+              <select id="tag.active" name="tag.active" value={cv.tag.active}
                       onChange={handleChange} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -156,7 +181,7 @@ class CalcVarForm extends Component {
             <th className="oms-spacing-120">Output Tag:</th>
             <td>
               <select name="outputTagId" id="outputTagId" value={cv.outputTagId}
-                     className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                     className= {["oms-spacing-120","oms-fontsize-12"].join(' ')}
                      onChange={handleChange}>
                 {otl.map(function(n,x) {
                             return <option key={x} value={n.id}>{n.name}</option>
@@ -174,7 +199,7 @@ class CalcVarForm extends Component {
                 <tr>
                   <td>
                     <select name="inputTagIds" id="inputTagIds" ref="inputTags" size={10}
-                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                           className= {["oms-spacing-120","oms-fontsize-12"].join(' ')}
                            onChange={handleChange}>
                       {inputTags.map(function(n,x) {
                           return <option key={x} value={n.id}>{n.name}</option>
@@ -203,7 +228,7 @@ class CalcVarForm extends Component {
                 </tr>
                 </tbody>
               </table>
-            </td>            
+            </td>
           </tr>
           </tbody>
         </table>
@@ -211,9 +236,9 @@ class CalcVarForm extends Component {
           <tbody>
           <tr  className="oms-spacing">
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {handleQuit(e)}}  />
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {handleUpdate(e)}} />
             </td>
           </tr>
@@ -225,12 +250,12 @@ class CalcVarForm extends Component {
           </tr>
         </tbody>
       </table>
-      
+
       </div>
-    );    
-      
+    );
+
   }
-  
+
 }
 
 export default CalcVarForm;

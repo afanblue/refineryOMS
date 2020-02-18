@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import DefaultContents from './DefaultContents.js';
@@ -46,7 +49,13 @@ class CarrierAdmin extends Component {
     this.handleCarrierQuit   = this.handleCarrierQuit.bind(this);
     this.finishCntnrFetch    = this.finishCntnrFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -54,21 +63,15 @@ class CarrierAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state ) {
+	return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
   }
-  
+
   finishCntnrFetch( req ) {
     let cd = req;
     const c = new Carrier(cd.id,cd.name,cd.description,cd.tagTypeCode,cd.tagTypeId
@@ -79,7 +82,7 @@ class CarrierAdmin extends Component {
   fetchFormData(id) {
     const myRequest = SERVERROOT + "/carrier/" + id;
     const loc = "CarrierAdmin.fetchFormData";
-    let req0 = new OMSRequest(loc, myRequest, 
+    let req0 = new OMSRequest(loc, myRequest,
                              "Problem selecting carrier "+myRequest, this.finishCntnrFetch);
     req0.fetchData();
   }
@@ -115,19 +118,14 @@ class CarrierAdmin extends Component {
     }
     request();
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleCarrierChange(event) {
     const target = event.target;
     const value = target.value;
@@ -143,7 +141,7 @@ class CarrierAdmin extends Component {
     }
     this.setState({carrier: fnew } );
   }
-  
+
   fetchList() {
     const clsMthd = "CarrierAdmin.fetchList";
     const myRequest = SERVERROOT + "/carrier/all";
@@ -152,32 +150,32 @@ class CarrierAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem fetching carrier list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
     }
   }
-  
+
   handleCarrierQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <CarrierList returnedText = {this.state.returnedText}

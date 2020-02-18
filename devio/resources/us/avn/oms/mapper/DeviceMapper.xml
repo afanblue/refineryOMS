@@ -53,7 +53,7 @@
          , cycle_time, offset, seq_no, active 
       from device
      where active = "Y"
-       and type = #{parm1}
+       and type = #{param1}
      order by seq_no
   </select>
   
@@ -61,7 +61,7 @@
     select id, description, type, model, param1, param2, param3, param4
          , cycle_time, offset, seq_no, active 
       from device
-     where id = #{parm1}
+     where id = #{param1}
   </select>
 
   <insert id="insertDevice" parameterType="Device" useGeneratedKeys="true"

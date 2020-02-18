@@ -10,17 +10,17 @@ Description:
 '''
 import sys
 import re
-import MySQLdb
+import mariadb
 
 config = {
   "user": "oms",
-  "passwd": "omsx",
+  "password": "omsx",
   "host": "127.0.0.1",
-  "db": "oms",
-  "use_unicode": True
+  "database": "oms",
+  "charset": "UTF-8"
 }
 
-cnx = MySQLdb.connect(**config)
+cnx = mariadb.connect(**config)
 crsr = cnx.cursor()
 
 args = sys.argv

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import FieldForm   from './forms/FieldForm.js';
@@ -27,8 +30,8 @@ import {Field}     from './objects/Field.js';
 import {RelTagTag} from './objects/Tag.js';
 
 
-/* 
-all_fields: 
+/*
+all_fields:
 create view all_fields( id,name,parent_id,parent ) as
 select f.id, t.name, f.id pid, t.name pname
   from field f, tag t
@@ -39,10 +42,10 @@ select f.id, t.name, f.id pid, t.name pname
 union
 select t.id, t.name, tp.id pid, tp.name pname
   from rel_tag_tag rtt join tag t on rtt.child_tag_id = t.id
-       join tag tp on rtt.parent_tag_id = tp.id 
+       join tag tp on rtt.parent_tag_id = tp.id
  where t.tag_type_code = 'FLD'
    and tp.tag_type_code = 'FLD'
-   
+
 select af.id, af.name, af.parent_id, af.parent
   from all_fields af
 	 order by af.name
@@ -66,7 +69,13 @@ class FieldAdmin extends Component {
     this.handleMouseUp     = this.handleMouseUp.bind(this);
     this.handleFieldQuit   = this.handleFieldQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -74,16 +83,10 @@ class FieldAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -109,12 +112,12 @@ class FieldAdmin extends Component {
                        updateDisplay: true,
                        updateData: false,
                        returnedText: fd,
-                       field: f                    
+                       field: f
                       });
       } catch( e ) {
         let emsg = "Problem selecting field id "+id;
         alert(emsg+"\n"+e);
-        Log.error(emsg+"  "+ e,clsMthd);  
+        Log.error(emsg+"  "+ e,clsMthd);
       }
     }
     request();
@@ -158,19 +161,14 @@ class FieldAdmin extends Component {
     }
     request();
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
-    switch (this.state.stage) {
-      case "begin":
-        break;
-      default:
-    }
-  }
-  
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -183,7 +181,7 @@ class FieldAdmin extends Component {
         let tLength = (fnew.childTanks===null?0:fnew.childTanks.length);
         for( var i=0; i<tLength; i++) {
             let v = fnew.childTanks.shift();
-            if( v === parseInt(value,10) ) { 
+            if( v === parseInt(value,10) ) {
                 f = i;
             } else {
                 tNew.push(v);
@@ -202,7 +200,7 @@ class FieldAdmin extends Component {
     }
     this.setState({field: fnew } );
   }
-  
+
   fetchList() {
     const clsMthd = "FieldAdmin.fetchList";
     const myRequest = SERVERROOT + "/field/all";
@@ -210,8 +208,8 @@ class FieldAdmin extends Component {
       const request = async () => {
         const response = await fetch(myRequest);
         const json = await response.json();
-        this.setState( {returnedText: json, 
-                        updateData: false, 
+        this.setState( {returnedText: json,
+                        updateData: false,
                         updateDisplay:true,
                         stage: "dataFetched" } );
       }
@@ -220,7 +218,7 @@ class FieldAdmin extends Component {
       } catch( e ) {
         const emsg = "Problem fetching field list";
         alert(emsg+"\n"+e);
-        Log.error(emsg+" - " + e, clsMthd);        
+        Log.error(emsg+" - " + e, clsMthd);
       }
     }
   }
@@ -244,23 +242,23 @@ class FieldAdmin extends Component {
       } else {
         fnew.c2Lat = lat;
         fnew.c2Long = long;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
       this.setState( {tank: fnew, nextCorner:nextCorner} );
   }
-  
+
   handleFieldQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <FieldList returnedText = {this.state.returnedText}

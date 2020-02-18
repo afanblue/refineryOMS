@@ -35,12 +35,12 @@ import us.avn.oms.domain.AnalogOutput;
 import us.avn.oms.domain.DigitalInput;
 import us.avn.oms.domain.DigitalOutput;
 import us.avn.oms.domain.Watchdog;
-import us.avn.oms.domain.Xfer;
+import us.avn.oms.domain.RawData;
 import us.avn.oms.service.ControlBlockService;
 import us.avn.oms.service.DigitalInputService;
 import us.avn.oms.service.DigitalOutputService;
 import us.avn.oms.service.WatchdogService;
-import us.avn.oms.service.XferService;
+import us.avn.oms.service.RawDataService;
 
 public class XferDigitalData extends TimerTask {
 	
@@ -50,7 +50,7 @@ public class XferDigitalData extends TimerTask {
     private DigitalInputService dis = null;
     private DigitalOutputService dos = null;
     private WatchdogService wds = null;
-    private XferService xs = null;
+    private RawDataService rds = null;
 
 	public void run( ) {
 		log.debug("Start digital processing");
@@ -71,7 +71,7 @@ public class XferDigitalData extends TimerTask {
 		if( dis == null) { dis = (DigitalInputService) context.getBean("digitalInputService"); }
 		if( dos == null) { dos = (DigitalOutputService) context.getBean("digitalOutputService"); }
 		if( cbs == null) { cbs = (ControlBlockService) context.getBean("controlBlockService"); }
-		if( xs == null)  { xs = (XferService) context.getBean("xferService"); }
+		if( rds == null) { rds = (RawDataService) context.getBean("rawDataService"); }
 		if( wds== null) { wds = (WatchdogService) context.getBean("watchdogService"); }
 
 		processDigitalInputs();
@@ -100,7 +100,7 @@ public class XferDigitalData extends TimerTask {
 				di.setScanTime(now);
 				dis.updateDigitalInput(di);
 			}
-			xs.clearUpdated(di.getTagId());
+			rds.clearUpdated(di.getTagId());
 		}
 	}
 	
@@ -115,8 +115,8 @@ public class XferDigitalData extends TimerTask {
 		while( ido.hasNext()) {
 			DigitalOutput d = ido.next();
 			log.debug("Processing DigitalOutput: "+d.toString());
-			Xfer x = new Xfer(d.getTagId(), d.getScanValue() );
-			xs.updateXfer(x);
+			RawData rd = new RawData(d.getTagId(), d.getScanValue() );
+			rds.updateRawData(rd);
 			dos.clearDOupdate(d.getTagId());
 		}
 		log.debug("Completed processing digital outputs");

@@ -7,20 +7,20 @@ Created on Nov 21, 2018
 '''
 # import os, sysconfig
 import sys
-import MySQLdb
+import mariadb
 
 args = sys.argv
 #print( args )
 
 config = {
   "user": "oms",
-  "passwd": args[1],
+  "password": args[1],
   "host": "127.0.0.1",
-  "db": "oms",
-  "use_unicode": True
+  "database": "oms",
+  "charset": "UTF-8"
 }
 
-cnx = MySQLdb.connect(**config)
+cnx = mariadb.connect(**config)
 crsr = cnx.cursor()
 
 

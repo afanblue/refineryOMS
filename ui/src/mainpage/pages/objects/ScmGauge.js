@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React from 'react';
-//import ReactDOM from 'react-dom';
+import PropTypes          from 'prop-types';
+
 import { Circle, Line, Group } from 'react-konva';
 
 
@@ -36,27 +38,30 @@ export default class ScmGauge extends React.Component {
       mu: props.handleMouseup
     };
   }
-  
-  static defaultProps = {
-    x: 0,
-    y: 0,
-    width:100,
-    height:100,
-    fill: "darkgreen",
-    stroke: "darkgreen",
-    strokeWidth:8,
-    text: ""
-  };
 
-  componentWillMount() {
+  static get propTypes() {
+    return {
+      x: PropTypes.integer,
+      y: PropTypes.integer,
+      width: PropTypes.integer,
+      height: PropTypes.integer,
+      zero: PropTypes.integer,
+      max: PropTypes.integer,
+      value: PropTypes.any,
+      text: PropTypes.string,
+      fill: PropTypes.any,
+      stroke: PropTypes.string,
+      strokeWidth: PropTypes.integer,
+      handleMouseup: PropTypes.func
+      }
   }
-  
+
   componentDidMount() {
   }
-  
+
   handleClick() {
   }
-  
+
   render() {
     var ht   = this.props.height;
     var wd   = this.props.width;
@@ -74,10 +79,21 @@ export default class ScmGauge extends React.Component {
     var mu   = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu} >
-        <Circle x={cx} y={cy} radius={r} 
+        <Circle x={cx} y={cy} radius={r}
                 stroke={stk} strokeWidth={2}  />
         <Line  x={cx} y={cy} stroke={stk} strokeWidth={3}  points={rad} />
-      </Group>    
+      </Group>
     );
   }
 }
+
+ScmGauge.defaultProps = {
+    x: 0,
+    y: 0,
+    width:100,
+    height:100,
+    fill: "darkgreen",
+    stroke: "darkgreen",
+    strokeWidth:8,
+    text: ""
+};

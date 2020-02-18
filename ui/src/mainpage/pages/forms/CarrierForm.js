@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
 
 
 class CarrierForm extends Component {
@@ -25,13 +27,27 @@ class CarrierForm extends Component {
     this.state = {  };
   }
 
+  static get propTypes() {
+      return {
+          carrier: PropTypes.object,
+          id: PropTypes.number,
+          name: PropTypes.string,
+          description: PropTypes.string,
+          tagTypeCode: PropTypes.string,
+          active: PropTypes.string,
+          quantity: PropTypes.number,
+          carrierUpdate: PropTypes.func,
+          handleQuit: PropTypes.func,
+          carrierChange: PropTypes.func
+      }
+  }
 
   render() {
     const c = this.props.carrier;
     const carrierUpdate = this.props.carrierUpdate;
     const handleQuit = this.props.handleQuit;
     const carrierChange = this.props.carrierChange;
-    
+
     return(
       <div className="oms-tabs">
       <table>
@@ -40,20 +56,20 @@ class CarrierForm extends Component {
             <td className="oms-top">
 
       <form id="carrierForm" >
-        Please enter your carrier information 
+        Please enter your carrier information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="120px"/>
             </td>
           </tr>
           <tr>
             <th className="oms-spacing-180">Carrier (10 chars):</th>
             <td className="oms-spacing">
-              <input type="hidden" name="id" value={c.id} />            
-              <input type="text" id="carrierName" name="carrierName" value={c.name} 
+              <input type="hidden" name="id" value={c.id} />
+              <input type="text" id="carrierName" name="carrierName" value={c.name}
                      className={["oms-spacing-180","oms-fontsize-12"].join(' ')}  size="32" maxLength="32"
                      onChange={carrierChange} />
             </td>
@@ -69,7 +85,7 @@ class CarrierForm extends Component {
           <tr>
             <td className="oms-spacing-180">Carrier Type:</td>
             <td className="oms-spacing">
-              <select id="tagTypeCode" name="tagTypeCode" value={c.tagTypeCode} 
+              <select id="tagTypeCode" name="tagTypeCode" value={c.tagTypeCode}
                       onChange={carrierChange} >
                 <option value="TC">Tank Car</option>
                 <option value="TT">Tank Truck</option>
@@ -80,7 +96,7 @@ class CarrierForm extends Component {
           <tr>
             <td className="oms-spacing-180">Active:</td>
             <td className="oms-spacing">
-              <select id="active" name="active" value={c.active} 
+              <select id="active" name="active" value={c.active}
                       onChange={carrierChange} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -101,9 +117,9 @@ class CarrierForm extends Component {
           <tbody>
           <tr  className="oms-spacing">
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {handleQuit(e)}}  />
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {carrierUpdate(e)}} />
             </td>
           </tr>
@@ -115,12 +131,12 @@ class CarrierForm extends Component {
           </tr>
         </tbody>
       </table>
-      
+
       </div>
-    );    
-      
+    );
+
   }
-  
+
 }
 
 export default CarrierForm;

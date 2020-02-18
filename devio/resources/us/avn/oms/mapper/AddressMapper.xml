@@ -37,7 +37,7 @@
     	 , a.iaddr5, a.saddr5, a.iaddr6, a.saddr6
     	 , t.active, x.float_value 
       from address a join tag t on a.id = t.id
-      join xfer x on a.id = x.id
+      join raw_data x on a.id = x.id
      where a.device_id = #{param1}
   </select>
   
@@ -47,7 +47,7 @@
     	 , a.iaddr5, a.saddr5, a.iaddr6, a.saddr6, t.active
     	 , x.float_value, x.updated
       from address a join tag t on a.id = t.id
-      join xfer x on a.id = x.id
+      join raw_data x on a.id = x.id
      where t.active = 'Y'
        and a.device_id = #{param1}
        and t.tag_type_code = #{param2}
@@ -58,7 +58,7 @@
     	 , a.iaddr2, a.saddr2, a.iaddr3, a.saddr3, a.iaddr4, a.saddr4
     	 , a.iaddr5, a.saddr5, a.iaddr6, a.saddr6
       from address a join tag t on a.id=t.id
-     where a.id = #{parm1}
+     where a.id = #{param1}
   </select>
 
   <insert id="insertAddress" parameterType="Address" >

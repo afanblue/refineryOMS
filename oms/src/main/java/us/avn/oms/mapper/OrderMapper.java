@@ -20,10 +20,47 @@ import java.util.Collection;
 
 import us.avn.oms.domain.Item;
 import us.avn.oms.domain.Order;
+import us.avn.oms.domain.Value;
 
 
 public interface OrderMapper {
 	
+	
+	/**
+	 * Get the number of order items for a given transfer which are not complete
+	 * @param xfrId Transfer ID
+	 * @return number of order items
+	 */
+	Long countActiveItems( Long xfrId );
+	
+	/**
+	 * Get the number of pending orders for a given content type
+	 * @param type content code
+	 * @return number of pending orders
+	 */
+	Long getPendingOrderCountForContent(String type);
+	
+	/**
+	 * Get a collection of the shipment ID's which have an item of the specified state
+	 * @param sts ("A","C","D","P") to retrieve list 
+	 * @return shipment IDs
+	 */
+	Collection<Long> getOrderListByStatus(String sts); 
+	
+	/**
+	 * Get the total volume ordered for all content types
+	 * @return order volumes by content type
+	 */
+	Collection<Value> getOrderVolumesForContents();
+	
+	/**
+	 * Get the number of active items for a shipment ID and carrier ID
+	 * Active is where the shipment_item.active not in ('C','D')
+	 * @param shipmentId ID for given order
+	 * @param carrierId ID for given carrier
+	 * @return number of active items
+	 */
+	Long getNumberActiveItems( Long shipmentId, Long carrierId );
 	
 	/**
 	 * Get the order (shipment) record for the specified ID
@@ -44,7 +81,7 @@ public interface OrderMapper {
 	 * @param id Transfer ID
 	 * @return all items w/ specified transfer ID (should only be one)
 	 */
-	Collection<Item> getOrderItemByTransferId( Long id );
+	Item getOrderItemByTransferId( Long id );
 	
 	/**
 	 * Get all of the active orders, i.e., those that have some items with
@@ -113,5 +150,12 @@ public interface OrderMapper {
 	 * @param i Item to be updated
 	 */
 	void updateItem( Item i );
+	
+	/**
+	 * Update the item record to mark the item with the specified code
+	 * for the given  ID provided in the Value object
+	 * @param v value object with id and code 
+	 */
+	void completeOrderItems( Value v );
 	
 }

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React from 'react';
+import PropTypes          from 'prop-types';
+
 import { Group, Line } from 'react-konva';
 
 
@@ -34,26 +37,28 @@ export default class ScmValve extends React.Component {
       orient: props.orient
     };
   }
-  
-  static defaultProps = {
-    x: 0,
-    y: 0,
-    width:100,
-    height:100,
-    fill: null,
-    stroke: "darkgreen",
-    strokeWidth:1
-  };
 
-  componentWillMount() {
+   static get propTypes() {
+     return {
+       x: PropTypes.integer,
+       y: PropTypes.integer,
+       width: PropTypes.integer,
+       height: PropTypes.integer,
+       fill: PropTypes.any,
+       stroke: PropTypes.string,
+       strokeWidth: PropTypes.integer,
+       orient: PropTypes.any,
+       value: PropTypes.any,
+       handleMouseup: PropTypes.func
+    }
   }
-  
+
   componentDidMount() {
   }
-  
+
   handleClick() {
   }
-  
+
   render() {
     var xt = this.props.x;
     var ht = 12;
@@ -85,3 +90,13 @@ export default class ScmValve extends React.Component {
     );
   }
 }
+
+ScmValve.defaultProps = {
+      x: 0,
+      y: 0,
+      width:100,
+      height:100,
+      fill: null,
+      stroke: "darkgreen",
+      strokeWidth:1
+};

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React from 'react';
+import PropTypes          from 'prop-types';
+
 import { Group, Rect, Arc, Line } from 'react-konva';
 
 
@@ -33,26 +36,27 @@ export default class ScmRefUnit extends React.Component {
       strokeWidth: props.strokeWidth
     };
   }
-  
-  static defaultProps = {
-    x: 0,
-    y: 0,
-    width:100,
-    height:100,
-    fill: null,
-    stroke: "darkgreen",
-    strokeWidth:1
-  };
 
-  componentWillMount() {
+  static get propTypes() {
+    return {
+      x: PropTypes.integer,
+      y: PropTypes.integer,
+      width: PropTypes.integer,
+      height: PropTypes.integer,
+      fill: PropTypes.any,
+      stroke: PropTypes.string,
+      strokeWidth: PropTypes.integer,
+      value: PropTypes.any,
+      handleMouseup: PropTypes.func
+    }
   }
-  
+
   componentDidMount() {
   }
-  
+
   handleClick() {
   }
-  
+
   render() {
     var val = (this.props.value===null||this.props.value===undefined)?0:this.props.value;
     var xt = this.props.x;
@@ -86,3 +90,13 @@ export default class ScmRefUnit extends React.Component {
     );
   }
 }
+
+ScmRefUnit.defaultProps = {
+    x: 0,
+    y: 0,
+    width:100,
+    height:100,
+    fill: null,
+    stroke: "darkgreen",
+    strokeWidth:1
+  };

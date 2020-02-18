@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 //import Calendar           from 'react-calendar';
 import Datetime  from 'react-datetime';
 
@@ -26,6 +29,29 @@ class OrderForm extends Component {
     this.state = {selected: "Properties"  };
   }
 
+  static get propTypes() {
+      return {
+          order: PropTypes.object,
+          items: PropTypes.array,
+          shipmentId: PropTypes.number,
+          option: PropTypes.string,
+          contents: PropTypes.any,
+          customers: PropTypes.any,
+          carriers: PropTypes.any,
+          expDate: PropTypes.any,
+          purchase: PropTypes.any,
+          active: PropTypes.string,
+          customerId: PropTypes.number,
+          carrierId: PropTypes.number,
+          actDate: PropTypes.string,
+          expVolume: PropTypes.number,
+          actVolume: PropTypes.number,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          orderUpdate: PropTypes.func,
+          orderCopy: PropTypes.func
+      }
+  }
 
   render() {
     var x          = this.props.order;
@@ -49,14 +75,14 @@ class OrderForm extends Component {
         <tbody>
         <tr>
           <td>
-                    
+
               <form id="orderForm" >
-                Please enter your order information 
+                Please enter your order information
           <table>
             <tbody className="scrollContent">
               <tr>
                 <th className="oms-spacing-150">&nbsp;</th>
-                <td className="oms-spacing"><img src="images/spacer.png" 
+                <td className="oms-spacing"><img src="images/spacer.png"
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
@@ -65,12 +91,12 @@ class OrderForm extends Component {
                   <input type="hidden" name="shipmentId" value={x.shipmentId} />
                   {sid}
                 </td>
-              </tr>            
+              </tr>
               <tr>
                 <th className="oms-spacing-150">Customer:</th>
                 <td className="oms-spacing">
                   <select id="customerId" name="customerId" value={x.customerId} onChange={fc} >
-                    { custs.map( 
+                    { custs.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -81,9 +107,9 @@ class OrderForm extends Component {
               <tr>
                 <th className="oms-spacing-150">Order Type:</th>
                 <td className="oms-spacing">
-                  <select id="carrierId" name="carrierId" value={x.carrierId} 
+                  <select id="carrierId" name="carrierId" value={x.carrierId}
                           onChange={fc} >
-                    { carrs.map( 
+                    { carrs.map(
                       function(n,x){
                         return <option key={x} value={n.id}>{n.name}</option>
                       } )
@@ -107,7 +133,7 @@ class OrderForm extends Component {
                 <th className="oms-spacing-150">Expected Date:</th>
                 <td className="oms-spacing">
                   <input type="text" id="expDate" name="expDate" value={x.expDate}
-                         className={["oms-spacing-150","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-150","oms-fontsize-12"].join(' ')}
                          size="20" maxLength="20" onChange={fc} />
                   <Datetime dateFormat="YYYY-MM-DD" timeFormat={false} defaultValue={defVal}
                             input={false} onChange={fc} value={x.expDate} />
@@ -117,13 +143,13 @@ class OrderForm extends Component {
                 <td className="oms-spacing-150">Actual Date:</td>
                 <td className="oms-spacing">
                   {x.actDate}
-     	  		</td>
+                   </td>
               </tr>
               <tr>
                 <th className="oms-spacing-150">Expected Volume (total):</th>
                 <td className="oms-spacing">
                   <input type="text" id="expVolume" name="expVolume" value={x.expVolume}
-                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')}
                          size="20" maxLength="20" onChange={fc} />
                   &nbsp;May not be meaningful&nbsp;
                 </td>
@@ -132,9 +158,9 @@ class OrderForm extends Component {
                 <td className="oms-spacing-150">Actual Volume (total):</td>
                 <td className="oms-spacing">
                   {x.actVolume}
-     	  		</td>
+                   </td>
               </tr>
-              
+
               <tr><td colSpan="2">
                 <table>
                   <thead>
@@ -147,24 +173,24 @@ class OrderForm extends Component {
                     </tr>
                   </thead>
                   <tbody>
-              
-              { items.map( 
+
+              { items.map(
                 function(n,x){
                   let itemNdx = n.itemNo-1;
                   return <tr key={x}>
                            <td className="oms-spacing-80">
                              &nbsp;
-                             <input id={["item",itemNdx,"shipmentId"].join('.')} 
-                                    name={["item",itemNdx,"shipmentId"].join('.')} 
+                             <input id={["item",itemNdx,"shipmentId"].join('.')}
+                                    name={["item",itemNdx,"shipmentId"].join('.')}
                                     type="hidden" value={n.shipmentId}/>&nbsp;
                              &nbsp;{n.itemNo}&nbsp;
                            </td>
                            <td className="oms-spacing-100">
                              &nbsp;
-                               <select id={["item",itemNdx,"contentCd"].join('.')} 
+                               <select id={["item",itemNdx,"contentCd"].join('.')}
                                        name={["item",itemNdx,"contentCd"].join('.')}
                                        value={n.contentCd} onChange={fc} >
-                                 {contents.map( 
+                                 {contents.map(
                                    function(c,cx) {
                                      return <option key={cx} value={c.code}>{c.name}</option>
                                    } )
@@ -174,9 +200,9 @@ class OrderForm extends Component {
                            </td>
                            <td className="oms-spacing-100">
                              &nbsp;
-                               <input type="text" id={["item",itemNdx,"expVolumeMin"].join('.')} 
+                               <input type="text" id={["item",itemNdx,"expVolumeMin"].join('.')}
                                       name={["item",itemNdx,"expVolumeMin"].join('.')}
-                                      value={n.expVolumeMin} size="9" maxLength="9" 
+                                      value={n.expVolumeMin} size="9" maxLength="9"
                                       onChange={fc} />
                              &nbsp;
                            </td>
@@ -195,7 +221,7 @@ class OrderForm extends Component {
                   </tbody>
                 </table>
               </td></tr>
-              
+
             </tbody>
           </table>
 
@@ -203,30 +229,30 @@ class OrderForm extends Component {
                   <tbody>
                     <tr className="oms-spacing">
                       <td>
-                        <input type="submit" id="closeForm"  name="closeForm"  
+                        <input type="submit" id="closeForm"  name="closeForm"
                                value=" Quit " className="oms-spacing"
                                onClick={(e) => {this.props.handleQuit(e)}} />
-                        &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                        &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                      value=" Submit " className="oms-spacing"
                                      onClick={(e) => {this.props.orderUpdate(e)}}/>
-                        &nbsp;<input type="submit" id="copyForm" name="copyForm" 
+                        &nbsp;<input type="submit" id="copyForm" name="copyForm"
                                      value=" Copy " className="oms-spacing"
                                      onClick={(e) => {this.props.orderCopy(e)}}/>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                
+
               </form>
 
           </td>
         </tr>
         </tbody>
       </table>
-   
+
      )
   }
-  
+
 }
 
 export default OrderForm;

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React from 'react';
+import PropTypes          from 'prop-types';
+
 import { Group, Line } from 'react-konva';
 
 
@@ -33,26 +36,28 @@ export default class Scm3WayValve extends React.Component {
       strokeWidth: props.strokeWidth
     };
   }
-  
-  static defaultProps = {
-    x: 0,
-    y: 0,
-    width:100,
-    height:100,
-    fill: null,
-    stroke: "darkgreen",
-    strokeWidth:1
-  };
 
-  componentWillMount() {
+  static get propTypes() {
+      return {
+          x: PropTypes.any,
+          y: PropTypes.any,
+          width: PropTypes.any,
+          height: PropTypes.any,
+          fill: PropTypes.string,
+          stroke: PropTypes.any,
+          strokeWidth: PropTypes.any,
+          orient: PropTypes.any,
+          value: PropTypes.any,
+          handleMouseup: PropTypes.func
+      }
   }
-  
+
   componentDidMount() {
   }
-  
+
   handleClick() {
   }
-  
+
   render() {
     var xt = this.props.x;
     var ht = 15;
@@ -63,7 +68,7 @@ export default class Scm3WayValve extends React.Component {
     var colorIn   = val===0?"red":(val===1?"darkgreen":"darkgreen");
     var colorOut1 = val===0?"red":(val===1?"darkgreen":"red");
     var colorOut2 = val===0?"red":(val===1?"red":"darkgreen");
-    
+
     var ptsOut1 = [xt+wd,   yt+4, xt+wd,     yt+ht, xt+wd/2, yt+4+(ht-4)/2];
     var ptsOut2 = [xt,      yt+4, xt,        yt+ht, xt+wd/2, yt+4+(ht-4)/2];
     var ptsIn   = [xt+wd/4, yt,   xt+3*wd/4, yt,    xt+wd/2, yt+4+(ht-4)/2];
@@ -86,7 +91,7 @@ export default class Scm3WayValve extends React.Component {
       ptsOut2 = [xt+wd,   yt,    xt+wd,     yt+ht-4, xt+wd/2, yt+(ht-4)/2];
       ptsIn   = [xt+wd/4, yt+ht, xt+3*wd/4, yt+ht,   xt+wd/2, yt+(ht-4)/2];
     }
-    
+
     var stkw = 1;
     var mu = this.props.handleMouseup;
     return (
@@ -99,3 +104,14 @@ export default class Scm3WayValve extends React.Component {
     );
   }
 }
+
+Scm3WayValve.defaultProps = {
+    x: 0,
+    y: 0,
+    width:100,
+    height:100,
+    fill: null,
+    stroke: "darkgreen",
+    strokeWidth:1
+  };
+

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import us.avn.oms.domain.Alarm;
 import us.avn.oms.domain.AlarmMessage;
 import us.avn.oms.domain.AlarmType;
+import us.avn.oms.domain.Tag;
 import us.avn.oms.service.AlarmService;
 
 @RestController
@@ -101,7 +102,7 @@ public class AlarmRestController {
 		Alarm alm = new Alarm();
 		alm.setId(id);
 		alm.setAcknowledged("Y");
-		alm.setActive("Y");
+		alm.setActive(Tag.ACTIVE);
 		alarmService.updateAlarm(alm);
 		return 1L;
 	}

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import { Stage, Layer, Rect } from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 import Scm3WayValve from '../objects/Scm3WayValve.js';
@@ -35,7 +38,32 @@ class SchematicForm extends Component {
     super(props);
     this.state = {  };
   }
-  
+
+  static get propTypes() {
+      return {
+          schematic: PropTypes.object,
+          childTags: PropTypes.array,
+          sco: PropTypes.object,
+          typeList: PropTypes.array,
+          inpTags: PropTypes.array,
+          outTags: PropTypes.array,
+          outTagId: PropTypes.number,
+          misc: PropTypes.string,
+          id: PropTypes.number,
+          name: PropTypes.string,
+          description: PropTypes.string,
+          active: PropTypes.string,
+          inpTagId: PropTypes.number,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          handleAdd: PropTypes.func,
+          handleMod: PropTypes.func,
+          schematicUpdate: PropTypes.func,
+          schematicCopy: PropTypes.func,
+          handleMouseUp: PropTypes.func
+      }
+  }
+
   setPositionLocation( sco, fc ) {
     if( sco.misc !== 'P' ) {
        return (
@@ -43,17 +71,17 @@ class SchematicForm extends Component {
   <tr>
     <td>
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      NW Corner: 
+      NW Corner:
     </td>
   </tr>
   <tr>
     <td>
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      <input type="text" id="sco.c1Lat" name="sco.c1Lat" value={sco.c1Lat} 
+      <input type="text" id="sco.c1Lat" name="sco.c1Lat" value={sco.c1Lat}
              className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
              size="10" maxLength="5" onChange={fc} />
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      <input type="text" id="sco.c1Long" name="sco.c1Long" value={sco.c1Long} 
+      <input type="text" id="sco.c1Long" name="sco.c1Long" value={sco.c1Long}
              className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
              size="10" maxLength="10" onChange={fc} />
     </td>
@@ -61,17 +89,17 @@ class SchematicForm extends Component {
   <tr>
     <td>
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      SE Corner: 
+      SE Corner:
     </td>
   </tr>
   <tr>
     <td>
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      <input type="text" id="sco.c2Lat" name="sco.c2Lat" value={sco.c2Lat} 
+      <input type="text" id="sco.c2Lat" name="sco.c2Lat" value={sco.c2Lat}
              className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
              size="10" maxLength="10" onChange={fc} />
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      <input type="text" id="sco.c2Long" name="sco.c2Long" value={sco.c2Long} 
+      <input type="text" id="sco.c2Long" name="sco.c2Long" value={sco.c2Long}
              className={["oms-spacing-50","oms-fontsize-12"].join(' ')}
              size="10" maxLength="10" onChange={fc} />
     </td>
@@ -84,7 +112,7 @@ class SchematicForm extends Component {
   <tr>
     <th className="oms-spacing-180">
       <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-      End Points: 
+      End Points:
     </th>
   </tr>
   <tr>
@@ -127,13 +155,13 @@ class SchematicForm extends Component {
     const mu     = this.props.handleMouseUp;
 
     let outSelect = <select id="sco.outTagId" name="sco.outTagId" value={sco.outTagId} onChange={fc}> { outTags.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } ) } </select>
-    if( (sco.misc === "G")  || (sco.misc === "P")  || (sco.misc === "RU") || 
+    if( (sco.misc === "G")  || (sco.misc === "P")  || (sco.misc === "RU") ||
         (sco.misc === "SH") || (sco.misc === "TK") || (sco.misc === "TX")  ) {
       outSelect = "no output required";
-    }    
+    }
 
-    let positionLocation = this.setPositionLocation(sco, fc);    
-    
+    let positionLocation = this.setPositionLocation(sco, fc);
+
     return(
       <div className="oms-tabs">
         <table>
@@ -141,7 +169,7 @@ class SchematicForm extends Component {
             <tr>
               <td className="oms-top">
         <form id="schematicForm" >
-          Please enter your schematic information 
+          Please enter your schematic information
           <table>
             <tbody>
               <tr>
@@ -156,12 +184,12 @@ class SchematicForm extends Component {
                       <tr>
                         <td className="oms-spacing">
                           <input type="hidden" name="id" value={scm.id} />
-                          <input type="text" id="name" name="name" value={scm.name} 
+                          <input type="text" id="name" name="name" value={scm.name}
                                  className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                                  size="10" maxLength="10" onChange={fc} />
                         </td>
                         <td className="oms-spacing">
-                          <input type="text" id="description" name="description" value={scm.description} 
+                          <input type="text" id="description" name="description" value={scm.description}
                                  className={["oms-spacing-240","oms-fontsize-12"].join(' ')}
                                  size="120" maxLength="120" onChange={fc} />
                         </td>
@@ -221,60 +249,60 @@ class SchematicForm extends Component {
                             let zero = (n.childTagZero===undefined||n.childTagZero===null)?0:n.childTagZero;
                             switch( n.misc ) {
                               case "3VB":
-                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                     value={cv} max={mx} zero={zero} fill={"green"} 
+                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                     value={cv} max={mx} zero={zero} fill={"green"}
                                                      orient={"bottom"} />
                               case "3VL":
-                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                     value={cv} max={mx} zero={zero} fill={"green"} 
+                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                     value={cv} max={mx} zero={zero} fill={"green"}
                                                      orient={"left"} />
                               case "3VR":
-                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                     value={cv} max={mx} zero={zero} fill={"green"} 
+                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                     value={cv} max={mx} zero={zero} fill={"green"}
                                                      orient={"right"} />
                               case "3VT":
-                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height} 
-                                                     value={cv} max={mx} zero={zero} fill={"green"} 
+                                return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                                                     value={cv} max={mx} zero={zero} fill={"green"}
                                                      orient={"top"} />
                               case "G":
-                                return <ScmGauge key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmGauge key={z} x={x} y={y} width={width} height={height}
                                                  value={cv} max={mx} zero={zero} fill={"green"} />
                               case "P":
                                 return <ScmPipe key={z} x={x} y={y} points={pts} strokeWidth={3}
                                                 value={cv} max={mx} zero={zero}  />
                               case "PL":
-                                return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmPump key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"green"} orient={"PL"} />
                               case "PR":
-                                return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmPump key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"green"} orient={"PR"} />
                               case "PT":
-                                return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmPump key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"green"}  orient={"PT"}/>
                               case "PB":
-                                return <ScmPump key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmPump key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"green"}  orient={"PB"}/>
                               case "RU":
-                                return <ScmRefUnit key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmRefUnit key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero}  />
                               case "SH":
-                                return <ScmShip key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmShip key={z} x={x} y={y} width={width} height={height}
                                                  value={cv} max={mx} zero={zero} fill={"green"} />
                               case "TK":
                                 return <ScmTank key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"red"} />
                               case "TX":
-                                return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx} 
+                                return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx}
                                                 strokeWidth={1} fontSize={14}/>
                               case "VH":
-                                return <ScmValve key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmValve key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"green"} orient={"horizontal"} />
                               case "VV":
-                                return <ScmValve key={z} x={x} y={y} width={width} height={height} 
+                                return <ScmValve key={z} x={x} y={y} width={width} height={height}
                                                 value={cv} max={mx} zero={zero} fill={"green"} orient={"vertical"} />
                               default:
                                 return null
-                            } 
+                            }
                           } )
                         }
                       </Layer>
@@ -286,7 +314,7 @@ class SchematicForm extends Component {
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                  Objects: 
+                                  Objects:
                                 </td>
                               </tr>
                               <tr>
@@ -294,61 +322,61 @@ class SchematicForm extends Component {
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                   <select id="sco.id" name="sco.id" value={sco.id}
                                           onChange={fc} >
-                                    { scoList.map( 
+                                    { scoList.map(
                                       function(n,x){
                                         return <option key={x} value={n.id}>{n.name}</option>
                                       } )
-                                    }                
+                                    }
                                   </select>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                  Object Name: 
+                                  Object Name:
                                 </td>
                               </tr>
                               <tr><td>
                                 <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                 <input type="hidden" name="id" value={sco.id} />
-                                <input type="text" id="sco.name" name="sco.name" value={sco.name} 
+                                <input type="text" id="sco.name" name="sco.name" value={sco.name}
                                        className={["oms-spacing-80","oms-fontsize-12"].join(' ')}
                                        size="10" maxLength="10" onChange={fc} />
                               </td></tr>
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                  Description: 
+                                  Description:
                                 </td>
                               </tr>
                               <tr><td>
                                 <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                <input type="text" id="sco.description" name="sco.description" value={sco.description} 
+                                <input type="text" id="sco.description" name="sco.description" value={sco.description}
                                        className={["oms-spacing-120","oms-fontsize-12"].join(' ')}
                                        size="20" maxLength="48" onChange={fc} />
                               </td></tr>
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                  Object Type: 
+                                  Object Type:
                                 </td>
                               </tr>
                               <tr>
                                 <td>
                                   <select id="sco.misc" name="sco.misc" value={sco.misc}
                                           onChange={fc}>
-                                    { typeList.map( 
+                                    { typeList.map(
                                       function(n,x){
                                         return <option key={x} value={n.code}>{n.code} ({n.name})</option>
                                       } )
-                                    }                
+                                    }
                                   </select>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                  Input Tag: 
+                                  Input Tag:
                                 </td>
                               </tr>
                               <tr>
@@ -356,18 +384,18 @@ class SchematicForm extends Component {
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
                                   <select id="sco.inpTagId" name="sco.inpTagId" value={sco.inpTagId}
                                           onChange={fc}>
-                                    { inpTags.map( 
+                                    { inpTags.map(
                                       function(n,x){
                                         return <option key={x} value={n.id}>{n.name}</option>
                                       } )
-                                    }                
+                                    }
                                   </select>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="1px" width="10px"/>
-                                  Output Tag: 
+                                  Output Tag:
                                 </td>
                               </tr>
                               <tr>
@@ -380,16 +408,16 @@ class SchematicForm extends Component {
                               <tr>
                                 <td>
                                   <img src="../../images/spacer.png" alt="" height="25px" width="20px"/>
-                                  <input type="submit" id="addItem"  name="addItem"  
+                                  <input type="submit" id="addItem"  name="addItem"
                                          value=" Add " className="oms-spacing"
                                          onClick={(e) => {ha(e)}} />
-                                  <input type="submit" id="modItem"  name="modItem"  
+                                  <input type="submit" id="modItem"  name="modItem"
                                          value=" Modify " className="oms-spacing"
                                          onClick={(e) => {hm(e)}} />
                                 </td>
                               </tr>
                             </tbody>
-                          </table>                          
+                          </table>
                         </td>
                       </tr>
                     </tbody>
@@ -402,13 +430,13 @@ class SchematicForm extends Component {
             <tbody>
               <tr className="oms-spacing">
                 <td>
-                  <input type="submit" id="closeForm"  name="closeForm"  
+                  <input type="submit" id="closeForm"  name="closeForm"
                          value=" Quit " className="oms-spacing"
                          onClick={(e) => {hq(e)}} />
-                  &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+                  &nbsp;<input type="submit" id="submitForm" name="submitForm"
                                value=" Submit " className="oms-spacing"
                                onClick={(e) => {su(e)}}/>
-                  &nbsp;<input type="submit" id="copyForm" name="copyForm" 
+                  &nbsp;<input type="submit" id="copyForm" name="copyForm"
                                value=" Copy " className="oms-spacing"
                                onClick={(e) => {sc(e)}}/>
                 </td>
@@ -416,16 +444,16 @@ class SchematicForm extends Component {
             </tbody>
           </table>
         </form>
-  
+
               </td>
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     );
   }
-  
+
 }
 
 export default SchematicForm;

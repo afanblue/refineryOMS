@@ -15,9 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
-
+import PropTypes          from 'prop-types';
 
 
 class DockForm extends Component {
@@ -25,16 +26,36 @@ class DockForm extends Component {
     super(props);
     this.state={};
     this.noAction=this.noAction.bind(this);
-  }  
+  }
+
+  static get propTypes() {
+      return {
+          carrierList: PropTypes.array,
+          sensorList: PropTypes.array,
+          stationList: PropTypes.array,
+          tag: PropTypes.object,
+          active: PropTypes.string,
+          description: PropTypes.string,
+          id: PropTypes.number,
+          inTagId: PropTypes.number,
+          misc: PropTypes.string,
+          name: PropTypes.string,
+          outTagId: PropTypes.number,
+          outTagList: PropTypes.array,
+          fieldChange: PropTypes.func,
+          handleQuit: PropTypes.func,
+          tagUpdate: PropTypes.func
+      }
+  }
 
   scale( tagLoc, siteLoc, scaleFactor ) {
     return Math.round(scaleFactor * (tagLoc - siteLoc));
   }
-  
+
   noAction(e) {
     e.preventDefault();
   }
-  
+
   render() {
     let t = this.props.tag;
     let carrierList  = this.props.carrierList;
@@ -56,7 +77,7 @@ class DockForm extends Component {
     var activeLabel = <div></div>
     var activeSelect = <div></div>
     var midStyle = {verticalAlign:'middle'};
-    
+
 
 /* specify select options for list of carriers */
     outTagLabel = <div>Carrier : </div>
@@ -67,7 +88,7 @@ class DockForm extends Component {
 
 /*    set name input to readonly */
       nameInput = <div><input type="text" id="name" name="name" value={t.name} className="oms-spacing-80" size="10" maxLength="10" onChange={fc} /></div>
-        
+
 /*    set active options */
       activeLabel = <div>Active :</div>
       activeSelect = <div><select id="active" name="active" value={t.active} onChange={fc} ><option value="N">N</option><option value="Y">Y</option></select></div>
@@ -84,7 +105,7 @@ class DockForm extends Component {
       outListLabel = <div style={midStyle}>Dock stations: </div>
       outListSelect =  <select id="outTagList" name="outTagList" value={t.outTagList} multiple="T" size="6" onChange={fc} >{stnList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
     } else {
-      nameInput = <div><input type="text" id="name" name="name" value={t.name} className="oms-spacing-80" size="10" maxLength="10" onChange={fc} readOnly="readonly" /></div> 
+      nameInput = <div><input type="text" id="name" name="name" value={t.name} className="oms-spacing-80" size="10" maxLength="10" onChange={fc} readOnly="readonly" /></div>
     }
 
 
@@ -96,12 +117,12 @@ class DockForm extends Component {
               <td className="oms-top">
 
       <form id="tagForm" onSubmit={(e) => {tup(e)}} >
-        Please add the carrier to your dock information 
+        Please add the carrier to your dock information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-180">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/></td>
           </tr>
           <tr>
@@ -141,9 +162,9 @@ class DockForm extends Component {
           </tr>
           <tr>
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {hq(e)}}/>
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {tup(e)}} />
             </td>
           </tr>

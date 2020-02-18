@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import UserList        from './lists/UserList.js';
 import UserForm        from './forms/UserForm.js';
@@ -46,7 +49,13 @@ class UserAdmin extends Component {
     this.finishRolesFetch = this.finishRolesFetch.bind(this);
     this.handleQuit       = this.handleQuit.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -54,18 +63,24 @@ class UserAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
+  /* on instantiation and re-rendering */
+  static getDerivedStateFromProps(nextProps, prevState ) {
+//    let clsMthd = "getDerivedStateFromProps";
+    let state = prevState;
+    if( nextProps.stage !== state.stage )
     {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
+      state = { stage: prevState.stage,
+                updateData: true,
+                updateDisplay: false,
+                returnedText: prevState.returnedText,
+                roles: prevState.roles,
+                user: prevState.user };
     }
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
-    let sts = nextState.updateDisplay;
+    let sts = nextState.updateDisplay || nextState.updateData;
     return sts;
   }
 
@@ -76,13 +91,13 @@ class UserAdmin extends Component {
                       ,ud.password,ud.state,ud.status,ud.roleId);
     this.setState({stage: "userRetrieved", updateDisplay: true, user: u });
   }
-  
+
   finishRolesFetch(req) {
     let roles = req;
     this.setState({stage: "userRetrieved", updateDisplay: true, roles: roles });
-                      
+
   }
-  
+
   handleUserSelect(event) {
     const id = event.z;
     const loc = "UserAdmin.userSelect";
@@ -92,8 +107,6 @@ class UserAdmin extends Component {
     let req1 = new OMSRequest(loc, SERVERROOT + "/role/all",
                             "Problem retrieving roles", this.finishRolesFetch);
     req1.fetchData();
-//    Log.info( "req0.uri="+req0.uri + " <-> req1.uri="+req1.uri);
-//    Log.info( "req0.erm="+req0.errMsg + " <-> req1.erm="+req1.errMsg);
   }
 
   handleUserUpdate(event) {
@@ -124,15 +137,15 @@ class UserAdmin extends Component {
   componentDidMount() {
     this.fetchList();
   }
-  
-  componentDidUpdate( prevProps, prevState ) {
+
+/*  componentDidUpdate( prevProps, prevState ) {
     switch (this.state.stage) {
       case "begin":
         break;
       default:
     }
   }
-  
+*/
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -141,7 +154,7 @@ class UserAdmin extends Component {
     unew[name] = value;
     this.setState({user:unew, activity:"userInput" } );
   }
-  
+
   fetchList() {
     const clsMthd = "UserAdmin.fetchList";
     const myRequest = SERVERROOT + "/user/all";
@@ -150,14 +163,14 @@ class UserAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "Problem fetching user list";
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - " + e, clsMthd);        
+          Log.error(emsg+" - " + e, clsMthd);
         }
       }
       request();
@@ -167,15 +180,15 @@ class UserAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     stage: "begin" } );
   }
-  
+
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+        case "begin":
         return <Waiting />
       case "dataFetched":
         return <UserList returnedText = {this.state.returnedText}

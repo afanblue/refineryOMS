@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import DefaultContents from './DefaultContents.js';
@@ -64,7 +67,15 @@ class OrderAdmin extends Component {
     this.finishCarriersFetch = this.finishCarriersFetch.bind(this);
     this.finishCustFetch     = this.finishCustFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          option: PropTypes.string,
+          type: PropTypes.any
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -72,50 +83,23 @@ class OrderAdmin extends Component {
     return response;
   }
 
-  getDerivedStateFromProps(nextProps,prevState) {
+  /* after instantiation and before re-rendering */
+  static getDerivedStateFromProps(nextProps,prevState) {
     Log.info("getDerivedStateFromProps");
-/*
-    if(  (nextProps.stage !== prevState.stage) 
-      || (nextProps.type != prevState.type ) )
-    {
-      this.setState({ stage: nextProps.stage,
-                      type: nextProps.type,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
-*/
+    return prevState;
   }
-/* */  
-  componentWillReceiveProps(nextProps) {
-    Log.info("willReceiveProps - option: "+this.state.option+"/"+nextProps.option);
-    if(  (nextProps.stage !== this.state.stage) 
-      || (nextProps.type  !== this.state.type ) )
-    {
-//      this.fetchList();
-      this.setState({ stage: nextProps.stage,
-                      type: nextProps.type,
-                      option: nextProps.option,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
-  }
-/* */
 
   shouldComponentUpdate(nextProps,nextState) {
-    Log.info("OrderAdmin - shouldComponentUpdate - stage : "+this.state.stage+"/"+nextProps.stage);
-    Log.info("OrderAdmin - shouldComponentUpdate - type  : "+this.state.type+"/"+nextProps.type);
-    Log.info("OrderAdmin - shouldComponentUpdate - option: "+this.state.option+"/"+nextProps.option);
+    Log.info("OrderAdmin - shouldComponentUpdate - stage : "+this.state.stage+"/"+nextProps.stage
+            +", option: "+this.state.option+"/"+nextProps.option);
     let sts = nextState.updateDisplay;
     if( nextState.stage !== this.state.stage ) { sts = true; }
-    if( nextState.type  !== this.state.type  ) { sts = true; }
-    if( nextProps.option !== this.state.option ) { 
+    if( nextProps.option !== this.state.option ) {
       this.fetchList(nextProps.option);
     }
     return sts;
   }
-  
+
   finishXferFetch( req ) {
     let xd = req;
     let items = xd.items;
@@ -123,7 +107,7 @@ class OrderAdmin extends Component {
                      , xd.carrier, xd.active, xd.purchase, xd.expDate, xd.actDate
                      , xd.expVolume, xd.actVolume );
     var ordItems = [];
-    items.map( 
+    items.map(
       function(n,x){
         let sid = n.shipmentId===0?xd.shipmentId:n.shipmentId;
         let i = new Item(sid,n.itemNo,n.newItem,n.contentCd,n.expVolumeMin,n.expVolumeMax,n.actVolume);
@@ -136,15 +120,15 @@ class OrderAdmin extends Component {
                    order: x
                   });
   }
-  
+
   finishTypesFetch(req) {
     let blankItem = {};
     blankItem.code = null;
-    blankItem.name = '---';       
-    req.unshift(blankItem);    
+    blankItem.name = '---';
+    req.unshift(blankItem);
     this.setState({stage: "itemRetrieved", updateDisplay: true, contentTypes:req });
   }
-  
+
   finishCarriersFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, carriers: req });
   }
@@ -155,8 +139,9 @@ class OrderAdmin extends Component {
 
   fetchFormData(id) {
     const loc = "OrderAdmin.select";
+    Log.info(loc + " - " + id);
     let myRequest = SERVERROOT + "/order/" + id;
-    let req0 = new OMSRequest(loc, myRequest, 
+    let req0 = new OMSRequest(loc, myRequest,
                             "Problem selecting order "+myRequest,
                             this.finishXferFetch);
     req0.fetchData();
@@ -169,9 +154,9 @@ class OrderAdmin extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/carrier/all",
                             "Problem retrieving input tag list", this.finishCarriersFetch);
     req3.fetchData();
-    
+
   }
-  
+
   handleSelect(event) {
     const id = event.z;
     this.fetchFormData(id);
@@ -205,6 +190,7 @@ class OrderAdmin extends Component {
 
   updateOrder(id) {
     let clsMthd = "OrderAdmin.updateOrder";
+    Log.info(clsMthd + " - " + id);
     let newt = Object.assign({},this.state.order);
     let method = "PUT";
     let url = SERVERROOT + "/order/update";
@@ -219,7 +205,7 @@ class OrderAdmin extends Component {
         await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
         alert("Update complete on order "+newt.shipmentId)
       } catch( error ) {
-        let emsg = clsMthd+" - Problem "+(id===0?"inserting":"updating")+" order id "+id; 
+        let emsg = clsMthd+" - Problem "+(id===0?"inserting":"updating")+" order id "+id;
         alert(emsg+"\n"+error);
         Log.error(emsg+" - " + error,clsMthd);
       }
@@ -236,7 +222,7 @@ class OrderAdmin extends Component {
       this.updateOrder(id);
     }
   }
-  
+
   handleCopy(event) {
     event.preventDefault();
     let x = this.state.order;
@@ -246,20 +232,19 @@ class OrderAdmin extends Component {
       this.updateOrder(id);
     }
   }
-  
+
   componentDidMount() {
     Log.info("OrderAdmin - componentDidMount");
     this.fetchList(this.state.option);
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-    Log.info("OrderAdmin - componentDidUpdate");
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//    Log.info("OrderAdmin - componentDidUpdate");
+//  }
 
   handleClick() {
-    
-  };
-  
+  }
+
   handleFieldChange(event) {
     let ordNew = Object.assign({},this.state.order);
     const target = event.target;
@@ -281,10 +266,11 @@ class OrderAdmin extends Component {
     }
     this.setState({order: ordNew } );
   }
-  
- 
+
+
   fetchList(option) {
     const clsMthd = "OrderAdmin.fetchList";
+    Log.info(clsMthd + " - " + option);
     var myRequest = SERVERROOT + "/order/active";
     if( option !== "B" ) {
       myRequest = SERVERROOT + "/order/type/" + option;
@@ -294,13 +280,13 @@ class OrderAdmin extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           option:option,
                           stage: "dataFetched" } );
         } catch( error ) {
-          let emsg = clsMthd+" - Problem fetching order list"; 
+          let emsg = clsMthd+" - Problem fetching order list";
           alert(emsg+"\n"+error);
           Log.error(emsg+" - " + error,clsMthd);
         }
@@ -312,17 +298,17 @@ class OrderAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList("B");
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     order: null,
                     stage: "begin" } );
   }
 
   render() {
-    Log.info("OrderAdmin - render - type: "+this.state.type);
+    Log.info("OrderAdmin - render - stage: "+this.state.stage);
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <OrderList orderData = {this.state.returnedText}
@@ -330,7 +316,7 @@ class OrderAdmin extends Component {
                           handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.order     === null) || (this.state.carriers === null) || 
+        if( (this.state.order     === null) || (this.state.carriers === null) ||
             (this.state.customers === null) || (this.state.contentTypes === null) )
         {
           return <Waiting />

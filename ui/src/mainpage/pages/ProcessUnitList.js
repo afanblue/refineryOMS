@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT}  from '../../Parameters.js';
 import {CE, IL3}     from './objects/ListObjects.js';
 import Log           from '../requests/Log.js';
@@ -35,7 +38,14 @@ class ProcessUnitList extends Component {
       menuSelect: props.menuSelect
     };
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string,
+          menuSelect: PropTypes.func
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -51,14 +61,14 @@ class ProcessUnitList extends Component {
         try {
           const response = await fetch(myRequest);
           const json = await response.json();
-          this.setState( {returnedText: json, 
-                          updateData: false, 
+          this.setState( {returnedText: json,
+                          updateData: false,
                           updateDisplay:true,
                           stage: "dataFetched" } );
         } catch( e ) {
           const emsg = "ProcessUnitList.fetchList: Fetching process unit list " + e;
           alert(emsg+"\n"+e);
-          Log.error(emsg+" - "+e, clsMthd);        
+          Log.error(emsg+" - "+e, clsMthd);
         }
       }
       request();
@@ -68,7 +78,7 @@ class ProcessUnitList extends Component {
   componentDidMount() {
     this.fetchList();
   }
-  
+
   generateList() {
     let menuSelect = this.state.menuSelect;
     let data = this.state.returnedText;
@@ -98,7 +108,7 @@ class ProcessUnitList extends Component {
       let il = new IL3(CE0,CE1,CE2);
       puColumns.push(il);
     }
-    
+
     return(
       <div>
       <h2>
@@ -109,13 +119,13 @@ class ProcessUnitList extends Component {
       <table className={"scrollTable"}>
         <thead className={"fixedHeader"}>
           <tr>
-	        <td className={"oms-spacing-180"}>Unit Name</td>
-	        <td className={"oms-spacing-180"}>Unit Name</td>
+            <td className={"oms-spacing-180"}>Unit Name</td>
+            <td className={"oms-spacing-180"}>Unit Name</td>
             <td className={"oms-spacing-180"}>Unit Name</td>
           </tr>
         </thead>
         <tbody className={"scrollContent"}>
-          {puColumns.map( 
+          {puColumns.map(
             function(n,x) {
               const z1 = n.i1.name;
               const z2 = n.i2.name;
@@ -127,7 +137,7 @@ class ProcessUnitList extends Component {
                             onClick={() => {menuSelect({z1})}} >{z1}
                     </button>
                   </td>
-                  <td className={"oms-spacing-180"}>                 
+                  <td className={"oms-spacing-180"}>
                     <button type="button" className={["oms-menu-text","link-button"].join(' ')}
                             onClick={() => {menuSelect({z2})}} >{z2}
                     </button>

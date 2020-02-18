@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+
 import us.avn.oms.service.AlarmService;
 import us.avn.oms.service.HistoryService;
 
@@ -368,30 +370,30 @@ public class AnalogInput extends OMSObject implements Serializable {
 
 	/**
 	 * Check for an alarm state and update the alarm table as needed
-	 * 
+	 * <br>
 	 * @param as (AlarmService)
 	 * @param almTypes collection of alarm types
-	 * {@code
-	 * Note 1: we use the class variable as (AlarmService) 
-	 * Note 2: we assume only one existing alarm for the given AI
-	 * Note 3: the handling of the existing alarm 
-	 * 
-	 *    set createAlarm false
-	 *    IF there's no alarm active
-	 *    .. IF there's a new alarm
-	 *    .. .. set createAlarm true
-	 *    .. END IF
-	 *    ELSE
-	 *    .. IF this state has returned to normal
-	 *    .. .. set active & acknowledged to N and Y
-	 *    .. .. update alarm
-	 *    .. ELSE IF this is not the same alarm state
-	 *    .. .. set active to N
-	 *    .. .. update alarm
-	 *    .. .. set createAlarm true
-	 *    .. END IF
-	 *    END IF
-	 * }
+	 * <br>
+	 *<br> Note 1: we use the class variable as (AlarmService) 
+	 *<br> Note 2: we assume only one existing alarm for the given AI
+	 *<br> Note 3: the handling of the existing alarm 
+	 *<br> 
+	 *<br>    set createAlarm false
+	 *<br>    IF there's no alarm active
+	 *<br>    .. IF there's a new alarm
+	 *<br>    .. .. set createAlarm true
+	 *<br>    .. END IF
+	 *<br>    ELSE
+	 *<br>    .. IF this state has returned to normal
+	 *<br>    .. .. set active and acknowledged to N and Y
+	 *<br>    .. .. update alarm
+	 *<br>    .. ELSE IF this is not the same alarm state
+	 *<br>    .. .. set active to N
+	 *<br>    .. .. update alarm
+	 *<br>    .. .. set createAlarm true
+	 *<br>    .. END IF
+	 *<br>    END IF
+	 *
 	 */
 	public void checkForAlarm( AlarmService as, HashMap<String,AlarmType> almTypes ) {
 		/* Note: there should only be one alarm, but in the future */
@@ -452,27 +454,26 @@ public class AnalogInput extends OMSObject implements Serializable {
 	 * Check the current history and update as needed
 	 * 
 	 * @param hs HistoryService
-	 * 
+	 * <br>
 	 * Notes:
-	 * {@code
-	 *		IF there's a value
-	 *		..	IF there's no history (no last history value) or it's been an hour
-	 *		..	..	save history record
-	 *		..	..	compute slope
-	 *		..	..	update AI record (set last history values)
-	 *		..	ELSE IF there's no slope (probly means second hist check)
-	 *		..	..	save history record
-	 *		..	..	compute slope
-	 *		..	..	update AI record
-	 *		..	ELSE
-	 *		..	..	IF linear
-	 *		..	..	..	do linear checks
-	 *		..	..	ELSE IF boxcar
-	 *		..	..	..	do boxcar checks
-	 *		..	..	END IF
-	 *		..	END IF
-	 *		END IF
-	 *}
+	 *<br>		IF there's a value
+	 *<br>		..	IF there's no history (no last history value) or it's been an hour
+	 *<br>		..	..	save history record
+	 *<br>		..	..	compute slope
+	 *<br>		..	..	update AI record (set last history values)
+	 *<br>		..	ELSE IF there's no slope (probly means second hist check)
+	 *<br>		..	..	save history record
+	 *<br>		..	..	compute slope
+	 *<br>		..	..	update AI record
+	 *<br>		..	ELSE
+	 *<br>		..	..	IF linear
+	 *<br>		..	..	..	do linear checks
+	 *<br>		..	..	ELSE IF boxcar
+	 *<br>		..	..	..	do boxcar checks
+	 *<br>		..	..	END IF
+	 *<br>		..	END IF
+	 *<br>		END IF
+	 *
 	 *<br>
 	 *	 The interval since the last time stored, ie, 3600-60-15, is due to
 	 *   the delay between the query retrieving the last time scanned, which

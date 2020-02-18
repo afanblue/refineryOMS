@@ -15,9 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
-import React from 'react';
-import { Text } from 'react-konva';
+import React       from 'react';
+import PropTypes   from 'prop-types';
+
+import { Text }    from 'react-konva';
 
 
 export default class ScmText extends React.Component {
@@ -37,8 +40,50 @@ export default class ScmText extends React.Component {
       fontStyle: props.fontStyle
     };
   }
-  
-  static defaultProps = {
+
+  static get propTypes() {
+    return {
+      x: PropTypes.integer,
+      y: PropTypes.integer,
+      width: PropTypes.integer,
+      height: PropTypes.integer,
+      text: PropTypes.string,
+      fill: PropTypes.any,
+      stroke: PropTypes.string,
+      strokeWidth: PropTypes.integer,
+      font: PropTypes.string,
+      fontSize: PropTypes.integer,
+      fontStyle: PropTypes.string
+      }
+  }
+
+  componentDidMount() {
+  }
+
+  handleClick() {
+  }
+
+  render() {
+    var xt = this.props.x;
+    var ht = this.props.height;
+    var wd = this.props.width;
+    var yt = this.props.y;
+    var stk = this.props.fill;
+    var stkw = this.props.strokeWidth;
+    var f   = this.props.font;
+    var fsz = this.props.fontSize;
+    var fst = this.props.fontStyle;
+
+    return (
+      <Text x={xt} y={yt} height={ht} width={wd}
+            text={this.props.text}
+            stroke={stk} strokeWidth={stkw}
+            font={f} fontSize={fsz} fontStyle={fst}  />
+    );
+  }
+}
+
+ScmText.defaultProps = {
     x: 0,
     y: 0,
     width:100,
@@ -51,32 +96,3 @@ export default class ScmText extends React.Component {
     fontSize: 12,
     fontStyle: "normal"
   };
-
-  componentWillMount() {
-  }
-  
-  componentDidMount() {
-  }
-  
-  handleClick() {
-  }
-  
-  render() {
-    var xt = this.props.x;
-    var ht = this.props.height;
-    var wd = this.props.width;
-    var yt = this.props.y;
-    var stk = this.props.fill;
-    var stkw = this.props.strokeWidth;
-    var f   = this.props.font;
-    var fsz = this.props.fontSize;
-    var fst = this.props.fontStyle;
-    
-    return (
-      <Text x={xt} y={yt} height={ht} width={wd} 
-            text={this.props.text} 
-            stroke={stk} strokeWidth={stkw}  
-            font={f} fontSize={fsz} fontStyle={fst}  />
-    );
-  }
-}

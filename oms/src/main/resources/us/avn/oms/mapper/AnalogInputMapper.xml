@@ -98,7 +98,7 @@
          , x.updated, x.scan_time pmc_scan_time, x.float_value
       from analog_input ai join tag t on ai.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
-           join xfer x on t.id = x.id 
+           join raw_data x on t.id = x.id 
      where t.active = 'Y'
      order by 2
   </select>
@@ -115,7 +115,7 @@
          , x.updated, x.scan_time pmc_scan_time, x.float_value
       from analog_input ai join tag t on ai.tag_id = t.id
            join tag_type tt on tt.code = t.tag_type_code
-           join xfer x on t.id = x.id 
+           join raw_data x on t.id = x.id 
      where t.active = 'Y'
        and x.updated = 1
      order by 2

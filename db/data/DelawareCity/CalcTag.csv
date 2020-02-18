@@ -2,23 +2,23 @@ Table,tag,,
 ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
 name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
-CV-0001,Current Temp degrees F,C,None,None,None,None,None,Y
-Com011-CV,Crude Tank 1 Pump Out state,C,None,None,None,None,None,Y
-Com013-CV,Crude Tank 3 Pump Out state,C,None,None,None,None,None,Y
-Com015-CV,Crude Tank 5 Pump Out state,C,None,None,None,None,None,Y
-Com021-CV,,C,None,None,None,None,None,Y
-Com023-CV,,C,None,None,None,None,None,Y
-Com025-CV,,C,None,None,None,None,None,Y
-Com012-CV,Crude Tank 2 Pump Out state,C,None,None,None,None,None,Y
-Com014-CV,Crude Tank 4 Pump Out state,C,None,None,None,None,None,Y
-Com016-CV,Crude Tank 6 Pump Out state,C,None,None,None,None,None,Y
-Com022-CV,,C,None,None,None,None,None,Y
-Com024-CV,,C,None,None,None,None,None,Y
-Com026-CV,,C,None,None,None,None,None,Y
-RU1-3-CV,,C,None,None,None,None,None,Y
-RU1-4-CV,,C,None,None,None,None,None,Y
-RU2-3-CV,,C,None,None,None,None,None,Y
-RU2-4-CV,,C,None,None,None,None,None,Y
-RU1-2-CV,,C,None,None,None,None,None,Y
-RU2-2-CV,,C,None,None,None,None,None,Y
+CV-0001,Current Temp degrees F,C,NULL,NULL,NULL,NULL,NULL,Y
+Com011-CV,Crude Tank 1 Pump Out state,C,NULL,NULL,NULL,NULL,NULL,Y
+Com013-CV,Crude Tank 3 Pump Out state,C,NULL,NULL,NULL,NULL,NULL,Y
+Com015-CV,Crude Tank 5 Pump Out state,C,NULL,NULL,NULL,NULL,NULL,Y
+Com021-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+Com023-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+Com025-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+Com012-CV,Crude Tank 2 Pump Out state,C,NULL,NULL,NULL,NULL,NULL,Y
+Com014-CV,Crude Tank 4 Pump Out state,C,NULL,NULL,NULL,NULL,NULL,Y
+Com016-CV,Crude Tank 6 Pump Out state,C,NULL,NULL,NULL,NULL,NULL,Y
+Com022-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+Com024-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+Com026-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+RU1-3-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+RU1-4-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+RU2-3-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+RU2-4-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+RU1-2-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
+RU2-2-CV,NULL,C,NULL,NULL,NULL,NULL,NULL,Y
 End

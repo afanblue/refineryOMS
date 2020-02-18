@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 
 import {Image}            from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
@@ -30,17 +33,23 @@ class SiteImage extends Component {
        onMouseUp: props.handleMouseUp
      }
   }
-  
+
+  static get propTypes() {
+      return {
+          handleMouseUp: PropTypes.func
+      }
+  }
+
   componentDidMount() {
     const img = new window.Image();
     img.src = "../../images/delcity.png";
     img.onload = () => { this.setState( {img:img} ); }
   }
-  
+
   render () {
     return <Image image={this.state.img}
                   height={IMAGEHEIGHT}
-                  width={IMAGEWIDTH} 
+                  width={IMAGEWIDTH}
                   onMouseUp={this.state.onMouseUp} />
   }
 }

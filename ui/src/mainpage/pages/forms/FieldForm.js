@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {Stage, Layer, Group, Rect} from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
 
@@ -27,6 +30,32 @@ class FieldForm extends Component {
   constructor(props) {
     super(props);
     this.state = {  };
+  }
+
+  static get propTypes() {
+      return {
+          field: PropTypes.object,
+          active: PropTypes.number,
+          c1Lat: PropTypes.number,
+          c1Long: PropTypes.number,
+          c2Lat: PropTypes.number,
+          c2Long: PropTypes.number,
+          childTanks: PropTypes.array,
+          description: PropTypes.string,
+          id: PropTypes.number,
+          name: PropTypes.string,
+          parentId: PropTypes.number,
+          roadImage: PropTypes.object,
+          satelliteImage: PropTypes.object,
+          returnedText: PropTypes.object,
+          parents: PropTypes.array,
+          siteLocation: PropTypes.object,
+          tanks: PropTypes.array,
+          fieldChange: PropTypes.func,
+          fieldUpdate: PropTypes.func,
+          handleMouseUp: PropTypes.func,
+          handleQuit: PropTypes.func
+      }
   }
 
   scaleX( tkLong, tLong, xScale ) {
@@ -47,9 +76,9 @@ class FieldForm extends Component {
     const handleMouseUp = this.props.handleMouseUp;
     const fieldChange = this.props.fieldChange;
     const tankList = this.props.returnedText.tanks;
-    
+
     const site = ud.siteLocation;
-    
+
     var xDivisor = site.c2Long-site.c1Long;
     var xScale = IMAGEWIDTH / xDivisor;
     var yDivisor = site.c2Lat-site.c1Lat;
@@ -69,20 +98,20 @@ class FieldForm extends Component {
             <td className="oms-top">
 
       <form id="FieldForm" >
-        Please enter your field information 
+        Please enter your field information
         <table>
           <tbody className="scrollContent-narrow">
           <tr>
             <th className="oms-spacing-120">&nbsp;</th>
-            <td className="oms-spacing"><img src="images/spacer.png" 
+            <td className="oms-spacing"><img src="images/spacer.png"
                 alt="" height="5px" width="240px"/>
             </td>
           </tr>
           <tr>
             <th className="oms-spacing-120">Field name (10 chars):</th>
             <td className="oms-spacing">
-              <input type="hidden" name="id" value={f.id} />            
-              <input type="text" id="name" name="name" value={f.name} 
+              <input type="hidden" name="id" value={f.id} />
+              <input type="text" id="name" name="name" value={f.name}
                      className={["oms-spacing-50","oms-fontsize-12"].join(' ')}  size="10" maxLength="10"
                      onChange={fieldChange} />
             </td>
@@ -90,7 +119,7 @@ class FieldForm extends Component {
           <tr>
             <td className="oms-spacing-120">Active:</td>
             <td className="oms-spacing">
-              <select id="active" name="active" value={f.active} 
+              <select id="active" name="active" value={f.active}
                       onChange={fieldChange} >
                 <option value="N">N</option>
                 <option value="Y">Y</option>
@@ -116,32 +145,32 @@ class FieldForm extends Component {
           <tr>
             <th className="oms-spacing-120">Satellite Image:</th>
             <td className="oms-spacing">
-              <input type="text" id="satelliteImage" name="satelliteImage" value={f.satelliteImage} 
-                     className={["oms-spacing-180","oms-fontsize-12"].join(' ')}  size="120" maxLength="120" 
+              <input type="text" id="satelliteImage" name="satelliteImage" value={f.satelliteImage}
+                     className={["oms-spacing-180","oms-fontsize-12"].join(' ')}  size="120" maxLength="120"
                      onChange={fieldChange} />
             </td>
           </tr>
           <tr>
             <th className="oms-spacing-120">NW Corner:</th>
             <td className="oms-spacing-180">
-              <input type="text" id="c1Lat" name="c1Lat" value={f.c1Lat} 
-                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
+              <input type="text" id="c1Lat" name="c1Lat" value={f.c1Lat}
+                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12"
                      onChange={fieldChange} />
               &nbsp;
               <input type="text" id="c1Long" name="c1Long" value={f.c1Long}
-                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
+                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12"
                      onChange={fieldChange} />
             </td>
           </tr>
           <tr>
             <th className="oms-spacing-120">SE Corner:</th>
             <td className="oms-spacing-180">
-              <input type="text" id="c2Lat" name="c2Lat" value={f.c2Lat} 
-                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12" 
+              <input type="text" id="c2Lat" name="c2Lat" value={f.c2Lat}
+                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')}  size="20" maxLength="12"
                      onChange={fieldChange} />
               &nbsp;
               <input type="text" id="c2Long" name="c2Long" value={f.c2Long}
-                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')} size="20" maxLength="12" 
+                     className={["oms-spacing-90","oms-fontsize-12"].join(' ')} size="20" maxLength="12"
                      onChange={fieldChange} />
             </td>
           </tr>
@@ -150,7 +179,7 @@ class FieldForm extends Component {
             <td className="oms-spacing">
               <select id="parentId" name="parentId" value={f.parentId}
                       onChange={fieldChange} >
-                {p.map( 
+                {p.map(
                   function(n,x){
                     return <option key={x} value={n.id}>{n.name}</option>
                   } )
@@ -162,7 +191,7 @@ class FieldForm extends Component {
             <th className="oms-spacing-120">Tanks in Unit:</th>
             <td>
               <select multiple={true} name="childTanks" id="childTanks" value={f.childTanks} size={10}
-                     className= {["oms-spacing-120","oms-fontsize-12"].join(' ')} 
+                     className= {["oms-spacing-120","oms-fontsize-12"].join(' ')}
                      onChange={fieldChange}>
                 {tankList.map(function(n,x) {
                             return <option key={x} value={n.id}>{n.name}</option>
@@ -177,9 +206,9 @@ class FieldForm extends Component {
           <tbody>
           <tr  className="oms-spacing">
             <td colSpan="2">
-              &nbsp;<input type="submit" id="closeForm"  name="closeForm"  
+              &nbsp;<input type="submit" id="closeForm"  name="closeForm"
                            value="Quit" onClick={(e) => {handleQuit(e)}}  />
-              &nbsp;<input type="submit" id="submitForm" name="submitForm" 
+              &nbsp;<input type="submit" id="submitForm" name="submitForm"
                            value="Submit" onClick={(e) => {fieldUpdate(e)}} />
             </td>
           </tr>
@@ -201,12 +230,12 @@ class FieldForm extends Component {
           </tr>
         </tbody>
       </table>
-      
+
       </div>
-    );    
-      
+    );
+
   }
-  
+
 }
 
 export default FieldForm;

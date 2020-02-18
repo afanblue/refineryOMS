@@ -34,18 +34,16 @@ import us.avn.oms.domain.Volume;
 public interface TankService {
 	
 	/**
-	 * Method: getAllTanks
-	 * Description: get a collection of Tank objects for all the tanks
-	 * 				in the refinery
+	 * Get a collection of Tank objects for all the tanks
+	 * 	in the refinery
 	 *
 	 * @return collection of all the tanks in the refinery
 	 */
 	public Collection<Tank> getAllTanks( );
 	
 	/**
-	 * Method: getAllTanksInField
-	 * Description: get a collection of Tank objects for all the tanks
-	 * 				in the specified Field
+	 * Get a collection of Tank objects for all the tanks
+	 * 	in the specified Field
 	 *
 	 * @param id (Long) requested field ID
 	 * @return collection of all the tanks in the specified field
@@ -53,9 +51,7 @@ public interface TankService {
 	public Collection<Tank> getAllTanksInField( Long id );
 	
 	/**
-	 * Method: getEstTankVolume
-	 * Description: get estimated tank volume in barrels for
-	 * 				the tank of this ID
+	 * Get estimated tank volume in barrels for the tank of this ID
 	 * 
 	 * @param id - tank ID
 	 * @return - Value object (tank ID, code, value) w/estimated volume in barrels
@@ -63,10 +59,9 @@ public interface TankService {
 	Value getEstTankVolume( Long id );
 	
 	/**
-	 * Method: getEmptiestTankForContent
-	 * Description: get the value object (ID, contents code, volume) for
-	 * 				the tank w/the most amount available for storage (in barrels)
-	 * 				for all the tanks w/the provided content code
+	 * Get the value object (ID, contents code, volume) for
+	 * 	the tank w/the most amount available for storage (in barrels)
+	 * 	for all the tanks w/the provided content code
 	 *
 	 * @param t - String - contents code
 	 * @return Value object (tank ID, code, volume)
@@ -74,10 +69,9 @@ public interface TankService {
 	Value getEmptiestTankForContent( String t );
 	
 	/**
-	 * Method: getFullestTankForContent
-	 * Description: get the value object (ID, contents code, volume) for
-	 * 				the tank w/the least amount available for storage (in barrels)
-	 * 				for all the tanks w/the provided content code
+	 * Get the value object (ID, contents code, volume) for
+	 * 	the tank w/the least amount available for storage (in barrels)
+	 * 	for all the tanks w/the provided content code
 	 * 
 	 * @param t - String - contents code
 	 * @return Value object (tank ID, code, volume)
@@ -85,8 +79,7 @@ public interface TankService {
 	Value getFullestTankForContent( String t );
 	
 	/**
-	 * Method: getTotalTankCapacitiesForContent
-	 * Description: get a collection of value objects (ID, contents code, volume) for
+	 * Get a collection of value objects (ID, contents code, volume) for
 	 * 				the total amount currently stored for tanks for each content code, ie,
 	 * 				the total amount currently stored for all crude tanks, 
 	 * 				for all gasoline tanks, etc.
@@ -96,8 +89,7 @@ public interface TankService {
 	Collection<Value> getTotalTankCapacitiesForContents();
 
 	/**
-	 * Method: getTotalTankVolumesForContent
-	 * Description: get a collection of value objects (ID, contents code, volume) for
+	 * Get a collection of value objects (ID, contents code, volume) for
 	 * 				the total <b>possible</b> storage volume for tanks for 
 	 * 				each content code, ie, the total amount currently stored
 	 * 				for all crude tanks, for all gasoline tanks, etc.
@@ -107,8 +99,31 @@ public interface TankService {
 	Collection<Value> getTotalTankVolumesForContents();
 
 	/**
-	 * Method: getTankCapacitiesForContent
-	 * Description: get a collection of value objects (ID, contents code, volume) for
+	 * get id and volume for the unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank with the most volume for the given contents code.  The 
+	 * volume computed here is a simple "volume of the cylinder" computation and should
+	 * not be used in any transfers. 
+	 *
+	 * @param t (String) contents code
+	 * @return Value object (tank ID, contents, max volume) for all the 
+	 * 			tank with the  containing the given contents
+	 */
+	Value getFullestUnusedTankVolumeForContents( String t );
+	
+	/**
+	 * get id and volume for the unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank with the least volume for the given contents code.  The 
+	 * volume computed here is a simple "volume of the cylinder" computation and should
+	 * not be used in any transfers.   
+	 *
+	 * @param t (String) contents code
+	 * @return Value object (tank ID, contents, min  volume) for all the 
+	 * 			tank with the least volume containing the given contents
+	 */
+	Value getEmptiestUnusedTankVolumeForContents( String t );
+	
+	/**
+	 * Get a collection of value objects (ID, contents code, volume) for
 	 * 				the total amount currently stored for tanks for each content code, ie,
 	 * 				the total amount currently stored for all crude tanks, 
 	 * 				for all gasoline tanks, etc.
@@ -119,14 +134,14 @@ public interface TankService {
 	Collection<Value> getTankCapacitiesForContents( String t );
 	
 	/**
-	 * Method: getTankVolumesForContents
-	 * Description: for the given refinery unit, 
+	 * get id and volume for all unused (i.e., not a source or destination for an active
+	 * or pending transfer) tank volumes for the given contents code  
 	 *
 	 * @param t (String) contents code
 	 * @return Collection of value objects (tank ID, contents, max possible volume) for all the 
 	 * 			tanks containing the given contents
 	 */
-	Collection<Value> getTankVolumesForContents( String t );
+	Collection<Value> getUnusedTankVolumesForContents( String t );
 	
 	/**
 	 * Return collection of tanks in Unit not involved in Active or Scheduled transfers
@@ -138,8 +153,7 @@ public interface TankService {
 	Collection<Value> getUnusedTankVolumesForUnit( String unit);
 	
 	/**
-	 * Method: getLevelVolumesForTank
-	 * Description: returns a Collection of Volume objects for the specified Tank
+	 * Returns a Collection of Volume objects for the specified Tank
 	 * 				This is a mapping of level vs volume to allow for the computation
 	 * 				(interpolation) of volume from level or level from volume
 	 * N.B., there is no temperature correction done.  These are specified for standard
@@ -151,8 +165,7 @@ public interface TankService {
 	Collection<Volume> getLevelVolumesForTank( Long id);
 	
 	/**
-	 * Method: getTank
-	 * Description: get the tank record for the given ID
+	 * Get the tank record for the given ID
 	 * 
 	 * @param id (Long) tank ID to retrieve
 	 * @return Tank object retrieved, null if not present
@@ -160,16 +173,14 @@ public interface TankService {
 	public Tank getTank( Long id);
 	
 	/**
-	 * Method: updateTank
-	 * Description: update the DB record for the given tank object
+	 * Update the DB record for the given tank object
 	 * 
 	 * @param t (Tank)
 	 */
 	void updateTank( Tank t );
 
 	/**
-	 * Method: insertTank
-	 * Description: add provided tank object to database
+	 * Add provided tank object to database
 	 * 
 	 * @param t - Tank to insert
 	 */

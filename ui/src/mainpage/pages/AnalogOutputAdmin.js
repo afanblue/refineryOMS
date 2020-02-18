@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import AOForm          from './forms/AOForm.js';
@@ -61,7 +64,13 @@ class AnalogOutputAdmin extends Component {
     this.finishSiteFetch   = this.finishSiteFetch.bind(this);
     this.finishListFetch   = this.finishListFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -69,16 +78,10 @@ class AnalogOutputAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state ) {
+	return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -94,22 +97,22 @@ class AnalogOutputAdmin extends Component {
                     , aod.prevValue, aod.prevTime, aod.lastHistValue, aod.lastHistTime, aod.unitId);
     this.setState({stage: "itemRetrieved", updateDisplay: true, ao: ao });
   }
-  
+
   finishHistTypesFetch(req) {
     let histTypes = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, histTypes: histTypes });
   }
-  
+
   finishUnitsFetch(req) {
     let unitList = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, unitList: unitList });
   }
-  
+
   finishSiteFetch(req) {
     let sl = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, siteLoc: sl });
   }
-  
+
   handleSelect(event) {
     const id = event.z;
     const loc = "AnalogOutputAdmin.aiSelect";
@@ -127,7 +130,7 @@ class AnalogOutputAdmin extends Component {
     req4.fetchData();
   }
 
-  /** 
+  /**
    * validateForm - x is an AO object
    */
   validateForm( x ) {
@@ -177,18 +180,18 @@ class AnalogOutputAdmin extends Component {
       request();
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
+
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
 
   handleClick() {
-    
+
   };
-  
+
   handleFieldChange(event) {
     const target = event.target;
     const value = target.value;
@@ -212,7 +215,7 @@ class AnalogOutputAdmin extends Component {
     }
     this.setState({ao: aonew } );
   }
-  
+
   handleMouseUp(event) {
       const e = event;
       const t = e.evt;
@@ -232,18 +235,18 @@ class AnalogOutputAdmin extends Component {
       } else {
         aonew.tag.c2Lat = lat;
         aonew.tag.c2Long = long;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
       this.setState( {ao: aonew, nextCorner:nextCorner} );
   }
-  
+
   finishListFetch(resp) {
-    this.setState( {returnedText: resp, 
-                    updateData: false, 
+    this.setState( {returnedText: resp,
+                    updateData: false,
                     updateDisplay:true,
                     stage: "dataFetched" } );
   }
- 
+
   fetchList() {
     const myRequest = SERVERROOT + "/ao/all";
     const loc = "AnalogOutputAdmin.aiSelect";
@@ -257,8 +260,8 @@ class AnalogOutputAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     ao: null,
                     stage: "begin" } );
@@ -266,7 +269,7 @@ class AnalogOutputAdmin extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <AOList aoData = {this.state.returnedText}
@@ -274,9 +277,9 @@ class AnalogOutputAdmin extends Component {
                        handleQuit = {this.handleQuit}
                />
       case "itemRetrieved":
-        if( (this.state.ao === null) || (this.state.histTypes === null) || 
+        if( (this.state.ao === null) || (this.state.histTypes === null) ||
             (this.state.unitList === null) || (this.state.siteLoc === null) ) {
-          return <Waiting />        
+          return <Waiting />
         } else {
           return <AOForm aoData    = {this.state.returnedText}
                          ao        = {this.state.ao}

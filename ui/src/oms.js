@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, { Component } from 'react';
+import PropTypes            from 'prop-types';
 //import logo from './logo.svg';
 
 import './reset.css';
@@ -32,6 +34,7 @@ import { SESSIONLENGTH, RESPONSENOTJSON } from './Parameters.js';
 import Contents     from './mainpage/Contents.js';
 //require('es6-promise').polyfill();
 require('isomorphic-fetch');
+
 
 
 function AppDisplay(props) {
@@ -85,6 +88,15 @@ function AppDisplay(props) {
   );
 }
 
+AppDisplay.propTypes = {
+	classifications: PropTypes.any,
+	option: PropTypes.any,
+	menus: PropTypes.any,
+	selected: PropTypes.any,
+	handleCatSelect: PropTypes.func,
+	handleMenuSelect: PropTypes.func
+}
+
 function MainDisplay(props) {
   if( props.loggedIn ) {
     return <AppDisplay classifications={props.classifications}
@@ -95,7 +107,7 @@ function MainDisplay(props) {
                        handleMenuSelect={props.handleMenuSelect}
            />;
   } else {
-    return <LoginDisplay alias={props.alias} 
+    return <LoginDisplay alias={props.alias}
                          handleLoginChange={props.handleLoginChange}
                          handleLogin={props.handleLogin}
            />;
@@ -187,9 +199,9 @@ class OMS extends Component {
                       menuList: vx.menus,
                       timerID: myTimerID
                      });
-    }).catch(function(error) { 
+    }).catch(function(error) {
        alert("Problem logging in \n"+error);
-       Log.error("Validating user (" + alias + ") " + error,"OMS (handleLogin)");  
+       Log.error("Validating user (" + alias + ") " + error,"OMS (handleLogin)");
     });
   }
 
@@ -203,7 +215,7 @@ class OMS extends Component {
     let z = event.z;
     if( z === undefined ) {z=event.z1;}
     if( z === undefined ) {z=event.z2;}
-    if( z === undefined ) {z=event.z3;}    
+    if( z === undefined ) {z=event.z3;}
     this.setState({option:z,activity:"menuSelect" });
   }
 

@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>xfer</artifactId>
+  <artifactId>pmc</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>xfer</name>
+  <name>pmc</name>
   
   <properties>
-    <spring.version>5.0.7.RELEASE</spring.version>
+    <spring.version>5.2.3.RELEASE</spring.version>
     <slf4j.version>1.7.25</slf4j.version>
     <mybatis.version>3.4.5</mybatis.version>
-    <mysql.connector.version>8.0.11</mysql.connector.version>
+    <mariadb.driver.version>2.5.4</mariadb.driver.version>
   </properties>
   
     <dependencies>
@@ -69,11 +69,11 @@
       <version>20040616</version>
     </dependency>
 
-    <!-- MySQL -->
+    <!-- MariaDB -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${mysql.connector.version}</version>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>${mariadb.driver.version}</version>
     </dependency>
      
     <!-- myBatis dependency -->
@@ -103,7 +103,7 @@
     </dependencies>
   
   <build>
-    <finalName>xfer</finalName>
+    <finalName>pmc</finalName>
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
@@ -131,7 +131,7 @@
             <manifest>
               <classpathPrefix>libs/</classpathPrefix>
               <mainClass>
-                us.avn.oms.xfer.Xfer
+                us.avn.oms.scada.Pmc
               </mainClass>
             </manifest>
           </archive>

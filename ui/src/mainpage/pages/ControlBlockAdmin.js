@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
+import PropTypes          from 'prop-types';
+
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
 import DefaultContents from './DefaultContents.js';
 import ControlBlockForm from './forms/ControlBlockForm.js';
@@ -64,7 +67,13 @@ class ControlBlockAdmin extends Component {
     this.handleDIFetch     = this.handleDIFetch.bind(this);
     this.handleListFetch   = this.handleListFetch.bind(this);
   }
-  
+
+  static get propTypes() {
+      return {
+          stage: PropTypes.string
+      }
+  }
+
   handleErrors(response) {
     if (!response.ok) {
         throw Error(response.status+" ("+response.statusText+")");
@@ -72,16 +81,10 @@ class ControlBlockAdmin extends Component {
     return response;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.stage !== this.state.stage )
-    {
-      this.setState({ stage: nextProps.stage,
-                      updateData: true,
-                      updateDisplay: false,
-                      returnedText: null });
-    }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
   }
-  
+
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
@@ -99,48 +102,48 @@ class ControlBlockAdmin extends Component {
                    cb: cb
                   });
   }
-  
+
   handleAIFetch(req) {
     let allAIInputs = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, allAIInputs: allAIInputs });
-  }  
+  }
 
   handleDIFetch(req) {
     let allDIInputs = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, allDIInputs: allDIInputs });
   }
-  
+
   handleOutFetch(req) {
     let allOutputs = req;
     this.setState({stage: "itemRetrieved", updateDisplay: true, allOutputs: allOutputs });
-  }  
+  }
 
 
   fetchCBselection( id ) {
     let req0 = new OMSRequest(loc, SERVERROOT + "/cb/" + id,
                             "Problem selecting control block - id "+id, this.handleCBFetch);
     req0.fetchData();
-    
+
     let req1 = new OMSRequest(loc, SERVERROOT + "/tag/types/AO,DO",
                             "Problem retrieving calc types", this.handleOutFetch);
     req1.fetchData();
-    
+
     let req2 = new OMSRequest(loc, SERVERROOT + "/tag/idname/AI",
                             "Problem retrieving AI types", this.handleAIFetch);
     req2.fetchData();
-    
+
     let req3 = new OMSRequest(loc, SERVERROOT + "/tag/idname/DI",
                             "Problem retrieving DI types", this.handleDIFetch);
     req3.fetchData();
   }
-  
+
   handleSelect(event) {
     const id = event.z;
     this.setState({stage: "dataFetched", updateDisplay: false, newCB: (id===0) });
     this.fetchCBselection(id);
   }
-  
-  /** 
+
+  /**
    * validateForm - x is an CB object
    */
   validateForm( x ) {
@@ -188,23 +191,23 @@ class ControlBlockAdmin extends Component {
         body: b
       }).then(this.handleErrors)
         .then(alert("Control block updated") )
-        .catch(function(error) { 
+        .catch(function(error) {
           alert("Problem "+(id===0?"inserting":"updating")+" control block "
                 +"for id "+id+"\n"+error);
-          Log.error(className+".cbUpdate: Error - " + error);  
+          Log.error(className+".cbUpdate: Error - " + error);
       });
     }
   }
-  
+
   componentDidMount() {
     this.fetchList();
   }
-    
-  componentDidUpdate( prevProps, prevState ) {
-  }
 
-  handleClick() {  };
-  
+//  componentDidUpdate( prevProps, prevState ) {
+//  }
+
+  handleClick() {  }
+
   handleFieldChange(event) {
     const target = event.target;
     const field = target.name;
@@ -227,7 +230,7 @@ class ControlBlockAdmin extends Component {
       this.setState({cb: cbnew } );
     }
   }
-  
+
   handleMouseUp(event) {
       const e = event;
       const t = e.evt;
@@ -247,18 +250,18 @@ class ControlBlockAdmin extends Component {
       } else {
         cbnew.tag.c2Lat = lat;
         cbnew.tag.c2Long = long;
-        nextCorner = 1;        
+        nextCorner = 1;
       }
       this.setState( {cb: cbnew, nextCorner:nextCorner} );
   }
-  
+
   handleListFetch(resp) {
-    this.setState( {returnedText: resp, 
-                    updateData: false, 
+    this.setState( {returnedText: resp,
+                    updateData: false,
                     updateDisplay:true,
                     stage: "dataFetched" } );
   }
-   
+
   fetchList() {
     let req = new OMSRequest(loc, SERVERROOT + "/cb/all",
                             "Problem retrieving control block list", this.handleListFetch);
@@ -268,8 +271,8 @@ class ControlBlockAdmin extends Component {
   handleQuit(event) {
     event.preventDefault();
     this.fetchList();
-    this.setState( {returnedText: null, 
-                    updateData: true, 
+    this.setState( {returnedText: null,
+                    updateData: true,
                     updateDisplay:true,
                     cb: null,
                     stage: "begin" } );
@@ -277,7 +280,7 @@ class ControlBlockAdmin extends Component {
 
   render() {
     switch( this.state.stage ) {
-  	  case "begin":
+      case "begin":
         return <Waiting />
       case "dataFetched":
         return <ControlBlockList cbData = {this.state.returnedText}
