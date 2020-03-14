@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "acorn": "^7.1.0",
+    "acorn": "^7.1.1",
     "ajv": "^6.11.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
