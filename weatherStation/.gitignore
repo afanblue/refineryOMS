@@ -1,1 +1,6 @@
-/target/
+# weather station directories
+weatherStation/libs
+weatherStation/target/classes
+weatherStation/target/generated-sources
+weatherStation/target/maven-archiver
+weatherStation/target/maven-status

@@ -15,6 +15,13 @@ logs/**
 # DB archive files
 *.arch
 
+# devio directories
+devio/libs
+devio/target/classes
+devio/target/javadoc-bundle-options
+devio/target/maven-archiver
+devio/target/maven-status
+
 # data-server target directories
 data-server/target/classes
 data-server/target/generated-sources
@@ -26,25 +33,44 @@ data-server/target/maven-status
 oms/target/generated-sources
 oms/target/maven-*
 
+# order directories
+order/libs
+order/target/classes
+order/target/javadoc-bundle-options
+order/target/maven-archiver
+order/target/maven-status
+
 # scada target directories
 scada/target/generated-sources
+scada/libs
+scada/target/classes
 scada/target/maven-archiver
 scada/target/maven-status
 
 # simulator target directories
+sim/libs
+sim/target/classes
 sim/target/generated-sources
 sim/target/maven-archiver
 sim/target/maven-status
 
 # transfer target directories
+transfer/libs
+transfer/target/classes
 transfer/target/generated-sources
 transfer/target/maven-archiver
 transfer/target/maven-status
-/scada/target/maven-status
-/scada/target/maven-archiver
-/scada/target/classes
-/transfer/target/maven-archiver
-/transfer/target/maven-status
-/sim/target/classes
-/oms/target/maven-archiver
-/oms/target/maven-status
+
+# watchdog directories
+watchdog/libs
+watchdog/target/classes
+watchdog/target/generated-sources
+watchdog/target/maven-archiver
+watchdog/target/maven-status
+
+# weather station directories
+weatherStation/libs
+weatherStation/target/classes
+weatherStation/target/generated-sources
+weatherStation/target/maven-archiver
+weatherStation/target/maven-status
