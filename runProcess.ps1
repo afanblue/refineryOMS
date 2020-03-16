@@ -47,10 +47,10 @@ gzip $NWNM
 
 Start-Sleep -Seconds 5
 
-cd  $env:OMS\$DIR
+cd  $env:OMS\exec
 pwd
 
-$CLASSPATH=".;target/$JAR.jar;libs/*"
+$CLASSPATH=".;$JAR.jar;libs/*"
 echo $CLASSPATH
 $TLOGNM=$LOGNM+$NFX+".log"
 $OUT=$env:OMS_LOGS,$TLOGNM -join "\"
