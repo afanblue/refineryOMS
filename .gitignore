@@ -61,6 +61,7 @@ transfer/target/generated-sources
 transfer/target/maven-archiver
 transfer/target/maven-status
 
+
 # watchdog directories
 watchdog/libs
 watchdog/target/classes
