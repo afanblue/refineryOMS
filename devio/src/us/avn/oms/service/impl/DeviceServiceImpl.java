@@ -28,8 +28,8 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceMapper.getAllDevices();
 	}
 	
-	public Collection<Device> getAllActiveDevices() {
-		return deviceMapper.getAllActiveDevices();
+	public Collection<Device> getAllActiveDevices( Integer sec) {
+		return deviceMapper.getAllActiveDevices( sec );
 	}
 	
 	public Collection<Device> getAllActiveDevicesOfType( Long t ) {

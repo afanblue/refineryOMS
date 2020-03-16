@@ -28,6 +28,7 @@ class Field extends Component {
     super(props);
     this.state = {
       stage: props.stage,
+      img: props.img,
       updateData: false,
       updateDisplay: true,
       field: props.field,
@@ -43,11 +44,16 @@ class Field extends Component {
     var field = this.state.field;
     img.src = (field.roadImage===null?field.satelliteImage:field.roadImage);
     img.onload = () => { this.setState( {img:img} ); }
+  }
 
+  componentDidUpdate( prevProps, prevState ) {
+//    this.setState({ field: prevProps.field } );
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    return state;
+    return { field: nextProps.field,
+             siteLoc: nextProps.siteLoc,
+             tags: nextProps.tags };
   }
 
   handleErrors(response) {

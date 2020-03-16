@@ -22,8 +22,8 @@ public class AddressServiceImpl implements AddressService {
 		return addrMapper.getAddressesForDevice(devId);
 	}
 	
-	public Collection<Address> getActiveAddressesForDeviceByType( Long devId, String type ) {
-		return addrMapper.getActiveAddressesForDeviceByType(devId, type);
+	public Collection<Address> getActiveAddressesForDeviceByType( Long devId, String type, Integer sec ) {
+		return addrMapper.getActiveAddressesForDeviceByType(devId, type, sec);
 	}
 	
 	public Address getAddress( Long id) {

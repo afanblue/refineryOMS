@@ -16,13 +16,8 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.Collection;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * railroad tank cars DOT-111
@@ -31,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Quantities are 34,500 gal (821 bbl)
  *                
  */
-public class TankCar implements Serializable {
+public class TankCar extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -88,21 +83,6 @@ public class TankCar implements Serializable {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
-	}
-
-	
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
 	}
 
 }

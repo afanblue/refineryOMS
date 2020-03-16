@@ -1,7 +1,7 @@
 Table,device,,,
 ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
-description,type,model,param1,param2,param3,param4,cycle_time,offset,active
-Default OMS Data Simulator,SIM,OMS,NULL,NULL,NULL,NULL,60,0,Y
-Weather Station Data Collection,WS,XML,KSGR,NULL,NULL,NULL,20,0,Y
+description,type,model,param1,param2,param3,param4,cycle_time,offset,seq_no,active
+Default OMS Data Simulator,SIM,OMS,NULL,NULL,NULL,NULL,10,0,99,Y
+Weather Station Data Collection,WS,XML,KSGR,NULL,NULL,NULL,1800,60,1,Y
 End

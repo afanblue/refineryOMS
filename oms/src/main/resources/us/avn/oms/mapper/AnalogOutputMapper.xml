@@ -55,16 +55,6 @@
     <result property="name"          column="name" />
   </resultMap>
   
-  <resultMap id="aoValueMap" type="AIValue" >
-    <result property="tagId"       column="id" />
-    <result property="name"        column="name" />
-    <result property="value"       column="value" />
-    <result property="valueText"   column="value_text" />
-    <result property="scanTime"    column="scan_time" />
-    <result property="alarmCode"   column="code" />
-    <result property="alarmColor"  column="color" /> 
-  </resultMap>
-
   <select id="getAllActiveAOtags" resultMap="analogOutputResultMap">
     select ao.tag_id, t.name, ao.zero_value, ao.max_value
          , ao.hist_type_code, ao.percent, ao.slope, ao.scan_value

@@ -79,6 +79,7 @@
   <resultMap id="aiValueMap" type="AIValue" >
     <result property="tagId"       column="id" />
     <result property="name"        column="name" />
+    <result property="description" column="description" />
     <result property="value"       column="value" />
     <result property="valueText"   column="value_text" />
     <result property="scanTime"    column="scan_time" />
@@ -117,7 +118,7 @@
            join tag_type tt on tt.code = t.tag_type_code
            join raw_data x on t.id = x.id 
      where t.active = 'Y'
-       and x.updated = 1
+       and x.updated != 0
      order by 2
   </select>
 
@@ -170,7 +171,7 @@
   </select>
   
   <select id="getCurrentAIValues" resultMap="aiValueMap" >
-    select ai.tag_id id, scan_value/(max_value-zero_value) value
+    select ai.tag_id id, (scan_value-zero_value)/(max_value-zero_value) value
          , coalesce(an.color,'darkgreen') color
       from analog_input ai left outer join alarm_info an on ai.tag_id=an.tag_id 
      order by ai.tag_id
@@ -245,7 +246,7 @@
   </insert>
   
   <select id="getProcUnitValues" resultMap="aiValueMap">
-    select tc.id, tc.name, ai.scan_value value
+    select tc.id, tc.name, tc.description, ai.scan_value value
          , concat(format(ai.scan_value,2)," ", u.code) value_text
          , ai.scan_time
          , coalesce(alm.code,'NORM') code, ac.item_value color
@@ -258,7 +259,7 @@
       left outer join alarm_color_list_vw ac on coalesce(alm.code,'NORM') = ac.item_name          
      where tp.name = #{param1}
     union
-    select tc.id, tc.name, ai.scan_value value
+    select tc.id, tc.name, tc.description, ai.scan_value value
          , concat(format(ai.scan_value,2)," ",u.code) value
          , ai.scan_time
          , coalesce(alm.code,'NORM') code, ac.item_value color

@@ -16,20 +16,15 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.Collection;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  *              id: 16
  *    child_tag_id: 1
  *   parent_tag_id: 19
  */
-public class RelTagTag implements Serializable {
+public class RelTagTag extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -106,21 +101,6 @@ public class RelTagTag implements Serializable {
 
 	public void setChild(String child) {
 		this.child = child;
-	}
-
-	
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
 	}
 
 }

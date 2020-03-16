@@ -41,6 +41,9 @@ python BuildRefCodeViews.py %1
 rem  load watchdog table
 python LoadDB.py %1 data/%siteName%/watchdog.csv
 
+rem  load crontab table
+python LoadDB.py %1 data/%siteName%/crontab.csv
+
 rem  load unit types table
 python LoadDB.py %1 data/%siteName%/unit_type.csv
 
@@ -134,11 +137,17 @@ python LoadDB.py %1 data/%siteName%/sim_io.csv
 rem  load calculated
 python LoadDB.py %1 data/%siteName%/calculated.csv
 
+rem  load control block
+python LoadDB.py %1 data/%siteName%/control_block.csv
+
 rem  load tanks
 python LoadDB.py %1 data/%siteName%/tank.csv
 
 rem  load fields
 python LoadDB.py %1 data/%siteName%/field.csv
+
+rem  load holds (for carriers
+python LoadDB.py %1 data/%siteName%/hold.csv
 
 rem  load shipment
 python LoadDB.py %1 data/%siteName%/shipment.csv
@@ -158,8 +167,20 @@ python LoadDB.py %1 data/%siteName%/vertex.csv
 rem  load volumes
 python LoadDB.py %1 data/%siteName%/volume.csv
 
+rem  plot groups
+python LoadDB.py %1 data/%siteName%/plotGroups.csv
+
+rem  raw data
+python LoadDB.py %1 data/%siteName%/rawData.csv
+
 rem  load transfers
 python LoadDB.py %1 data/%siteName%/transfer.csv
+
+rem  load history
+python LoadDB.py %1 data/%siteName%/history.csv
+
+rem  load alarms
+python LoadDB.py %1 data/%sitename%/alarm.csv
 
 rem  set the initial values for the analog inputs
 mysql -u'oms' --password=%1 --execute="source omsStart.sql" -Doms

@@ -56,6 +56,10 @@ class OrderForm extends Component {
   render() {
     var x          = this.props.order;
     var items      = x.items;
+    if( items.size === 0 ) {
+		var i = new Item(0,1,"Y","",0,0,0);
+		items.unshift(i);
+	}
     var sid        = "000000"+x.shipmentId.toString();
     sid            = sid.substring(sid.length-6);
     const option   = this.props.option;
@@ -105,7 +109,7 @@ class OrderForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-150">Order Type:</th>
+                <th className="oms-spacing-150">Carrier:</th>
                 <td className="oms-spacing">
                   <select id="carrierId" name="carrierId" value={x.carrierId}
                           onChange={fc} >
@@ -124,9 +128,8 @@ class OrderForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-150">Type:</th>
+                <th className="oms-spacing-150"> Order Type:</th>
                 <td className="oms-spacing">
-                  {purchaseSelect}
                 </td>
               </tr>
               <tr>

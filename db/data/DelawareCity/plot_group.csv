@@ -6,4 +6,12 @@ id3,tag,id,name,tag,tag_type_code,tag_type_code
 id4,tag,id,name,tag,tag_type_code,tag_type_code
 Data,,,
 id,name,id1,id2,id3,id4,active
+1,Local,DCT-0000|AI,CTA-101|AI,DCP-0000|AI,DCR-0000|AI,Y
+2,Crude1,CT01-L|AI,CT02-L|AI,CT03-L|AI,CT04-L|AI,Y
+3,Crude2,CT05-L|AI,CT06-L|AI,CT07-L|AI,CT08-L|AI,Y
+4,Crude3,CT09-L|AI,CT10-L|AI,CT11-L|AI,CT12-L|AI,Y
+5,Gasoline1,GT01-L|AI,GT02-L|AI,GT03-L|AI,GT04-L|AI,Y
+6,Gasoline2,GT05-L|AI,GT06-L|AI,GT07-L|AI,GT08-L|AI,Y
+7,Gasoline3,GT09-L|AI,GT10-L|AI,GT11-L|AI,GT12-L|AI,Y
+8,Asphalt1,AT01-L|AI,AT02-L|AI,AT03-L|AI,AT04-L|AI,Y
 End

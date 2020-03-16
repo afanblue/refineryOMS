@@ -16,14 +16,9 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class UserPriv implements Serializable {
+public class UserRole extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -33,9 +28,64 @@ public class UserPriv implements Serializable {
      *  where u.alias = ?
 	 */
 	
+	private Long userRoleId;
+	private Long userId;
+	private Long roleId;
 	private String username;
 	private String role;
 	  
+	
+	public UserRole() {}
+	
+	public UserRole( Long urId, Long uId, Long rId ) {
+		userRoleId = urId;
+		userId = uId;
+		roleId = rId;
+	}
+
+	/**
+	 * @return the userRoleId
+	 */
+	public Long getUserRoleId() {
+		return userRoleId;
+	}
+
+	/**
+	 * @param userRoleId the userRoleId to set
+	 */
+	public void setUserRoleId(Long userRoleId) {
+		this.userRoleId = userRoleId;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public Long getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	
+
+	/**
+	 * @return the roleId
+	 */
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	/**
+	 * @param roleId the roleId to set
+	 */
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+	
 
 	public String getUsername() {
 		return this.username;
@@ -52,21 +102,6 @@ public class UserPriv implements Serializable {
 
 	public void setRole(String r) {
 		this.role = r;
-	}
-
-
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
 	}
 
 }

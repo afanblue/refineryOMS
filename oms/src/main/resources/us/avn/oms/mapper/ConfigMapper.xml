@@ -60,7 +60,7 @@
      where id= #{id}
   </update>
   
-  <insert id="insertConfigurationItem">
+  <insert id="insertConfigurationItem" parameterType="Config">
     insert config( item_name, item_value) 
     values (#{key}, #{value})
     on duplicate key update

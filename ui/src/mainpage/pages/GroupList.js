@@ -50,6 +50,17 @@ class GroupList extends Component {
           stage: PropTypes.string
       }
   }
+  static getDerivedStateFromProps(nextProps, state) {
+    return state;
+  }
+
+  componentDidUpdate( prevProps, prevState ) {
+    switch (this.state.stage) {
+      case "begin":
+        break;
+      default:
+    }
+  }
 
   handleErrors(response) {
     if (!response.ok) {
@@ -95,9 +106,12 @@ class GroupList extends Component {
     let menuSelect = this.menuSelect;
     let data = this.state.returnedText;
 //    let puColumns = [];
-    if( data[0].id === 0) {
-      data.shift(1);
+	if( data.length != 0 ) {
+      if( data[0].id === 0) {
+        data.shift(1);
+      }
     }
+
     let option = (this.state.option===null)?data[0].id:this.state.option;
     let activity = (this.state.activity===null)?"begin":this.state.activity;
 /*    data.forEach((i,x) => {
@@ -148,7 +162,7 @@ class GroupList extends Component {
                         <tr key={x}>
                           <td className={"oms-spacing-150"}>
                             <button type="button"
-                                    className={["oms-spacing-70","link-button","oms-fontsize-12"].join(' ')}
+                                    className={["oms-spacing-120","link-button","oms-fontsize-12"].join(' ')}
                                     onClick={() => {menuSelect({z1})}} >{n.name}
                             </button>
                           </td>

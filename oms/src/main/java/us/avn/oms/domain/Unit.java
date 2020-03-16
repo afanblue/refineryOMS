@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *          active: Y
  *          
  */
-public class Unit implements Serializable {
+public class Unit extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -98,21 +98,6 @@ public class Unit implements Serializable {
 
 	public void setUnitType(String unitType) {
 		this.unitType = unitType;
-	}
-
-	
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
 	}
 
 }

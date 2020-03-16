@@ -20,7 +20,7 @@
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
 
-import {SERVERROOT} from '../../Parameters.js';
+import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import DefaultContents from './DefaultContents.js';
 import Log             from '../requests/Log.js';
@@ -50,7 +50,7 @@ class TransferAdmin extends Component {
       statuses: null,
       sources: null,
       color: "green",
-      type: props.type,
+      type: "B",
       nextCorner: 1
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -68,7 +68,7 @@ class TransferAdmin extends Component {
   static get propTypes() {
       return {
           stage: PropTypes.string,
-          type: PropTypes.any
+          type: PropTypes.string
       }
   }
 
@@ -89,7 +89,7 @@ class TransferAdmin extends Component {
     if( nextState.stage !== this.state.stage ) { sts = true; }
     if( nextState.type  !== this.state.type  ) { sts = true; }
     if( nextProps.type !== this.state.type ) {
-      this.fetchList();
+      this.fetchList(nextProps.type);
     }
     return sts;
   }
@@ -109,6 +109,10 @@ class TransferAdmin extends Component {
   }
 
   finishTypesFetch(req) {
+    let blankItem = {};
+    blankItem.code = null;
+    blankItem.name = '---';
+    req.unshift(blankItem);
     this.setState({stage: "itemRetrieved", updateDisplay: true, transferTypes:req });
   }
 
@@ -216,7 +220,7 @@ class TransferAdmin extends Component {
   }
 
   componentDidMount() {
-    this.fetchList();
+    this.fetchList(this.state.type);
   }
 
 //  componentDidUpdate( prevProps, prevState ) {
@@ -243,10 +247,10 @@ class TransferAdmin extends Component {
   }
 
 
-  fetchList() {
+  fetchList( type ) {
     const clsMthd = "TransferAdmin.fetchList";
-    const myRequest = SERVERROOT + "/transfer/all/"+this.state.type;
-    Log.info("fetchList - type: "+this.state.type);
+    const myRequest = SERVERROOT + "/transfer/all/"+type;
+    Log.info("fetchList - type: "+type);
     if( myRequest !== null ) {
       const request = async () => {
         try {
@@ -255,6 +259,7 @@ class TransferAdmin extends Component {
           this.setState( {returnedText: json,
                           updateData: false,
                           updateDisplay:true,
+                          type:type,
                           stage: "dataFetched" } );
         } catch( error ) {
           let emsg = "Problem fetching transfer list";
@@ -268,7 +273,7 @@ class TransferAdmin extends Component {
 
   handleQuit(event) {
     event.preventDefault();
-    this.fetchList();
+    this.fetchList(this.state.type);
     this.setState( {returnedText: null,
                     updateData: true,
                     updateDisplay:true,

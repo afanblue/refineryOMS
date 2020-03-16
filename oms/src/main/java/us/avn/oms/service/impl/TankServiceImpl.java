@@ -91,10 +91,9 @@ public class TankServiceImpl implements TankService {
 	
 	@Override
 	/**
-	 * Method: getEmptiestTankForContent
-	 * Description: get the value object (ID, contents code, volume) for
-	 * 				the tank w/the most amount available for storage (in barrels)
-	 * 				for all the tanks w/the provided content code
+	 * Get the value object (ID, contents code, volume) for the tank w/the least amount 
+	 * (in barrels) for all the tanks w/the provided content code which is not currently 
+	 * being used in a transfer
 	 * 
 	 * @param t - String - contents code
 	 * @return Value object (tank ID, code, volume)
@@ -104,9 +103,9 @@ public class TankServiceImpl implements TankService {
 	}
 	
 	/**
-	 * Return the value object (ID, contents code, volume) for
-	 * the tank w/the least amount available for storage (in barrels)
-	 * for all the tanks w/the provided content code
+	 * Return the value object (ID, contents code, volume) for the tank w/the most amount
+	 * (in barrels) for all the tanks w/the provided content code which is not currently 
+	 * being used in a transfer
 	 * 
 	 * @param t - String - contents code
 	 * @return Value object (tank ID, code, volume)

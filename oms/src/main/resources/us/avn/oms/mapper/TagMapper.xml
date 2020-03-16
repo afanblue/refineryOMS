@@ -332,10 +332,10 @@
           , c1_lat, c1_long, c2_lat, c2_long, active )
     values( #{name}, #{description}, #{tagTypeCode}, #{misc}
           , #{c1Lat}, #{c1Long}, #{c2Lat}, #{c2Long}, #{active})
-    on duplicate key update
-            tag_type_code = #{tagTypeCode}, misc = #{misc}
-          , c1_lat = #{c1Lat}, c1_long = #{c1Long}
-          , c2_lat = #{c2Lat}, c2_long = #{c2Long}, active = #{active}
+    on duplicate key
+    update tag_type_code = #{tagTypeCode}, misc = #{misc}
+         , c1_lat = #{c1Lat}, c1_long = #{c1Long}
+         , c2_lat = #{c2Lat}, c2_long = #{c2Long}, active = #{active}
     <selectKey keyProperty="id" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID();
     </selectKey>

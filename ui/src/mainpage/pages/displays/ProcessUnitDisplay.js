@@ -48,45 +48,15 @@ class ProcessUnitDisplay extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    return state;
-//    this.setState({ option: nextProps.option,
-//                    items: nextProps.items,
-//                    itemSelect: nextProps.itemSelect });
+    return { option: nextProps.option,
+                     items: nextProps.items,
+                     itemSelect: nextProps.itemSelect };
   }
 
   render () {
     let itemSelect = this.state.itemSelect;
     let it = this.state.items;
     let puColumns = [];
-    it.forEach((i,x) => {
-      if( !((x+1) % 3) ) {
-        let it0 = it[x-2];
-        let it1 = it[x-1];
-        let it2 = it[x];
-        let AIV0 = new AIValue(it0.tagId,it0.name,it0.value,it0.valueText,it0.scanTime,it0.alarmCode,it0.alarmColor);
-        let AIV1 = new AIValue(it1.tagId,it1.name,it1.value,it1.valueText,it1.scanTime,it1.alarmCode,it1.alarmColor);
-        let AIV2 = new AIValue(it2.tagId,it2.name,it2.value,it2.valueText,it2.scanTime,it2.alarmCode,it2.alarmColor);
-        let il = new IL3(AIV0,AIV1,AIV2);
-        puColumns.push(il);
-      }
-    });
-    const dl = it.length;
-    const rem = dl%3;
-    if( rem > 0 ) {
-      let AIV2 = new AIValue(0,"",null,"",null,"NORM","green");
-      let AIV1 = new AIValue(0,"",null,"",null,"NORM","green");
-      let AIV0 = new AIValue(0,"",null,"",null,"NORM","green");
-      let x = dl-rem;
-      if( rem > 1 ) {
-        let it1 = it[x+1];
-        AIV1 = new AIValue(it1.tagId,it1.name,it1.value,it1.valueText,it1.scanTime,it1.alarmCode,it1.alarmColor);
-      }
-      let it0  = it[x];
-      AIV0 = new AIValue(it0.tagId,it0.name,it0.value,it0.valueText,it0.scanTime,it0.alarmCode,it0.alarmColor);
-      let il = new IL3(AIV0,AIV1,AIV2);
-      puColumns.push(il);
-    }
-
     var n = new Date();
     var now = n.toLocaleString('en-US');
     return(
@@ -104,21 +74,9 @@ class ProcessUnitDisplay extends Component {
               <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
               Tag
             </td>
-            <td className={"oms-spacing-90"}>
+            <td className={"oms-spacing-240"}>
               <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-              Value
-            </td>
-            <td className={"oms-spacing-120"}>
-              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-              Tag
-            </td>
-            <td className={"oms-spacing-90"}>
-              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-              Value
-            </td>
-            <td className={"oms-spacing-120"}>
-              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
-              Tag
+              Description
             </td>
             <td className={"oms-spacing-90"}>
               <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
@@ -127,18 +85,12 @@ class ProcessUnitDisplay extends Component {
           </tr>
         </thead>
         <tbody className={"scrollContent"}>
-          {puColumns.map(
+          {it.map(
             function(n,x) {
               let ztc = "#C3C2B9";
-              let zx1 = n.i1;
-              const z1 = zx1.id;
-              let zx1c = zx1.color;
-              let zx2 = n.i2;
-              const z2 = zx2.id;
-              let zx2c = zx2.color;
-              let zx3 = n.i3;
-              const z3 = zx3.id;
-              let zx3c = zx3.color;
+              let zx1 = n;
+              const z1 = zx1.tagId;
+              let zx1c = zx1.alarmColor;
               return (
                 <tr key={x}>
                   <td className={"oms-spacing-120"}>
@@ -147,27 +99,11 @@ class ProcessUnitDisplay extends Component {
                       <div style={{"color":ztc}}>{zx1.name}</div>
                     </button>
                   </td>
+                  <td className={"oms-spacing-240"}>
+                    <div style={{"color":ztc}}>{zx1.description}</div>
+                  </td>
                   <td className={"oms-spacing-90"}>
                     <div style={{"color":zx1c}}>{zx1.valueText}</div>
-                  </td>
-                  <td className={"oms-spacing-120"}>
-                    <button type="button" className="link-button"
-                            onClick={() => {itemSelect({z2})}} >
-                      <div style={{"color":ztc}}>{zx2.name}</div>
-                    </button>
-                  </td>
-                  <td className={"oms-spacing-90"}>
-                    <div style={{"color":zx2c}}>{zx2.valueText}</div>
-                  </td>
-                  <td className={"oms-spacing-120"}>
-                    <button type="button" className="link-button"
-                            onClick={() => {itemSelect({z3})}} >
-                      <div style={{"color":ztc}}>{zx3.name}</div>
-                    </button>
-                  </td>
-                  <td className={"oms-spacing-90"}>
-                      <div style={{"color":zx3c}}>{zx3.valueText}</div>
-
                   </td>
                 </tr>
               )

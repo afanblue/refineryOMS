@@ -6,29 +6,35 @@ IF "%~2" == "" GOTO showUsage
 IF "%~3" == "" GOTO showUsage
 
 rem create device I/O process
-schtasks /create /tn "OMSDeviceIO" /tr %3\runDevIO.bat /sc OMSSTART /ru %1 /rp %2
+schtasks /create /xml %3\OMSDeviceIO /ru %1 /rp %2
 
-rem create simulator process
-schtasks /create /tn "OMSSimulator" /tr %3\runSimulate.bat /sc ONSTART /ru %1 /rp %2 
+rem create order process
+schtasks /create /xml %3\OMSOrder.xml /ru %1 /rp %2 
 
 rem create scada/pmc process
-schtasks /create /tn "OMSpmc" /tr %3\runPmc.bat /sc ONSTART /ru %1 /rp %2 
+schtasks /create /xml %3\OMSpmc.xml /ru %1 /rp %2 
+
+rem create simulator process
+schtasks /create /xml %3\OMSSimulator.xml /ru %1 /rp %2 
 
 rem create transfer job
-schtasks /create /tn "OMSTransfer" /tr %3\runTransfer.bat /sc ONSTART /ru %1 /rp %2 
+schtasks /create /xml %3\OMSTransfer.xml /ru %1 /rp %2 
 
 rem create watchdog job
-schtasks /create /tn "OMSWatchdog" /tr %3\runWatchdog.bat /sc ONSTART /ru %1 /rp %2 
+schtasks /create /xml %3\OMSWatchdog.xml /ru %1 /rp %2 
 
+
+rem Archive the History, Alarm, and Transfer tables
+schtasks /create /xml "%3\OMSArchive.xml" /ru %1 /rp %2 
 
 rem Purge OMS log files
-schtasks /create /tn "PurgeOMSLogs" /tr %3\purgeOMSLogs.bat /sc DAILY /st 00:45 /ru %1 /rp %2 
+schtasks /create /xml %3\PurgeOMSLogs.xml /ru %1 /rp %2 
 
 rem Purge Tomcat logs
-schtasks /create /tn "PurgeTomcatLogs" /tr %3\purgeTomcatLogs.bat /sc DAILY /st 00:30 /ru %1 /rp %2 
+schtasks /create /xml %3\PurgeTomcatLogs.xml /ru %1 /rp %2 
 
 rem Save the OMS DB
-schtasks /create /tn "Save OMS DB" /tr %3\extractDB.bat /sc DAILY /st 00:30 /ru %1 /rp %2 
+schtasks /create /xml "%3\SaveOMSDB" /ru %1 /rp %2 
 
 goto csjEnd
 

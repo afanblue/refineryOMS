@@ -19,21 +19,31 @@ package us.avn.oms.mapper;
 import java.util.Collection;
 
 import us.avn.oms.domain.User;
-import us.avn.oms.domain.UserPriv;
+import us.avn.oms.domain.UserRole;
 
 
 public interface UserMapper {
 	
-	User getUserById( Integer id );
+	/**
+	 * Get user record from DB
+	 * @param id user ID to fetch
+	 * @return user record
+	 */
+	User getUserById( Long id );
 	
+	/**
+	 * @return all user records from DB
+	 */
 	Collection<User> getAllUsers(  );
 	
     void updateUser( User u );
 
     Long insertUser( User u );
 
-    Collection<UserPriv> getUserRole( String alias );
+    Collection<UserRole> getUserRole( String alias );
 
     Integer validateUser( String u, String pw );
+    
+    Integer insertUserRole( UserRole ur );
 	  
 }

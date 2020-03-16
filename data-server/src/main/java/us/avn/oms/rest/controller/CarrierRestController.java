@@ -61,12 +61,13 @@ public class CarrierRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	public Carrier getCarrier( @PathVariable Long id) {
-		Carrier c = carrierService.getCarrier(id);
-		if( c == null ) {
+		Carrier c = null;
+		if( 0L == id ) {
 			c = new Carrier();
 			c.setId(id);
-			c.setName("Nothing for id "+id);
+			c.setName("New carrier"+id);
 		} else {
+			c = carrierService.getCarrier(id);
 			c.setHolds(carrierService.getHolds(id));
 		}
 		return c;

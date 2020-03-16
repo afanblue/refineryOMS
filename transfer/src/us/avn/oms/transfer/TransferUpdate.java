@@ -96,10 +96,11 @@ public class TransferUpdate extends TimerTask {
     private Integer newTransferHour;
     private Integer newTransferMinute;
     private Integer newTransferInterval;
-//    private HashMap<String,Long> types;
-//    private HashMap<String,Long> statuses;
+    private HashMap<String,Long> types;
+    private HashMap<String,Long> statuses;
     private ZonedDateTime tomorrow;
     private Vector<String> stations = new Vector<String>(3);
+    private ZonedDateTime now;
 
     
     public TransferUpdate() { 
@@ -148,9 +149,10 @@ public class TransferUpdate extends TimerTask {
 		if( vtxs == null ) { vtxs = (VertexService) context.getBean("vertexService"); }
 		
 		wds.updateWatchdog(Watchdog.TRANSFER);
-		
-//		types = xfrs.getAllTransferTypes();
-//		statuses = xfrs.getAllTransferStatuses();
+		now = ZonedDateTime.now();
+
+		types = xfrs.getAllTransferTypes();
+		statuses = xfrs.getAllTransferStatuses();
 		nameTemplates = cfgs.getAllConfigItems();
 		
 		try {
@@ -286,7 +288,6 @@ public class TransferUpdate extends TimerTask {
 						   : false;
 		log.debug( "runScheduledTransfers: Check? " + (checkOnce?"true":"false") + " or " + (checkMulti?"true":"false"));
 
-		ZonedDateTime now = ZonedDateTime.now();
 		tomorrow = now.plus(24,ChronoUnit.HOURS) ;
 		Iterator<Transfer> ixpt = xfrs.getPendingTemplates().iterator();
 
@@ -343,7 +344,7 @@ public class TransferUpdate extends TimerTask {
 				Tag dock = carrierPresent(item);
 				if( null != dock ) {
 					log.debug("createTransfersFromOrders: pending order item "+item.getItemNo());
-					Transfer xfr = createNewTransfer(order,item,carrier,dock);
+					Transfer xfr = createTransferFromOrder(order,item,carrier,dock);
 					if( null != xfr ) {
 						xfr.startTransfer(xfrs);
 						item.setActive(Item.ACTIVE);
@@ -356,36 +357,47 @@ public class TransferUpdate extends TimerTask {
 					log.debug("createTransfersFromOrders: carrier not present at dock");
 				}
 			}
+			if( null == order.getActDate() ) {
+				order.setActDate(Instant.now());
+				ords.updateOrder(order);
+			}
 		}
 	}
 	
 	/**
-	 * Insert a new transfer into the transfer table 
-	 * @param x
-	 * @param newX
+	 * Insert a new transfer based on the given template into the transfer table 
+	 * @param xfr  transfer template
+	 * @param newXfr new transfer to insert
 	 */
-	private void insertNewTransfer( Transfer x, Transfer newX ) {
+	private void insertNewTransfer( Transfer xfr, Transfer newXfr ) {
 		/* ensure that tag ID points to transfer */
-		newX.setTagId(x.getTagId());
+		newXfr.setTagId(xfr.getTagId());
 		/* Change transfer type id & status id */
 		LocalDate ld = LocalDate.of( tomorrow.get(ChronoField.YEAR)
 				                   , tomorrow.get(ChronoField.MONTH_OF_YEAR)
 				                   , tomorrow.get(ChronoField.DAY_OF_MONTH));
-		newX.setName(newX.getName()+ld.toString());
+		newXfr.setName(newXfr.getName()+ld.toString());
 		/* source check */
-		newX.checkSource( tgs, tks );
+		boolean srcFound = newXfr.checkSource( tgs, tks );
 		/* destination check */
-		newX.checkDestination( tgs, tks );
-		newX.setStatusId(xfrs.getTransferStatusId(Transfer.SCHEDULED ));
-		newX.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
-		newX.setExpStartTime(x.getNewStartTime());
-		newX.setExpEndTime(newX.getNewEndTime());
-		log.debug("insertNewTransfer: "+newX.getId()+"/"+newX.getName());
-		xfrs.insertTransfer(newX);		
+		boolean destFound = newXfr.checkDestination( tgs, tks );
+		if( srcFound && destFound ) {
+			newXfr.setStatusId(statuses.get(Transfer.SCHEDULED ));
+			newXfr.setTransferTypeId(types.get(Transfer.EXECUTABLE));
+			newXfr.setExpStartTime(xfr.getNewStartTime());
+			newXfr.setExpEndTime(newXfr.getNewEndTime());
+			log.debug("insertNewTransfer: "+newXfr.getId()+"/"+newXfr.getName()
+			+", sourceId: "+newXfr.getSourceId()+", destId: "+newXfr.getDestinationId());
+			xfrs.insertTransfer(newXfr);
+		} else {
+			log.debug( (srcFound?"":"Source "+newXfr.getSourceId()+" not found  ")
+					+ (destFound?"":"Destination "+newXfr.getDestinationId()+" not found") );			
+		}
 	}
 	
 	/**
-	 * Change transfer state
+	 * Turn the child tags to the new state.  This turns valves and pumps to their
+	 * correct position to allow the fluid to flow to the destination.
 	 * @param x  Transfer to modify the state of
 	 * @param newState New state for transfer
 	 */
@@ -474,7 +486,7 @@ public class TransferUpdate extends TimerTask {
 	}
 
 	/**
-	 * Create a new transfer object based on the order and the carrier
+	 * Create a new transfer object based on the order item and the carrier
 	 * and the dock at which the carrier is parked.  It DOES insert
 	 * the DB record.
 	 * <br/>            
@@ -499,7 +511,7 @@ public class TransferUpdate extends TimerTask {
 	 * 
 	 * @return - Transfer object (ready to insert)
 	 */
-	private Transfer createNewTransfer( Order order, Item i, Tag carrier, Tag dock ) {
+	private Transfer createTransferFromOrder( Order order, Item i, Tag carrier, Tag dock ) {
 		log.debug("createNewTransfer: order: "+order.getShipmentId()+" item "+i.toString()+" for carrier "
 				+carrier.getName()+" at dock "+dock.getName());
 		Transfer xfr = null;
@@ -512,13 +524,6 @@ public class TransferUpdate extends TimerTask {
 			if( null != template ) {
 				log.debug("createNewTransfer: template for dock "+dock.getName()+" "+template.toString()); 
 				Tag src = tgs.getTag(template.getSourceId());
-				Tag dest = tgs.getTag(template.getDestinationId());
-				String name = "";
-				String today = DateTimeFormatter.ofPattern("yyyyMMddHHmm").format(ZonedDateTime.now());
-				//		Calendar cal = Calendar.getInstance();
-				xfr.setId(0L);
-				xfr.setTagId(template.getTagId());
-
 				if( Tag.DOCK.equals(src.getTagTypeCode()) ) {
 					String srcName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
 							.replace("STN",i.getItemNo().toString());
@@ -526,6 +531,7 @@ public class TransferUpdate extends TimerTask {
 				}
 				xfr.setSourceId(src.getId());
 
+				Tag dest = tgs.getTag(template.getDestinationId());
 				if( Tag.DOCK.equals(dest.getTagTypeCode()) ) {
 					String destName = nameTemplates.get(Config.STATION_NAME_MASK).replace(Tag.DOCK, src.getName())
 							.replace("STN",i.getItemNo().toString());
@@ -533,25 +539,35 @@ public class TransferUpdate extends TimerTask {
 				}
 				xfr.setDestinationId(template.getDestinationId());
 
-				if( Order.PURCHASE.equals(order.getPurchase())) {
-					name = dock.getName() + "-" + i.getItemNo() + "to" + i.getContentCd() + "-" + today;
-				} else {
-					name = i.getContentCd() + "to" + dock.getName() + i.getItemNo() + "-" + today;
-				}
+				boolean sourceFound = xfr.checkSource(tgs, tks);
+				boolean destFound = xfr.checkDestination(tgs, tks);
+				if( sourceFound && destFound ) {
+					String name = "";
+					String today = DateTimeFormatter.ofPattern("yyyyMMddHHmm").format(now);
+					//		Calendar cal = Calendar.getInstance();
+					xfr.setId(0L);
+					xfr.setTagId(template.getTagId());
 
-				xfr.checkSource(tgs, tks);
-				xfr.checkDestination(tgs, tks);
-				xfr.setName(name);
-				xfr.setContentsCode(i.getContentCd());
-				xfr.setStatusId(xfrs.getTransferStatusId(Transfer.ACTIVE));
-				xfr.setTransferTypeId(xfrs.getTransferTypeId(Transfer.EXECUTABLE));
-				xfr.setDelta(0);
-				xfr.setExpVolume(i.getExpVolumeMax());
-				xfr.setExpStartTime(Timestamp.from(Instant.now()));
-				Double transferTime = Math.ceil(i.getExpVolumeMax()/Transfer.SLOW);
-				Instant et = Instant.now().plus(transferTime.longValue(), ChronoUnit.MINUTES );
-				xfr.setExpEndTime( Timestamp.from(et) );
-				xfrs.insertTransfer(xfr);
+					if( Order.PURCHASE.equals(order.getPurchase())) {
+						name = dock.getName() + "-" + i.getItemNo() + "to" + i.getContentCd() + "-" + today;
+					} else {
+						name = i.getContentCd() + "to" + dock.getName() + i.getItemNo() + "-" + today;
+					}
+					xfr.setName(name);
+					xfr.setContentsCode(i.getContentCd());
+					xfr.setStatusId(statuses.get(Transfer.ACTIVE));
+					xfr.setTransferTypeId(types.get(Transfer.EXECUTABLE));
+					xfr.setDelta(0);
+					xfr.setExpVolume(i.getExpVolumeMin());
+					xfr.setExpStartTime(Timestamp.from(Instant.now()));
+					Double transferTime = Math.ceil(i.getExpVolumeMin()/Transfer.SLOW);
+					Instant et = Instant.now().plus(transferTime.longValue(), ChronoUnit.MINUTES );
+					xfr.setExpEndTime( Timestamp.from(et) );
+					xfrs.insertTransfer(xfr);
+				} else {
+					log.debug( (sourceFound?"":"Source "+src.getName()+" not found  ")
+							+ (destFound?"":"Destination "+dest.getName()+" not found") );
+				}
 			} else {
 				log.debug("No transfer template found for "+templateName);
 			}
@@ -663,6 +679,7 @@ public class TransferUpdate extends TimerTask {
 	}
 
 	private Long checkTank( String option, Tag endPoint ) {
+		log.debug("checkTank: "+option+" - "+endPoint.getMisc());
 		Tank tk = tks.getTank( endPoint.getId() );
 		AnalogInput l = ais.getAnalogInput(tk.getLevelId());
 		Long newTankId = null;

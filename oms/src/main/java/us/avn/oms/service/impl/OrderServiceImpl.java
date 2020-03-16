@@ -131,6 +131,15 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	/**
+	 * Get all repeat orders, ie, those with a non-zero cycle time
+	 * @return all repeat orders
+	 */
+	@Override
+	public Collection<Order> getRepeatOrders() {
+		return orderMapper.getRepeatOrders();
+	}
+	
+	/**
 	 * Get all of the pending orders, i.e., those that have some 
 	 * items with active = 'P'
 	 * @param id 

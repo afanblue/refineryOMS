@@ -52,7 +52,9 @@ public class Simulator {
         Timer preTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
     	Integer psed = pseDelayInterval;
+    	log.debug("Number of arguments:"+args.length);
         if( 0 < args.length ) {
+        	log.debug("First arg: "+args[0]);
         	try {
         		psed = new Integer(args[0]);
         		if( 0 == psed ) { psed = pseDelayInterval; }

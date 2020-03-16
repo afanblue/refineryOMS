@@ -58,6 +58,11 @@
   <insert id="insertRolePriv" parameterType="RolePriv">
     insert into role_priv( role_id, priv_id )
     values( #{roleId}, #{privId} )
+    on duplicate key 
+    update set name = #{name}, active=#{active}
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
   </insert>
 
 </mapper>

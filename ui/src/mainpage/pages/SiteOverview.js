@@ -97,7 +97,7 @@ class SiteOverview extends Component {
         return <Waiting />
       case "dataFetched":
         return <Field stage="begin"
-                      field={this.state.site}
+                      fieldName={this.state.site}
                       tankType={this.state.tankType} />
       default:
         return <DefaultContents />

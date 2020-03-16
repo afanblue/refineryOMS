@@ -45,6 +45,7 @@
          , cycle_time, offset, seq_no, active 
       from device
      where active = "Y"
+       and mod(#{param1},cycle_time) = offset
      order by seq_no 
   </select>
   

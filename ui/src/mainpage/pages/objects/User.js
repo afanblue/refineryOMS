@@ -17,9 +17,10 @@
  ***********************************************************************/
 
 
-export function User(i,a,fn,mn,ln,e,p,st,sts,rid) { 
-  this.id=i; this.alias=a; this.firstName=fn; this.lastName=ln; 
-  this.middleName=(mn===null?"":mn);
-  this.email=(e===null?"":e); this.password=p; this.state=st; 
-  this.status=sts; this.roleId=rid;
+export function User(i,a,fn,mn,ln,e,p,st,sts,rid,rn,urId) {
+  this.id=i; this.alias=a; this.firstName=fn; this.lastName=ln;
+  this.middleName=(mn===null?"":mn); this.userRoleId=urId;
+  this.email=(e===null?"":e); this.password=p; this.state=st;
+  this.active=((sts===null||sts==="")?"N":sts);
+  this.roleId=rid; this.role=(rn===null?"":rn);
 }

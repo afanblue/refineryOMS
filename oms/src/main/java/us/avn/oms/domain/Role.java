@@ -16,18 +16,14 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.util.Collection;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * 
  */
-public class Role implements Serializable {
+public class Role extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
@@ -90,21 +86,6 @@ public class Role implements Serializable {
 
 	public void setPrivileges(Collection<IdName> privileges) {
 		this.privileges = privileges;
-	}
-
-	
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
 	}
 
 }

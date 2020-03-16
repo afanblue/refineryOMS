@@ -41,9 +41,10 @@ class Field extends Component {
     super(props);
     this.state = {
       stage: props.stage,
+      img: props.img,
       updateData: false,
       updateDisplay: true,
-      fieldName: props.field,
+      fieldName: props.fieldName,
       tankType: props.tankType,
       field: null,
       tags: null,
@@ -57,7 +58,9 @@ class Field extends Component {
   static get propTypes() {
       return {
           stage: PropTypes.string,
+          fieldName: PropTypes.string,
           field: PropTypes.any,
+          img: PropTypes.any,
           tankType: PropTypes.any
       }
   }
@@ -70,7 +73,22 @@ class Field extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, state) {
+//    clearInterval(state.itemTimer);
+    if( nextProps.fieldName !== state.fieldName ) {
+//      this.setState({option: nextProps.option});
+      return { stage: nextProps.stage,
+               fieldName: nextProps.fieldName,
+               field: nextProps.field,
+               siteLoc: nextProps.siteLoc,
+               tags: nextProps.tags};
+    }
 	return state;
+  }
+
+  componentDidUpdate( prevProps, prevState ) {
+	if( this.state.fieldName != prevState.fieldName ) {
+      this.fetchSite(this.state.fieldName);
+    }
   }
 
   fetchSite(fn) {

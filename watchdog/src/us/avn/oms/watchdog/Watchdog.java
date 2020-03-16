@@ -43,9 +43,9 @@ public class Watchdog {
 	}
 	
 	/**
-	 * Method: execute
-	 * Description: start the thread that checks watchdogs.
-	 * 				start @ the minute and run every minute after that.
+	 * Start the thread that checks watchdogs.  Start @ the minute and run 
+	 * every minute after that.
+	 * @param args list of arguments (passed on to @see WatchdogCheck)
 	 */
 	public void execute(String[]args) {
         TimerTask wdck = new WatchdogCheck(args);

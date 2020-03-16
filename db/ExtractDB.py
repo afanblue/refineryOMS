@@ -82,6 +82,15 @@ qry = ("select name, active from watchdog")
 addData( crsr, tbl, qry, hdr, False )
 
 
+''' crontab '''
+tbl = "crontab"
+hdr = ( "Table,"+tbl+",,",
+        "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "Data,,,")
+qry = ("select id, name, moh, hod, dom, moy, dow, hourDuration, minDuration from crontab")
+addData( crsr, tbl, qry, hdr, False )
+
+
 ''' tag_type '''
 tbl = "tag_type"
 hdr = ( "Table,"+tbl+",,",
@@ -409,9 +418,11 @@ tbl = "analog_output"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
+        "unit_id,unit,id,name",
         "Data,,,")
-qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, zero_value, max_value, hist_type_code "
-       "from analog_output ao join tag t on ao.tag_id = t.id")
+qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, zero_value, max_value, hist_type_code, u.name "
+       "from analog_output ao join tag t on ao.tag_id = t.id"
+       "join unit u on ao.unit_id = u.id")
 addData( crsr, tbl, qry, hdr, False )
 
 
@@ -457,7 +468,7 @@ hdr = ( "Table,"+tbl+",,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select description, type, model, param1, param2, param3"
-       ", param4, cycle_time, offset, active "
+       ", param4, cycle_time, offset, seq_no, active "
        "from device")
 addData( crsr, tbl, qry, hdr, False )
 
@@ -621,33 +632,37 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "Data,,,")
-qry = ( "select id, concat(t.name,'|',t.tag_type_code) tag_id"
+qry = ( "select h.id, concat(t.name,'|',t.tag_type_code) tag_id"
         ", scan_value, scan_time, h.create_dt "
         "from history h join tag t on h.tag_id = t.id " )
 addData( crsr, tbl, qry, hdr, False )
 
 
-''' shipment '''
+''' shipment (order) '''
 tbl = "shipment"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "customer_id,customer,id,name",
-        "carrier_id,tag,id,name,tag,tag_type_code,tag_type_code"
+        "crontab_id,crontab,id,name",
         "Data,,,")
-qry = ( "select c.name customer_id, purchase, exp_date, act_date, s.create_dt "
-        "from shipment s join customer c on s.customer_id = c.id " )
+qry = ( "select c.name customer_id, purchase, exp_date, act_date, t.name crontab_id, s.create_dt "
+        "from shipment s join customer c on s.customer_id = c.id " 
+        "join crontab t on s.crontab_id=t.id " )
 addData( crsr, tbl, qry, hdr, False )
 
 
-''' shipment_item '''
+''' shipment_item  (order_item)'''
 tbl = "shipment_item"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "carrier_id,tag,id,name,tag,tag_type_code,tag_type_code",
+        "transfer_id,transfer,id,name",
         "Data,,,")
-qry = ( "select si.shipment_id, si.item_no, si.active, si.content_cd, "
-        "si.exp_volume_min, si.exp_volume_max, si.act_volume, si.carrier_id, "
-        "si.station_id, si.transfer_id, si.create_dt from shipment_item si "
-        "join shipment s on s.shipment_id=si.shipment_id "  )
+qry = ( "select si.shipment_id, si.item_no, si.active, si.content_cd, si.exp_volume_min"
+        ", si.exp_volume_max, si.act_volume, concat(tc.name,'|',tc.tag_type_code) carrier_id"
+        ", si.station_id, xfr.name transfer_id, si.create_dt "
+        "from shipment_item si join shipment s on s.shipment_id=si.shipment_id "
+        "join tag tc on si.carrier_id=tc.id join transfer xfr on xfr.id=si.transfer_id "  )
 addData( crsr, tbl, qry, hdr, False )
 
 

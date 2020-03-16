@@ -30,15 +30,15 @@ class FieldList extends Component {
     var json = this.props.returnedText;
     var fieldSelect = this.props.fieldSelect;
     var fieldList = [];
-    var nf = new Field( 0, 'Create new Field', '', 'FLD', null, null, null
+    var nf = new Field( 0, 'New Field', '', 'FLD', null, null, null
                       , null, null, null, 'N', null, null, null, null);
     fieldList.push(nf);
     json.map(function(n,x){
         var f = new Field( n.id, n.name, n.description, n.tagTypeCode, n.tagTypeId
                          , n.misc, n.c1Lat, n.c1Long, n.c2Lat, n.c2Long, n.active
-                         , n.parentId, n.parent, n.roadImage, n.satelliteImage); 
+                         , n.parentId, n.parent, n.roadImage, n.satelliteImage);
         return fieldList.push( f ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Site Fields</div></h2>
         <table>
@@ -59,7 +59,7 @@ class FieldList extends Component {
                          </button>
                        </td>
                        <td className="oms-spacing-120">{n.parent}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -67,7 +67,7 @@ class FieldList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default FieldList;

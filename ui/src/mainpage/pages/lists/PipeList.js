@@ -25,20 +25,20 @@ class PipeList extends Component {
     super(props);
     this.state = {};
   }
-  
+
   render () {
     var json  = this.props.returnedText;
     var ps    = this.props.pipeSelect;
-    
+
     var pipeList = [];
-    var nt = new Pipe(0,'Create new pipe','','','',0,0,0,0,0,'N',0,[]);
+    var nt = new Pipe(0,'New pipe','','','',0,0,0,0,0,'N',0,[]);
     pipeList.push(nt);
     json.map(function(n,x){var p = new Pipe(n.id,n.name,n.description,n.tagTypeCode
                                            ,n.tagTypeId,n.misc
                                            ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long
-                                           ,n.active,n.inTagId,n.vtxList); 
+                                           ,n.active,n.inTagId,n.vtxList);
                            return pipeList.push( p ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div>
           <img src="./images/spacer.png" alt="" width="30px" height="2px"/>Pipes
@@ -66,7 +66,7 @@ class PipeList extends Component {
                        <td className="oms-spacing-240">{n.description}</td>
                        <td className="oms-spacing-50">{n.active}</td>
                        <td className="oms-spacing-50">{n.misc}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>

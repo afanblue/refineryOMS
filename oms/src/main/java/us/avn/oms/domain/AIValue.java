@@ -39,6 +39,7 @@ public class AIValue extends OMSObject implements Serializable {
 
 	private Long     tagId;
 	private String   name;
+	private String   description;
 	private Double   value;
 	private String   aiType;
 	private String   valueText;
@@ -70,6 +71,15 @@ public class AIValue extends OMSObject implements Serializable {
 
 	public void setName(String n) {
 		this.name = n;
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String d) {
+		this.description = d;
 	}
 
 

@@ -31,7 +31,7 @@ class DOList extends Component {
     var json = this.props.doData;
     var doSelect = this.props.doSelect;
     var doList = [];
-    var t0 = new Tag(0,'Create new tag',null,'DO',null,null,null,null,null,null,'Y');
+    var t0 = new Tag(0,'New DO',null,'DO',null,null,null,null,null,null,'Y');
     var do0 = new DigitalOutput(0,t0,null,null ,null,null,null,null,null,null );
     doList.push(do0);
     json.map(function(n,x){
@@ -40,7 +40,7 @@ class DOList extends Component {
         var doObj = new DigitalOutput( n.tagId, t, n.histTypeCode, n.valueView, n.scanValue, n.scanTime
                                      , n.prevValue, n.prevTime, n.lastHistValue, n.lastHistTime);
         return doList.push( doObj ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Analog Outputs</div></h2>
         <table>
@@ -67,7 +67,7 @@ class DOList extends Component {
                        <td className={["oms-spacing-240","oms-fontsize-12"].join(' ')}>{n.tag.description}</td>
                        <td className={["oms-spacing-70","oms-fontsize-12"].join(' ')}>{n.histTypeCode}</td>
                        <td className={["oms-spacing-180","oms-fontsize-12"].join(' ')}>{n.valueView}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -75,7 +75,7 @@ class DOList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default DOList;

@@ -106,24 +106,9 @@ public class WS extends IODevice {
 		//			get the current conditions
 		String wt = device.getModel();
 		String wl = device.getParam1();
-		Long wi = device.getCycleTime();
-		try {
-			wi = (wi==null)?new Long((String)configuration.get(Config.WEATHER_INTERVAL)):wi;
-		} catch( Exception e ) {
-			wi = 60L;
-		}
-		Long wd = device.getOffset();
-		try {
-			wd = (wd==null)?new Long((String)configuration.get(Config.WEATHER_DELAY)):wd;
-		} catch( Exception e ) {
-			wd = 16L;
-		}
-		boolean updateCurrentConditions = cal.get(Calendar.MINUTE) % wi == wd;
-		log.debug("Delay: "+wd+", interval: "+wi+", update? "+(updateCurrentConditions?"yes":"no"));
-		if( updateCurrentConditions ) {
-			WeatherStation ws = wsf.getWeatherStation(wt, wl);
-			cc = ws.getCurrentConditions();
-		}
+
+		WeatherStation ws = wsf.getWeatherStation(wt, wl);
+		cc = ws.getCurrentConditions();
 
 		Instant cst = Instant.now();
 		ZonedDateTime currentScanTime = null;
@@ -152,8 +137,8 @@ public class WS extends IODevice {
 		currentTags.put(currentWindDirTag,   currentWindDir);
 		currentTags.put(currentPrecipTag,    currentPrecip);
 		
-		
-		Collection<Address> cadr = adrs.getActiveAddressesForDeviceByType(device.getId(), Tag.ANALOG_INPUT);
+		Collection<Address> cadr = 
+				adrs.getActiveAddressesForDeviceByType(device.getId(), Tag.ANALOG_INPUT, sec);
 		Iterator<Address> iadr = cadr.iterator();
 		while( iadr.hasNext() ) {
 			Address addr = iadr.next();
@@ -164,7 +149,7 @@ public class WS extends IODevice {
 			String aiTypeCode = ai.getAnalogTypeCode();
 			String aiName = ai.getTag().getName();
 //     	    fake the collected data
-			if( updateCurrentConditions) {
+			if( ! cst.equals(ai.getScanTime())) {
 				log.debug("Processing WS AI tag "+aiName + "/" + ai.getTagId());
 				if( currentTags.containsKey(aiName) ) {
 					Double currentValue = currentTags.get(aiName); 
@@ -177,6 +162,8 @@ public class WS extends IODevice {
 						rds.updateRawData(rd);
 					}
 				}
+			} else {
+				log.debug("Unchanged scan time, ignoring WS AI tag "+aiName + "/" + ai.getTagId());
 			}
 		}
 	}

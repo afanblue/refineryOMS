@@ -75,7 +75,7 @@ class ProcessUnit extends Component {
     clearInterval(state.itemTimer);
     if( nextProps.option !== state.option ) {
 //      this.setState({option: nextProps.option});
-      this.fetchList(nextProps.option);
+      return { option: nextProps.option };
     }
     return state;
   }
@@ -83,6 +83,12 @@ class ProcessUnit extends Component {
   shouldComponentUpdate(nextProps,nextState) {
     let sts = nextState.updateDisplay;
     return sts;
+  }
+
+  componentDidUpdate( prevProps, prevState ) {
+	if( this.state.option != prevState.option ) {
+      this.fetchList(this.state.option);
+    }
   }
 
   handleItemSelect(event) {
@@ -103,11 +109,11 @@ class ProcessUnit extends Component {
         const response = await fetch(myRequest);
         const json = await response.json();
         let pdNew = Object.assign({},this.state.plotDetails);
-        if( this.state.plotDetails.max0 === Infinity ) {
+//        if( this.state.plotDetails.max0 === Infinity ) {
           let aiTag = json.aiTag;
           pdNew.max0 = aiTag.maxValue;
           pdNew.min0 = aiTag.zeroValue;
-        }
+//        }
         this.setState( {returnedText: json,
                         plotDetails: pdNew,
                         updateData: false,

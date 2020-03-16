@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+   <context:component-scan base-package="us.avn.oms" />
+   <context:annotation-config />
+   
+   
+   <bean id="appProperties"
+         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+         <list>
+            <value>classpath:config/database.properties</value>
+         </list>
+      </property>
+   </bean>
+   
+   <bean id="mysqlDS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName" value="${db.driverClass}"/>
+      <property name="url" value="${db.url}"/>
+      <property name="username" value="${db.user}"/>
+      <property name="password" value="${db.pwd}"/>
+   </bean>
+
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+      <property name="dataSource"     ref="mysqlDS" />
+      <property name="configLocation" value="classpath:config/mybatis-config.xml" />
+   </bean>
+
+<!--  Define Mapper beans   -->
+   
+   <bean id="carrierMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CarrierMapper" />
+   </bean>
+
+   <bean id="configMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ConfigMapper" />
+   </bean>
+
+   <bean id="crontabMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CrontabMapper" />
+   </bean>
+
+   <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CustomerMapper" />
+   </bean>
+
+   <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.OrderMapper" />
+   </bean>
+
+   <bean id="referenceCodeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.ReferenceCodeMapper" />
+   </bean>
+   
+   <bean id="tagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TagMapper" />
+   </bean>
+
+   <bean id="transferMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.TransferMapper" />
+   </bean>
+
+   <bean id="wdogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.WatchdogMapper" />
+   </bean>
+
+<!-- Define service beans -->
+
+   <bean id="carrierService" class="us.avn.oms.service.impl.CarrierServiceImpl">
+      <property name="carrierMapper"      ref="carrierMapper" />
+      <property name="tagMapper"          ref="tagMapper" />
+   </bean>
+   
+   <bean id="configService" class="us.avn.oms.service.impl.ConfigServiceImpl">
+      <property name="configMapper"      ref="configMapper" />
+   </bean>
+   
+   <bean id="crontabService"   class="us.avn.oms.service.impl.CrontabServiceImpl">
+      <property name="crontabMapper"    ref="crontabMapper" />
+   </bean>
+   
+   <bean id="customerService" class="us.avn.oms.service.impl.CustomerServiceImpl">
+      <property name="customerMapper"    ref="customerMapper" />
+   </bean>
+   
+   <bean id="orderService" class="us.avn.oms.service.impl.OrderServiceImpl">
+      <property name="orderMapper"         ref="orderMapper" />
+   </bean>
+   
+   <bean id="referenceCodeService" class="us.avn.oms.service.impl.ReferenceCodeServiceImpl">
+      <property name="referenceCodeMapper" ref="referenceCodeMapper" />
+   </bean>
+   
+   <bean id="transferService" class="us.avn.oms.service.impl.TransferServiceImpl">
+      <property name="transferMapper"    ref="transferMapper" />
+   </bean>
+   
+   <bean id="watchdogService" class="us.avn.oms.service.impl.WatchdogServiceImpl">
+      <property name="watchdogMapper"    ref="wdogMapper" />
+   </bean>
+   
+</beans>

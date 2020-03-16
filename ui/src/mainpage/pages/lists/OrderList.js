@@ -31,19 +31,23 @@ class OrderList extends Component {
     var json = this.props.orderData;
     var orderSelect = this.props.orderSelect;
     var orderList = [];
-    var tNow = new Date();
-    var z = new Order( 0, 0, "", 0, "", "P", "S", tNow, tNow, 0, 0);
-    orderList.push(z);
+    if( "B" === this.props.option ) {
+      var tNow = new Date();
+      var z = new Order( 0, 0, "", 0, "", "P", "S", null, null, 0, 0, "");
+      orderList.push(z);
+    }
+//    var n = new Date();
+    var now = (new Date()).toLocaleString('en-US');
     json.map(function(xd,x){
         var xf = new Order( xd.shipmentId, xd.customerId, xd.customer, xd.carrierId
                           , xd.carrier, xd.active, xd.purchase, xd.expDate, xd.actDate
-                          , xd.expVolume, xd.actVolume); 
-        return orderList.push( xf ); 
+                          , xd.expVolume, xd.actVolume, xd.contents);
+        return orderList.push( xf );
       } );
-    return ( 
+    return (
       <div className="oms-tabs">
-        <h2><div><img src="./images/spacer.png" alt="" width="50px" 
-                      height="2px"/>OMS Orders</div></h2>
+        <h1><div><img src="./images/spacer.png" alt="" width="50px"
+                      height="2px"/>OMS Orders - {now}</div></h1>
         <table>
           <thead className="fixedHeader">
             <tr>
@@ -51,6 +55,7 @@ class OrderList extends Component {
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> Customer </th>
               <th className={["oms-spacing-90","oms-underline"].join(' ')}> Carrier </th>
               <th className={["oms-spacing-50","oms-underline"].join(' ')}> Status </th>
+              <th className={["oms-spacing-90","oms-underline"].join(' ')}> Contents </th>
               <th className={["oms-spacing-50","oms-underline"].join(' ')}> Type </th>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> Exp Start </th>
               <th className={["oms-spacing-120","oms-underline"].join(' ')}> Act Start </th>
@@ -73,12 +78,13 @@ class OrderList extends Component {
                        <td className="oms-spacing-120">{n.customer}</td>
                        <td className="oms-spacing-90">{n.carrier}</td>
                        <td className="oms-spacing-50">{n.active}</td>
+                       <td className="oms-spacing-90">{n.contents}</td>
                        <td className="oms-spacing-50">{n.purchase}</td>
                        <td className="oms-spacing-120">{n.expDate}</td>
                        <td className="oms-spacing-120">{n.actDate}</td>
                        <td className="oms-spacing-90"> {n.expVolume} </td>
                        <td className="oms-spacing-90"> {n.actVolume} </td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -86,7 +92,7 @@ class OrderList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default OrderList;

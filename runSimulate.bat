@@ -19,6 +19,6 @@ pushd .
 
 # java -cp %CLASSPATH% us.avn.oms.sim.Simulator >>%LOG% 2>&1
 
-powershell -command F:\projects\oms\v2\runProcess.ps1 -LOGNM simError -PROC Simulate -DIR sim -JAR sim -CPATH us.avn.oms.sim.Simulator
+powershell -command F:\projects\oms\v2\runProcess.ps1 -LOGNM simError -PROC Simulate -DIR sim -JAR sim -CPATH us.avn.oms.sim.Simulator -ARG1 15
 
 popd

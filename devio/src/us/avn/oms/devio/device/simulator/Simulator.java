@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,63 +80,64 @@ public class Simulator extends IODevice {
 	}
 
 	/**
-	 * 
+	 * Get the values for all of the analog inputs.  For the simulation, the changes
+	 * due to transfers are first calculated, then the changes for most of the other
+	 * analog values.  The changes due to transfers are first calculated and a collection
+	 * of endpoint tag IDs is returned.  The  
+	 * @param sec the current second, used to determine the tags to "scan". 
 	 */
 	@Override
 	public void getAnalogInputs( Integer sec ) {
 		log.debug("Start Simulator AI processing");
-		Collection<Address> cai = adrs.getActiveAddressesForDeviceByType(device.getId(), Tag.ANALOG_INPUT);
-		Iterator<Address> iai = cai.iterator();
 		Instant currentScanTime = Instant.now();
+
+		//		check transfers	
+		Vector<Long> epIds = checkTransfers( currentScanTime, sec );
+		// log.debug("# endPoints: "+epIds.size()+" - "+epIds);
+
+		Collection<Address> cai = 
+				adrs.getActiveAddressesForDeviceByType(device.getId(), Tag.ANALOG_INPUT, sec);
+		Iterator<Address> iai = cai.iterator();
 		while( iai.hasNext() ) {
 			Address adr = iai.next();
 			AnalogInput ai = ais.getAnalogInput(adr.getIaddr1());
-			RawData x = new RawData();
-			x.setId(ai.getTagId());
 			String aiTypeCode = ai.getAnalogTypeCode();
 			String aiName = ai.getTag().getName();
-//     	    fake the collected data
-			if( "T".equals(ai.getAnalogTypeCode())) {
-				if( currentTempTime.plus(2L,ChronoUnit.HOURS).compareTo(ai.getScanTime()) >= 0 ) {
-					log.debug("Processing AI tag "+aiName + "/" + ai.getTagId());
-					Double nv = (ai.getScanValue()!=null)?ai.getScanValue():AMBIENT_TEMPERATURE;
-					Double ct = (currentTemp!=null?currentTemp:nv);
-					log.debug("Recorded scan value (id="+x.getId()+"): "+nv+", from web: "+ct);
-					nv += 0.002 * (ct - nv);
-					x.setFloatValue(nv);
-					x.setScanTime(currentScanTime);
-//					Updated simulated data
-					rds.updateRawData(x);
-				} else {
-					log.debug("Ignore "+aiName+" - "+currentTempTime+" < scan time ("+ai.getScanTime()+")");
+			//     	    fake the collected data
+			log.debug("Processing AI tag "+aiName + "/" + ai.getTagId()+":"+aiTypeCode);
+			if( ! epIds.contains(ai.getTagId())) {
+				switch (aiTypeCode) {
+				case AnalogInput.TEMPERATURE :
+					updateTemperature( ai, currentScanTime);
+					break;
+				case AnalogInput.CALCULATED:
+				case AnalogInput.MANUAL:
+					log.debug(aiName+" ignored: "+aiTypeCode+" not simulated");
+					break;
+				case AnalogInput.FLOW_RATE:
+				case AnalogInput.LEVEL:
+				case AnalogInput.PRESSURE:
+				case AnalogInput.ANGLE_HEADING:
+				case AnalogInput.ACCUMULATOR:
+				case AnalogInput.MISCELLANEOUS:
+					updateOther( ai, currentScanTime );
+					break;
+				default:
+					log.debug(aiName +" ignored: "+aiTypeCode+" not recognized");
+					break;
 				}
 			} else {
-//				don't update Calculated or Manual analog types or the current weather tags
-				if( ! AnalogInput.CALCULATED.equals(aiTypeCode) && 
-					! AnalogInput.MANUAL.equals(aiTypeCode) ) {
-					if( ! currentTags.containsKey(aiName) ) {
-//						set the value to its current value
-//						(this will be overwritten by transfer levels)
-						x.setFloatValue(ai.getScanValue());
-						x.setScanTime(currentScanTime);
-						rds.updateRawData(x);
-					} else {
-						log.debug("Ignore: "+aiName+", current weather tag");
-					}
-				} else {
-					log.debug(aiTypeCode+" ignored: "+aiName);
-				}
+				log.debug(aiName+" ignored, updated by transfer");;
 			}
 		}
-//		check transfers	
-		checkTransfers( );
 		log.debug("End Simulator AI processing");
 	}
 
 	@Override
 	public void setAnalogOutputs( Integer sec ) {
 		log.debug("Start Simulator AO processing");
-		Iterator<Address> iadr = adrs.getActiveAddressesForDeviceByType(device.getId(), Tag.ANALOG_OUTPUT).iterator();
+		Iterator<Address> iadr = 
+				adrs.getActiveAddressesForDeviceByType(device.getId(), Tag.ANALOG_OUTPUT, sec).iterator();
 		while( iadr.hasNext() ) {
 			Address addr = iadr.next();
 			if( null != addr.getScanValue() && addr.getUpdated() == 1 ) {
@@ -155,7 +157,8 @@ public class Simulator extends IODevice {
 	@Override
 	public void getDigitalInputs( Integer sec ) {
 		log.debug("Start Simulator DI processing");
-		Collection<Address> cdi = adrs.getActiveAddressesForDeviceByType(device.getId(),Tag.DIGITAL_INPUT);
+		Collection<Address> cdi = 
+				adrs.getActiveAddressesForDeviceByType(device.getId(),Tag.DIGITAL_INPUT, sec);
 		Iterator<Address> idi = cdi.iterator();
 		while( idi.hasNext() ) {
 			Address di = idi.next();
@@ -171,7 +174,8 @@ public class Simulator extends IODevice {
 	public void setDigitalOutputs( Integer sec ) {
 		log.debug("Start Simulator DO processing");
 /* */
-		Iterator<Address> iadr = adrs.getActiveAddressesForDeviceByType(device.getId(),Tag.DIGITAL_OUTPUT).iterator();
+		Iterator<Address> iadr = 
+				adrs.getActiveAddressesForDeviceByType(device.getId(),Tag.DIGITAL_OUTPUT, sec).iterator();
 		while( iadr.hasNext() ) {
 			Address addr = iadr.next();
 			if( null != addr.getScanValue() && addr.getUpdated() == 1 ) {
@@ -188,19 +192,63 @@ public class Simulator extends IODevice {
 	}
 	
 	/**
+	 * Update the raw data value for an analog temperature
+	 * @param ai Analog Input to update
+	 * @param cst current scan time
+	 */
+	private void updateTemperature( AnalogInput ai, Instant cst ) {
+		RawData x = new RawData();
+		x.setId(ai.getTagId());
+		if( currentTempTime.plus(2L,ChronoUnit.HOURS).compareTo(ai.getScanTime()) >= 0 ) {
+			Double nv = (ai.getScanValue()!=null)?ai.getScanValue():AMBIENT_TEMPERATURE;
+			Double ct = (currentTemp!=null?currentTemp:nv);
+			log.debug("Recorded scan value (id="+x.getId()+"): "+nv+", from web: "+ct);
+			nv += 0.002 * (ct - nv);
+			x.setFloatValue(nv);
+			x.setScanTime(cst);
+			//	Update simulated data
+			rds.updateRawData(x);
+		} else {
+			log.debug("Ignore "+ai.getTag().getName() +" - "+currentTempTime+" < scan time ("+ai.getScanTime()+")");
+		}
+	}
+	
+	private void updateOther( AnalogInput ai, Instant cst ) {
+		RawData x = new RawData();
+		String aiName = ai.getTag().getName();
+		x.setId(ai.getTagId());
+		//	don't update Calculated or Manual analog types or the current weather tags
+		if( ! currentTags.containsKey(aiName) ) {
+		//	set the value to its current value
+			x.setFloatValue(ai.getScanValue());
+			x.setScanTime(cst);
+			rds.updateRawData(x);
+		} else {
+			log.debug("Ignore: "+aiName+", current weather tag");
+		}		
+	}
+
+	
+	/**
 	 * Check the active transfers to be able to set the changes in the 
 	 * analog values for the tank levels.  No changes are made to the transfer
+	 * @param cst current scan time
+	 * @return list of IDs of all source and destination tags
 	 */
-	private void checkTransfers( ) {
+	private Vector<Long> checkTransfers( Instant cst, Integer sec ) {
+		Vector<Long> endPointIDs = new Vector<Long>();
 		Iterator<Transfer> ix = tfs.getActiveTransfers().iterator();
 		while( ix.hasNext() ) {
 			Transfer x = ix.next();
 			log.debug("checkTransfers: Transfer "+x.toString());
 			Double delta = specifyVolumeChange( x );
 			log.debug("Transfer "+x.getName()+"/"+x.getId()+" - Change: "+delta);
-			decrementSource( x.getSourceId(), delta );
-			incrementDestination( x.getDestinationId(), delta );
+			Long srcId = decrementSource( x.getSourceId(), delta, sec, cst );
+			if( null != srcId ) { endPointIDs.add(srcId); }
+			Long destId = incrementDestination( x.getDestinationId(), delta, sec, cst );
+			if( null != destId ) { endPointIDs.add(destId); }
 		}
+		return endPointIDs;
 	}
 
 
@@ -259,7 +307,9 @@ public class Simulator extends IODevice {
 		case Tag.TANK :
 			Tank srcTk = tks.getTank(x.getSourceId());
 			/* tank - tank transfer */
-			if( Tag.TANK.equals(dest.getTagTypeCode())) {
+			if( 0 == srcTk.getId() ) {
+				delta = 0D;
+			} else if( Tag.TANK.equals(dest.getTagTypeCode())) {
 				Tank destTk = tks.getTank(x.getDestinationId());
 				if( srcTk.getContentTypeCode().equals(destTk.getContentTypeCode())) {
 					if( Tank.CRUDE.equals(srcTk.getContentTypeCode())) {
@@ -296,7 +346,9 @@ public class Simulator extends IODevice {
 			break;
 		case Tag.REFINERY_UNIT :
 			Tank destTk = tks.getTank(x.getDestinationId());
-			if( Tank.CRUDE.equals(destTk.getContentTypeCode())) {
+			if( 0 == destTk.getId() ) {
+				delta = 0D;
+			} else if( Tank.CRUDE.equals(destTk.getContentTypeCode())) {
 				delta = 0D;
 			} else {
 				String code = destTk.getContentType().toUpperCase().concat("-PERCENT");
@@ -310,7 +362,9 @@ public class Simulator extends IODevice {
 		case Tag.STATION :
 		case Tag.DOCK :
 			Tank dstTk = tks.getTank(x.getDestinationId());
-			if( Tag.TANK.equals(dest.getTagTypeCode())) {
+			if( 0 == dstTk.getId() ) {
+				delta = 0D;
+			} else if ( Tag.TANK.equals(dest.getTagTypeCode())) {
 				if( Tank.CRUDE.equals(dstTk.getContentTypeCode())) {
 					delta = Transfer.FAST;
 				} else {
@@ -329,79 +383,105 @@ public class Simulator extends IODevice {
 
 
 	/**
-	 * Method: decrementSource
-	 * Description: correct the level for the tank based on the
-	 * 				change in volume; If it's not a tank, no change
-	 * 				is necessary
-	 * Notes: This doesn't currently correct for temperature differences
-	 * {@code IF the source is a tank
-	 * 		.. get the current level
-	 * 		.. compute the current volume
-	 * 		.. subtract out the change (don't let it go below zero)
-	 * 		.. compute the new level
-	 * 		.. update the level tag
-	 * 		END IF
-	 * }	
-	 * @param srcId
-	 * @param vol
+	 * correct the level for the tank based on the change in volume; If it's 
+	 * not a tank, no change is necessary
+	 * <br>
+	 * <br>Notes: This doesn't currently correct for temperature differences
+	 * <br>IF the source is a tank and is to be updated
+	 * <br>.. get the current level
+	 * <br>.. compute the current volume
+	 * <br>.. subtract out the change (don't let it go below zero)
+	 * <br>.. compute the new level
+	 * <br>.. update the level tag
+	 * <br>END IF
+	 * 	
+	 * @param srcId tag ID for transfer source
+	 * @param delta volume change to source
+	 * @param sec current second for scan
+	 * @param cst current scan time
+	 * @return levelID updated
 	 */
-	private void decrementSource( Long srcId, Double vol ) {
-		log.debug("Decrement source: "+srcId+" by "+vol);
-		if( vol > 0D ) { 
+	private Long decrementSource( Long srcId, Double delta, Integer sec, Instant cst ) {
+		Long levelID = null;
+		if( delta > 0D ) { 
 			Tag t = tgs.getTag(srcId);
 			if( Tag.TANK.equals(t.getTagTypeCode()) ) {
 				Tank tk = tks.getTank(srcId);
-				AnalogInput l = ais.getAnalogInput(tk.getLevelId());
-				Double volume = tk.computeVolume( l.getScanValue() );
-				volume = (volume-vol>0)?(volume-vol):0D;
-				Double lvl = tk.computeLevel( volume );
-				RawData rd = new RawData();
-				rd.setId(tk.getLevelId());
-				rd.setFloatValue(lvl);
-				log.debug("Update raw data (decrement): "+rd.toString());
-				rds.updateRawData(rd);
+				AnalogInput aiLvl = ais.getAnalogInput(tk.getLevelId());
+				Address aLvl = adrs.getAddress(tk.getLevelId()); 
+				log.debug("decrementSource: "+srcId+" ("+aLvl.getId()+"), sec: "+sec
+						 +", interval: "+aLvl.getInterval()+", offset: "+aLvl.getOffset()
+				         +" sec % interval: "+sec%aLvl.getInterval());
+				if( sec % aLvl.getInterval() == aLvl.getOffset() * 10 ) {
+					levelID = aLvl.getId();
+					log.debug("decrementSource: "+srcId+" ("+aLvl.getId()+") by "+delta);
+					
+					Double volume = tk.computeVolume( aiLvl.getScanValue() );
+					Double volume2 = (volume-delta>0)?(volume-delta):0D;
+					Double lvl = tk.computeLevel( volume2 );
+					log.debug("decrementSource ("+aLvl.getId()+"): delta="+delta
+							 +", currentLvl="+aiLvl.getScanValue()+
+							  ", currentVol="+volume+", newLvl="+lvl+", newVol="+volume2);
+					RawData rd = new RawData();
+					rd.setId(tk.getLevelId());
+					rd.setFloatValue(lvl);
+					rd.setScanTime(cst);
+					log.debug("decrementSource: update raw data: "+rd.toString());
+					rds.updateRawData(rd);
+				}
 			}
 		}
+		return levelID;
 	}
 
 	/**
-	 * Correct the level for the tank based on the
-	 * change in volume; If it's not a tank, no change
-	 * is necessary
-	 * {@code
-	 * Notes: This doesn't currently correct for temperature differences
-	 * 		IF the source is a tank
-	 * 		.. get the current level
-	 * 		.. compute the current volume
-	 * 		.. add in the change 
-	 * 		.. compute the new level (don't let it go above the max level)
-	 * 		.. update the level tag
-	 * 		END IF
-	 * }
-	 * 
+	 * Correct the level for the tank based on the change in volume; 
+	 * If it's not a tank, no change is necessary
+	 * <br>
+	 * <br>Notes: This doesn't currently correct for temperature differences
+	 * <br>IF the source is a tank and is to be updated (correct offset in scan interval)
+	 * <br>.. get the current level
+	 * <br>.. compute the current volume
+	 * <br>.. add in the change 
+	 * <br>.. compute the new level (don't let it go above the max level)
+	 * <br>.. update the level tag
+	 * <br>END IF
+	 * <br>
 	 * @param destId	ID of transfer destination
-	 * @param vol	volume change
-	 * @param tks	tank service
-	 * @param ais	analog input service
+	 * @param delta	volume change
+	 * @param sec current second for scan
+	 * @param cst   curent scan time
+	 * @return ID of level updated
 	 */
-	private void incrementDestination( Long destId, Double vol ) {
-		log.debug("Increment destination: "+destId+" by "+vol);
-		if( vol > 0D ) {
+	private Long incrementDestination( Long destId, Double delta, Integer sec, Instant cst ) {
+		Long levelID = null;
+		if( delta > 0D ) {
 			Tag t = tgs.getTag(destId);
 			if( Tag.TANK.equals(t.getTagTypeCode()) ) {
 				Tank tk = tks.getTank(destId);
-				AnalogInput l = ais.getAnalogInput(tk.getLevelId());
-				Double volume = tk.computeVolume( l.getScanValue());
-				volume += vol;
-				Double lvl = tk.computeLevel( volume );
-				lvl = (lvl>l.getMaxValue())?l.getMaxValue():lvl;
-				RawData rd = new RawData();
-				rd.setId(tk.getLevelId());
-				rd.setFloatValue(lvl);
-				log.debug("Update raw data (increment): "+rd.toString());
-				rds.updateRawData(rd);
+				AnalogInput aiLvl = ais.getAnalogInput(tk.getLevelId());
+				Address aLvl = adrs.getAddress(tk.getLevelId()); 
+				if( sec % aLvl.getInterval() == aLvl.getOffset() * 10 ) {
+					levelID = aLvl.getId();
+					log.debug("incrementDestination: "+destId+" ("+aLvl.getId()+") by "+delta);
+
+					Double volume = tk.computeVolume( aiLvl.getScanValue());
+					Double volume2 = volume + delta;
+					Double lvl = tk.computeLevel( volume2 );
+					lvl = (lvl>aiLvl.getMaxValue())?aiLvl.getMaxValue():lvl;
+					log.debug("incrementDestination: "+destId+" ("+aLvl.getId()+"), delta="+delta
+						     +", currentLvl="+aiLvl.getScanValue()+
+							  ", currentVol="+volume+", newLvl="+lvl+", newVol="+volume2);
+					RawData rd = new RawData();
+					rd.setId(tk.getLevelId());
+					rd.setFloatValue(lvl);
+					rd.setScanTime(cst);
+					log.debug("incrementDestination: update raw data: "+rd.toString());
+					rds.updateRawData(rd);
+				}
 			}
 		}
+		return levelID;
 	}
 
 }

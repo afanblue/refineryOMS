@@ -19,6 +19,7 @@
 
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
+import axios              from 'axios';
 
 import {SERVERROOT}    from '../../Parameters.js';
 import Log             from '../requests/Log.js';
@@ -28,6 +29,7 @@ import Waiting         from './Waiting.js';
 import {AlarmType}     from './objects/Alarm.js';
 import AlarmTypeList   from './lists/AlarmTypeList.js';
 import AlarmTypeForm   from './forms/AlarmTypeForm.js';
+
 
 
 class AlarmTypeAdmin extends Component {

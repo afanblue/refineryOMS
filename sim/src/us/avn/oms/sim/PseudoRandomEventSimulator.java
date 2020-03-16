@@ -372,7 +372,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 				+", limit="+limit);
 		if( (capacity + curVolume + orderVolume) < limit ) {
 			log.debug("PRE: createCrudeOrder: room enough and time ");
-			Carrier carrier = getCrudeCarrier();
+			Carrier carrier = crs.getCrudeCarrier();
 			if( null != carrier ) {
 				Carrier s = crs.getCarrier(carrier.getId());
 				Customer cust = getCustomer();
@@ -413,14 +413,14 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 				+", orderVolume="+orderVolume+", expectedVolume="+expectedVolume+", limit="+limit);
 		if( expectedVolume < limit ) {
 			log.debug("PRE: createRefinedOrder for "+productCode);
-			Carrier carrier = getProductCarrier( carrierType, productCode, 
+			Carrier carrier = crs.getProductCarrier( carrierType, productCode, 
 									expectedVolume-limit  );
 			if( null != carrier ) {
-				Carrier s = crs.getCarrier(carrier.getId() );
+//				Carrier s = crs.getCarrier(carrier.getId() );
 				Customer cust = getCustomer();
 				if( null != cust ) {
 					Long orderDuration = 2L;
-					o = buildNewOrder(s, cust, Order.SALE, productCode, orderVolume, orderDuration );
+					o = buildNewOrder(carrier, cust, Order.SALE, productCode, orderVolume, orderDuration );
 				} else {
 					o = null;
 					log.debug("PRE: no customer found");
@@ -474,115 +474,6 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 			log.debug("PRE: problem, no holds found for carrier "+s.getName());
 		}
 		return o;
-	}
-
-	/**
-	 * Get a Tag of type S (ship) which is not being used (i.e., is not currently
-	 * docked) to use as a carrier for a crude order (remember: this is a simulation) 
-	 * 
-	 * @return
-	 */
-	private Carrier getCrudeCarrier() {
-		Carrier t = null;
-		Iterator<Tag> it = tgs.getTagsByTypeRandom(Tag.SHIP).iterator();
-		log.debug("PRE: getCrudeCarrier "+(it.hasNext()?"not empty":"empty") );
-		while( it.hasNext() ) {
-			Tag xt = it.next();
-			Collection<RelTagTag> crtt = tgs.getChildrenOfType(xt.getId(), Tag.DOCK);
-			log.debug("PRE: getCrudeCarrier "+xt.getId()+" "+(crtt.isEmpty()?"empty":"not empty"));
-			if( crtt.isEmpty() ) {
-				log.debug("Crude carrier "+xt.getName()+" found");
-				t = new Carrier(xt);
-				break;
-			}
-		}
-		return t;
-	}
-
-	/**
-	 * Get a Tag of either type T (train), or TT (tank truck) which is not
-	 * being used (i.e., is inot currently docked) to use as a carrier for a refined
-	 * product carrier.
-	 * <br>
-	 * Ships are not currently being used
-	 * @param carrierType carrier type (Train - T, TankTruck - TT)
-	 * @param productType product (contents) code
-	 * @param volRequired volume of material we need to ship.
-	 * @return
-	 */
-	private Carrier getProductCarrier( String carrierType, String productType, Double volRequired ) {
-		Carrier t = null;
-		if( carrierType.equals(Tag.TRAIN) ) {
-			t = getTrain(productType, volRequired);
-		} else {
-			t = getTruck(productType);
-		}
-		return t;
-	}
-	
-	/**
-	 * Return a train for use as a carrier.  Create an imaginary Train to determine 
-	 * if there's already a train present.  If not, then we can create the train with a 
-	 * maximum of 100 tank cars.
-	 * @param productType product (contents) code
-	 * @param volRequired amount of product needed to be shipped
-	 * @return
-	 */
-	private Carrier getTrain( String productType, Double volRequired ) {
-		String trainName = "TR".concat(DateTimeFormatter.ofPattern("yyyyMMdd").format(ZonedDateTime.now()));
-		Carrier carrier = null;
-		Tag t = tgs.getTagByName(trainName, Tag.TRAIN);
-		if( t == null ) {
-			t = new Tag(0L,trainName,Tag.TRAIN);
-			Long dockId = getDockForCarrier( t );
-			if( dockId.compareTo(0L) > 0 ) {
-				t.setDescription("PRE: getTrain, train "+trainName+" for "+productType);
-				t.setMisc(productType);
-				t.setActive(Tag.ACTIVE);
-				tgs.insertTag(t);
-				Hold h = new Hold();
-				h.setCarrierId(t.getId());
-				Long noCars = 1 + Math.min(volRequired.longValue()/Carrier.TANK_CAR,100L);
-				h.setHoldNo(1L);
-				h.setVolume(new Double(Carrier.TANK_CAR));
-				h.setNoDuplicates(noCars);
-				crs.insertHold(h);
-				carrier = new Carrier(t);
-				Collection<Hold> holds = new Vector<Hold>();
-				holds.add(h);
-				carrier.setHolds(holds);
-			} else {
-				log.debug("PRE: getTrain, train already present");
-				carrier = null;
-			}
-		}
-		return carrier;
-	}
-	
-	/**
-	 * Get a truck for the specified product type. 
-	 * @param productType
-	 * @return
-	 */
-	private Carrier getTruck( String productType ) {
-		Carrier carrier = null;
-		Iterator<Tag> it = tgs.getTagsByTypeRandom(Tag.TANK_TRUCK).iterator();
-		log.debug("PRE: getTruck, list "+(it.hasNext()?"not empty":"empty") );
-		while( it.hasNext()) {
-			Tag xt = it.next();
-			if( xt.getMisc().equals(productType) ) {
-				Collection<RelTagTag> crtt = tgs.getChildrenOfType(xt.getId(), Tag.DOCK);
-				log.debug("PRE: getTruck "+xt.getId()+", truck "
-						 +(crtt.isEmpty()?"not":"already")+" docked");
-				if( crtt.isEmpty() ) {
-					log.debug("PRE: getTruck, product "+productType+" carrier found");
-					carrier = new Carrier(xt);
-					carrier.setHolds(crs.getHolds(xt.getId()));
-					break;
-				}
-			}
-		}
-		return carrier;
 	}
 
 	/**

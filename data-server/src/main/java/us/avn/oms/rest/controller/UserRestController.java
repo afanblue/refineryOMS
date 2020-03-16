@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.User;
+import us.avn.oms.domain.UserRole;
 import us.avn.oms.domain.Validation;
 import us.avn.oms.service.UserService;
 
@@ -60,13 +61,13 @@ public class UserRestController {
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
     @ResponseStatus(HttpStatus.OK)
-	public User getUserById( @PathVariable Integer id ) {
+	public User getUserById( @PathVariable Long id ) {
 		log.debug("getting user by ID "+id);
 		User u = new User();
 		if( id != 0 ) {
 			u = userService.getUserById(id);
 		} else {
-			u = new User(0,"","","","","","","","",0L);
+			u = new User(0L,"","","","","","","","",0L);
 		}
 		return u;
 	}
@@ -84,7 +85,11 @@ public class UserRestController {
     @ResponseStatus(HttpStatus.CREATED)
 	public Long insertUser(@RequestBody User u) {
 		log.debug("Inserting user "+u.toString());
-		return userService.insertUser(u);
+		if( 0 == u.getId() ) { u.setId(null); }
+		Long userId = userService.insertUser(u);
+    	UserRole ur = new UserRole(u.getUserRoleId(), u.getId(), u.getRoleId());
+    	userService.insertUserRole(ur);
+		return userId;
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )

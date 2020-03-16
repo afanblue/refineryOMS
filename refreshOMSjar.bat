@@ -7,6 +7,8 @@ set WSJAR=WeatherStation-0.0.1-SNAPSHOT.jar
 
 cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\devio\libs
 
+cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\order\libs
+
 cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\scada\libs
 
 cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\sim\libs

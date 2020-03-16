@@ -40,21 +40,20 @@ import {Order,Item}    from './objects/Order.js';
 class OrderAdmin extends Component {
   constructor(props) {
     super(props);
-    Log.info("OrderAdmin - constructor");
     this.state = {
       stage: props.stage,
       updateData: false,
       updateDisplay: true,
       returnedText: null,
+      option: props.option,
       order: null,
       orderTypes: null,
       contentTypes: null,
       customers: null,
       carriers: null,
-      option: "B",
       color: "green",
       type: props.type,
-      nextCorner: 1
+      unitTimer: null
     };
     this.handleFieldChange   = this.handleFieldChange.bind(this);
     this.handleCopy          = this.handleCopy.bind(this);
@@ -62,7 +61,7 @@ class OrderAdmin extends Component {
     this.handleUpdate        = this.handleUpdate.bind(this);
     this.handleQuit          = this.handleQuit.bind(this);
     this.handleClick         = this.handleClick.bind(this);
-    this.finishXferFetch     = this.finishXferFetch.bind(this);
+    this.finishOrderFetch    = this.finishOrderFetch.bind(this);
     this.finishTypesFetch    = this.finishTypesFetch.bind(this);
     this.finishCarriersFetch = this.finishCarriersFetch.bind(this);
     this.finishCustFetch     = this.finishCustFetch.bind(this);
@@ -85,13 +84,10 @@ class OrderAdmin extends Component {
 
   /* after instantiation and before re-rendering */
   static getDerivedStateFromProps(nextProps,prevState) {
-    Log.info("getDerivedStateFromProps");
     return prevState;
   }
 
   shouldComponentUpdate(nextProps,nextState) {
-    Log.info("OrderAdmin - shouldComponentUpdate - stage : "+this.state.stage+"/"+nextProps.stage
-            +", option: "+this.state.option+"/"+nextProps.option);
     let sts = nextState.updateDisplay;
     if( nextState.stage !== this.state.stage ) { sts = true; }
     if( nextProps.option !== this.state.option ) {
@@ -100,12 +96,12 @@ class OrderAdmin extends Component {
     return sts;
   }
 
-  finishXferFetch( req ) {
+  finishOrderFetch( req ) {
     let xd = req;
     let items = xd.items;
     var x = new Order( xd.shipmentId, xd.customerId, xd.customer, xd.carrierId
                      , xd.carrier, xd.active, xd.purchase, xd.expDate, xd.actDate
-                     , xd.expVolume, xd.actVolume );
+                     , xd.expVolume, xd.actVolume, xd.contents );
     var ordItems = [];
     items.map(
       function(n,x){
@@ -139,11 +135,10 @@ class OrderAdmin extends Component {
 
   fetchFormData(id) {
     const loc = "OrderAdmin.select";
-    Log.info(loc + " - " + id);
     let myRequest = SERVERROOT + "/order/" + id;
     let req0 = new OMSRequest(loc, myRequest,
                             "Problem selecting order "+myRequest,
-                            this.finishXferFetch);
+                            this.finishOrderFetch);
     req0.fetchData();
     let req1 = new OMSRequest(loc, SERVERROOT + "/referencecode/category/content-type",
                             "Problem retrieving contents list", this.finishTypesFetch);
@@ -190,7 +185,6 @@ class OrderAdmin extends Component {
 
   updateOrder(id) {
     let clsMthd = "OrderAdmin.updateOrder";
-    Log.info(clsMthd + " - " + id);
     let newt = Object.assign({},this.state.order);
     let method = "PUT";
     let url = SERVERROOT + "/order/update";
@@ -234,8 +228,11 @@ class OrderAdmin extends Component {
   }
 
   componentDidMount() {
-    Log.info("OrderAdmin - componentDidMount");
     this.fetchList(this.state.option);
+    if( "B" === this.state.option ) {
+      var myTimerID = setInterval(() => {this.fetchList("B")}, 60000 );
+      this.setState({unitTimer:myTimerID});
+    }
   }
 
 //  componentDidUpdate( prevProps, prevState ) {
@@ -268,12 +265,34 @@ class OrderAdmin extends Component {
   }
 
 
+  /**
+   * B - both, P - purchases, 7 - week, M - last month, S - sales
+   */
   fetchList(option) {
     const clsMthd = "OrderAdmin.fetchList";
-    Log.info(clsMthd + " - " + option);
+    if( (null !== this.state.myTimerID) && (undefined !== this.state.myTimeID)) {
+      clearInterval(this.state.unitTimer);
+    }
     var myRequest = SERVERROOT + "/order/active";
-    if( option !== "B" ) {
-      myRequest = SERVERROOT + "/order/type/" + option;
+    switch (option) {
+      case "B" :
+        myRequest = SERVERROOT + "/order/active";
+        break;
+      case "P" :
+        myRequest = SERVERROOT + "/order/type/P";
+        break;
+      case "7" :
+        myRequest = SERVERROOT + "/order/lastWeek" ;
+        break;
+      case "M" :
+        myRequest = SERVERROOT + "/order/lastMonth" ;
+        break;
+      case "S" :
+        myRequest = SERVERROOT + "/order/type/S";
+        break;
+      default:
+        myRequest = SERVERROOT + "/order/active" ;
+        break;
     }
     if( myRequest !== null ) {
       const request = async () => {
@@ -297,21 +316,32 @@ class OrderAdmin extends Component {
 
   handleQuit(event) {
     event.preventDefault();
-    this.fetchList("B");
+    var myTimerId = null;
+    if( "B" === this.state.option ) {
+      var myTimerID = setInterval(() => {this.fetchList("B")}, 60000 );
+    }
+    this.fetchList(this.state.option);
     this.setState( {returnedText: null,
                     updateData: true,
                     updateDisplay:true,
                     order: null,
-                    stage: "begin" } );
+                    stage: "begin",
+                    unitTimer:myTimerID } );
+  }
+
+  componentWillUnmount() {
+    if( this.state.unitTimer !== null ) {
+      clearInterval(this.state.unitTimer);
+    }
   }
 
   render() {
-    Log.info("OrderAdmin - render - stage: "+this.state.stage);
     switch( this.state.stage ) {
       case "begin":
         return <Waiting />
       case "dataFetched":
-        return <OrderList orderData = {this.state.returnedText}
+        return <OrderList option = {this.state.option}
+                          orderData = {this.state.returnedText}
                           orderSelect = {this.handleSelect}
                           handleQuit = {this.handleQuit}
                />

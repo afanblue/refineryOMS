@@ -34,8 +34,8 @@
         <Logger name="us.avn.ws" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
-        <Logger name="us.avn.oms.mapper" level="DEBUG" additivity="false">
+        <!-- Logger name="us.avn.oms.mapper" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
-        </Logger>
+        </Logger -->
     </Loggers>
 </Configuration>

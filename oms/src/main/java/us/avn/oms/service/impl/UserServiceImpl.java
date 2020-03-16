@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.Role;
 import us.avn.oms.domain.User;
-import us.avn.oms.domain.UserPriv;
+import us.avn.oms.domain.UserRole;
 import us.avn.oms.domain.Validation;
 import us.avn.oms.mapper.MenuMapper;
 import us.avn.oms.mapper.RoleMapper;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUserById( Integer id ) {
+	public User getUserById( Long id ) {
 		User u = userMapper.getUserById(id);
 		return u;
 	}
@@ -66,11 +66,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
     public Long insertUser( User u ) {
-    	return userMapper.insertUser(u);
+    	userMapper.insertUser(u);
+    	Long userId = u.getId();
+    	return userId;
     }
 
 	@Override
-    public Collection<UserPriv> getUserRole( String alias ) {
+    public Collection<UserRole> getUserRole( String alias ) {
     	return userMapper.getUserRole(alias);
     }
 
@@ -84,5 +86,10 @@ public class UserServiceImpl implements UserService {
     	}
     	return v;
     }
+	
+	@Override
+	public Integer insertUserRole( UserRole ur ) {
+		return userMapper.insertUserRole(ur);
+	}
 	
 }

@@ -25,18 +25,18 @@ class UserList extends Component {
     super(props);
     this.state = {};
   }
-  
+
   render () {
     var json = this.props.returnedText;
     var userSelect = this.props.userSelect;
-    
+
     var userList = [];
-    var nu = new User(0,'','Create new user','','','','','','',0);
+    var nu = new User(0,'','New user','','','','','','',0,'?',0);
     userList.push(nu);
     json.map(function(n,x){var u = new User(n.id,n.alias,n.firstName,n.middleName,n.lastName,n.email
-                                           ,n.password,n.state,n.status,n.roleId); 
+                                           ,n.password,n.state,n.active,n.roleId,n.role,n.userRoleId);
                            return userList.push( u ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>OMS Users</div></h2>
         <table>
@@ -57,15 +57,15 @@ class UserList extends Component {
               return <tr key={x}>
                        <td className={["oms-spacing-120","oms-cursor-pointer"].join(' ')}>
                          <button type="button" className="link-button"
-                                 onClick={() => {userSelect({z})}} >{n.lastName}
+                                 onClick={() => {userSelect({z})}} >{n.firstName} {n.lastName}
                          </button>
                        </td>
                        <td className="oms-spacing-240">{n.email}</td>
                        <td className="oms-spacing-90">{n.alias}</td>
                        <td className="oms-spacing-50">{n.state}</td>
                        <td className="oms-spacing-50">{n.active}</td>
-                       <td className="oms-spacing-50"> ? </td>
-                     </tr>; 
+                       <td className="oms-spacing-50">{n.role}</td>
+                     </tr>;
             } )
           }
           </tbody>

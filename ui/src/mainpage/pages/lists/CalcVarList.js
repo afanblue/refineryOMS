@@ -31,16 +31,16 @@ class CalcVarList extends Component {
     var json = this.props.returnedText;
     var handleSelect = this.props.handleSelect;
     var cvList = [];
-    var nt = new Tag(0,'Create new CalcVar','','C',null,null,null,null,null,null,'N');
+    var nt = new Tag(0,'New CalcVar','','C',null,null,null,null,null,null,'N');
     var nf = new CalcVar(0,nt,'0',null,null,null,null);
     cvList.push(nf);
     json.map(function(n,x) {
         var t = new Tag( n.id,n.tag.name,n.tag.description,n.tag.tagTypeCode,n.tag.tagTypeId
                        , n.tag.misc, n.tag.c1Lat,n.tag.c1Long,n.tag.c2Lat,n.tag.c2Long,n.tag.active);
-        var cv = new CalcVar(n.id,t,n.definition,n.outputTagId,n.inputTags,null,null); 
+        var cv = new CalcVar(n.id,t,n.definition,n.outputTagId,n.inputTags,null,null);
         return cvList.push( cv );
     } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Calculation Variables</div></h2>
         <table>
@@ -65,7 +65,7 @@ class CalcVarList extends Component {
                        </td>
                        <td className="oms-spacing-180">{descr}</td>
                        <td className="oms-spacing-120">{defn}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -73,7 +73,7 @@ class CalcVarList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default CalcVarList;

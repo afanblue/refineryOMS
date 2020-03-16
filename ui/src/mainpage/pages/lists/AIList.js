@@ -32,7 +32,7 @@ class AIList extends Component {
     var json = this.props.aiData;
     var aiSelect = this.props.aiSelect;
     var aiList = [];
-    var t0 = new Tag(0,'Create new tag',null,'AI',null,null,null,null,null,null,'Y');
+    var t0 = new Tag(0,'New AI',null,'AI',null,null,null,null,null,null,'Y');
     var ai0 = new AnalogInput(0,t0,null,null,null,null, null,null,null,null,null
                              ,null,null,null,null,null
                              ,null,null,null,null,null,null,null);
@@ -45,7 +45,7 @@ class AIList extends Component {
                                 ,n.rawValue,n.scanValue,n.scanTime,n.prevValue,n.prevTime
                                 ,n.lastHistValue,n.lastHistTime,n.hh,n.hi,n.lo,n.ll,n.unitId);
         return aiList.push( ai ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Analog Inputs</div></h2>
         <table>
@@ -76,7 +76,7 @@ class AIList extends Component {
                        <td className={["oms-spacing-50","oms-fontsize-12"].join(' ')}>{n.zeroValue}</td>
                        <td className={["oms-spacing-50","oms-fontsize-12"].join(' ')}>{n.maxValue}</td>
                        <td className={["oms-spacing-70","oms-fontsize-12"].join(' ')}>{n.histTypeCode}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -84,7 +84,7 @@ class AIList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default AIList;

@@ -11,7 +11,7 @@ public interface DeviceMapper {
 	
 	Collection<Device> getAllDevices( );
 	
-	Collection<Device> getAllActiveDevices();
+	Collection<Device> getAllActiveDevices( Integer sec );
 	
 	Collection<Device> getAllActiveDevicesOfType( Long t );
 	

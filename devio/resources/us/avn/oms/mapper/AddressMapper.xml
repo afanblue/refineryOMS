@@ -12,7 +12,7 @@
   <resultMap id="addrmap"  type="Address">
     <result property="id"           column="id"/>
     <result property="deviceId"     column="device_id"/>
-    <result property="interval"     column="interval"/>
+    <result property="interval"     column="cycle_time"/>
     <result property="offset"       column="offset"/>
     <result property="iaddr1"       column="iaddr1"/>
     <result property="saddr1"       column="saddr1"/>
@@ -51,6 +51,7 @@
      where t.active = 'Y'
        and a.device_id = #{param1}
        and t.tag_type_code = #{param2}
+       and mod(#{param3},a.cycle_time) = a.offset * 10
   </select>
   
   <select id="getAddress" resultMap="addrmap">
@@ -70,7 +71,7 @@
           , #{iaddr2}, #{saddr2}, #{iaddr3}, #{saddr3}, #{iaddr4}, #{saddr4}
           , #{iaddr5}, #{saddr5}, #{iaddr6}, #{saddr6} )
     on duplicate key update
-            device_id = #{deviceId}, cycle_time = #{cycleTime}, offset = #{offset}
+            device_id = #{deviceId}, cycle_time = #{interval}, offset = #{offset}
           , iaddr1 = #{iaddr1}, saddr1 = #{saddr1}, iaddr2 = #{iaddr2}, saddr2 = #{saddr2}
           , iaddr3 = #{iaddr3}, saddr3 = #{saddr3}, iaddr4 = #{iaddr4}, saddr4 = #{saddr4}
           , iaddr5 = #{iaddr5}, saddr5 = #{saddr5}, iaddr6 = #{iaddr6}, saddr6 = #{saddr6}
@@ -81,7 +82,7 @@
   
   <update id="updateDevice" parameterType="Address">
     update device 
-       set  device_id = #{deviceId}, interval = #{interval}, offset = #{offset}
+       set  device_id = #{deviceId}, cycle_time = #{interval}, offset = #{offset}
          , iaddr1 = #{iaddr1}, saddr1 = #{saddr1}, iaddr2 = #{iaddr2}, saddr2 = #{saddr2}
          , iaddr3 = #{iaddr3}, saddr3 = #{saddr3}, iaddr4 = #{iaddr4}, saddr4 = #{saddr4}
          , iaddr5 = #{iaddr5}, saddr5 = #{saddr5}, iaddr6 = #{iaddr6}, saddr6 = #{saddr6}

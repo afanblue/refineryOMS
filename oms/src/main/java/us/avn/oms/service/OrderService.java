@@ -91,6 +91,12 @@ public interface OrderService {
 	Collection<Order> getActiveOrders( );
 	
 	/**
+	 * Get all repeat orders, ie, those with a non-zero cycle time
+	 * @return all repeat orders
+	 */
+	Collection<Order> getRepeatOrders();
+	
+	/**
 	 * Get all of the pending orders, i.e., those that have some 
 	 * items with active = 'P'
 	 * @return All pending orders

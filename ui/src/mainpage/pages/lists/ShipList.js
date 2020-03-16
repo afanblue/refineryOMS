@@ -25,18 +25,18 @@ class ShipList extends Component {
     super(props);
     this.state = {};
   }
-  
+
   render () {
     var json  = this.props.returnedText;
     var ts    = this.props.shipSelect;
-    
+
     var shipList = [];
-    var nt = new Tag(0,'Create new ship','','S','',0,0,0,0,0,'N');
+    var nt = new Tag(0,'New ship','','S','',0,0,0,0,0,'N');
     shipList.push(nt);
     json.map(function(n,x){var t = new Tag(n.id,n.name,n.description,n.tagTypeCode,n.tagTypeId,n.misc
-                                           ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long,n.active); 
+                                           ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long,n.active);
                            return shipList.push( t ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div>
           <img src="./images/spacer.png" alt="" width="30px" height="2px"/>Ships
@@ -62,7 +62,7 @@ class ShipList extends Component {
                        </td>
                        <td className="oms-spacing-240">{n.description}</td>
                        <td className="oms-spacing-50">{n.active}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>

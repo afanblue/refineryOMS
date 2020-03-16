@@ -84,7 +84,7 @@ class DockForm extends Component {
     outTagSelect = <select id="outTagId" name="outTagId" value={t.outTagId} onChange={fc} >{carrierList.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } )}</select>
 
 /* IF stationList is null, then we only want to set the Carrier */
-    if( stnList !== null ) {
+    if( stnList !== undefined ) {
 
 /*    set name input to readonly */
       nameInput = <div><input type="text" id="name" name="name" value={t.name} className="oms-spacing-80" size="10" maxLength="10" onChange={fc} /></div>

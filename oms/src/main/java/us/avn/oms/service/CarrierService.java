@@ -39,5 +39,9 @@ public interface CarrierService {
 	public void updateHold( Hold h );
 	
 	public void insertHold( Hold h );
+	
+	public Carrier getCrudeCarrier();
+
+	public Carrier getProductCarrier( String carrierType, String productType, Double volRequired );
 
 }

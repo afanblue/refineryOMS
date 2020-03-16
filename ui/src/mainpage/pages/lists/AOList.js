@@ -31,7 +31,7 @@ class AOList extends Component {
     var json = this.props.aoData;
     var aoSelect = this.props.aoSelect;
     var aoList = [];
-    var t0 = new Tag(0,'Create new tag',null,'AO',null,null,null,null,null,null,'Y');
+    var t0 = new Tag(0,'New AO',null,'AO',null,null,null,null,null,null,'Y');
     var ao0 = new AnalogOutput(0,t0,null,null ,null,null,null,null,null ,null,null,null,null,null);
     aoList.push(ao0);
     json.map(function(n,x){
@@ -41,7 +41,7 @@ class AOList extends Component {
                                  , n.histTypeCode, n.percent, n.slope, n.scanValue, n.scanTime
                                  , n.prevValue, n.prevTime, n.lastHistValue, n.lastHistTime, n.unitId);
         return aoList.push( ao ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Analog Outputs</div></h2>
         <table>
@@ -70,7 +70,7 @@ class AOList extends Component {
                        <td className={["oms-spacing-50","oms-fontsize-12"].join(' ')}>{n.zeroValue}</td>
                        <td className={["oms-spacing-50","oms-fontsize-12"].join(' ')}>{n.maxValue}</td>
                        <td className={["oms-spacing-70","oms-fontsize-12"].join(' ')}>{n.histTypeCode}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -78,7 +78,7 @@ class AOList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default AOList;

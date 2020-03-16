@@ -25,32 +25,32 @@ class TagList extends Component {
     super(props);
     this.state = {};
   }
-  
+
   render () {
     var type  = this.props.type;
     let blankItem = {};
     blankItem.id = null;
-    blankItem.name = '---';       
+    blankItem.name = '---';
     var types = this.props.types.slice(0);
     types.unshift(blankItem);
     var json  = this.props.returnedText;
     var ts    = this.props.tagSelect;
     var fc    = this.props.fieldChange;
-    
+
     var tagList = [];
-    var nt = new Tag(0,'Create new tag','','','',0,0,0,0,0,'N');
+    var nt = new Tag(0,'New tag','','','',0,0,0,0,0,'N');
     tagList.push(nt);
     json.map(function(n,x){var t = new Tag(n.id,n.name,n.description,n.tagTypeCode,n.tagTypeId,n.misc
-                                           ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long,n.active); 
+                                           ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long,n.active);
                            return tagList.push( t ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div>
           <img src="./images/spacer.png" alt="" width="30px" height="2px"/>OMS Tags
           <img src="./images/spacer.png" alt="" width="10px" height="2px"/>
-          <select id="type" name="type" value={type} 
+          <select id="type" name="type" value={type}
                   onChange={fc} >
-            { types.map( 
+            { types.map(
               function(n,x){
                 return <option key={x} value={n.code}>{n.name}</option>
               } )
@@ -85,7 +85,7 @@ class TagList extends Component {
                        <td className="oms-spacing-150">{n.c1Lat},{n.c1Long}</td>
                        <td className="oms-spacing-150">{n.c2Lat},{n.c2Long}</td>
                        <td className="oms-spacing-50">{n.active}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>

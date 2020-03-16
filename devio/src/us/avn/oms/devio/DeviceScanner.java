@@ -88,7 +88,10 @@ public class DeviceScanner extends TimerTask {
 		if( rds  == null ) { rds  = (RawDataService) context.getBean("rawDataService"); }
 		if( wds  == null ) { wds  = (WatchdogService) context.getBean("watchdogService"); }
 		
-		Iterator<Device> idev = devs.getAllActiveDevices().iterator();
+		Calendar now = Calendar.getInstance();
+		Integer sec = now.get(Calendar.MINUTE)*60+now.get(Calendar.SECOND); 
+
+		Iterator<Device> idev = devs.getAllActiveDevices(sec).iterator();
 	    IODeviceFactory iodf = new IODeviceFactory();
 		while( idev.hasNext() ) {
 			Device d = idev.next();
@@ -96,8 +99,6 @@ public class DeviceScanner extends TimerTask {
 	        iodevs.put(d.getSeqNo(), iodev);
 		}
 		
-		Calendar now = Calendar.getInstance();
-		Integer sec = now.get(Calendar.SECOND); 
 		wds.updateWatchdog(Watchdog.DCAO);
 //		process the outputs
 		for( Map.Entry<Long, IODevice> entry : iodevs.entrySet()) {
@@ -108,16 +109,14 @@ public class DeviceScanner extends TimerTask {
 	    	dev.setDigitalOutputs(sec);			
 	    	log.debug("End outputs for "+d.getType()+"/"+d.getModel());
 		}
-		if( sec == 0 ) {
-			wds.updateWatchdog(Watchdog.DCAI);
-			for( Map.Entry<Long, IODevice> entry : iodevs.entrySet()) {
-				IODevice dev = entry.getValue();
-				Device d = dev.getDevice();
-		    	log.debug("Start inputs for "+d.getType()+"/"+d.getModel());
-		    	dev.getAnalogInputs(sec);
-		    	dev.getDigitalInputs(sec);			
-		    	log.debug("End inputs for "+d.getType()+"/"+d.getModel());
-			}
+		wds.updateWatchdog(Watchdog.DCAI);
+		for( Map.Entry<Long, IODevice> entry : iodevs.entrySet()) {
+			IODevice dev = entry.getValue();
+			Device d = dev.getDevice();
+	    	log.debug("Start inputs for "+d.getType()+"/"+d.getModel());
+	    	dev.getAnalogInputs(sec);
+	    	dev.getDigitalInputs(sec);			
+	    	log.debug("End inputs for "+d.getType()+"/"+d.getModel());
 		}
 	}
 	

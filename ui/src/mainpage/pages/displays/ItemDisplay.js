@@ -44,11 +44,12 @@ class ItemDisplay extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    return state;
-//    this.setState({ id: nextProps.id,
-//                    items: nextProps.items,
-//                    plotDetails: nextProps.plotDetails,
-//                    quit:  nextProps.quit });
+    return {
+           id: nextProps.id,
+           items: nextProps.items,
+           plotDetails: nextProps.plotDetails,
+           fieldChange: nextProps.fieldChange,
+           quit: nextProps.quit};
   }
 
     getStyles() {

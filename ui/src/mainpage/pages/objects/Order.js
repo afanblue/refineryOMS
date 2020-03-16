@@ -18,19 +18,19 @@
 import moment    from 'moment';
 
 
-export function Order(i,ci,c,cri,cr,a,p,xd,ad,xv,av) {
-  let fmt = "YYYY-MM-DD";
-  let now = moment().format(fmt);
+export function Order(i,ci,c,cri,cr,a,p,xd,ad,xv,av,cnts) {
+  let fmt = "YY-MM-DD HH:MM";
   this.shipmentId=i; this.customerId=ci; this.customer=c; this.carrierId=cri;
-  this.carrier=cr; this.active=a; this.purchase=p; 
-  this.expDate = (xd===null)?now:moment.utc(xd*1).format(fmt); 
-  this.actDate = (ad===null)?"":moment.utc(ad*1).format(fmt);
+  this.carrier=cr; this.active=a; this.purchase=p;
+  this.expDate=(xd===null)?"":moment.utc(xd*1000).format(fmt);
+  this.actDate=(ad===null)?"":moment.utc(ad*1000).local().format(fmt);
   this.expVolume=xv; this.actVolume=av; this.items=null;
+  this.contents=cnts;
 }
 
 export function Item(si,ino,nw,ccd,xvn,xvx,av) {
-  this.shipmentId=si; this.itemNo=ino; 
+  this.shipmentId=si; this.itemNo=ino;
   this.newItem=(nw==="Y"?nw:"N"); this.contentCd=ccd;
-  this.expVolumeMin=xvn; this.expVolumeMax=xvx; 
+  this.expVolumeMin=xvn; this.expVolumeMax=xvx;
   this.actVolume=(av===null?0:av);
 }

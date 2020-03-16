@@ -71,12 +71,20 @@ class PlotGroupVars extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    if( nextProps.stage !== state.stage && nextProps.stage === "begin")
-    {
-      if( state.unitTimer !== null ) { clearInterval(state.unitTimer); }
-      this.fetchData(nextProps.id);
+    if( state.stage == "generatePlot" ) {
+      if( nextProps.stage !== state.stage && nextProps.stage === "begin")
+      {
+ //       if( state.unitTimer !== null ) { clearInterval(state.unitTimer); }
+        return { id: nextProps.id };
+      }
     }
-    return state;
+    return { id: nextProps.id };
+  }
+
+  componentDidUpdate( prevProps, prevState ) {
+    if( this.state.id != prevState.id ) {
+      this.fetchData(this.state.id);
+    }
   }
 
   shouldComponentUpdate(nextProps,nextState) {

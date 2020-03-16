@@ -113,18 +113,17 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
       }
     case "Orders" :
       option = (((option==="")||(option===null))?"Active":option);
-      Log.info("Orders: "+option);
       switch ( option ) {
         case "Active":
           return <OrderAdmin stage={stage} option="B" />
         case "LastWeeksOrders":
-          return <DefaultContents pageName={pageName} />
+          return <OrderAdmin stage={stage} option="7" />
         case "LastMonthsOrders":
-          return <DefaultContents pageName={pageName} />
+          return <OrderAdmin stage={stage} option="M" />
         case "Purchases":
-          return <OrderAdmin pageName={pageName} option="P"/>
+          return <OrderAdmin stage={stage} option="P"/>
         case "Sales":
-          return <OrderAdmin pageName={pageName} option="S"/>
+          return <OrderAdmin stage={stage} option="S"/>
         case "VesselDock":
           return <DockingAdmin stage={stage} />
         default:
@@ -148,7 +147,7 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
                                tankType="filled" />
         default:
           return <Field stage={stage}
-                        field={option}
+                        fieldName={option}
                         tankType="normal" />
       }
     case "PlotGroups" :

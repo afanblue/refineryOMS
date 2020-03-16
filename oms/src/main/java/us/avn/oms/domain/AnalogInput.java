@@ -53,10 +53,13 @@ public class AnalogInput extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
+	public static final String ACCUMULATOR = "A";
+	public static final String ANGLE_HEADING = "R";
 	public static final String CALCULATED = "C";
 	public static final String FLOW_RATE = "F";
 	public static final String LEVEL = "L";
 	public static final String MANUAL = "M";
+	public static final String MISCELLANEOUS = "S";
 	public static final String PRESSURE = "P";
 	public static final String TEMPERATURE = "T";
 	

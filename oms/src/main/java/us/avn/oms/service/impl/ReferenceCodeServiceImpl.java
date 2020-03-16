@@ -43,7 +43,7 @@ public class ReferenceCodeServiceImpl implements ReferenceCodeService {
 
 	@Override
 	public Collection<ReferenceCode> getAllContentTypes( ) {
-		return rcm.getAllForCategory("content-type-vw");
+		return rcm.getAllForCategory("content-type");
 	}
 	
 	@Override

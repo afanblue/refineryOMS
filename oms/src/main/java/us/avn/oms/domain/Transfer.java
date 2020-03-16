@@ -427,6 +427,7 @@ public class Transfer extends OMSObject implements Serializable {
 	 *
 	 * @param ts  - tagService
 	 * @param tks - tankService
+	 * @return T of source actually found
 	 *
 	 * Notes:
 	 * {@code
@@ -438,7 +439,8 @@ public class Transfer extends OMSObject implements Serializable {
 	 * 		.. .. .. save the tagID as the source ID
 	 * }
 	 */
-	public void checkSource( TagService ts, TankService tks ) {
+	public boolean checkSource( TagService ts, TankService tks ) {
+		boolean rtnSts = false;
 		Tag src = ts.getTag(sourceId);
 		if( Tag.PROCESS_UNIT.equals(src.getTagTypeCode())) {
 			Iterator<Value> is = tks.getUnusedTankVolumesForUnit(src.getName()).iterator();
@@ -448,29 +450,34 @@ public class Transfer extends OMSObject implements Serializable {
 				if( aiv.getValue() > maxVolume ) {
 					maxVolume = aiv.getValue();
 					this.sourceId = aiv.getId();
+					rtnSts = true;
 				}
 			}
+		} else {
+			rtnSts = true;
 		}
+		return rtnSts;
 	}
 	
 	/**
 	 * Check the destination for a transfer.  If it's a process unit, find the tank
 	 * with the least volume and set the source ID to that tank. 
-	 * 				
+	 * 	
+	 * <br>Notes:
+	 * <br>	get destination tag
+	 * <br>	IF destination tag is a process unit
+	 * <br>	.. get the (rough) tank volumes of this unit
+	 * <br>	.. WHILE there are tanks left to check
+	 * <br>	.. .. IF this has the least volume
+	 * <br>	.. .. .. save the tagID as the source ID
+	 *
 	 * @param ts  TagService
 	 * @param tks TankService
+	 * @return T if destination actually found;
 	 * 
-	 * Notes:
-	 * {@code
-	 * 		get destination tag
-	 * 		IF destination tag is a process unit
-	 * 		.. get the (rough) tank volumes of this unit
-	 * 		.. WHILE there are tanks left to check
-	 * 		.. .. IF this has the least volume
-	 * 		.. .. .. save the tagID as the source ID
-	 * }
 	 */
-	public void checkDestination( TagService ts, TankService tks ) {
+	public boolean checkDestination( TagService ts, TankService tks ) {
+		boolean rtnSts = false;
 		Tag dest = ts.getTag(destinationId);
 		if( Tag.PROCESS_UNIT.equals(dest.getTagTypeCode())) {
 			Iterator<Value> is = tks.getUnusedTankVolumesForUnit(dest.getName()).iterator();
@@ -480,9 +487,13 @@ public class Transfer extends OMSObject implements Serializable {
 				if( aiv.getValue() < minVolume ) {
 					minVolume = aiv.getValue();
 					this.destinationId = aiv.getId();
+					rtnSts = true;
 				}
 			}
+		} else {
+			rtnSts = true;
 		}
+		return rtnSts;
 	}
 
 }

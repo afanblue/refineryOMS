@@ -27,6 +27,7 @@ import DefaultContents from './DefaultContents.js';
 import Log             from '../requests/Log.js';
 import OMSRequest      from '../requests/OMSRequest.js';
 import Waiting         from './Waiting.js';
+import {Role}          from './objects/Role.js';
 import {User}          from './objects/User.js';
 
 
@@ -64,23 +65,13 @@ class UserAdmin extends Component {
   }
 
   /* on instantiation and re-rendering */
-  static getDerivedStateFromProps(nextProps, prevState ) {
+  static getDerivedStateFromProps(nextProps, state ) {
 //    let clsMthd = "getDerivedStateFromProps";
-    let state = prevState;
-    if( nextProps.stage !== state.stage )
-    {
-      state = { stage: prevState.stage,
-                updateData: true,
-                updateDisplay: false,
-                returnedText: prevState.returnedText,
-                roles: prevState.roles,
-                user: prevState.user };
-    }
     return state;
   }
 
   shouldComponentUpdate(nextProps,nextState) {
-    let sts = nextState.updateDisplay || nextState.updateData;
+    let sts = nextState.updateDisplay;
     return sts;
   }
 
@@ -88,14 +79,17 @@ class UserAdmin extends Component {
   finishUserFetch( req ) {
     let ud = req;
     const u = new User(ud.id,ud.alias,ud.firstName,ud.middleName,ud.lastName,ud.email
-                      ,ud.password,ud.state,ud.status,ud.roleId);
+                      ,ud.password,ud.state,ud.active,ud.roleId,ud.role,ud.userRoleId);
     this.setState({stage: "userRetrieved", updateDisplay: true, user: u });
   }
 
   finishRolesFetch(req) {
-    let roles = req;
+    let roles = [];
+    var nr = new Role(0,"-","N",null);
+    roles.push(nr);
+    req.map(function(n,x){var r = new Role(n.id,n.name,n.active,n.parents);
+                           return roles.push( r ); } );
     this.setState({stage: "userRetrieved", updateDisplay: true, roles: roles });
-
   }
 
   handleUserSelect(event) {
@@ -150,9 +144,14 @@ class UserAdmin extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
+    let np = name.split(".");
     let unew = Object.assign({},this.state.user);
-    unew[name] = value;
-    this.setState({user:unew, activity:"userInput" } );
+    if( "roleId" === name ) {
+      unew[name] = parseInt(value,10);
+    } else {
+      unew[name] = value;
+    }
+    this.setState({user:unew} );
   }
 
   fetchList() {

@@ -36,7 +36,7 @@ class AlarmTypeForm extends Component {
           code: PropTypes.string,
           alarmMsgId: PropTypes.number,
           handleQuit: PropTypes.func,
-          FieldChange: PropTypes.func,
+          fieldChange: PropTypes.func,
           typeUpdate: PropTypes.func
       }
   }
@@ -46,7 +46,7 @@ class AlarmTypeForm extends Component {
     const msgs   = this.props.msgs;
     const typeUpdate  = this.props.typeUpdate;
     const handleQuit  = this.props.handleQuit;
-    const fieldChange = this.props.FieldChange;
+    const fieldChange = this.props.fieldChange;
 
     return (
       <div className="oms-tabs">

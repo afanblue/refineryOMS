@@ -3,7 +3,9 @@ param(
   [string]$PROC="watchdog",
   [string]$DIR="watchdog",
   [string]$CPATH="us.avn.oms.watchdog.Watchdog",
-  [string]$JAR="watchdog"
+  [string]$JAR="watchdog",
+  [string]$ARG1,
+  [string]$ARG2
 )
 
 date 
@@ -60,7 +62,7 @@ echo $ERR
 Add-Content -Path $OUT -Value (Get-Date)
 Add-Content -Path $ERR -Value (Get-Date)
 
-$ARGLIST='-cp '+$CLASSPATH+" "+$CPATH
+$ARGLIST='-cp '+$CLASSPATH+" "+$CPATH+" "+$ARG1+" "+$ARG2
 echo $ARGLIST
 
 $PROCID=(Start-Process java -argumentlist $ARGLIST -NoNewWindow -RedirectStandardOutput $OUT -RedirectStandardError $ERR -passthru).ID

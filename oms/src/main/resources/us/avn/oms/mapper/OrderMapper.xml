@@ -13,9 +13,14 @@
     <result property="purchase"       column="purchase" />
     <result property="expDate"        column="exp_date" />
     <result property="actDate"        column="act_date" />
+    <result property="crontabId"      column="crontab_id" />
+    <result property="delay"          column="delay" />
     <result property="expVolume"      column="exp_volume" />
     <result property="actVolume"      column="act_volume" />
     <result property="transferId"     column="transfer_id"/>
+    <result property="active"         column="active" />
+    <result property="contents"       column="contents" />
+    <result property="carrier"        column="carrier" />
   </resultMap>
   
   <resultMap id="itemMap" type="Item">
@@ -104,21 +109,36 @@
   <select id="getActiveOrders" resultMap="ordmap">
     select distinct s.shipment_id, s.customer_id, c.name customer
     	 , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-    	 , ovv.act_volume
+    	 , round(ovv.act_volume,4) act_volume
+    	 , 'A' active, ocv.contents, ocv2.carrier
       from shipment s join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
       join active_order_vw aov on s.shipment_id = aov.shipment_id
+      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
+      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
      where aov.sc != 0
+       and coalesce(s.crontab_id,0) = 0
      order by s.exp_date desc
+  </select>
+
+  <select id="getRepeatOrders" resultMap="ordmap">
+    select distinct s.shipment_id, s.customer_id, c.name customer, s.purchase
+        , s.crontab_id, s.delay, s.act_date 
+     from shipment s join customer c on s.customer_id = c.id 
+    where coalesce(s.crontab_id,0) != 0
+    order by shipment_id asc
   </select>
 
   <select id="getPendingOrders" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
+         , round(ovv.act_volume,4) act_volume, ovv.transfer_id
+         , 'P' active
       from shipment s join shipment_item si on s.shipment_id=si.shipment_id
       join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
      where si.active = 'P'
+       and coalesce(s.crontab_id,0) = 0
      order by s.exp_date
   </select>
   
@@ -127,7 +147,7 @@
          , si.transfer_id, coalesce(si.content_cd,'N') new_item, si.carrier_id
          , coalesce(si.exp_volume_min,0) min_vol
          , coalesce(si.exp_volume_max,0) max_vol
-         , coalesce(si.act_volume,0) act_vol
+         , round(coalesce(si.act_volume,0),4) act_vol
       from shipment_item si
       left outer join tag t on si.carrier_id=t.id 
      where si.active = 'P'
@@ -140,29 +160,53 @@
 
   <select id="getOrdersByType" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
+         , round(ovv.act_volume,4) act_volume
+         , if( aov.sc!=0,'A', if( pov.sc!=0, 'P', 'C')) active
+         , ocv.contents, ocv2.carrier
       from shipment s join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
-     where s.purchase = #{param1}
-       and s.exp_date > current_date()-interval 3 month
+      join active_order_vw aov on s.shipment_id = aov.shipment_id
+      join pending_order_vw pov on s.shipment_id = pov.shipment_id
+      join complete_order_vw cov on s.shipment_id = cov.shipment_id
+      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
+      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
+     where s.exp_date > current_date()-interval 1 month
+       and s.purchase = #{param1}
      order by s.exp_date desc
   </select>
 
   <select id="getLastWeeksOrders" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
+         , round(ovv.act_volume,4) act_volume
+         , if( aov.sc!=0,'A', if( pov.sc!=0, 'P', 'C')) active
+         , ocv.contents, ocv2.carrier
       from shipment s join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
+      join active_order_vw aov on s.shipment_id = aov.shipment_id
+      join pending_order_vw pov on s.shipment_id = pov.shipment_id
+      join complete_order_vw cov on s.shipment_id = cov.shipment_id
+      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
+      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
      where s.exp_date > current_date()-interval 1 week 
      order by s.exp_date desc
   </select>
   
   <select id="getLastMonthsOrders" resultMap="ordmap">
     select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume
+         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
+         , round(ovv.act_volume,4) act_volume
+         , if( aov.sc!=0,'A', if( pov.sc!=0, 'P', 'C')) active
+         , ocv.contents, ocv2.carrier
       from shipment s join customer c on s.customer_id = c.id
       join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
+      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
      where s.exp_date > current_date()-interval 1 month 
+      join active_order_vw aov on s.shipment_id = aov.shipment_id
+      join pending_order_vw pov on s.shipment_id = pov.shipment_id
+      join complete_order_vw cov on s.shipment_id = cov.shipment_id
+      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
      order by s.exp_date desc
   </select>
     

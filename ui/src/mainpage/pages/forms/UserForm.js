@@ -32,6 +32,8 @@ class UserForm extends Component {
           user: PropTypes.object,
           roles: PropTypes.array,
           id: PropTypes.number,
+          roleId: PropTypes.number,
+          userRoleId: PropTypes.number,
           alias: PropTypes.string,
           status: PropTypes.string,
           password: PropTypes.string,
@@ -39,7 +41,6 @@ class UserForm extends Component {
           middleName: PropTypes.string,
           lastName: PropTypes.string,
           email: PropTypes.string,
-          state: PropTypes.string,
           userUpdate: PropTypes.func,
           fieldChange: PropTypes.func,
           handleQuit: PropTypes.func
@@ -75,8 +76,8 @@ class UserForm extends Component {
           <tr>
             <th className="oms-spacing-180">User Status:</th>
             <td className="oms-spacing">
-              <select id="status" name="status" value={u.status}
-                      onChange={fieldChange} >
+              <select id="active" name="active" value={u.active} onChange={fieldChange} >
+                <option value="">------</option>
                 <option value="Y">Active</option>
                 <option value="N">Inactive</option>
               </select>
@@ -123,16 +124,10 @@ class UserForm extends Component {
             </td>
           </tr>
           <tr>
-            <th className="oms-spacing-180">User Request State:</th>
-            <td className="oms-spacing">
-                <input type="hidden" id="state" name="state" value={u.state}/>
-                {u.state}
-            </td>
-          </tr>
-          <tr>
             <th className="oms-spacing-180">Role:</th>
             <td className="oms-spacing">
-              <select id="role_id" name="role_id" onChange={fieldChange} >
+              <input type="hidden" id="userRoleId" name="userRoleId" value={u.userRoleId} />
+              <select id="roleId" name="roleId" value={u.roleId} onChange={fieldChange} >
                 {roles.map(
                    function(n,x){
                      return <option key={x} value={n.id}>{n.name}</option>

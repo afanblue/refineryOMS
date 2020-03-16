@@ -16,22 +16,17 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.Collection;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class User implements Serializable {
+public class User extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
 	/*
-	 * id, alias, first_name, middle_name, last_name, email , password, state, status
+	 * id, alias, first_name, middle_name, last_name, email , password, state, active
 	 */
-	private Integer id;
+	private Long id;
 	private String alias;
 	private String firstName;
 	private String middleName;
@@ -39,14 +34,26 @@ public class User implements Serializable {
 	private String email;
 	private String password;
 	private String state;
-	private String status;
+	private String active;
+	private Long userRoleId;
 	private Long roleId;
-//	private Collection<Role> roles;
+	private String role;
 	  
-	public User() { }
+	public User() { 
+		this.id = 0L;
+		this.alias = "";
+		this.firstName = "";
+		this.middleName = "";
+		this.lastName = "";
+		this.password = "";
+		this.state = "P";
+		this.active = "N";
+		this.roleId = 0L;
+		this.userRoleId = 0L;		
+	}
 	
-	public User( Integer i, String a, String fn, String mn, String ln
-			   , String e, String p, String st, String sts, Long rid ) {
+	public User( Long i, String a, String fn, String mn, String ln
+			   , String e, String p, String st, String act, Long rid ) {
 		this.id = i;
 		this.alias = a;
 		this.firstName = fn;
@@ -55,15 +62,28 @@ public class User implements Serializable {
 		this.email = e;
 		this.password = p;
 		this.state = st;
-		this.status = sts;
+		this.active = act;
 		this.roleId = rid;
+		this.userRoleId = 0L;
+	}
+	
+	public User( User u ) {
+		this.id = 0L;
+		this.alias = "";
+		this.firstName = u.firstName;
+		this.middleName = u.middleName;
+		this.lastName = u.lastName;
+		this.email = u.email;
+		this.password = "";
+		this.roleId = u.roleId;
+		this.userRoleId = 0L;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
@@ -131,25 +151,24 @@ public class User implements Serializable {
 	}
 	
 
-	public String getStatus() {
-		return status;
+	public String getActive() {
+		return active;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setActive(String act) {
+		this.active = act;
 	}
 
 
-/*
-	public Collection<Role> getRoles() {
-		return roles;
+	public Long getUserRoleId() {
+		return userRoleId;
 	}
 
-	public void setRoles(Collection<Role> roles) {
-		this.roles = roles;
+	public void setUserRoleId(Long urId) {
+		this.userRoleId = urId;
 	}
 	
-*/
+
 	public Long getRoleId() {
 		return roleId;
 	}
@@ -159,18 +178,13 @@ public class User implements Serializable {
 	}
 	
 
-	public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        String json;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			json = "{\"error\":\""+sw.toString()+"\"}";
-		}
-		return json;
+	public String getRole() {
+		return role;
 	}
+
+	public void setRole(String r) {
+		this.role = r;
+	}
+	
 
 }

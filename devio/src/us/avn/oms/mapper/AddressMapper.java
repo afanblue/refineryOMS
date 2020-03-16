@@ -8,7 +8,7 @@ public interface AddressMapper {
 
 	Collection<Address> getAddressesForDevice( Long devId );
 	
-	Collection<Address> getActiveAddressesForDeviceByType( Long devId, String type);
+	Collection<Address> getActiveAddressesForDeviceByType( Long devId, String type, Integer sec);
 	
 	Address getAddress( Long id);
 		

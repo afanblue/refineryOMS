@@ -273,7 +273,8 @@ class DockingAdmin extends Component {
           return <DockForm tag           = {this.state.tag}
                            carrierList   = {this.state.carrierList}
                            sensorList    = {this.state.sensorList}
-                           pumpList      = {null}
+                           pumpList      = {this.state.pumpList}
+                           stationList   = {undefined}
                            contentsList  = {this.state.contentsList}
                            tagUpdate     = {this.handleTagUpdate}
                            fieldChange   = {this.handleFieldChange}

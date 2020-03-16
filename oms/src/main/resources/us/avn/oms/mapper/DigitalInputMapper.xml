@@ -64,6 +64,7 @@
   <resultMap id="aiValueMap" type="AIValue" >
     <result property="tagId"       column="id" />
     <result property="name"        column="name" />
+    <result property="description" column="description" />
     <result property="value"       column="value" />
     <result property="valueText"   column="value_text" />
     <result property="scanTime"    column="scan_time" />
@@ -129,7 +130,7 @@
   </select>
   
   <select id="getProcUnitValues" resultMap="aiValueMap">
-    select rtt.id, tp.id, tc.id, tc.name, di.scan_value value, vv.name value_text
+    select rtt.id, tp.id, tc.id, tc.name, tc.description, di.scan_value value, vv.name value_text
          , di.scan_time, coalesce(alm.code,'NORM') code, ac.item_value color
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id 
       join tag tc on rtt.child_tag_id = tc.id 

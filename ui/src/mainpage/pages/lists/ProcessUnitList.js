@@ -32,16 +32,16 @@ class ProcessUnitList extends Component {
     var json = this.props.returnedText;
     var select = this.props.puSelect;
     var puList = [];
-    var pu = new ProcessUnit( 0, "New Process Unit", "Create new process unit", "", "PU", null
+    var pu = new ProcessUnit( 0, "New", "Create new process unit", "", "PU", null
                             , null, null, null, null, null, "N", null);
 //    var tpu = new ProcessUnit(pu, null);
     puList.push(pu);
     json.map(function(n,x){
         var ts = n.tags;
         var pu = new ProcessUnit( n.id, n.name, n.description, n.tagTypeCode, n.tagTypeId
-                                , n.misc, n.c1Lat, n.c1Long, n.c2Lat, n.c2Long, n.active, ts); 
+                                , n.misc, n.c1Lat, n.c1Long, n.c2Lat, n.c2Long, n.active, ts);
         return puList.push( pu ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Process Units</div></h2>
         <table>
@@ -69,7 +69,7 @@ class ProcessUnitList extends Component {
                        </td>
                        <td className="oms-spacing-240">{n.description}</td>
                        <td className="oms-spacing-80">{n.active}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -77,7 +77,7 @@ class ProcessUnitList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default ProcessUnitList;

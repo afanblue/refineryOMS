@@ -42,6 +42,27 @@ import us.avn.oms.domain.Watchdog;
 import us.avn.oms.service.ConfigService;
 import us.avn.oms.service.WatchdogService;
 
+/**
+ * WatchdogCheck verifies that all of the active processes in the watchdog
+ * table are actually being updated.  There are three global variables for
+ * this class, the lastCheckedCount, lastUpdateCount, and notifiedCount.
+ * <br>It loops through all of the active records (active='Y') and looks to see if
+ * <ol><li> the lastCheckedCount is greater than or equal to the interval from the 
+ * table. </li>
+ * <li> If it does not, then it's <b>not time to check to see if the program has 
+ * run</b>. So the lastCheckedCount is updated.</li>  
+ * <li> If it does, then it is time to <b>see if the program has run</b>, so the 
+ * lastUpdateCount is checked.</li>
+ * <li>If it doesn't match the value from the record, then <b>all is well</b>, 
+ * and the lastCheckedCount is cleared.</li>
+ * <li>If it does, then the <b>program didn't run</b>, so we need to </li>
+ * <li>increment the notified count</li>
+ * <li>If the notified count exceeds the limit, we notify the "mail_user" and clear the notified count</li>
+ * <li>Otherwise, we just increment the notified count</li>
+ * </ol>
+ * @author Allan
+ *
+ */
 public class WatchdogCheck extends TimerTask {
 
 	private static final long   DEFAULT_INTERVAL = 60L;
@@ -62,8 +83,9 @@ public class WatchdogCheck extends TimerTask {
     private WatchdogService wds = null;
 
     private Long emailInterval;
-    private HashMap<Long,Long> lastUpdateCount = new HashMap<Long,Long>(10);
-    private HashMap<Long,Long> notifiedCount = new HashMap<Long,Long>(10);
+    private HashMap<Long,Long> lastCheckedCount = new HashMap<Long,Long>(20);
+    private HashMap<Long,Long> lastUpdateCount = new HashMap<Long,Long>(20);
+    private HashMap<Long,Long> notifiedCount = new HashMap<Long,Long>(20);
     private static HashMap<String,String> configuration;
    
     public WatchdogCheck( String[] args ) { 

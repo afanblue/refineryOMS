@@ -14,32 +14,36 @@
            email: system.admin@nowhere.net
         password: admin
            state: A
-          status: Y
+          active: Y
 --> 
    <resultMap id="userResultMap" type="User">
-      <id property="id" column="id"/>
-      <result property="alias" column="alias"/>
-      <result property="firstName" column="first_name" />
+      <id property="id"             column="id"/>
+      <result property="alias"      column="alias"/>
+      <result property="firstName"  column="first_name" />
       <result property="middleName" column="middle_name" />
-      <result property="lastName" column="last_name" />
-      <result property="email" column="email" />
-      <result property="password" column="password" />
-      <result property="state" column="state" />
-      <result property="status" column="status" />
-      <result property="roleId" column="role_id" />
+      <result property="lastName"   column="last_name" />
+      <result property="email"      column="email" />
+      <result property="password"   column="password" />
+      <result property="state"      column="state" />
+      <result property="active"     column="active" />
+      <result property="roleId"     column="role_id" />
+      <result property="role"       column="role" />
+      <result property="userRoleId" column="user_role_id" />
    </resultMap>
 
   <select id="getUserById" resultMap="userResultMap">
-    select id, alias, first_name, middle_name, last_name, email
-         , password, state, status, role_id
+    select u.id, u.alias, u.first_name, u.middle_name, u.last_name, u.email
+         , u.password, u.state, u.active, ur.role_id, r.name role, ur.user_role_id
       from user u join user_role ur on u.id = ur.user_id
-     where id = #{param1}
+      join role r on ur.role_id=r.id
+     where u.id = #{param1}
   </select>
 
   <select id="getAllUsers" resultMap="userResultMap">
-    select id, alias, first_name, middle_name, last_name, email
-         , password, state, status
-      from user
+    select u.id, u.alias, u.first_name, u.middle_name, u.last_name, u.email
+         , u.password, u.state, u.active, ur.role_id, r.name role, ur.user_role_id
+      from user u join user_role ur on u.id = ur.user_id
+      join role r on ur.role_id=r.id
   </select>
   
   <update id="updateUser" parameterType="User">
@@ -51,15 +55,15 @@
          , email = #{email}
          , password = #{password}
          , state = #{state}
-         , status = #{status}
+         , active = #{active}
      where id = #{id}
   </update>
   
   <insert id="insertUser" useGeneratedKeys="true">
-    insert user( alias, first_name, middle_name, last_name
-         , email, password, state, status ) 
-    values (#{alias}, #{firstName}, #{middleName}, #{lastName}
-         , #{email}, #{password}, #{state}, #{status})
+    insert user( id, alias, first_name, middle_name, last_name
+         , email, password, state, active ) 
+    values (#{id}, #{alias}, #{firstName}, #{middleName}, #{lastName}
+         , #{email}, #{password}, #{state}, #{active})
     on duplicate key update
            alias = #{alias}
          , first_name = #{firstName}
@@ -68,14 +72,29 @@
          , email = #{email}
          , password = #{password}
          , state = #{state}
-         , status = #{status}
+         , active = #{active}
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
   </insert>
   
-  <select id="getUserRole" resultType="UserPriv">
-    select u.alias username, concat('ROLE_',upper(r.name)) role
-      from role r join user_role ur on r.id=ur.role_id join user u on ur.user_id = u.id
+  <select id="getUserRole" resultType="UserRole">
+    select ur.user_role_id, u.user_id, r.role_id, u.alias username, r.name role
+      from role r join user_role ur on r.id=ur.role_id 
+      join user u on ur.user_id = u.id
      where u.alias = #{param1}
   </select>
+  
+  <insert id="insertUserRole" parameterType="UserRole">
+    insert user_role( user_role_id, user_id, role_id ) 
+    values( #{userRoleId}, #{userId}, #{roleId} )
+    on duplicate key update
+            user_id = #{userId}
+          , role_id = #{roleId}
+    <selectKey keyProperty="userRoleId" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+  </insert>
   
   <select id="validateUser" resultType="Integer">
     select count(*) valid

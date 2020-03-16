@@ -25,18 +25,18 @@ class DockList extends Component {
     super(props);
     this.state = {};
   }
-  
+
   render () {
     var json  = this.props.returnedText;
     var ts    = this.props.tagSelect;
-    
+
     var tagList = [];
-    var nt = new Tag(0,'Create new tag','','','',0,0,0,0,0,'N');
+    var nt = new Tag(0,'New dock','','','',0,0,0,0,0,'N');
     tagList.push(nt);
     json.map(function(n,x){var t = new Tag(n.id,n.name,n.description,n.tagTypeCode,n.tagTypeId,n.misc
-                                           ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long,n.active); 
+                                           ,n.c1Lat,n.c1Long,n.c2Lat,n.c2Long,n.active);
                            return tagList.push( t ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <table>
           <thead className="fixedHeader">
@@ -62,7 +62,7 @@ class DockList extends Component {
                        <td className="oms-spacing-60">{n.tagTypeCode}</td>
                        <td className="oms-spacing-80">{n.misc}</td>
                        <td className="oms-spacing-50">{n.active}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>

@@ -1,0 +1,31 @@
+status=error
+dest = err
+name = transfer
+ 
+property.fileName = ${env:OMS_LOGS}/transfer
+ 
+filter.threshold.type = ThresholdFilter
+filter.threshold.level = debug
+  
+appender.transfer.type = RollingFile
+appender.transfer.name = transfer
+appender.transfer.fileName = ${fileName}.log
+appender.transfer.filePattern = ${fileName}-%d{yyyy-MM-dd}-%i.log.gz
+appender.transfer.layout.type = PatternLayout
+appender.transfer.layout.pattern = %d{ISO8601} %-5p %c - %m%n
+appender.transfer.policies.type = Policies
+appender.transfer.policies.time.type = TimeBasedTriggeringPolicy
+appender.transfer.policies.time.interval = 1
+appender.transfer.policies.time.modulate = true
+appender.transfer.policies.size.type = SizeBasedTriggeringPolicy
+appender.transfer.policies.size.size=100MB
+appender.transfer.strategy.type = DefaultRolloverStrategy
+appender.transfer.strategy.max = 5
+ 
+logger.transfer.name = us.avn.oms
+logger.transfer.level = debug
+logger.transfer.additivity = false
+logger.transfer.appenderRef.rolling.ref = transfer
+ 
+rootLogger.level = error
+rootLogger.appenderRef.stdout.ref = transfer

@@ -20,6 +20,7 @@
         <typeAlias alias="Config"         type="us.avn.oms.domain.Config"/>
         <typeAlias alias="Carrier"        type="us.avn.oms.domain.Carrier"/>
         <typeAlias alias="ControlBlock"   type="us.avn.oms.domain.ControlBlock"/>
+        <typeAlias alias="Crontab"        type="us.avn.oms.domain.Crontab"/>
         <typeAlias alias="Customer"       type="us.avn.oms.domain.Customer"/>
         <typeAlias alias="Device"         type="us.avn.oms.domain.Device"/>
      	<typeAlias alias="DigitalInput"   type="us.avn.oms.domain.DigitalInput"/>
@@ -53,7 +54,7 @@
      	<typeAlias alias="UnitConversion" type="us.avn.oms.domain.UnitConversion"/>
      	<typeAlias alias="UnitType"       type="us.avn.oms.domain.UnitType"/>
         <typeAlias alias="User"           type="us.avn.oms.domain.User"/>
-        <typeAlias alias="UserPriv"       type="us.avn.oms.domain.UserPriv"/>
+        <typeAlias alias="UserRole"       type="us.avn.oms.domain.UserRole"/>
         <typeAlias alias="Validation"     type="us.avn.oms.domain.Validation"/>
         <typeAlias alias="Value"          type="us.avn.oms.domain.Value"/>
         <typeAlias alias="Vertex"         type="us.avn.oms.domain.Vertex"/>

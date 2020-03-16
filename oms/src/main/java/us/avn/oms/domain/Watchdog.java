@@ -39,6 +39,7 @@ public class Watchdog extends OMSObject implements Serializable {
 	public static final String DCDO = "DataCollectionDO";
 	public static final String DI = "DigitalInput";
 	public static final String DO = "DigitalOutput";
+	public static final String ORDER = "Order";
 	public static final String PRE = "PseudoRandomEvents";
 	public static final String TRANSFER = "Transfer";
 	

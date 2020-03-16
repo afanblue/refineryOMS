@@ -53,10 +53,15 @@ public class Order extends OMSObject implements Serializable {
 	private Long    customerId;
 	private String  customer;
 	private String  purchase;     // Purchase 'P', Sale 'S'
+	private String  active;
+	private String  contents;
+	private String  carrier;
 	private Instant expDate;
 	private Instant actDate;
 	private Double  expVolume;
 	private Double  actVolume;
+	private Long    crontabId;
+	private Integer delay;
 	private Collection<Item> items;
 	
 	public Order() { }
@@ -105,6 +110,49 @@ public class Order extends OMSObject implements Serializable {
 	}
 	
 
+	/**
+	 * This is a derived active flag based on the number of
+	 * active, pending and complete order items.  If the number of
+	 * active order items is not zero, the order is active.  If it
+	 * is and the number of pending order items is not zero, the order
+	 * is pending.  Otherwise, the order is complete.  Note that
+	 * 'complete' includes the case where the item is "done", but
+	 * has not yet been marked complete.
+	 * @return current order status
+	 */
+	public String getActive() {
+		return active;
+	}
+	
+	public void setActive(String act) {
+		this.active = act;
+	}
+	
+
+	/**
+	 * Like "active", this is a derived value based on the order items.
+	 * It is a concatenated string of all the contents from the order
+	 * items.
+	 * @return concatenated list of content codes
+	 */
+	public String getContents() {
+		return contents;
+	}
+	
+	public void setContents(String c ) {
+		this.contents = c;
+	}
+	
+
+	public String getCarrier() {
+		return carrier;
+	}
+	
+	public void setCarrier(String c ) {
+		this.carrier = c;
+	}
+	
+
 	public Instant getActDate() {
 		return actDate;
 	}
@@ -122,40 +170,23 @@ public class Order extends OMSObject implements Serializable {
 		expDate = xd;
 	}
 
-
-/*
-	public Timestamp getExpDate() {
-		if( expDate != null ) {
-//			return sdfd.format(expDate);
-			return Timestamp.from(expDate);
-		}
-		return null;
+	
+	public Long getCrontabId() {
+		return crontabId;
 	}
 	
-	public void setExpDate(Timestamp xd) {
-		try {
-			this.expDate = xd.toInstant();
-		} catch( Exception e) {
-			this.expDate = null;
-		}
+	public void setCrontabId( Long ct ) {
+		crontabId = ct;
 	}
 
-	public Timestamp getActDate() {
-		if( actDate != null ) {
-//			return sdfd.format(actDate);
-			return Timestamp.from(actDate);
-		}
-		return null;
+
+	public Integer getDelay() {
+		return delay;
 	}
 	
-	public void setActDate( Timestamp ad ) {
-		try {
-			this.actDate = ad.toInstant();
-		} catch( Exception e ) {
-			this.actDate = null;
-		}
+	public void setDelay( Integer i ) {
+		delay = i;
 	}
-*/
 
 	
 	public Double getExpVolume() {

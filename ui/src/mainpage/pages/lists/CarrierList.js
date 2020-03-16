@@ -31,13 +31,13 @@ class CarrierList extends Component {
     var json = this.props.returnedText;
     var carrierSelect = this.props.carrierSelect;
     var carrierList = [];    // i,n,d,ttc,ttId,m,a,q
-    var nc = new Carrier(0,'Create new carrier','','S',0,null,'N',0);
+    var nc = new Carrier(0,'New carrier','','S',0,null,'N',0);
     carrierList.push(nc);
     json.map(function(n,x){
         var v = new Carrier( n.id,n.name, n.description, n.tagTypeCode, n.tagTypeId
-                           , n.misc, n.active, n.quantity); 
+                           , n.misc, n.active, n.quantity);
         return carrierList.push( v ); } );
-    return ( 
+    return (
       <div className="oms-tabs">
         <h2><div><img src="./images/spacer.png" alt="" width="30px" height="2px"/>Site Carriers</div></h2>
         <table>
@@ -62,7 +62,7 @@ class CarrierList extends Component {
                        <td className="oms-spacing-180">{n.description}</td>
                        <td className="oms-spacing-90" >{n.active}</td>
                        <td className="oms-spacing-120">{n.quantity}</td>
-                     </tr>; 
+                     </tr>;
             } )
           }
           </tbody>
@@ -70,7 +70,7 @@ class CarrierList extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default CarrierList;

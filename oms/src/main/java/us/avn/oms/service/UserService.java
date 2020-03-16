@@ -19,12 +19,12 @@ package us.avn.oms.service;
 import java.util.Collection;
 
 import us.avn.oms.domain.User;
-import us.avn.oms.domain.UserPriv;
+import us.avn.oms.domain.UserRole;
 import us.avn.oms.domain.Validation;
 
 public interface UserService {
 	
-	public User getUserById( Integer id );
+	public User getUserById( Long id );
 	
 	public Collection<User> getAllUsers();
 	
@@ -32,8 +32,10 @@ public interface UserService {
 
     public Long insertUser( User u );
 
-    public Collection<UserPriv> getUserRole( String alias );
+    public Collection<UserRole> getUserRole( String alias );
 
     public Validation validateUser( String u, String pw );
+    
+    public Integer insertUserRole( UserRole ur );
 
 }
