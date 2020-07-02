@@ -15,6 +15,10 @@ import re
 import mariadb 
 
 '''
+ * Args: 1: DB password
+ *       2: File to load
+ *       3: Debug flag (Y => don't actually do the insert, default value = N)
+ *
  * Format of file:
  *         Row 1: 'Table',TableName
  *         Row 2: 'ColumnConstrained','ConstraintTable','ConstraintField','ConstraintEquivalent', '2ndTable','2ndField','2ndEquivalence'
@@ -72,7 +76,8 @@ def GetDataType( tableName, colName) :
 
 def FormatField( tbl, fld, dataVal )  :
     rtn = ""
-    if GetDataType(tbl,fld)=="char" :
+    dataType = GetDataType(tbl,fld)
+    if dataType == "char" or dataType == "varchar" :
         rtn = rtn + "\"" + dataVal + "\""
     else :
         rtn = rtn + "{} ".format(dataVal,)
@@ -84,11 +89,13 @@ def AddConstraintQuery( cx, data ) :
     cv = data.split('|')
 #    print(cv)
 #    print(cx)
+#    print("Data: "+data)
     if( len(cv) == 1 ) :
         rtn = rtn + FormatField(cx[2],cx[4],data)
     else :
         rtn = rtn + FormatField(cx[2],cx[4],cv[0])
         rtn = rtn + " and {} = \"{}\"".format( cx[6], cv[1] )
+#    print( rtn )
     return rtn
     
 
@@ -106,17 +113,89 @@ def AddWhereClause( constraints, columnIndex, data )  :
             index = columnIndex[cx[0]]
             dataVal = data[index]
             if dataVal != "" :
-                rtn = rtn + "{}t{}.{} = (select {}".format(delim,cx[1],cx[3],cx[3])
-                rtn = rtn + " from {} where {} =".format(cx[2],cx[4])
-                rtn = rtn + AddConstraintQuery( cx, dataVal )
-                rtn = rtn + ")"
-                delim = " and "
+                if dataVal.lower() != "null" :
+                    rtn = rtn + "{}t{}.{} = (select {}".format(delim,cx[1],cx[3],cx[3])
+                    rtn = rtn + " from {} where {} =".format(cx[2],cx[4])
+                    rtn = rtn + AddConstraintQuery( cx, dataVal )
+                    rtn = rtn + ")"
+                    delim = " and "
 #    print("WhereClause: "+ rtn )
+    return rtn;
+
+def AddColumns( columns, constraints, columnIndex, data) :
+    ndx = 0
+#   print("selectFrom: ",selectFrom)
+    rtn = ""
+    delim = ""
+    for k, col in columns.items() :
+#        print ("key, Col: "+k+","+col[0]+" - "+col[1])
+        colName = col[0]
+        dataValue = data[columnIndex[colName]]
+        if dataValue != "" :
+#            print("colName: ",colName," data: ",dataValue)
+#            print(constraints)
+            if colName in constraints :
+                if dataValue.lower() == "null" :
+                    rtn = rtn + delim + "null"
+                else :
+                    rtn = rtn + delim + " t" + "{}".format(constraints[colName][1],) 
+                    rtn = rtn + "." + constraints[colName][3]
+                    rtn = rtn + " " + colName
+            else :
+                if data[ndx].lower() == "null" :
+                    rtn = rtn + delim + "null"
+                else :
+                    cv = data[ndx].split("|")
+                    if col[1] == "char" or col[1] == "varchar" :
+                        rtn = rtn + delim + "\"" + cv[0] + "\""
+                    elif col[1] == "date" or col[1] == "time" or col[1] == "timestamp" :
+                        rtn = rtn + delim + "\"" + cv[0] + "\""
+                    else :
+                        rtn = rtn + delim + "{}".format(cv[0],)
+        else :
+            rtn = rtn + delim + "null"
+                    
+        delim = ", "
+        ndx = ndx + 1
+
+    print( rtn ) 
     return rtn;
 
 args = sys.argv
 #print( args )
 
+def SelectFrom( constraints, columnIndex, data ):
+    selectFrom = ""
+    if len(constraints) == 0 :
+        selectFrom = " from dual"
+    else :
+        selectFrom = " from "
+        delim = ""
+        for k, cx in constraints.items() :
+#           print (cx)
+            index = columnIndex[cx[0]]
+            if data[index] != "" and data[index].lower() != "null" :
+                selectFrom = selectFrom + "{} {} t{}".format(delim,cx[2],cx[1])
+                delim = ", "
+                    
+        if selectFrom == " from " :
+            selectFrom = selectFrom + "dual "
+    return selectFrom;    
+
+def InsertInto():
+    insInto = "insert into " + table + " ("
+    delim = ""
+    for k, col in columns.items() :
+#        print (col)
+        # if there's data add it.  otherwise skip the field
+        if col[0] != "" :
+            insInto = insInto + delim + col[0]
+            delim = ","
+                    
+        insInto = insInto + ") select"
+        delim = " "
+                
+    return insInto;
 
 row = 1;
 text = ( "Table", "ColumnConstrained", "Data", "x", "End" );
@@ -140,6 +219,9 @@ noDataRows = 0
 constraints = {}
 columns = {} 
 columnIndex = {}
+debug = "N"
+if( len(args) > 2 ) :
+    debug = args[3]
     
 for line in file :
     noRows = noRows + 1
@@ -156,7 +238,7 @@ for line in file :
         table = data[1]
         looking = 1
     elif data[0] == text[1] :
- #       print ("Found constraint header info")
+#        print ("Found constraint header info")
         # found the constraint table info header
         found = looking
         looking = 2
@@ -210,82 +292,34 @@ for line in file :
 #            print ("found data: "+line)
             # as long as we're looking for "End", we've got data
             noDataRows = noDataRows + 1
-            if len(constraints) == 0 :
-                selectFrom = " from dual"
-            else :
-                selectFrom = " from "
-                delim = ""
-                for k, cx in constraints.items() :
-#                    print (cx)
-                    index = columnIndex[cx[0]]
-                    if data[index] != "" :
-                        selectFrom = selectFrom + "{} {} t{}".format(delim,cx[2],cx[1])
-                        delim = ", "
-                    
-                if selectFrom == " from " :
-                    selectFrom = selectFrom + "dual "
-                
-            insQuery = "insert into " + table + " ("
-            delim = ""
-            for k, col in columns.items() :
-#                print (col)
-                # if there's data add it.  otherwise skip the field
-                if col[0] != "" :
-                    insQuery = insQuery + delim + col[0]
-                    delim = ","
-                    
-            insQuery = insQuery + ") select"
-            delim = " "
-            ndx = 0
-#            print("selectFrom: ",selectFrom)
-
-            for k, col in columns.items() :
-#                print ("key, Col: "+k+","+col[0])
-                colName = col[0]
-                dataValue = data[columnIndex[colName]]
-                if dataValue != "" :
-#                    print("colName: ",colName)
-#                    print(constraints)
-                    if colName in constraints :
-                        insQuery = insQuery + delim + " t" + "{}".format(constraints[colName][1],) 
-                        insQuery = insQuery + "." + constraints[colName][3]
-                        insQuery = insQuery + " " + colName
-                    else :
-                        if data[ndx] == "null" :
-                            insQuery = insQuery + delim + "null"
-                        else :
-                            cv = data[ndx].split("|")
-                            if col[1] == "char" or col[1] == "varchar" :
-                                insQuery = insQuery + delim + "\"" + cv[0] + "\""
-                            elif col[1] == "date" or col[1] == "time" or col[1] == "timestamp" :
-                                insQuery = insQuery + delim + "\"" + cv[0] + "\""
-                            else :
-                                insQuery = insQuery + delim + "{}".format(cv[0],)
-                else :
-                    insQuery = insQuery + delim + "null"
-                    
-                delim = ", "
-                ndx = ndx + 1
+            insQuery = "" 
+            
+#            print( "selectFrom: "+selectFrom )
+            if debug == "N" :
+                insQuery = insQuery + InsertInto( table, columns )
 #                print(insQuery)
-                
-            insQuery = insQuery + selectFrom
+            else :
+                insQuery = insQuery + "select "
+            
+            insQuery = insQuery + AddColumns(columns, constraints, columnIndex, data)
+            insQuery = insQuery + SelectFrom( constraints, columnIndex, data )
+
 #            print("insQuery: ",insQuery)
             insQuery = insQuery + AddWhereClause( constraints, columnIndex, data )
             print("insQuery: ",insQuery)
-            try:
-                insSet = crsr.execute(insQuery)
-                cnx.commit()
-                if insSet :
-                    print(" -- True {} row(s) inserted\n".format(crsr.rowcount))
-                else :
-                    print(" -- False\n\n")
-            except: 
-                print("Error ",sys.exc_info()[0]," row {}\n".format(noDataRows))
-                
+            if debug == "N" :
+                try:
+                    insSet = crsr.execute(insQuery)
+                    cnx.commit()
+                    if insSet :
+                        print(" -- True {} row(s) inserted\n".format(crsr.rowcount))
+                    else :
+                        print(" -- False\n\n")
+                except: 
+                    print("Error ",sys.exc_info()[0]," row {}\n".format(noDataRows))
+            else :
+                print( " -- insert not processed")
 print ("{} data rows processed\n".format(noDataRows))
 #print ("{} processed\n".format(noRows))
 file.close()
     
-
-
-

@@ -83,6 +83,7 @@ class PlotGroupVars extends Component {
 
   componentDidUpdate( prevProps, prevState ) {
     if( this.state.id != prevState.id ) {
+      clearInterval(this.state.unitTimer);
       this.fetchData(this.state.id);
     }
   }
@@ -118,7 +119,7 @@ class PlotGroupVars extends Component {
   }
 
   fetchHistory(id,ndx) {
-    const pd = this.state.plotDetails;
+    var pd = this.state.plotDetails;
     var noDays = 2;
     let skip = false;
     if( pd !== null && pd !== undefined ) {
@@ -128,7 +129,7 @@ class PlotGroupVars extends Component {
         noDays = (pd.numberDays!==null)?pd.numberDays:2;
       }
     }
-    if( id !== undefined && ! skip ) {
+    if( id !== undefined && id !== null && ! skip ) {
       const myRequest = SERVERROOT + "/ai/history/" + id + "/" + noDays;
       const request = async () => {
         try {
@@ -142,31 +143,23 @@ class PlotGroupVars extends Component {
           }
           switch( ndx ) {
             case 1:
-              if( pd.max0 === Infinity ) {
-                pd.min0 = fd.aiTag.zeroValue;
-                pd.max0 = fd.aiTag.maxValue;
-              }
+              pd.min0 = fd.aiTag.zeroValue;
+              pd.max0 = fd.aiTag.maxValue;
               this.setState({stage: "generatePlot", d0:fd, plotDetails: pd});
               break;
             case 2:
-              if( pd.max1 === Infinity ) {
-                pd.min1 = fd.aiTag.zeroValue;
-                pd.max1 = fd.aiTag.maxValue;
-              }
+              pd.min1 = fd.aiTag.zeroValue;
+              pd.max1 = fd.aiTag.maxValue;
               this.setState({stage: "generatePlot", d1:fd, plotDetails: pd});
               break;
             case 3:
-              if( pd.max2 === Infinity ) {
-                pd.min2 = fd.aiTag.zeroValue;
-                pd.max2 = fd.aiTag.maxValue;
-              }
+              pd.min2 = fd.aiTag.zeroValue;
+              pd.max2 = fd.aiTag.maxValue;
               this.setState({stage: "generatePlot", d2:fd, plotDetails: pd});
               break;
             default:
-              if( pd.max3 === Infinity ) {
-                pd.min3 = fd.aiTag.zeroValue;
-                pd.max3 = fd.aiTag.maxValue;
-              }
+              pd.min3 = fd.aiTag.zeroValue;
+              pd.max3 = fd.aiTag.maxValue;
               this.setState({stage: "generatePlot", d3:fd, plotDetails: pd});
               break;
           }
@@ -175,7 +168,37 @@ class PlotGroupVars extends Component {
            Log.error("Error - " + error, CLASS+".fetchHistory" );
         }
       }
-      request();
+      request()
+    } else {
+	  if( id === undefined || id === null ) {
+        if( this.state.plotDetails === null ) {
+          pd = new PlotDetails(2,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity,Infinity,-Infinity);
+        } else {
+          pd = Object.assign({},this.state.plotDetails);
+        }
+	    switch( ndx ) {
+		  case 1:
+		    pd.min0 = undefined;
+		    pd.max0 = undefined;
+		    this.setState({stage: "generatePlot", d0:null, plotDetails: pd});
+		    break;
+		  case 2:
+		    pd.min1 = undefined;
+		    pd.max1 = undefined;
+		    this.setState({stage: "generatePlot", d1:null, plotDetails: pd});
+		    break;
+		  case 3:
+		    pd.min2 = undefined;
+		    pd.max2 = undefined;
+		    this.setState({stage: "generatePlot", d2:null, plotDetails: pd});
+		    break;
+		  default:
+		    pd.min3 = undefined;
+		    pd.max3 = undefined;
+		    this.setState({stage: "generatePlot", d3:null, plotDetails: pd});
+		    break;
+		}
+	  }
     }
   }
 

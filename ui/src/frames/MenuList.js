@@ -15,8 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, { Component } from 'react';
+
+import {Category}   from '../mainpage/pages/objects/Category.js';
+import {Menu}       from '../mainpage/pages/objects/Category.js';
 
 
 class MenuList extends Component {
@@ -25,11 +29,10 @@ class MenuList extends Component {
     this.state = {};
   }
 
-  render() {
-    var menuList = this.props.menus;
-    var selected = this.props.selected;
-    var option   = this.props.option;
-    var menuSelect = this.props.handleMenuSelect;
+  sidebarMenus( classList, selected, option, menuSelect ) {
+	let menuList = []
+	classList.map(function(c,x){ if( selected.localeCompare(c.text)===0 ) { return menuList.push(c.menus); } else return null; } );
+	menus = menuList[0];
     return (
       <div className="oms-left-menu">
         <table>
@@ -39,40 +42,46 @@ class MenuList extends Component {
                 <img src="./images/spacer.png" alt="" height="15px" width="180px" />
               </td>
             </tr>
-            {menuList.map(
+            {menus.map(
             function(n,x){
               let t=n.category.replace(" ","");
               let z=n.menuname;
-              if( selected.localeCompare(t) === 0 ) {
-                if( typeof option === "string" && option.localeCompare(z) === 0 ) {
-                  return(
-                    <tr key={x}>
-                      <td className="oms-menu-text">
-                        <img src="./images/spacer.png" alt="" height="5px" width="10px" />
-                        <button type="button" className="link-button-selected" onClick={() => {menuSelect({z})}} >
-                          {n.text}
-                        </button>
-                      </td>
-                    </tr> );
-                } else {
-                  return(
-                    <tr key={x}>
-                      <td className="oms-menu-text">
-                        <img src="./images/spacer.png" alt="" height="5px" width="10px" />
-                        <button type="button" className="link-button" onClick={() => {menuSelect({z})}} >
-                          {n.text}
-                        </button>
-                      </td>
-                    </tr> );
-                }
-              }
-              return null;
-            } 
+              return(
+                <tr key={x}>
+                  <td className="oms-menu-text">
+                    <img src="./images/spacer.png" alt="" height="5px" width="10px" />
+                    <button type="button" className="link-button-selected" onClick={() => {menuSelect({z})}} >
+                      {n.text}
+                    </button>
+                  </td>
+                </tr> );
+            }
             )}
           </tbody>
         </table>
       </div>
+      );
+  }
+
+  dropdownMenus( ) {
+	return (
+      <div className="oms-left-menu">
+        <img src="./images/spacer.png" alt="" height="5px" width="20px" />
+      </div>
     );
+  }
+
+  render() {
+    var menuType = this.props.menuType;
+    var classList = this.props.classifications;
+    var selected = this.props.selected;
+    var option   = this.props.option;
+    var menuSelect = this.props.handleMenuSelect;
+    if( "sidebar" == this.props.menuType ) {
+      return this.sidebarMenus( classList, selected, option, menuSelect );
+    } else {
+      return this.dropdownMenus( );
+    }
   }
 
 }

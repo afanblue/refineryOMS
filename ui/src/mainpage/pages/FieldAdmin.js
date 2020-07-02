@@ -152,8 +152,13 @@ class FieldAdmin extends Component {
     const b = JSON.stringify(f);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on field update id="+id);
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Field update/insert complete for id = "+id)
+          this.fetchFormData(id);
+        } else {
+          alert("Field update/insert failed for id =  "+id+":  " + response.status);
+        }
       } catch( error ) {
         alert("Problem "+(id===0?"inserting":"updating")+" field id "+id+"\n"+error);
         Log.error("Error - " + error,clsMthd);

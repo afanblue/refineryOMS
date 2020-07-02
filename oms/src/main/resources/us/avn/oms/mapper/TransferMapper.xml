@@ -40,6 +40,7 @@
     <result property="source"          column="source" />
     <result property="destinationId"   column="destination_id"/>
     <result property="destination"     column="destination"/>
+    <result property="crontabId"       column="crontab_id" />
     <result property="expStartTime"    column="exp_start_time"/>
     <result property="expEndTime"      column="exp_end_time"/>
     <result property="expVolume"       column="exp_volume"/>
@@ -91,7 +92,7 @@
            join transfer_status_vw tsv on x.status_id = tsv.value
            join transfer_type_vw ttv on x.transfer_type_id = ttv.value
      where tsv.code = 'A'
-     order by x.act_start_time desc, x.name
+     order by date_format(x.act_start_time,'%Y%M%D%H%i') asc, x.name
   </select>
   
   <select id="getLastTransfers" resultMap="transferResultMap">
@@ -199,36 +200,16 @@
          , x.transfer_type_id, ttv.name transfer_type
          , x.source_id, ts.name source
          , x.destination_id, td.name destination
-         , x.exp_start_time, x.exp_end_time, x.exp_volume 
-         , x.act_start_time, x.act_end_time, x.act_volume
-         , x.delta 
-         , coalesce(if(delta!=0,d.today,d.tmorrow) + UNIX_TIMESTAMP(exp_start_time) 
-                   + if(delta=0,0,60*x.delta*floor( 1+((d.cmin-x1.smin)/delta) ))
-                   - d.bot - unix_timestamp(), 300) start_diff
-         , date_format(from_unixtime(if(delta!=0,d.today,d.tmorrow) + unix_timestamp(x.exp_start_time) 
-                   + if(delta=0,0,60*x.delta*floor( 1+((d.cmin-x1.smin)/delta) ))
-                   - d.bot), '%Y-%m-%d %H:%i:%s') new_start_time
-         , date_format(from_unixtime(if(delta!=0,d.today,d.tmorrow) + unix_timestamp(x.exp_end_time) 
-                   + if(delta=0,0,60*x.delta*floor( 1+(d.cmin-x1.smin)/delta) )
-                   - d.bot),'%Y-%m-%d %H:%i:%s') new_end_time
+         , x.crontab_id, x.exp_volume, x.delta 
       from transfer x join tag tx on x.tag_id=tx.id
            join tag ts on x.source_id = ts.id
            join tag td on x.destination_id=td.id
            join transfer_status_vw tsv on x.status_id = tsv.value
            join transfer_type_vw ttv on x.transfer_type_id = ttv.value
-           join (select id, 60*hour(exp_start_time)+minute(exp_start_time) smin
-                      , 60*hour(exp_end_time)+minute(exp_end_time) emin
-                   from transfer ) x1 on x.id = x1.id
-           join (select unix_timestamp('1970-01-01 00:00:00') bot
-                      , unix_timestamp(curdate()) today
-                      , unix_timestamp(date_add(curdate(), interval 1 day)) tmorrow
-                      , 60*hour(now())+minute(now()) cmin
-                   from dual) d
      where tsv.code not in ('C','I')
        and ttv.code = 'T'
-       and x.exp_start_time is not null
-       and if(delta=0,true,not exists (select id from transfer x1 where status_id in (1,3) and x1.name like concat(x.name,'%')))
-     order by 8, 2
+       and coalesce(x.crontab_id,0) != 0
+      order by 8, 2
   </select>
 
   <select id="getTransferTypes" resultMap="idNameResultMap">

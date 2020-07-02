@@ -14,3 +14,5 @@ for /F "tokens=1,2*" %%i in (java.tmp) do (
   echo %%j
   tskill %%i /A /V
 )
+
+rm temp.tmp java.tmp

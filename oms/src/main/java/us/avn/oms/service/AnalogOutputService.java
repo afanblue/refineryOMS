@@ -41,7 +41,7 @@ public interface AnalogOutputService {
 	
 	public void clearAOupdate( Long id );
 
-	public void output( Long id );
+	public void output( Long id, Double value );
 	
 	public void updateAnalogOutput( AnalogOutput ao );
 

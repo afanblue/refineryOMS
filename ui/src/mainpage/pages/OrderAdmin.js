@@ -19,6 +19,7 @@
 
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
+import moment             from 'moment';
 
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
@@ -28,7 +29,7 @@ import OrderForm       from './forms/OrderForm.js';
 import OrderList       from './lists/OrderList.js';
 import Waiting         from './Waiting.js';
 import {Order,Item}    from './objects/Order.js';
-
+import {IdName}        from './objects/Tag.js';
 
 /*
 {"id":177,"name":"DCTK-A101","api":32.6,"density":0.862,"height":25.0,"diameter":30.0
@@ -46,14 +47,15 @@ class OrderAdmin extends Component {
       updateDisplay: true,
       returnedText: null,
       option: props.option,
+      contentCode: 'T',
       order: null,
       orderTypes: null,
-      contentTypes: null,
+      contentCodes: null,
       customers: null,
       carriers: null,
       color: "green",
       type: props.type,
-      unitTimer: null
+      itemTimer: null
     };
     this.handleFieldChange   = this.handleFieldChange.bind(this);
     this.handleCopy          = this.handleCopy.bind(this);
@@ -84,6 +86,14 @@ class OrderAdmin extends Component {
 
   /* after instantiation and before re-rendering */
   static getDerivedStateFromProps(nextProps,prevState) {
+    if( nextProps.option !== prevState.option ) {
+	  var myTimerID = prevState.itemTimer;
+      if( prevState !== 'B') {
+        clearInterval(prevState.itemTimer);
+        myTimerID = null;
+      }
+      return { option: nextProps.option, itemTimer:myTimerID };
+    }
     return prevState;
   }
 
@@ -99,16 +109,22 @@ class OrderAdmin extends Component {
   finishOrderFetch( req ) {
     let xd = req;
     let items = xd.items;
-    var x = new Order( xd.shipmentId, xd.customerId, xd.customer, xd.carrierId
-                     , xd.carrier, xd.active, xd.purchase, xd.expDate, xd.actDate
-                     , xd.expVolume, xd.actVolume, xd.contents );
+    var x = new Order( xd.id, xd.customerId, xd.customer
+                     , xd.active, xd.purchase, xd.expDate, xd.actDate
+                     , xd.expVolume, xd.actVolume, xd.contents
+                     , xd.crontabId, xd.delay, xd.carrier, items );
     var ordItems = [];
     items.map(
       function(n,x){
-        let sid = n.shipmentId===0?xd.shipmentId:n.shipmentId;
-        let i = new Item(sid,n.itemNo,n.newItem,n.contentCd,n.expVolumeMin,n.expVolumeMax,n.actVolume);
+        let sid = n.id===0?xd.id:n.id;
+        let i = new Item(sid,n.itemNo,n.active,n.newItem,n.contentCd,n.expVolumeMin,n.expVolumeMax
+                        ,n.actVolume,n.carrierId, n.carrier,n.stationId,n.station
+                        ,n.transferId,n.transfer);
         return ordItems.push(i);
       } )
+    var itemNo = ordItems.length+1;
+    let i = new Item(xd.id, itemNo, "", false, "", 0, 0, 0, 0, "", 0, "", 0, "" );
+    ordItems.push(i);
     x.items = ordItems;
     this.setState({stage: "itemRetrieved",
                    updateDisplay: true,
@@ -118,18 +134,28 @@ class OrderAdmin extends Component {
   }
 
   finishTypesFetch(req) {
+	var types = [];
+    req.map(
+      function(n,x) {
+        let i = new IdName(n.code,n.name);
+        return types.push(i);
+      } )
+    this.setState({stage: "itemRetrieved", updateDisplay: true, contentCodes:types });
+  }
+
+  finishCarriersFetch(req) {
     let blankItem = {};
     blankItem.code = null;
     blankItem.name = '---';
     req.unshift(blankItem);
-    this.setState({stage: "itemRetrieved", updateDisplay: true, contentTypes:req });
-  }
-
-  finishCarriersFetch(req) {
     this.setState({stage: "itemRetrieved", updateDisplay: true, carriers: req });
   }
 
   finishCustFetch(req) {
+    let blankItem = {};
+    blankItem.code = null;
+    blankItem.name = '---';
+    req.unshift(blankItem);
     this.setState({stage: "itemRetrieved", updateDisplay: true, customers: req });
   }
 
@@ -154,13 +180,14 @@ class OrderAdmin extends Component {
 
   handleSelect(event) {
     const id = event.z;
+    clearInterval(this.state.itemTimer);
     this.fetchFormData(id);
   }
 
   validateForm( x ) {
     let doSubmit = true;
     let msg = "The following fields ";
-    if( x.statusId === 0 ) {
+    if( x.purchase === "" ) {
         doSubmit = false;
         msg += "order status, ";
     }
@@ -168,10 +195,36 @@ class OrderAdmin extends Component {
         doSubmit = false;
         msg = "order type, ";
     }
-    if(x.sourceId === 0) {
+    if(x.customerId === 0) {
         doSubmit = false;
         msg = "order source, ";
     }
+    var items = x.items;
+    items.map(
+      function(n,y){
+		if( n.contentCd === "" && n.carrierId === 0 && n.active === "" &&
+		    n.expVolumeMin === 0 && n.expVolumeMax === 0 ) {
+		  doSubmit = doSubmit;
+		} else {
+          if( n.active === "" ) {
+            doSubmit = false;
+		  }
+		  if( n.contentCd === "" ) {
+			doSubmit = false;
+		  }
+		  if( n.carrierId === 0 ) {
+			doSubmit = false;
+		  }
+		  if( n.expVolumeMin === 0 ) {
+			doSubmit = false;
+		  }
+		  if( n.expVolumeMax === 0 ) {
+			doSubmit = false;
+		  }
+        }
+        return doSubmit;
+	  } )
+
     if(x.destinationId === 0) {
         doSubmit = false;
         msg = "order destination ";
@@ -185,19 +238,41 @@ class OrderAdmin extends Component {
 
   updateOrder(id) {
     let clsMthd = "OrderAdmin.updateOrder";
-    let newt = Object.assign({},this.state.order);
+    let newo = Object.assign({},this.state.order);
     let method = "PUT";
     let url = SERVERROOT + "/order/update";
     if( id === 0 ) {
-      newt.id = 0;
+      newo.id = 0;
       method = "POST";
       url = SERVERROOT + "/order/insert";
     }
-    var b = JSON.stringify( newt );
+    // format the time
+    var at = moment(newo.actDate,"YYYY-MM-DD hh:mm:ss");
+    var xt = moment(newo.expDate,"YYYY-MM-DD HH:mm:ss");
+    newo.actDate = moment(at).format();
+    newo.expDate = moment(xt).format();
+    // take out the item that wasn't filled out
+    var i = [];
+	newo.items.map(
+      function(n,y){
+        if( n.contentCd === "" && n.carrierId === 0 && n.active === "" &&
+            n.expVolumeMin === 0 && n.expVolumeMax === 0 ) {
+          return null;
+        } else {
+		  return i.push(n);
+	    }
+	  })
+	newo.items = i;
+
+    var b = JSON.stringify( newo );
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update complete on order "+newt.shipmentId)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+	      alert("Order update complete on "+newo.id)
+		} else {
+          alert("Order update failed on "+newo.id+": " + response.status);
+	    }
       } catch( error ) {
         let emsg = clsMthd+" - Problem "+(id===0?"inserting":"updating")+" order id "+id;
         alert(emsg+"\n"+error);
@@ -229,9 +304,9 @@ class OrderAdmin extends Component {
 
   componentDidMount() {
     this.fetchList(this.state.option);
-    if( "B" === this.state.option ) {
+    if( ("B" === this.state.option) && (this.state.itemTimer !== null) ) {
       var myTimerID = setInterval(() => {this.fetchList("B")}, 60000 );
-      this.setState({unitTimer:myTimerID});
+      this.setState({itemTimer:myTimerID});
     }
   }
 
@@ -243,25 +318,29 @@ class OrderAdmin extends Component {
   }
 
   handleFieldChange(event) {
-    let ordNew = Object.assign({},this.state.order);
     const target = event.target;
     if( (target !== null) && (target !== undefined) ) {
-      const value = target.value;
-      const name = target.name;
-      let np = name.split(".");
-      if( np.length === 1 ) {
-        const field = np[0];
-        ordNew[field] = value;
+      if( target.name === "contentCode" ) {
+        this.setState({contentCode: target.value});
       } else {
-        let itemNo = parseInt(np[1],10);
-        let fld = np[2];
-        ordNew.items[itemNo][fld] = value;
+        let ordNew = Object.assign({},this.state.order);
+        const value = target.value;
+        const name = target.name;
+        let np = name.split(".");
+        if( np.length === 1 ) {
+          const field = np[0];
+          ordNew[field] = value;
+        } else {
+          let itemNo = parseInt(np[1],10);
+          let fld = np[2];
+          ordNew.items[itemNo][fld] = value;
+        }
+//      } else {   // expDate target == null ?
+//        let iso = event.format("YYYY-MM-DD");
+//        ordNew["expDate"] = iso;
+        this.setState({order: ordNew } );
       }
-    } else {
-      let iso = event.format("YYYY-MM-DD");
-      ordNew["expDate"] = iso;
     }
-    this.setState({order: ordNew } );
   }
 
 
@@ -270,28 +349,40 @@ class OrderAdmin extends Component {
    */
   fetchList(option) {
     const clsMthd = "OrderAdmin.fetchList";
-    if( (null !== this.state.myTimerID) && (undefined !== this.state.myTimeID)) {
-      clearInterval(this.state.unitTimer);
+    var myTimerID = this.state.itemTimer;
+    if( (null !== this.state.itemTimer) && (undefined !== this.state.itemTimer)) {
+      if( this.state.option !== 'B' ) {
+        clearInterval(this.state.itemTimer);
+        myTimerID = null;
+      }
+    } else {
+      if( "B" === this.state.option ) {
+        myTimerID = setInterval(() => {this.fetchList("B")}, 60000 );
+      }
     }
-    var myRequest = SERVERROOT + "/order/active";
+    let req1 = new OMSRequest(clsMthd, SERVERROOT + "/referencecode/category/content-type",
+                            "Problem retrieving contents list", this.finishTypesFetch);
+    req1.fetchData();
+
+    var myRequest = SERVERROOT + "/order/active/"+this.state.contentCode;
     switch (option) {
       case "B" :
-        myRequest = SERVERROOT + "/order/active";
+        myRequest = SERVERROOT + "/order/active/"+this.state.contentCode;
         break;
       case "P" :
-        myRequest = SERVERROOT + "/order/type/P";
+        myRequest = SERVERROOT + "/order/type/P/"+this.state.contentCode;
         break;
       case "7" :
-        myRequest = SERVERROOT + "/order/lastWeek" ;
+        myRequest = SERVERROOT + "/order/lastWeek/"+this.state.contentCode;
         break;
       case "M" :
-        myRequest = SERVERROOT + "/order/lastMonth" ;
+        myRequest = SERVERROOT + "/order/lastMonth/"+this.state.contentCode;
         break;
       case "S" :
-        myRequest = SERVERROOT + "/order/type/S";
+        myRequest = SERVERROOT + "/order/type/S/"+this.state.contentCode;
         break;
       default:
-        myRequest = SERVERROOT + "/order/active" ;
+        myRequest = SERVERROOT + "/order/active/" ;
         break;
     }
     if( myRequest !== null ) {
@@ -303,6 +394,7 @@ class OrderAdmin extends Component {
                           updateData: false,
                           updateDisplay:true,
                           option:option,
+                          itemTimer:myTimerID,
                           stage: "dataFetched" } );
         } catch( error ) {
           let emsg = clsMthd+" - Problem fetching order list";
@@ -326,12 +418,12 @@ class OrderAdmin extends Component {
                     updateDisplay:true,
                     order: null,
                     stage: "begin",
-                    unitTimer:myTimerID } );
+                    itemTimer:myTimerID } );
   }
 
   componentWillUnmount() {
-    if( this.state.unitTimer !== null ) {
-      clearInterval(this.state.unitTimer);
+    if( this.state.itemTimer !== null ) {
+      clearInterval(this.state.itemTimer);
     }
   }
 
@@ -340,19 +432,27 @@ class OrderAdmin extends Component {
       case "begin":
         return <Waiting />
       case "dataFetched":
-        return <OrderList option = {this.state.option}
-                          orderData = {this.state.returnedText}
-                          orderSelect = {this.handleSelect}
-                          handleQuit = {this.handleQuit}
+        if( (this.state.returnedText === null) || (this.state.contentCodes === null) )
+        {
+          return <Waiting />
+        } else {
+          return <OrderList option = {this.state.option}
+                            contentCode = {this.state.contentCode}
+                            contents = {this.state.contentCodes}
+                            orderData = {this.state.returnedText}
+                            orderSelect = {this.handleSelect}
+                            fieldChange = {this.handleFieldChange}
+                            handleQuit = {this.handleQuit}
                />
+        }
       case "itemRetrieved":
         if( (this.state.order     === null) || (this.state.carriers === null) ||
-            (this.state.customers === null) || (this.state.contentTypes === null) )
+            (this.state.customers === null) || (this.state.contentCodes === null) )
         {
           return <Waiting />
         } else {
           return <OrderForm order       = {this.state.order}
-                            contents    = {this.state.contentTypes}
+                            contents    = {this.state.contentCodes}
                             carriers    = {this.state.carriers}
                             customers   = {this.state.customers}
                             orderCopy   = {this.handleCopy}

@@ -39,13 +39,13 @@ export default class ScmShip extends React.Component {
 
   static get propTypes() {
     return {
-      x: PropTypes.integer,
-      y: PropTypes.integer,
-      width: PropTypes.integer,
-      height: PropTypes.integer,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number,
       fill: PropTypes.any,
       stroke: PropTypes.string,
-      strokeWidth: PropTypes.integer,
+      strokeWidth: PropTypes.number,
       value: PropTypes.any,
       handleMouseup: PropTypes.func
     }
@@ -58,12 +58,15 @@ export default class ScmShip extends React.Component {
   }
 
   render() {
+	var id = this.props.id;
+	var name = this.props.name;
+	var val = this.props.value*1;
     var xt = this.props.x;
     var ht = this.props.height;
     var wd = this.props.width;
     var yt = this.props.y;
     var r  = ht/2;
-    var color = this.props.value===0?"red":"darkgreen";
+    var color = val===0?"red":"darkgreen";
     var mu = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu}>

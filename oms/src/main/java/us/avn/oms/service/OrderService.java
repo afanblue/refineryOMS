@@ -36,11 +36,11 @@ public interface OrderService {
 	/**
 	 * Get the number of active items for a shipment ID and carrier ID
 	 * Active is where the shipment_item.active not in ('C','D')
-	 * @param shipmentId ID for given order
+	 * @param id ID for given order
 	 * @param carrierId ID for given carrier
 	 * @return number of active items
 	 */
-	Long getNumberActiveItems( Long shipmentId, Long carrierId );
+	Long getNumberActiveItems( Long id, Long carrierId );
 
 	/**
 	 * Get the number of pending orders for a given content type
@@ -84,11 +84,21 @@ public interface OrderService {
 	Item getOrderItemByTransferId( Long id );
 	
 	/**
+	 * Get any active order for the specified carrier.  There should only
+	 * be one, but just in case ...
+	 * 
+	 * @param id Tag ID for specified carrier
+	 * @return Item object(s)
+	 */
+	Collection<Item> getActiveOrderItemForCarrier( Long id );
+	
+	/**
 	 * Get all of the active orders, i.e., those that have some items with
-	 * active = 'A'
+	 * active = 'A' and content code as specified
+	 * @param code specified content code ("T" = all)
 	 * @return all active orders 
 	 */
-	Collection<Order> getActiveOrders( );
+	Collection<Order> getActiveOrders( String code );
 	
 	/**
 	 * Get all repeat orders, ie, those with a non-zero cycle time
@@ -113,23 +123,26 @@ public interface OrderService {
 	/**
 	 * Get all the orders of type (Purchase or Sale)
 	 * @param type P(urchase) or S(ale)
+	 * @param code specified content code ("T" = all)
 	 * @return collection of specified orders
 	 */
-	Collection<Order> getOrdersByType( String type );
+	Collection<Order> getOrdersByType( String type, String code );
 	
 	/**
 	 * Get the last week's orders, i.e., all the orders from the current
 	 * day minus one week
+	 * @param code specified content code ("T" = all)
 	 * @return collection of last weeks orders
 	 */
-	Collection<Order> getLastWeeksOrders( );
+	Collection<Order> getLastWeeksOrders( String code );
 	
 	/**
 	 * Get the last month's orders, i.e., all the orders from the current
 	 * day minus one month
+	 * @param code specified content code ("T" = all)
 	 * @return collection of the last month's orders
 	 */
-	Collection<Order> getLastMonthsOrders( );
+	Collection<Order> getLastMonthsOrders( String code );
 	
 	/**
 	 * Insert a DB record for the given Order

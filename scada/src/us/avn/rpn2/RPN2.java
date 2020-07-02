@@ -1,51 +1,97 @@
 package us.avn.rpn2;
 
-/**  RPN2
- *
- *   Based on https://stackoverflow.com/questions/43025031/rpn-calculator-using-stacks
- *
- *   Modified to add functions other than 4 basic math functions
- *            to overload 
- *   
- *   For operations, the stack looks like:
- *          oldest  -->   op1
- *                        op2
- *          newest  -->   op3
- *   So when we pop an element from the stack we get "op3" and the "newest" member
- *   is now "op2".
- *
- *   Operations: 
- *      op      Stack B4 --> Stack After
- *       +       op1 op2 --> op1+op2
- *       -       op1 op2 --> op1-op2 
- *       *       op1 op2 --> op1*op2
- *       /       op1 op2 --> op1/op2
- *       %       op1 op2 --> op1%op2 (modulus)
- *       **      op1 op2 --> op1 raised to the op2 power
- *       dup     op1     --> op1 op1 (i.e., duplicated)
- *       swap    op1 op2 --> op2 op1
- *       sin     op1     --> sin(op1)
- *       cos     op1     --> cos(op1)
- *       tan     op1     --> tan(op1)
- *       log     op1     --> log10(op1)
- *       ln      op1     --> log(op1)  natural log
- *       sqrt    op1     --> sqrt(op1)
- *
- */
- 
+
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
 
+/**  RPN2
+*
+*   Based on https://stackoverflow.com/questions/43025031/rpn-calculator-using-stacks
+*
+*   Modified to add functions other than 4 basic math functions
+*   to overload.  And if you think the changes are influenced by Forth,
+*   you're right. 
+*{@code
+*   For operations, the stack looks like:
+*<br/>          oldest  ==>   op1
+*<br/>                        op2
+*<br/>          newest  ==>   op3
+*<br/>   So when we pop an element from the stack we get "op3" and the "newest" member
+*   is now "op2".
+*
+*<br/>   Operations: 
+*<br/>      op      Stack B4 => Stack After
+*<br/>       +       op1 op2 => op1+op2
+*<br/>       -       op1 op2 => op1-op2 
+*<br/>       *       op1 op2 => op1*op2
+*<br/>       /       op1 op2 => op1/op2
+*<br/>       %       op1 op2 => op1%op2 (modulus)
+*<br/>       **      op1 op2 => op1 raised to the op2 power
+*<br/>       dup     op1     => op1 op1 (i.e., duplicated)
+*<br/>       swap    op1 op2 => op2 op1
+*<br/>       sin     op1     => sin(op1)
+*<br/>       cos     op1     => cos(op1)
+*<br/>       tan     op1     => tan(op1)
+*<br/>       log     op1     => log10(op1)
+*<br/>       ln      op1     => log(op1)  natural log
+*<br/>       sqrt    op1     => sqrt(op1)
+*<br>        pi              => pi (3.14159...)
+*<br>        now             => epoch seconds Zulu time
+*<br/>
+*<br/> If there aren't enough arguments, i.e, the stack is empty, the missing 
+*     arguments are replaced w/ 0's (zeros), which probably means that the results
+*     are not trustworthy.
+*<br/> This may not be the best solution, but since this is intended to run w/no 
+*     user interaction, it seems like the best option available
+*}  
+*/
 public class RPN2 {
 
     private Stack<Double> stack;
-    private HashMap<String,Integer> controlList;
-    private HashMap<String,Integer> operatorList;
+    private static HashMap<String,Integer> controlList = new HashMap<String,Integer>() { {
+        put("if", 1);
+        put("else",0);
+        put("then",0);
+    } };
+    private static HashMap<String,Integer> operatorList = new HashMap<String,Integer>() { {
+        put("+",2);      // op1 op2 --> op1+op2
+        put("-",2);      // op1 op2 --> op1-op2 
+        put("*",2);      // op1 op2 --> op1*op2
+        put("/",2);      // op1 op2 --> op1/op2
+        put("%",2);      // op1 op2 --> op1%op2
+        put("**",2);     // op1 op2 --> op1 raised to the op2 power
+        put(">",2);      // op1 op2 --> op1>op2  ? 1 : 0 (1=GT, 0=LE)
+        put(">=",2);     // op1 op2 --> op1>=op2 ? 1 : 0 (1=GE, 0=LT)
+        put("<",2);      // op1 op2 --> op1<op2  ? 1 : 0 (1=LT, 0=GE)
+        put("<=",2);     // op1 op2 --> op1<=op2 ? 1 : 0 (1=LE, 0=GT)
+        put("=",2);      // op1 op2 --> op1=op2  ? 1 : 0 (1=EQ, 0=NE)
+        put("!=",2);     // op1 op2 --> op1!=op2 ? 1 : 0 (1=NE, 0=EQ)
+        put("pi",0);     //         --> PI (3.14159...)
+        put("now",0);    //         --> epoch seconds for Zulu time 
+        put(".",1);      // returns entry on stack as result 
+        put("dup",1);    // op1     --> op1 op1 (i.e., duplicated)
+        put("swap",2);   // op1 op2 --> op2 op1
+        put("sin",1);    // op1     --> sin(op1)
+        put("cos",1);    // op1     --> cos(op1)
+        put("tan",1);    // op1     --> tan(op1)
+        put("log",1);    // op1     --> log10(op1)
+        put("ln",1);     // op1     --> log(op1)  natural log
+        put("sqrt",1);   // op1     --> sqrt(op1)
+        put("abs",1);    // op1     --> abs(op1)
+                         // NB, for logical purposes 0 => false, !=0 => true
+        put("0>",1);     // op1     --> 0>op1 ? 1 : 0 (1=GT, 0=LE)
+        put("0=",1);     // op1     --> 0=op1 ? 1 : 0 (1=EQ, 0=NE)
+        put("0<",1);     // op1     --> 0<op1 ? 1 : 0 (1=LT, 0=GE)
+        put("&", 2);     // op1 op2 --> (op1!=0)&&(op2!=0)  (logical and)
+        put("|",2);      // op1 op2 --> (op1!=0)||(op2!=0)  (logical or)
+        put("!",1);      // op1     --> (op1==0?1:0)        (logical not)
+    } };
 
     public RPN2() {
         stack = new Stack<Double>();  //creates stack
-        controlList = new HashMap<String,Integer>();
+/*        controlList = new HashMap<String,Integer>();
         controlList.put("if", 1);
         controlList.put("else",0);
         controlList.put("then",0);
@@ -80,6 +126,7 @@ public class RPN2 {
         operatorList.put("&", 2);     // op1 op2 --> (op1!=0)&&(op2!=0)  (logical and)
         operatorList.put("|",2);      // op1 op2 --> (op1!=0)||(op2!=0)  (logical or)
         operatorList.put("!",1);      // op1     --> (op1==0?1:0)        (logical not)
+  */
     }
     
     void clearStack() {
@@ -113,7 +160,10 @@ public class RPN2 {
     }
     
     /**
-     *
+     * Execute the operation requested.
+     * @param token specifying the next token in the string parsing
+     * @param nops number of operands expected to exist on the stack.
+     * @return result of operation 
      */
     private double execOperation( String token, Integer nops ) 
             throws NumberFormatException {
@@ -121,14 +171,27 @@ public class RPN2 {
         double op1, op2, result=0D;
         
         if( token.equals("dup") ) {
-            op1 = (stack.pop().doubleValue());
-            stack.push(op1);
-            stack.push(op1);
+        	if( ! stack.isEmpty() ) {
+        		op1 = (stack.pop().doubleValue());
+        	} else {
+        		op1 = 0D;
+        	}
+        	stack.push(op1);
+        	stack.push(op1);
         } else if( token.equals("swap") ) {
-            op2 = (stack.pop()).doubleValue();
-            op1 = (stack.pop()).doubleValue();
-            stack.push(op2);
-            stack.push(op1);
+            if( ! stack.isEmpty() ) {
+            	op2 = (stack.pop()).doubleValue();
+            	if( ! stack.isEmpty() ) { 
+            		op1 = (stack.pop()).doubleValue();
+            	} else {
+            		op1 = 0D;
+            	}
+            } else { 
+            	op2 = 0D;
+            	op1 = 0D;
+            }
+    		stack.push(op2);
+    		stack.push(op1);
         } else {
             if( nops.equals(0) ) {
                 op1 = 0D;
@@ -136,13 +199,19 @@ public class RPN2 {
                 result = evaluateSingleOperator(token, op1, op2);
                 stack.push(new Double(result));                
             } else if( nops.equals(1) ) {
-                op1 = (stack.pop()).doubleValue();
+            	if( ! stack.isEmpty() ) {
+            		op1 = (stack.pop()).doubleValue();
+            	} else {
+            		op1 = 0D;
+            	}
                 op2 = 0D;
                 result = evaluateSingleOperator(token, op1, op2);
                 stack.push(new Double(result));
             } else if( nops.equals(2) ) {
-                op2 = (stack.pop()).doubleValue();
-                op1 = (stack.pop()).doubleValue();
+            	op1 = 0D;
+            	op2 = 0D;
+                if( ! stack.isEmpty() ) { op2 = (stack.pop()).doubleValue(); }
+            	if( ! stack.isEmpty() ) { op1 = (stack.pop()).doubleValue(); }
                 result = evaluateSingleOperator(token, op1, op2);
                 stack.push(new Double(result));
             }
@@ -186,6 +255,7 @@ public class RPN2 {
                     stack.push(new Double(Double.parseDouble(token)));
                 }
             }
+            parser.close();
  //           System.out.println("Out "+token+" - Stack size: "+stack.size()+", result: "+result+", control: "+control);
         }
         return (stack.pop()).doubleValue();
@@ -199,12 +269,12 @@ public class RPN2 {
      * @param c String, current state
      * @return new state
      * {@code B => "then" found => control block complete (restore to starting condition)
-     *        e => "if" found, result was false, 
-     *             => look for "else" (i.e., skip everything until "else" found)
-     *        E => "else" found, state was "e" => can compute now until "then" found 
-     *        I => "if" found, result was true
-     *             process stuff until else found, then skip to end
-     *        T => "else" found, state was "c" => skip everything until "then" found
+     * <br>       e => "if" found, result was false, 
+     * <br>            => look for "else" (i.e., skip everything until "else" found)
+     * <br>       E => "else" found, state was "e" => can compute now until "then" found 
+     * <br>       I => "if" found, result was true
+     * <br>            process stuff until else found, then skip to end
+     * <br>       T => "else" found, state was "c" => skip everything until "then" found
      * }
      */
     public String execControl( String token, Integer nops, String c ) {
@@ -256,7 +326,7 @@ public class RPN2 {
      * of arguments used.  Returns null if this is not a control
      * 
      * @param token String 
-     * @param Integer, number of operands for this token
+     * @return number of operands for this token
      */
     private Integer isControl(String token) {
         return ( controlList.get(token) );
@@ -355,6 +425,9 @@ public class RPN2 {
             case "abs":
             	result = Math.abs(op1);
             	break;
+            case "now":
+            	Long n = Instant.now().getEpochSecond();
+            	result = new Double(n);
         }
         return result;
     }

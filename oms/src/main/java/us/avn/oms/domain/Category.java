@@ -16,19 +16,32 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collection;
 
 public class Category extends OMSObject implements Serializable {
 	
 	private static final long serialVersionUID = 8751282105532159742L;
 	
+	private Long id;
 	private String text;
+	private Collection<Menu> menus;
 	  
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 
 	public String getText() {
 		return text;
@@ -36,6 +49,21 @@ public class Category extends OMSObject implements Serializable {
 	
 	public void setText(String t) {
 		this.text = t;
+	}
+	
+
+	/**
+	 * @return the menus
+	 */
+	public Collection<Menu> getMenus() {
+		return menus;
+	}
+
+	/**
+	 * @param menus the menus to set
+	 */
+	public void setMenus(Collection<Menu> menus) {
+		this.menus = menus;
 	}
 	
 }

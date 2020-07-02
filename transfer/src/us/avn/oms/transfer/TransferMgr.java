@@ -47,13 +47,13 @@ public class TransferMgr {
 	 * the minute and run every minute after that.
 	 * 
 	 * @param args  used to specify when new transfers are created
-	 * 				from templates.  
+	 * 				from templates. <br>
 	 * 				If 1 arg: args[0] is the repeat interval, ie, it
-	 * 						  is run when  min % args[0] == 0
+	 * 						  is run when  min % args[0] == 0 <br>
 	 * 				If 2 args: args[0] = hour, args[1] is the minute 
 	 */
 	public void execute(String[]args) {
-        TimerTask updx = new TransferUpdate(args);
+        TimerTask updx = new TransferUpdater(args);
         Timer xTimer = new Timer(true);
         Calendar cal = Calendar.getInstance();
 //		wait until 45 seconds after (15 seconds before) the minute

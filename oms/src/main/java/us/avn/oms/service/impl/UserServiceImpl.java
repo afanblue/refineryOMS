@@ -16,10 +16,14 @@
  *******************************************************************************/
 package us.avn.oms.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import us.avn.oms.domain.Category;
+import us.avn.oms.domain.Menu;
 import us.avn.oms.domain.Role;
 import us.avn.oms.domain.User;
 import us.avn.oms.domain.UserRole;
@@ -81,8 +85,16 @@ public class UserServiceImpl implements UserService {
     	Validation v = new Validation();
     	v.setValid(userMapper.validateUser(u, pw));
     	if( v.getValid() == 1 ) {
-    		v.setCategories(menuMapper.getAllMenuCategories());
-    		v.setMenus(menuMapper.getAllMenuItems(u)); 
+    		Collection<Category> c = new ArrayList<Category>();
+    		Collection<Category> cx = menuMapper.getAllMenuCategories();
+    		Iterator<Category> ic = cx.iterator();
+    		while( ic.hasNext() ) {
+    			Category c0 = ic.next();
+    			Collection<Menu> menus = menuMapper.getMenuItemsForCategory(u, c0.getText());
+    			c0.setMenus(menus);
+    			c.add(c0);
+    		}
+    		v.setCategories(c);
     	}
     	return v;
     }

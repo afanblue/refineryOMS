@@ -77,6 +77,7 @@ public class Transfer extends OMSObject implements Serializable {
 	protected Long    destinationId;
 	/** The {@link String} instance for the destination name (in TAG, not in TRANSFER DB record) */
 	protected String  destination;
+	protected Long    crontabId;
 	/** The {@link Instant} instance for the expected start time */
 	protected Instant expStartTime;
 	/** The {@link Instant} instance for the expected end time */
@@ -259,6 +260,15 @@ public class Transfer extends OMSObject implements Serializable {
 	
 	public void setDestination(String d) {
 		this.destination = d;
+	}
+	
+
+	public Long getCrontabId() {
+		return crontabId;
+	}
+	
+	public void setCrontabId(Long id) {
+		this.crontabId = id;
 	}
 	
 

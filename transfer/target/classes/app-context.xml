@@ -51,6 +51,11 @@
       <property name="mapperInterface"   value="us.avn.oms.mapper.CarrierMapper" />
    </bean>
 
+   <bean id="crontabMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CrontabMapper" />
+   </bean>
+
    <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.CustomerMapper" />
@@ -124,6 +129,10 @@
    <bean id="carrierService"   class="us.avn.oms.service.impl.CarrierServiceImpl">
       <property name="carrierMapper"    ref="carrierMapper" />
       <property name="tagMapper"        ref="tagMapper" />
+   </bean>
+   
+   <bean id="crontabService"   class="us.avn.oms.service.impl.CrontabServiceImpl">
+      <property name="crontabMapper"    ref="crontabMapper" />
    </bean>
    
    <bean id="customerService" class="us.avn.oms.service.impl.CustomerServiceImpl">

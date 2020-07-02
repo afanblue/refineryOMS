@@ -24,25 +24,36 @@
       from plot_group pg
      where pg.id = #{param1}
     union
-    select x.id, x.name, trts.level_tag_id id1, trts.temp_tag_id id2
-         , trtd.level_tag_id id3, trtd.temp_tag_id id4, 'Y' active, 'X' source
-      from transfer x 
-      left outer join tank_ref_tag_vw trts on x.source_id=trts.id 
-      left outer join tank_ref_tag_vw trtd on x.destination_id = trtd.id 
-     where x.status_id = 1 and x.id = #{param1}
+    select x.id, x.name
+         , if(ts.tag_type_code = 'TK',trtvs.level_tag_id,trtvd.level_tag_id) id1
+         , if(ts.tag_type_code = 'TK',trtvs.temp_tag_id,trtvd.temp_tag_id) id2
+         , if(ts.tag_type_code = 'TK',if(td.tag_type_code = 'TK',trtvd.level_tag_id,null),null) id3
+         , if(ts.tag_type_code = 'TK',if(td.tag_type_code = 'TK',trtvd.level_tag_id,null),null) id4
+         , 'Y' active, 'X' source
+      from transfer x join tag ts on x.source_id=ts.id 
+      join tag td on x.destination_id = td.id 
+      left outer join tank_ref_tag_vw trtvs on x.source_id=trtvs.id 
+      left outer join tank_ref_tag_vw trtvd on x.destination_id = trtvd.id 
+     where x.id = #{param1}
   </select>
 
   <select id="getAllPlotGroups" resultMap="plotGroupMap">
     select pg.id, pg.name, pg.id1, pg.id2, pg.id3, pg.id4, pg.active, 'PG' source
       from plot_group pg 
     union 
-    select x.id, x.name, if(ts.tag_type_code = 'TK',source_id,null)
-         , if(td.tag_type_code='TK',destination_id,null), null, null, 'Y', 'X'
+    select x.id, x.name
+         , if(ts.tag_type_code = 'TK',trtvs.level_tag_id,trtvd.level_tag_id) id1
+         , if(ts.tag_type_code = 'TK',trtvs.temp_tag_id,trtvd.temp_tag_id) id2
+         , if(ts.tag_type_code = 'TK',if(td.tag_type_code = 'TK',trtvd.level_tag_id,null),null) id3
+         , if(ts.tag_type_code = 'TK',if(td.tag_type_code = 'TK',trtvd.level_tag_id,null),null) id4
+         , 'Y', 'X'
       from transfer x join tag ts on x.source_id=ts.id 
       join tag td on x.destination_id = td.id 
+      left outer join tank_ref_tag_vw trtvs on x.source_id=trtvs.id
+      left outer join tank_ref_tag_vw trtvd on x.destination_id=trtvd.id
       join transfer_status_vw tsv on tsv.value = x.status_id
      where tsv.code = 'A'
-     order by 2
+    order by 8,2
   </select>
   
   <update id="updatePlotGroup" parameterType="PlotGroup" >

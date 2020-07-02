@@ -45,4 +45,5 @@ VT,Orders,Last Months Orders,40,Y,Last Months Orders
 VT,Admin,Ships,145,N,ShipAdmin
 VT,Admin,Docks,82,Y,Docks
 VT,Orders,Vessel Dock,50,Y,VesselDock
+VT,Admin,Crontab,15,Y,Crontab Admin
 End

@@ -9,6 +9,7 @@
     <slf4j.version>1.7.25</slf4j.version>
     <mybatis.version>3.4.5</mybatis.version>
     <mariadb.driver.version>2.5.4</mariadb.driver.version>
+    <log4j.version>2.13.2</log4j.version>
   </properties>
   
     <dependencies>
@@ -27,7 +28,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
+      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -138,10 +139,27 @@
         </configuration>
       </plugin>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <tasks>
+                <copy file="target/pmc.jar" tofile="../exec/pmc.jar" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
+          <show>private</show>
           <excludePackageNames> *.impl </excludePackageNames>
         </configuration>
       </plugin>

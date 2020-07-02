@@ -19,6 +19,7 @@
 
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
+import moment             from 'moment';
 
 import {SERVERROOT}    from '../../Parameters.js';
 import OMSRequest      from '../requests/OMSRequest.js';
@@ -51,7 +52,7 @@ class TransferAdmin extends Component {
       sources: null,
       color: "green",
       type: "B",
-      nextCorner: 1
+      myTimerID: null
     };
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleCopy        = this.handleCopy.bind(this);
@@ -84,14 +85,30 @@ class TransferAdmin extends Component {
   }
 
   shouldComponentUpdate(nextProps,nextState) {
-    Log.info("shouldComponentUpdate - type: "+this.state.type+"/"+nextProps.type);
+    Log.info("xfrAdmin-shouldComponentUpdate - type: "+this.state.type+"/"+nextState.type+"/"+nextProps.type
+            +" - "+nextState.myTimerID+"/"+this.state.myTimerID);
     let sts = nextState.updateDisplay;
     if( nextState.stage !== this.state.stage ) { sts = true; }
-    if( nextState.type  !== this.state.type  ) { sts = true; }
-    if( nextProps.type !== this.state.type ) {
+    if( nextProps.type  !== nextState.type  ) {
+      sts = true;
       this.fetchList(nextProps.type);
+      if( nextProps.type === 'A' ) {
+        if( (this.state.myTimerID === null) && (nextState.myTimerID === null) ) {
+          var timerID = setInterval(() => {this.fetchList(nextProps.type)}, 60000 );
+          this.setState( {myTimerID: timerID, type:nextProps.type } );
+        }
+      } else {
+        clearInterval(this.state.myTimerID);
+        this.setState({myTimerID: null, type:nextProps.type });
+      }
     }
     return sts;
+  }
+
+  componentWillUnmount() {
+    if( this.state.myTimerID !== null ) {
+      clearInterval(this.state.myTimerID);
+    }
   }
 
   finishXferFetch( req ) {
@@ -110,13 +127,17 @@ class TransferAdmin extends Component {
 
   finishTypesFetch(req) {
     let blankItem = {};
-    blankItem.code = null;
+    blankItem.id = -1;
     blankItem.name = '---';
     req.unshift(blankItem);
     this.setState({stage: "itemRetrieved", updateDisplay: true, transferTypes:req });
   }
 
   finishStsFetch(req) {
+    let blankItem = {};
+    blankItem.id = -1;
+    blankItem.name = '---';
+    req.unshift(blankItem);
     this.setState({stage: "itemRetrieved", updateDisplay: true, statuses: req });
   }
 
@@ -137,7 +158,6 @@ class TransferAdmin extends Component {
     let req3 = new OMSRequest(loc, SERVERROOT + "/transfer/types",
                             "Problem retrieving input tag list", this.finishTypesFetch);
     req3.fetchData();
-    this.setState({schematic:null, sco:null, typeList:null, inpTags:null})
     let req4 = new OMSRequest(loc, SERVERROOT + "/transfer/statuses",
                             "Problem retrieving output tag list", this.finishStsFetch);
     req4.fetchData();
@@ -146,17 +166,18 @@ class TransferAdmin extends Component {
 
   handleSelect(event) {
     const id = event.z;
+    clearInterval(this.state.myTimerID);
     this.fetchFormData(id);
   }
 
   validateForm( x ) {
     let doSubmit = true;
     let msg = "The following fields ";
-    if( x.statusId === 0 ) {
+    if( x.statusId === -1 ) {
         doSubmit = false;
         msg += "transfer status, ";
     }
-    if(x.transferTypeId === 0) {
+    if( (x.transferTypeId === -1) ) {
         doSubmit = false;
         msg = "transfer type, ";
     }
@@ -185,11 +206,29 @@ class TransferAdmin extends Component {
       method = "POST";
       url = SERVERROOT + "/transfer/insert";
     }
+    // format the time
+    var fmt = "YYYY-MM-DD hh:mm:ss";
+    var xet = moment(newt.expEndTime,fmt);
+    var xst = moment(newt.expStartTime,fmt);
+    newt.expEndTime = moment(xet).format();
+    newt.expStartTime = moment(xst).format();
+    if( newt.actStartTime !== "" ) {
+      var ast = moment(newt.actStartTime,fmt);
+      newt.actStartTime = moment(ast).format();
+    }
+    if( newt.actEndTime !== "" ) {
+      var aet = moment(newt.actEndTime,fmt);
+      newt.actEndTime = moment(aet).format();
+    }
     var b = JSON.stringify( newt );
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update complete on "+newt.name)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+	      alert("transfer update complete on "+newt.name)
+		} else {
+          alert("Transfer update failed on "+newt.name+": " + response.status);
+	    }
       } catch( error ) {
         let emsg = "Problem "+(id===0?"inserting":"updating")+" transfer id "+id;
         alert(emsg+"\n"+error);
@@ -221,6 +260,10 @@ class TransferAdmin extends Component {
 
   componentDidMount() {
     this.fetchList(this.state.type);
+    if( this.state.type === 'A' ) {
+      var timerID = setInterval(() => {this.fetchList(this.state.type)}, 60000 );
+      this.setState( {myTimerID: timerID } );
+    }
   }
 
 //  componentDidUpdate( prevProps, prevState ) {
@@ -246,11 +289,39 @@ class TransferAdmin extends Component {
     this.setState({transfer: tknew } );
   }
 
-
+  /**
+   * type = X (executable), T (template), A (active}, S (scheduled), 7 (Last Seven days)
+   */
   fetchList( type ) {
     const clsMthd = "TransferAdmin.fetchList";
-    const myRequest = SERVERROOT + "/transfer/all/"+type;
-    Log.info("fetchList - type: "+type);
+    if( (null !== this.state.myTimerID) && (undefined !== this.state.myTimerID)) {
+      if( type !== 'A' ) {
+        clearInterval(this.state.myTimerID);
+        this.setState({myTimerID: null });
+      }
+    }
+    var myRequest = SERVERROOT + "/transfer/active";
+    switch (type) {
+      case "7" :
+        myRequest = SERVERROOT + "/transfer/last/7";
+        break;
+      case "A" :
+        myRequest = SERVERROOT + "/transfer/active";
+        break;
+      case "S" :
+        myRequest = SERVERROOT + "/transfer/scheduled";
+        break;
+      case "T" :
+        myRequest = SERVERROOT + "/transfer/all/T" ;
+        break;
+      case "X" :
+        myRequest = SERVERROOT + "/transfer/all/X" ;
+        break;
+      default:
+        type = "A";
+        myRequest = SERVERROOT + "/transfer/active" ;
+        break;
+    }
     if( myRequest !== null ) {
       const request = async () => {
         try {
@@ -273,6 +344,9 @@ class TransferAdmin extends Component {
 
   handleQuit(event) {
     event.preventDefault();
+    if( "A" === this.state.type ) {
+      var myTimerID = setInterval(() => {this.fetchList("A")}, 60000 );
+    }
     this.fetchList(this.state.type);
     this.setState( {returnedText: null,
                     updateData: true,
@@ -282,12 +356,12 @@ class TransferAdmin extends Component {
   }
 
   render() {
-    Log.info("render - type: "+this.state.type);
     switch( this.state.stage ) {
         case "begin":
         return <Waiting />
       case "dataFetched":
-        return <TransferList transferData = {this.state.returnedText}
+        return <TransferList type = {this.state.type}
+                             transferData = {this.state.returnedText}
                              transferSelect = {this.handleSelect}
                              handleQuit = {this.handleQuit}
                />

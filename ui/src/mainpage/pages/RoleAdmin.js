@@ -125,9 +125,13 @@ class RoleAdmin extends Component {
     const b = JSON.stringify(r);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on "+r.name)
-        this.fetchFormData(id);
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Role update/insert complete for id = "+id)
+          this.fetchFormData(id);
+        } else {
+          alert("Role update/insert failed for id =  "+id+":  " + response.status);
+        }
       } catch( error ) {
         alert("Problem "+(id===0?"inserting":"updating")+" role "
              +"id "+id+"\n"+error);

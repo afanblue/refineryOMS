@@ -106,7 +106,7 @@
   
   <select id="getTotalTankCapacitiesForContents" resultMap="valueMap">
     select tk.content_type_code code, round(sum(0.17811*pi()*tk.diameter*tk.diameter*tk.height/4),4) value
-      from tank tk join tank_level_vw tlv on tk.id=tlv.tank_id
+      from tank tk 
      group by tk.content_type_code
   </select>
   

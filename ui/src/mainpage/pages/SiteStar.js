@@ -19,6 +19,7 @@
 
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
+import moment             from 'moment';
 
 import {Stage, Layer, Group, Circle, Text} from 'react-konva';
 import {SERVERROOT, IMAGEHEIGHT, IMAGEWIDTH} from '../../Parameters.js';
@@ -98,14 +99,22 @@ class SiteStar extends Component {
         return <Waiting />
       case "dataFetched":
       default:
-        var r = (IMAGEWIDTH<IMAGEHEIGHT?(IMAGEWIDTH/2):(IMAGEHEIGHT/2));
-        var cpx = IMAGEWIDTH/2;
-        var cpy = IMAGEHEIGHT/2;
+        var w = document.getElementById('contents');
+        var ht = w.offsetHeight;
+        var wid = w.offsetWidth;
+        var rat = ht/IMAGEHEIGHT < wid/IMAGEWIDTH ? ht/IMAGEHEIGHT : wid/IMAGEWIDTH;
+        rat = rat < 1 ? 1 : Math.floor(rat*1000)/1000;
+        rat = 1.25;
+        var scrnHt = rat * IMAGEHEIGHT;
+        var scrnWid = rat * IMAGEWIDTH;
+        var r = (scrnWid<scrnHt?(scrnWid/2):(scrnHt/2));
+        var cpx = scrnWid/2;
+        var cpy = scrnHt/2;
         var json = this.state.returnedText;
         var aDelt = 360/json.length;
-        var now = (new Date()).toLocaleString();
+        var now = moment().format('YYYY-MM-DD hh:mm:ss');
         return (
-          <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
+          <Stage height={scrnHt} width={scrnWid}>
             <Layer>
               <Text text={now} x={2} y={2} fontSize={14} stroke={"#C3C2B9"} strokeWidth={1}/>
               <Circle radius={r} stroke={"white"} strokeWidth={1} x={cpx} y={cpy} />

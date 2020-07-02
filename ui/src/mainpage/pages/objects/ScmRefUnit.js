@@ -39,13 +39,13 @@ export default class ScmRefUnit extends React.Component {
 
   static get propTypes() {
     return {
-      x: PropTypes.integer,
-      y: PropTypes.integer,
-      width: PropTypes.integer,
-      height: PropTypes.integer,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number,
       fill: PropTypes.any,
       stroke: PropTypes.string,
-      strokeWidth: PropTypes.integer,
+      strokeWidth: PropTypes.number,
       value: PropTypes.any,
       handleMouseup: PropTypes.func
     }
@@ -58,7 +58,9 @@ export default class ScmRefUnit extends React.Component {
   }
 
   render() {
-    var val = (this.props.value===null||this.props.value===undefined)?0:this.props.value;
+	var id = this.props.id;
+	var name = this.props.name;
+    var val = this.props.value*1;
     var xt = this.props.x;
     var ht = 36;
     var wd = 60;

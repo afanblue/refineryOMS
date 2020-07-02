@@ -25,6 +25,8 @@ public interface MenuMapper {
 	
 	Collection<Menu> getAllMenuItems( String user );
 	
+	Collection<Menu> getMenuItemsForCategory( String user, String category );
+	
 	Collection<Category> getAllMenuCategories();
 
 }

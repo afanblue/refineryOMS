@@ -19,6 +19,7 @@
 
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
+import moment             from 'moment';
 
 import {AIValue}  from '../objects/AIValue.js';
 import {IL3}      from '../objects/ListObjects.js';
@@ -57,8 +58,7 @@ class ProcessUnitDisplay extends Component {
     let itemSelect = this.state.itemSelect;
     let it = this.state.items;
     let puColumns = [];
-    var n = new Date();
-    var now = n.toLocaleString('en-US');
+    var now = moment().format('YYYY-MM-DD hh:mm:ss');
     return(
       <div>
       <h2>

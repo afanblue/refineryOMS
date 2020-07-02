@@ -84,9 +84,12 @@ public class DigitalOutputServiceImpl implements DigitalOutputService {
 	}
 
 	@Override
-	public void output(Long id ) {
+	public void output(Long id, Double value ) {
 		DigitalOutput d = doMapper.getDigitalOutput(id);
-		Double scanValue = (d.getScanValue() == 0D)?1D:0D;
+		Double scanValue = value;
+		if( value == null ) {
+			scanValue = (d.getScanValue() == 0D)?1D:0D;
+		}
 		d.setScanValue(scanValue);
 		doMapper.updateDigitalOutput(d);
 	}

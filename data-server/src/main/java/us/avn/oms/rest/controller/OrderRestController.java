@@ -43,52 +43,37 @@ public class OrderRestController {
 	@Autowired 
 	OrderService orderService;
 
-	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/active")
-	public Collection<Order> getActiveOrders( ) {
+	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/active/{code}")
+	public Collection<Order> getActiveOrders( @PathVariable String code ) {
 		log.debug("get active orders");
-		Collection<Order> orders = orderService.getActiveOrders();
+		Collection<Order> orders = orderService.getActiveOrders( code );
 //		Iterator<Order> io = orders.iterator();
 //		while( io.hasNext() ) {
 //			Order o = io.next();
-//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
+//			o.setItems(orderService.getOrderItems(o.getId()));
 //		}
 		return orders;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/{type}")
-	public Collection<Order> getOrdersByType( @PathVariable String type ) {
+	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/type/{type}/{code}")
+	public Collection<Order> getOrdersByType( @PathVariable String type, @PathVariable String code ) {
 		log.debug("get active orders of type "+type);
-		Collection<Order> orders = orderService.getOrdersByType(type);
-//		Iterator<Order> io = orders.iterator();
-//		while( io.hasNext() ) {
-//			Order o = io.next();
-//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-//		}
+		Collection<Order> orders = orderService.getOrdersByType(type,code);
 		return orders;
 	}
 	
 	
-	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/lastWeek")
-	public Collection<Order> getLastWeeksOrders( ) {
+	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/lastWeek/{code}")
+	public Collection<Order> getLastWeeksOrders( @PathVariable String code ) {
 		log.debug("get active orders");
-		Collection<Order> orders = orderService.getLastWeeksOrders();
-//		Iterator<Order> io = orders.iterator();
-//		while( io.hasNext() ) {
-//			Order o = io.next();
-//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-//		}
+		Collection<Order> orders = orderService.getLastWeeksOrders(code);
 		return orders;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/lastMonth")
-	public Collection<Order> getLastMonthOrders( ) {
+	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/lastMonth/{code}")
+	public Collection<Order> getLastMonthOrders( @PathVariable String code ) {
 		log.debug("get active orders");
-		Collection<Order> orders = orderService.getLastMonthsOrders();
-//		Iterator<Order> io = orders.iterator();
-//		while( io.hasNext() ) {
-//			Order o = io.next();
-//			o.setItems(orderService.getOrderItems(o.getShipmentId()));
-//		}
+		Collection<Order> orders = orderService.getLastMonthsOrders(code);
 		return orders;
 	}
 	
@@ -106,12 +91,12 @@ public class OrderRestController {
 	}
 	
 	private void updateItems( Order o ) {
-		Long id = o.getShipmentId()==null?0L:o.getShipmentId();
+		Long id = o.getId()==null?0L:o.getId();
 		Iterator<Item> itemItr = o.getItems().iterator();
 		Long ino = 1L;
 		while( itemItr.hasNext() ) {
 			Item i = itemItr.next();
-			i.setShipmentId(id);
+			i.setId(id);
 			i.setItemNo(ino);
 			ino++;
 			orderService.insertItem(i);
@@ -122,9 +107,9 @@ public class OrderRestController {
 	@RequestMapping(method = RequestMethod.PUT, value="/update" )
 	public void updateOrder(@RequestBody Order o ) {
 		log.debug("Update " + o.toString()); 
-		Long id = o.getShipmentId()==null?0L:o.getShipmentId();
+		Long id = o.getId()==null?0L:o.getId();
 		if( id == 0L ) {
-			o.setShipmentId(id);
+			o.setId(id);
 			id = orderService.insertOrder(o);
 		} else {
 			orderService.updateOrder(o);
@@ -135,12 +120,13 @@ public class OrderRestController {
 	@RequestMapping(method = RequestMethod.POST, value="/insert" )
 	public Long insertorder(@RequestBody Order o ) {
 		log.debug("Insert " + o.toString());
-		Long id = o.getShipmentId();
+		Long id = o.getId();
 		if( id == 0L ) {
-			orderService.insertOrder(o);
+			id = orderService.insertOrder(o);
 		} else {
 			orderService.updateOrder(o);
 		}
+		updateItems(o);
 		return id;
 	}
 

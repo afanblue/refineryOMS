@@ -89,6 +89,11 @@ MariaDB:
       <property name="mapperInterface"   value="us.avn.oms.mapper.ControlBlockMapper" />
    </bean>
 
+   <bean id="crontabMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      <property name="mapperInterface"   value="us.avn.oms.mapper.CrontabMapper" />
+   </bean>
+
    <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
       <property name="mapperInterface"   value="us.avn.oms.mapper.CustomerMapper" />
@@ -198,7 +203,6 @@ MariaDB:
    
    <bean id="analogOutputService" class="us.avn.oms.service.impl.AnalogOutputServiceImpl">
       <property name="analogOutputMapper" ref="analogOutputMapper" />
-      <property name="tagMapper"          ref="tagMapper" />
    </bean>
    
    <bean id="calcVariableService" class="us.avn.oms.service.impl.CalcVariableServiceImpl">
@@ -218,6 +222,10 @@ MariaDB:
    
    <bean id="controlBlockService" class="us.avn.oms.service.impl.ControlBlockServiceImpl">
       <property name="controlBlockMapper" ref="controlBlockMapper" />
+   </bean>
+   
+   <bean id="crontabService" class="us.avn.oms.service.impl.CrontabServiceImpl">
+      <property name="crontabMapper"      ref="crontabMapper" />
    </bean>
    
    <bean id="customerService" class="us.avn.oms.service.impl.CustomerServiceImpl">

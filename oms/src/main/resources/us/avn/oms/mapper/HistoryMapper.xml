@@ -22,15 +22,21 @@
      where tag_id = #{tagId}
      <choose>
        <when test="startInterval != null and endInterval != null">
-         and scan_time 
-             between unix_timestamp(sysdate() - Interval #{startInterval} #{units})
-                 and unix_timestamp(sysdate() - Interval #{endInterval} #{units})
+       and scan_time 
+           between unix_timestamp(sysdate() - Interval #{startInterval} #{units})
+               and unix_timestamp(sysdate() - Interval #{endInterval} #{units})
        </when>
        <when test="startInterval != null">
-         and scan_time
-             > unix_timestamp(sysdate() - Interval #{startInterval} day )
+       and scan_time
+           > unix_timestamp(sysdate() - Interval #{startInterval} day )
        </when>
      </choose>
+      union
+      select m.mxid+1, ai.tag_id, ai.scan_value, unix_timestamp(ai.scan_time)
+        from analog_input ai 
+        join (select tag_id, max(id) mxid from history where tag_id = #{tagId}  group by tag_id) m 
+             on ai.tag_id=m.tag_id
+       where ai.tag_id = #{tagId}
      order by id
   </select>
   

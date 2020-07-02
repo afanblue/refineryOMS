@@ -141,7 +141,7 @@ class GroupList extends Component {
       <div>
       <h2>
         <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>Process Units
+           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>Plot Groups
         </div>
       </h2>
       <table>
@@ -173,7 +173,7 @@ class GroupList extends Component {
                 </tbody>
               </table>
             </td>
-            <td className={"oms-spacing-480"}>
+            <td className={"oms-spacing-all"}>
               <PlotGroupVars stage={activity}
                              id={option}
                              source={"id"} />

@@ -16,19 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
-import React, {Component} from 'react';
+import React, {Component}     from 'react';
 import { Stage, Layer, Rect } from 'react-konva';
+import moment                 from 'moment';
+
+import Log              from '../../requests/Log.js';
 
 import {IMAGEHEIGHT, IMAGEWIDTH}  from '../../../Parameters.js';
-import Scm3WayValve from '../objects/Scm3WayValve.js';
-import ScmGauge     from '../objects/ScmGauge.js';
-import ScmPump      from '../objects/ScmPump.js';
-import ScmPipe      from '../objects/ScmPipe.js';
-import ScmRefUnit   from '../objects/ScmRefUnit.js';
-import ScmShip      from '../objects/ScmShip.js';
-import ScmTank      from '../objects/ScmTank.js';
-import ScmText      from '../objects/ScmText.js';
-import ScmValve     from '../objects/ScmValve.js';
+import Scm3WayValve     from '../objects/Scm3WayValve.js';
+import ScmGauge         from '../objects/ScmGauge.js';
+import ScmPump          from '../objects/ScmPump.js';
+import ScmPipe          from '../objects/ScmPipe.js';
+import ScmProcessValue  from '../objects/ScmProcessValue.js';
+import ScmRefUnit       from '../objects/ScmRefUnit.js';
+import ScmShip          from '../objects/ScmShip.js';
+import ScmTank          from '../objects/ScmTank.js';
+import ScmText          from '../objects/ScmText.js';
+import ScmValve         from '../objects/ScmValve.js';
 
 
 class SchematicDisplay extends Component {
@@ -53,15 +57,24 @@ class SchematicDisplay extends Component {
 
   render () {
     let handleMouseup = this.state.handleMouseup;
-    let scm = this.state.scm;
+    let scm = this.props.schematic;
     let scoList = scm.childTags;
     let stkWid = 3;
     if( scm.tagTypeCode === 'XFR' ) {
       stkWid = 1;
     }
 
+    var w = document.getElementById('contents');
+    var ht = w.offsetHeight;
+    var wid = w.offsetWidth;
+    var rat = ht/IMAGEHEIGHT < wid/IMAGEWIDTH ? ht/IMAGEHEIGHT : wid/IMAGEWIDTH;
+    rat = rat < 1 ? 1 : Math.floor(rat*1000)/1000;
+	rat = 1.25;
+    var scrnHt = rat * IMAGEHEIGHT;
+    var scrnWid = rat * IMAGEWIDTH;
+    Log.debug("schmDisp: ratio: "+rat+" - "+ht+"/"+wid);
     var n = new Date();
-    var now = n.toLocaleString('en-US');
+    var now = moment().format('YYYY-MM-DD hh:mm:ss');
     return(
       <div>
       <h2>
@@ -70,38 +83,35 @@ class SchematicDisplay extends Component {
            Schematic {scm.name} - {now}
         </div>
       </h2>
-      <table className={"scrollTable"}>
-        <thead className={"fixedHeader"}>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <Stage height={IMAGEHEIGHT} width={IMAGEWIDTH}>
+      <div>
+              <Stage height={scrnHt} width={scrnWid}>
                 <Layer>
-                  <Rect height={IMAGEHEIGHT}
-                        width={IMAGEWIDTH}
+                  <Rect height={scrnHt}
+                        width={scrnWid}
                         stroke={"red"}
                         strokeWidth={1} />
                  { scoList.map(
                        function(n,z) {
-                         let y= n.c1Lat;
-                         let x = n.c1Long;
-                         let height = n.c2Lat - n.c1Lat;
-                         let width  = n.c2Long - n.c1Long;
-                         let cv = (n.inpValue===undefined||n.inpValue===null?0:n.inpValue);
-                         let tx = cv.toFixed(2).toString();
+                         let id = n.id;
+                         let name = n.name;   // name of schematic object
+                         let y = rat * n.c1Lat;
+                         let x = rat * n.c1Long;
+                         let height = rat * (n.c2Lat - n.c1Lat);
+                         let width  = rat * (n.c2Long - n.c1Long);
+                         let cv = n.inpValue;
+                         let tx = cv;
                          let mx = n.inpMax;
                          let zero = n.inpZero;
                          let color = n.inpAlmColor;
                          let pts = [];
                          if( n.misc==="P" ) {
                            if( n.vtxList===null || n.vtxList===undefined || n.vtxList.length===0 ) {
-                             pts = [x,y,n.c2Long,n.c2Lat];
+                             pts = [x,y,rat*n.c2Long,rat*n.c2Lat];
                            } else {
                              n.vtxList.map( function(nv,zv){
 //                               let vl = z.replace( /\n/gi, "");
 //                               let lpt = vl.split(",");
-                               pts = pts.concat([nv.longitude,nv.latitude]);
+                               pts = pts.concat([rat*nv.longitude,rat*nv.latitude]);
                                return pts;
                              } );
                            }
@@ -109,67 +119,71 @@ class SchematicDisplay extends Component {
                          }
                          switch( n.misc ) {
                            case "3VB":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                             return <Scm3WayValve key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                                   value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"bottom"} handleMouseup={handleMouseup}/>
                            case "3VL":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                             return <Scm3WayValve key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                                   value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"left"} handleMouseup={handleMouseup}/>
                            case "3VR":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                             return <Scm3WayValve key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                                   value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"right"} handleMouseup={handleMouseup}/>
                            case "3VT":
-                             return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
+                             return <Scm3WayValve key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                                   value={cv} max={mx} zero={zero} fill={color}
                                                   orient={"top"} handleMouseup={handleMouseup}/>
                            case "G":
-                             return <ScmGauge key={z} x={x} y={y} width={width} height={height}
+                             return <ScmGauge key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                               value={cv} max={mx} zero={zero} fill={color}
                                               handleMouseup={handleMouseup}/>
                            case "P":
-                             return <ScmPipe key={z} x={x} y={y} points={pts} strokeWidth={stkWid}
+                             return <ScmPipe key={z} id={id} name={name} x={x} y={y} points={pts} strokeWidth={stkWid}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup} />
                            case "PB":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
+                             return <ScmPump key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
-                                             orient={"PB"} handleMouseup={handleMouseup} />
+                                             orient={"bottom"} handleMouseup={handleMouseup} />
                            case "PL":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
+                             return <ScmPump key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
-                                             orient={"PL"} handleMouseup={handleMouseup}/>
+                                             orient={"left"} handleMouseup={handleMouseup}/>
                            case "PR":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
+                             return <ScmPump key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
-                                             orient={"PR"} handleMouseup={handleMouseup}/>
+                                             orient={"right"} handleMouseup={handleMouseup}/>
                            case "PT":
-                             return <ScmPump key={z} x={x} y={y} width={width} height={height}
+                             return <ScmPump key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
-                                             orient={"PT"} handleMouseup={handleMouseup} />
+                                             orient={"top"} handleMouseup={handleMouseup} />
+                           case "PV":
+                             return <ScmProcessValue key={z} id={id} name={name} x={x} y={y} width={width} height={height} text={tx}
+                                              strokeWidth={1} fontSize={14} fill={color}
+                                              handleMouseup={handleMouseup}/>
                            case "RU":
-                             return <ScmRefUnit key={z} x={x} y={y} width={width} height={height}
+                             return <ScmRefUnit key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup} />
                            case "SH":
-                             return <ScmShip key={z} x={x} y={y} width={width} height={height}
+                             return <ScmShip key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup} />
                            case "TK":
-                             return <ScmTank key={z} x={x} y={y} width={width} height={height}
+                             return <ScmTank key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              handleMouseup={handleMouseup}/>
                            case "TX":
-                             return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx}
+                             return <ScmText key={z} id={id} name={name} x={x} y={y} width={width} height={height} text={tx}
                                              strokeWidth={1} fontSize={14} fill={color}
                                              handleMouseup={handleMouseup}/>
                            case "VH":
-                             return <ScmValve key={z} x={x} y={y} width={width} height={height}
+                             return <ScmValve key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              orient={"horizontal"} handleMouseup={handleMouseup} />
                            case "VV":
-                             return <ScmValve key={z} x={x} y={y} width={width} height={height}
+                             return <ScmValve key={z} id={id} name={name} x={x} y={y} width={width} height={height}
                                              value={cv} max={mx} zero={zero} fill={color}
                                              orient={"vertical"} handleMouseup={handleMouseup} />
                            default:
@@ -179,10 +193,7 @@ class SchematicDisplay extends Component {
                      }
                 </Layer>
               </Stage>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        </div>
       </div>
 
       );

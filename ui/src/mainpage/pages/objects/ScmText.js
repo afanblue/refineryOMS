@@ -43,16 +43,16 @@ export default class ScmText extends React.Component {
 
   static get propTypes() {
     return {
-      x: PropTypes.integer,
-      y: PropTypes.integer,
-      width: PropTypes.integer,
-      height: PropTypes.integer,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number,
       text: PropTypes.string,
       fill: PropTypes.any,
       stroke: PropTypes.string,
-      strokeWidth: PropTypes.integer,
+      strokeWidth: PropTypes.number,
       font: PropTypes.string,
-      fontSize: PropTypes.integer,
+      fontSize: PropTypes.number,
       fontStyle: PropTypes.string
       }
   }
@@ -64,6 +64,8 @@ export default class ScmText extends React.Component {
   }
 
   render() {
+	var id = this.props.id;
+	var name = this.props.name;
     var xt = this.props.x;
     var ht = this.props.height;
     var wd = this.props.width;

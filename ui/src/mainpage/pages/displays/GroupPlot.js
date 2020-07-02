@@ -19,7 +19,7 @@
 import React, {Component} from 'react';
 import {PlotDetails} from '../objects/PlotGroup.js';
 
-import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
+import { VictoryAxis, VictoryChart, VictoryLabel, VictoryLine, VictoryTheme } from 'victory';
 import moment from 'moment';
 
 
@@ -200,7 +200,7 @@ class GroupPlot extends Component {
   }
 
   getTickYValues(minY, maxY) {
-    let xd = (maxY-minY)/5;
+    var xd = (maxY-minY)/5;
     return [ minY, minY+xd, minY+2*xd, minY+3*xd, minY+4*xd, maxY ];
   }
 
@@ -243,7 +243,7 @@ class GroupPlot extends Component {
                                orientation="left" standalone={false}
                                style={styles.axisZero} tickValues={tick0Values} />;
       LineZero  = <VictoryLine data={dsZero} domain={{x: [minTime, maxTime], y: [minY0, maxY0] }}
-                               interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                               interpolation="monotoneX" scale={{x: "time", y: "linear"}}
                                standalone={false} style={styles.lineZero} />
     }
 
@@ -261,7 +261,7 @@ class GroupPlot extends Component {
       AxisOne =  <VictoryAxis domain={[minY1, maxY1]} offsetX={30} orientation="left"
                               standalone={false} style={styles.axisOne} tickValues={tick1Values} />;
       LineOne  = <VictoryLine data={dsOne} domain={{x: [minTime, maxTime], y: [minY1,   maxY1] }}
-                              interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                              interpolation="monotoneX" scale={{x: "time", y: "linear"}}
                               standalone={false} style={styles.lineOne} />;
     }
 
@@ -275,11 +275,11 @@ class GroupPlot extends Component {
       const dsTwo  = d2.history;
       const lblTwo = d2.aiTag.tag.name + " - " + d2.aiTag.tag.description;
 
-      LabelTwo = <VictoryLabel x={25} y={45} text={lblTwo} style={styles.labelTwo} />;
+      LabelTwo = <VictoryLabel x={265} y={15} text={lblTwo} style={styles.labelTwo} />;
       AxisTwo  = <VictoryAxis domain={[minY2, maxY2]} orientation="right"
                               standalone={false} style={styles.axisTwo} tickValues={tick2Values} />;
       LineTwo  = <VictoryLine data={dsTwo} domain={{x: [minTime, maxTime], y: [minY2,   maxY2] }}
-                              interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                              interpolation="monotoneX" scale={{x: "time", y: "linear"}}
                               standalone={false} style={styles.lineTwo} />;
     } else {
       AxisTwo = <VictoryAxis domain={[minY0, maxY0]} orientation="right" standalone={false}
@@ -296,114 +296,176 @@ class GroupPlot extends Component {
       const dsThree  = d3.history;
       const lblThree = d3.aiTag.tag.name + " - " + d3.aiTag.tag.description;
 
-      LabelThree = <VictoryLabel x={25} y={60} text={lblThree} style={styles.labelThree} />
+      LabelThree = <VictoryLabel x={265} y={30} text={lblThree} style={styles.labelThree} />
       AxisThree  = <VictoryAxis domain={[minY3, maxY3]} offsetX={30} orientation="right"
                                 standalone={false} style={styles.axisThree} tickValues={tick3Values} />;
       LineThree  = <VictoryLine data={dsThree} domain={{x: [minTime, maxTime],y: [minY3,   maxY3] }}
-                                interpolation="monotoneX" scale={{x: "linear", y: "linear"}}
+                                interpolation="monotoneX" scale={{x: "time", y: "linear"}}
                                 standalone={false} style={styles.lineThree} />;
     }
 
     const tickValues = this.getTickValues(minTime, maxTime);
 
-    var n = new Date();
-    var now = n.toLocaleString('en-US');
+    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+    var gstyle = { width:500, height:3};
     return(
       <div>
       <form>
       <table>
         <tbody>
           <tr>
-            <td>Days to display:</td>
-            <td colSpan={4}>
-              <input className="oms-spacing-60" type={"text"} value={pd.numberDays}
+            <td className="oms-spacing-40">Days</td>
+            <td>
+              <input className="oms-spacing-40" type={"text"} value={pd.numberDays}
                      name="numberDays" id="numberDays" size="3" maxLength="3"
                      onChange={fc}/>
             </td>
+            <td rowSpan={12} width={1000}>&nbsp;to display&nbsp;
+              <img src="./images/spacer.png" alt="" height="1px" width="100px"/>
+              {now}
+              <svg  viewBox="0 0 900 500">
+              <g transform={"scale(1.25)"}>
+              {LabelZero}
+              {LabelOne}
+              {LabelTwo}
+              {LabelThree}
+              </g>
+              <g transform={"translate(10, 4) scale(1.75)"} >
+              {/* Add shared independent axis */}
+              <VictoryAxis
+                scale="linear"
+                standalone={false}
+                style={styles.axisYears}
+                tickValues={tickValues}
+                tickFormat={ (x) => {return moment(x*1000).format('MM-DD HH:mm')} }
+              />
+              {AxisZero}
+              {AxisOne}
+              {AxisTwo}
+              {AxisThree}
+              {/* dataset 0 */}
+              {LineZero}
+              {/* dataset 1 */}
+              {LineOne}
+              {/* dataset 2 */}
+              {LineTwo}
+              {/* dataset 3 */}
+              {LineThree}
+              </g>
+              </svg>
+            </td>
           </tr>
           <tr>
-            <td>Max values (1,2,3,4):</td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.max0}
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+          </tr>
+          <tr>
+            <td>Min </td>
+            <td>Max </td>
+          </tr>
+          <tr>
+            <td>(1-4):</td>
+            <td>(1-4):</td>
+          </tr>
+          <tr>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.min0}
+                     name="min0" id="min0" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.max0}
                      name="max0" id="max0" size="5" maxLength="5" onChange={fc}/>
             </td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.max1}
+          </tr>
+          <tr>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.min1}
+                     name="min1" id="min1" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.max1}
                      name="max1" id="max1" size="5" maxLength="5" onChange={fc}/>
             </td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.max2}
+          </tr>
+          <tr>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.min2}
+                     name="min2" id="min2" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.max2}
                      name="max2" id="max2" size="5" maxLength="5" onChange={fc}/>
             </td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.max3}
+          </tr>
+          <tr>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.min3}
+                     name="min3" id="min3" size="5" maxLength="5" onChange={fc}/>
+            </td>
+            <td className="oms-spacing-40">
+              <input className="oms-spacing-40" type={"text"} value={pd.max3}
                      name="max3" id="max3" size="5" maxLength="5" onChange={fc}/>
             </td>
           </tr>
           <tr>
-            <td>Min values (1,2,3,4):</td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.min0}
-                     name="min0" id="min0" size="5" maxLength="5" onChange={fc}/>
-            </td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.min1}
-                     name="min1" id="min1" size="5" maxLength="5" onChange={fc}/>
-            </td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.min2}
-                     name="min2" id="min2" size="5" maxLength="5" onChange={fc}/>
-            </td>
-            <td className="oms-spacing-80">
-              <input className="oms-spacing-60" type={"text"} value={pd.min3}
-                     name="min3" id="min3" size="5" maxLength="5" onChange={fc}/>
-            </td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+          </tr>
+          <tr>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+          </tr>
+          <tr>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+          </tr>
+          <tr>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+          </tr>
+          <tr>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
+            <td><img src="./images/spacer.png" alt="" width="30px" height="23px"/></td>
           </tr>
         </tbody>
       </table>
       </form>
-      <h2>
-        <div className={"oms-tags"}>
-           <img src="./images/spacer.png" alt="" height="1px" width="100px"/>
-           {now}
-        </div>
-      </h2>
-      <svg style={styles.parent} viewBox="0 0 640 400">
-        {LabelZero}
-        {LabelOne}
-        {LabelTwo}
-        {LabelThree}
-        <g transform={"translate(20, 40)"}>
-            {/* Add shared independent axis */}
-          <VictoryAxis
-              scale="linear"
-              standalone={false}
-              style={styles.axisYears}
-              tickValues={tickValues}
-              tickFormat={
-                (x) => {
-                  return moment(x*1000).format('MM-DD HH:mm')
-                }
-              }
-            />
-          {AxisZero}
-          {AxisOne}
-          {AxisTwo}
-          {AxisThree}
-          {/* dataset 0 */}
-          {LineZero}
-          {/* dataset 1 */}
-          {LineOne}
-          {/* dataset 2 */}
-          {LineTwo}
-          {/* dataset 3 */}
-          {LineThree}
-        </g>
-      </svg>
       </div>
-
     );
   }
 }
 
 export default GroupPlot;
+
+
+/*
+              <svg  viewBox="0 0 740 500">
+              {LabelZero}
+              {LabelOne}
+              {LabelTwo}
+              {LabelThree}
+              <g transform={"translate(20, 40)"}>
+              {/* Add shared independent axis * /}
+              <VictoryAxis
+                scale="linear"
+                standalone={false}
+                style={styles.axisYears}
+                tickValues={tickValues}
+                tickFormat={ (x) => {return moment(x*1000).format('MM-DD HH:mm')} }
+              />
+              {AxisZero}
+              {AxisOne}
+              {AxisTwo}
+              {AxisThree}
+              {/* dataset 0 * /}
+              {LineZero}
+              {/* dataset 1 * /}
+              {LineOne}
+              {/* dataset 2 * /}
+              {LineTwo}
+              {/* dataset 3 * /}
+              {LineThree}
+              </g>
+              </svg>
+
+*/

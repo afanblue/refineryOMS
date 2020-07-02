@@ -45,4 +45,5 @@ Last Months Orders,NULL,OrderAdmin,View Orders,Y
 ShipAdmin,NULL,Admin Ship,Admin Ship,Y
 Docks,NULL,Admin Docks,Admin Docks,Y
 VesselDock,NULL,DockVessel,DockVessel,Y
+Crontab Admin,NULL,CrontabAdmin,CrontabAdmin,Y
 End

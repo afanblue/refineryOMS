@@ -38,7 +38,6 @@ class Schematic extends Component {
       updateDisplay: true,
       returnedText: null,
       id: null,
-      unitTimer: null,
       itemTimer: null
     };
     this.handleMouseup = this.handleMouseup.bind(this);
@@ -48,7 +47,7 @@ class Schematic extends Component {
   static get propTypes() {
       return {
           stage: PropTypes.string,
-          option: PropTypes.string
+          option: PropTypes.number
       }
   }
 
@@ -59,13 +58,13 @@ class Schematic extends Component {
     return response;
   }
 
-  static getDerivedStateFromProps(nextProps, state) {
-    clearInterval(state.itemTimer);
-    if( nextProps.option !== state.option ) {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    clearInterval(prevState.itemTimer);
+    if( nextProps.option !== prevState.option ) {
 //      this.setState({option: nextProps.option});
       this.fetchList(nextProps.option);
     }
-    return state;
+    return prevState;
   }
 
   shouldComponentUpdate(nextProps,nextState) {
@@ -74,16 +73,15 @@ class Schematic extends Component {
   }
 
 /* */
-  reqOut( id ) {
+  reqOut( id, name, val ) {
     const clsMthd = "Schematic.reqOut";
-    const myRequest=SERVERROOT + "/tag/output/" + id;
+    const myRequest=SERVERROOT + "/tag/output/" + id + "/" + val;
     const request = async () => {
       try {
         await fetch(myRequest, {method:"PUT", headers:{'Content-Type':'application/json'} });
-        alert("Output complete on id "+id)
+        alert("Output complete on "+name+", id = "+id)
       } catch( error ) {
-        alert("Problem "+(id===0?"inserting":"updating")+" XXXX "
-             +"id "+id+"\n"+error);
+        alert("Problem writing "+" id "+id+"\n"+error);
         Log.error("Error - " + error,clsMthd);
       }
     }
@@ -101,7 +99,13 @@ class Schematic extends Component {
          && (x >= e.c1Long) && (x <= e.c2Long) ) {
         let outTagId = (e.outTagId===null)?undefined:e.outTagId;
         if( (outTagId !== undefined) && (e.outTagId !== 0)) {
-          this.reqOut(outTagId);
+          let newVal = e.inpValue*1;
+          if( e.inpType === 'DI' ) {
+			newVal = (e.inpValue*1)===0?1:0;
+	      } else {
+			newVal = (e.inpValue*1)+0.05*(e.inpMax-e.inpZero);
+		  }
+          this.reqOut(outTagId, e.outTagName, newVal );
         }
       }
     }
@@ -112,11 +116,14 @@ class Schematic extends Component {
     this.fetchList(this.state.option);
     clearInterval(this.state.itemTimer);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );
+    this.setState( {itemTimer: myTimerID } );
   }
 
   fetchList(opt) {
     const clsMthd = "Schematic.fetchList";
+    var cntnts = document.getElementById('contents');
+    var width = cntnts.offsetWidth;
+    var height = cntnts.offsetHeight;
     const myRequest = SERVERROOT + "/schematic/" + opt;
     if( myRequest !== null ) {
       const request = async () => {
@@ -140,12 +147,12 @@ class Schematic extends Component {
   componentDidMount() {
     this.fetchList(this.state.option);
     var myTimerID = setInterval(() => {this.fetchList(this.state.option)}, 60000 );
-    this.setState( {unitTimer: myTimerID } );
+    this.setState( {itemTimer: myTimerID } );
   }
 
   componentWillUnmount() {
-    if( this.state.unitTimer !== null ) {
-      clearInterval(this.state.unitTimer);
+    if( this.state.itemTimer !== null ) {
+      clearInterval(this.state.itemTimer);
     }
 //    if( this.state.itemTimer !== null ) {
 //      clearInterval(this.state.itemTimer);

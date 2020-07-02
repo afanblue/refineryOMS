@@ -261,7 +261,7 @@ class SchematicAdmin extends Component {
       try {
         let response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
         if( response.status !== 200 ) {
-          let es = "Response status is "+response.status;
+          let es = "Schematic insert/update failed "+response.status;
           throw es;
         }
         alert("Update/insert complete on "+newt.name);

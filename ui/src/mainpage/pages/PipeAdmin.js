@@ -171,8 +171,12 @@ class PipeAdmin extends Component {
     const b = JSON.stringify(pipe);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on pipe, id="+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Pipe update/insert complete for id = "+id)
+        } else {
+          alert("Pipe update/insert failed for id =  "+id+":  " + response.status);
+        }
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" pipe, id="+id;
         alert(emsg+"\n"+error);

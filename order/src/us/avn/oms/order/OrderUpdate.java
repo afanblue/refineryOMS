@@ -18,6 +18,7 @@ package us.avn.oms.order;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -120,23 +121,23 @@ public class OrderUpdate extends TimerTask {
 		Iterator<Order> iord = ords.getRepeatOrders().iterator();
 		while( iord.hasNext() ) {
 			Order order = iord.next();
-			Long id = order.getShipmentId();
+			Long id = order.getId();
 			if( crns.checkSchedule(ldt, order.getCrontabId() )) {
-				log.debug("Create order: "+order.getShipmentId()+" for "+order.getCrontabId());
+				log.debug("Create order: "+order.getId()+" for "+order.getCrontabId());
 				order.setItems(ords.getOrderItems(id));
 				Instant expDate = now.plus( order.getDelay(), ChronoUnit.HOURS);
-				order.setShipmentId(0L);
+				order.setId(0L);
 				order.setCrontabId(0L);
 				order.setDelay(0);
-				order.setExpDate(expDate);
+				order.setExpDate(Timestamp.from(expDate));
 			
 				log.debug("create order: "+order.toString());
 				Iterator<Item> ii = order.getItems().iterator();
-				Long shipmentId = ords.insertOrder(order);
+				id = ords.insertOrder(order);
 				while( ii.hasNext() ) {
 					Item i = ii.next();
-					log.debug("Item: "+i.getShipmentId()+":"+i.getItemNo()+" for "+i.getContentCd());
-					i.setShipmentId(shipmentId);
+					log.debug("Item: "+i.getId()+":"+i.getItemNo()+" for "+i.getContentCd());
+					i.setId(id);
 					i.setActive(Item.PENDING);
 					Carrier c = crs.getProductCarrier(Tag.TANK_TRUCK, i.getContentCd(), i.getExpVolumeMax());
 					log.debug("carrier: "+(c==null?"null":c.toString()));
@@ -144,7 +145,7 @@ public class OrderUpdate extends TimerTask {
 					ords.insertItem(i);
 				}
 			} else {
-				log.debug("Wrong time, order: "+order.getShipmentId()+" for "+order.getCrontabId());				
+				log.debug("Wrong time, order: "+order.getId()+" for "+order.getCrontabId());				
 			}
 		}
 	}

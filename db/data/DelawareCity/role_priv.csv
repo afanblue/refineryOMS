@@ -48,6 +48,7 @@ Admin,Tag Admin
 Admin,AdminPipes
 Admin,OrderAdmin
 Admin,Admin Ship
+Admin,CrontabAdmin
 Operator,Access Schematics
 Operator,Acknowledge Alarms
 Operator,Execute Crude Field

@@ -1,8 +1,0 @@
-Table,rel_tag_tag,,
-ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTbl,2ndFld,2ndEquiv
-parent_tag_id,tag,id,name,tag,tag_type_code,tag_type_code
-child_tag_id,tag,id,name,tag,tag_type_code,tag_type_code
-Data,,,
-parent_tag_id,child_tag_id,code
-3WayValve|SCO,RU1CP-DI|DI,null
-End

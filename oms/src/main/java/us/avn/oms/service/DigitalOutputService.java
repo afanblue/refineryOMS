@@ -37,7 +37,7 @@ public interface DigitalOutputService {
 	
 	public void clearDOupdate( Long id );
 
-	public void output( Long id );
+	public void output( Long id, Double value );
 	
 	public void updateDigitalOutputStatic( DigitalOutput ai );
 

@@ -29,10 +29,11 @@ public class ChildValue extends Tag implements Serializable {
 	
 	private Long   parentId;
 	private Long   relTagId;
+	private String endCode;
     private Long   inpTagId;
     private Long   inpRelTagId;
     private String inpTagName;
-    private Double inpValue;
+    private String inpValue;
     private String inpType;
     private Double inpMax;
     private Double inpZero;
@@ -68,6 +69,15 @@ public class ChildValue extends Tag implements Serializable {
 	}
 
 
+	public String getEndCode() {
+		return endCode;
+	}
+
+	public void setEndCode(String ec) {
+		this.endCode = ec;
+	}
+
+	
 	public Long getInpTagId() {
 		return inpTagId;
 	}
@@ -95,11 +105,11 @@ public class ChildValue extends Tag implements Serializable {
 	}
 
 
-	public Double getInpValue() {
+	public String getInpValue() {
 		return inpValue;
 	}
 
-	public void setInpValue(Double inpValue) {
+	public void setInpValue(String inpValue) {
 		this.inpValue = inpValue;
 	}
 

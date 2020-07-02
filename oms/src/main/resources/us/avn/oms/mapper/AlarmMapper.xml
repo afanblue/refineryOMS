@@ -77,7 +77,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
   
   <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-  <select id="getAlarmColors" parameterType="Config" >
+  <select id="getAlarmColors" resultType="Config" >
     select id, item_name, item_value
       from alarm_color_list_vw
   </select>
@@ -100,7 +100,7 @@ Alarm: id, alarm_type_id, tag_type_id, alm_occurred, acknowledged, active, alarm
   </select>
 
   <select id="getAllAlarms" resultMap="alarmMap">
-    select id, alarm_type_id, tag_type_id, alm_occurred
+    select id, tag_id, alarm_type_id, tag_type_id, alm_occurred
          , acknowledged, active, alarm_msg_id
       from alarm
      order by alm_occurred

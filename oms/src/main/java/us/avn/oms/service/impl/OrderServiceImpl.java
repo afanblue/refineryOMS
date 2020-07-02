@@ -63,12 +63,12 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * Get the number of active items for a shipment ID and carrier ID
 	 * Active is where the shipment_item.active not in ('C','D')
-	 * @param shipmentId ID for given order
+	 * @param id ID for given order
 	 * @param carrierId ID for given carrier
 	 * @return number of active items
 	 */
-	public Long getNumberActiveItems( Long shipmentId, Long carrierId ) {
-		return orderMapper.getNumberActiveItems(shipmentId, carrierId);
+	public Long getNumberActiveItems( Long id, Long carrierId ) {
+		return orderMapper.getNumberActiveItems(id, carrierId);
 	}
 
 	/**
@@ -119,15 +119,27 @@ public class OrderServiceImpl implements OrderService {
 		return orderMapper.getOrderItemByTransferId(id);
 	}
 	
-
+	/**
+	 * Get any active order for the specified carrier.  There should only
+	 * be one, but just in case ...
+	 * 
+	 * @param id Tag ID for specified carrier
+	 * @return Item object(s)
+	 */
+	@Override
+	public Collection<Item> getActiveOrderItemForCarrier( Long id ) {
+		return orderMapper.getActiveOrderItemForCarrier(id);
+	}
+	
 	/**
 	 * Get all of the active orders, i.e., those that have some items with
-	 * active = 'A'
+	 * active = 'A' and content code as specified
+	 * @param code specified content code ("T" = all)
 	 * @return all active orders 
 	 */
 	@Override
-	public Collection<Order> getActiveOrders( ) {
-		return orderMapper.getActiveOrders();
+	public Collection<Order> getActiveOrders( String code ) {
+		return orderMapper.getActiveOrders( code );
 	}
 	
 	/**
@@ -163,31 +175,34 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * Get all the orders of type (Purchase or Sale)
 	 * @param type P(urchase) or S(ale)
+	 * @param code specified content code ("T" = all)
 	 * @return collection of specified orders
 	 */
 	@Override
-	public Collection<Order> getOrdersByType( String type ) {
-		return orderMapper.getOrdersByType(type);
+	public Collection<Order> getOrdersByType( String type, String code ) {
+		return orderMapper.getOrdersByType(type, code);
 	}
 	
 	/**
 	 * Get the last week's orders, i.e., all the orders from the current
-	 * day minus one week
+	 * day minus one week  ("T" = all)
+	 * @param code content type code
 	 * @return
 	 */
 	@Override
-	public Collection<Order> getLastWeeksOrders( ) {
-		return orderMapper.getLastWeeksOrders();
+	public Collection<Order> getLastWeeksOrders( String code ) {
+		return orderMapper.getLastWeeksOrders( code );
 	}
 	
 	/**
 	 * Get the last month's orders, i.e., all the orders from the current
 	 * day minus one month
+	 * @param code content type code ("T" = all)
 	 * @return collection of the last month's orders
 	 */
 	@Override
-	public Collection<Order> getLastMonthsOrders( ) {
-		return orderMapper.getLastMonthsOrders();
+	public Collection<Order> getLastMonthsOrders( String code ) {
+		return orderMapper.getLastMonthsOrders( code );
 	}
 	
 	/**
@@ -198,7 +213,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Long insertOrder( Order o ) {
 		orderMapper.insertOrder(o);
-		return o.getShipmentId();
+		return o.getId();
 	}
 	
 	/**
@@ -218,7 +233,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Long updateOrder( Order o ) {
 		orderMapper.updateOrder(o);
-		return o.getShipmentId();
+		return o.getId();
 	}
 	
 	/**

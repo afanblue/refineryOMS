@@ -108,6 +108,7 @@ public class FieldRestController {
 		fs.updateField(f); 
 		Long id = f.getId();
 		// update parent relationship
+		// -- the loop is deceptive 'cause there's only one allowed
 		Collection<RelTagTag> crtt = ts.getParentTags(f.getId());
 		for (RelTagTag rtt : crtt ) {
 			if( ! rtt.getParentTagId().equals(f.getParentId()) ) {
@@ -120,6 +121,7 @@ public class FieldRestController {
 		Iterator<RelTagTag> ict = f.getChildTanks().iterator();
 		while( ict.hasNext() ) {
 			RelTagTag ct = ict.next();
+			if( ct.getCode() == null ) { ct.setCode("FLD"); }
 			ct.setParentTagId(id);
 			ts.insertRelationship(ct);
 		}

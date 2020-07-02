@@ -17,7 +17,6 @@
 package us.avn.oms.rest.controller;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,13 +25,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.Pipe;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Tag;
-import us.avn.oms.domain.Vertex;
 import us.avn.oms.service.TagService;
 import us.avn.oms.service.VertexService;
 

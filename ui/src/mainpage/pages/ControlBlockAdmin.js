@@ -185,17 +185,21 @@ class ControlBlockAdmin extends Component {
     }
     if( this.validateForm( this.state.cb ) ) {
       var b = JSON.stringify( this.state.cb );
-      fetch(url, {
-        method: method,
-        headers: {'Content-Type':'application/json'},
-        body: b
-      }).then(this.handleErrors)
-        .then(alert("Control block updated") )
-        .catch(function(error) {
+      const request = async () => {
+        try {
+          const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          if( response.ok ) {
+            alert("Control block update/insert complete for id = "+ id)
+          } else {
+            alert("Control block update/insert failed for id = "+id+":  " + response.status);
+          }
+        } catch( error ) {
           alert("Problem "+(id===0?"inserting":"updating")+" control block "
-                +"for id "+id+"\n"+error);
-          Log.error(className+".cbUpdate: Error - " + error);
-      });
+               +"id "+id+"\n"+error);
+          Log.error("Error - " + error,clsMthd);
+        }
+      }
+      request();
     }
   }
 

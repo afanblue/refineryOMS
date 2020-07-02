@@ -106,8 +106,12 @@ class AlarmMsgAdmin extends Component {
     const b = JSON.stringify(this.state.msg);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on message # "+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Alarm message update/insert complete for id="+id)
+        } else {
+          alert("Alarm message update/insert failed for id="+id+":  " + response.status);
+        }
       } catch( error ) {
         alert("Problem "+(id===0?"inserting":"updating")+" transfer "
              +"id "+id+"\n"+error);

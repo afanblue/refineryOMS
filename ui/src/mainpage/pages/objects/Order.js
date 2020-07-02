@@ -18,19 +18,24 @@
 import moment    from 'moment';
 
 
-export function Order(i,ci,c,cri,cr,a,p,xd,ad,xv,av,cnts) {
-  let fmt = "YY-MM-DD HH:MM";
-  this.shipmentId=i; this.customerId=ci; this.customer=c; this.carrierId=cri;
-  this.carrier=cr; this.active=a; this.purchase=p;
-  this.expDate=(xd===null)?"":moment.utc(xd*1000).format(fmt);
-  this.actDate=(ad===null)?"":moment.utc(ad*1000).local().format(fmt);
-  this.expVolume=xv; this.actVolume=av; this.items=null;
-  this.contents=cnts;
+export function Order(i,ci,c,a,p,xd,ad,xv,av,cnts,cid,dly,cr,items ) {
+  let fmt = "YYYY-MM-DD HH:MM:SS";
+  this.id=i; this.customerId=ci; this.customer=c;
+  this.purchase=p; this.active=a; this.contents=cnts;
+  this.carrier=cr;
+  this.expDate=(xd===null||xd===undefined)?"":moment.utc(xd*1).local().format(fmt);
+  this.actDate=(ad===null||ad===undefined)?"":moment.utc(ad*1).local().format(fmt);
+  this.expVolume=(xv===null?0:xv); this.actVolume=(av===null?0:av);
+  this.crontabId=null; this.delay=0;
+  this.items=items;
 }
 
-export function Item(si,ino,nw,ccd,xvn,xvx,av) {
-  this.shipmentId=si; this.itemNo=ino;
+export function Item(si,ino,sts,nw,ccd,xvn,xvx,av,cid,c,stnId,stn,xfrId,xfr) {
+  this.id=si; this.itemNo=ino; this.active=sts;
   this.newItem=(nw==="Y"?nw:"N"); this.contentCd=ccd;
   this.expVolumeMin=xvn; this.expVolumeMax=xvx;
   this.actVolume=(av===null?0:av);
+  this.carrierId=cid; this.carrier=c;
+  this.stationId=stnId; this.station=stn;
+  this.transferId=xfrId; this.transfer=xfr;
 }

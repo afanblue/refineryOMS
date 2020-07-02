@@ -30,6 +30,7 @@ public class RelTagTag extends OMSObject implements Serializable {
 	
 	private Long id;
 	private String code;
+	private String code2;
 	private Long parentTagId;
 	private String parent;
 	private Long childTagId;
@@ -65,6 +66,15 @@ public class RelTagTag extends OMSObject implements Serializable {
 	
 	public void setCode(String k) {
 		this.code = k;
+	}
+
+	
+	public String getCode2() {
+		return code2;
+	}
+	
+	public void setCode2(String k) {
+		this.code2 = k;
 	}
 
 	

@@ -92,12 +92,15 @@ public class AnalogOutputServiceImpl implements AnalogOutputService {
 	}
 
 	@Override
-	public void output( Long id ) {
+	public void output( Long id, Double value ) {
 		AnalogOutput ao = aoMapper.getAnalogOutput(id);
-		Double inc = 0.20*(ao.getMaxValue() - ao.getZeroValue());
-		Double value = ao.getScanValue()+inc;
-		value = (value>ao.getMaxValue()?ao.getMaxValue():value);
-		ao.setScanValue(value);
+		Double val = value;
+		if( val == null ) {
+			Double inc = 0.20*(ao.getMaxValue() - ao.getZeroValue());
+			val = ao.getScanValue()+inc;
+		}
+		val = (val>ao.getMaxValue()?ao.getMaxValue():val);
+		ao.setScanValue(val);
 		aoMapper.updateAOvalue(ao);
 	}
 	

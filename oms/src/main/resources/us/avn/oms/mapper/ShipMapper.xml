@@ -18,6 +18,7 @@
   </resultMap>
   
   
+  <!-- rtt record here is used to specify ownership of Ship ("C" => customer) -->
   <select id="getAllShips" resultMap="srm">
     select s.id, s.name, c.id owner_id, c.name owner
       from tag s join rel_tag_tag rtt on s.id=rtt.parent_tag_id
@@ -40,10 +41,10 @@
   <select id="getShipByName" resultMap="srm">
     select s.id, s.name, c.id owner_id, c.name owner
          , t.description, t.tag_type_code, t.active
-      from tag s join rel_tag_tag rtt on s.id=rtt.parent_tag_id
+      from tag s
       join customer c on rtt.child_tag_id = c.id
      where s.tag_type_code = 'S'
-       and rtt.code = 'C'
+       and s.misc = 'C'
 	 where t.name = #{param1} 
   </select>
     

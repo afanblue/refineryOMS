@@ -87,7 +87,7 @@ tbl = "crontab"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
-qry = ("select id, name, moh, hod, dom, moy, dow, hourDuration, minDuration from crontab")
+qry = ("select id, name, moh, hod, dom, moy, dow, hour_duration, min_duration from crontab")
 addData( crsr, tbl, qry, hdr, False )
 
 
@@ -254,7 +254,7 @@ tbl = "user"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
-qry = ("select alias, first_name, middle_name, last_name, email, password, state, status "
+qry = ("select alias, first_name, middle_name, last_name, email, password, state, active "
        "from user")
 addData( crsr, tbl, qry, hdr, False )
 
@@ -359,7 +359,7 @@ hdr = ( "Table,"+tbl+",,",
         "child_tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "Data,,,")
 qry = ("select concat(tp.name,'|',tp.tag_type_code) parent_tag_id"
-            ", concat(tc.name,'|',tc.tag_type_code) child_tag_id, rtt.code "
+            ", concat(tc.name,'|',tc.tag_type_code) child_tag_id, rtt.code, rtt_code2 "
        "from rel_tag_tag rtt, tag tp, tag tc "
        "where rtt.parent_tag_id=tp.id and rtt.child_tag_id = tc.id")
 addData( crsr, tbl, qry, hdr, False )
@@ -421,7 +421,7 @@ hdr = ( "Table,"+tbl+",,",
         "unit_id,unit,id,name",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, zero_value, max_value, hist_type_code, u.name "
-       "from analog_output ao join tag t on ao.tag_id = t.id"
+       "from analog_output ao join tag t on ao.tag_id = t.id "
        "join unit u on ao.unit_id = u.id")
 addData( crsr, tbl, qry, hdr, False )
 
@@ -537,18 +537,20 @@ hdr = ( "Table,"+tbl+",,",
         "destination_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "status_id,transfer_status_vw,value,name",
         "transfer_type_id,transfer_type_vw,value,name",
+        "crontab_id,crontab,id,name",
         "Data,,,")
 qry    = ("select x.name, tsv.name status_id, ttv.name transfer_type_id"
           ", concat(tt.name,'|',tt.tag_type_code) tag_id"
           ", concat(ts.name,'|',ts.tag_type_code) source_id"
           ", concat(td.name,'|',td.tag_type_code) destination_id"
           ", exp_start_time, exp_end_time, exp_volume"
-          ", act_start_time, act_end_time, act_volume "
+          ", act_start_time, act_end_time, act_volume, ct.name crontab_id "
           "from transfer x join tag ts on x.source_id = ts.id " 
           "join tag td on x.destination_id=td.id "
           "join tag tt on x.tag_id=tt.id "
           "join transfer_status_vw tsv on x.status_id = tsv.value "
           "join transfer_type_vw ttv on x.transfer_type_id = ttv.value "
+          "left outer join crontab ct on x.crontab_id = ct.id "
           "where tsv.code!='C'" )
 addData( crsr, tbl, qry, hdr, False )
 
@@ -647,7 +649,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ( "select c.name customer_id, purchase, exp_date, act_date, t.name crontab_id, s.create_dt "
         "from shipment s join customer c on s.customer_id = c.id " 
-        "join crontab t on s.crontab_id=t.id " )
+        "left outer join crontab t on s.crontab_id=t.id " )
 addData( crsr, tbl, qry, hdr, False )
 
 

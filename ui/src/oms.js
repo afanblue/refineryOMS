@@ -32,6 +32,8 @@ import MenuList     from './frames/MenuList.js';
 import LoginDisplay from './mainpage/LoginDisplay.js';
 import { SESSIONLENGTH, RESPONSENOTJSON } from './Parameters.js';
 import Contents     from './mainpage/Contents.js';
+import {Category}   from './mainpage/pages/objects/Category.js';
+import {Menu}   from './mainpage/pages/objects/Category.js';
 //require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
@@ -39,11 +41,13 @@ require('isomorphic-fetch');
 
 function AppDisplay(props) {
   let classifications = props.classifications;
+  let menuType = props.menuType;
   let option = props.option;
-  let menus = props.menus;
   let selected = props.selected;
   let catSelect = props.handleCatSelect;
   let menuSelect = props.handleMenuSelect;
+  let mouseEnter = props.handleMouseEnter;
+  let mouseLeave = props.handleMouseLeave;
   if( option === "" || option === undefined || option === null ) {
     if(      selected === "Admin" )         { option = "Users"; }
     else if( selected === "Alarms" )        { option = "ActiveAlarms"; }
@@ -54,27 +58,46 @@ function AppDisplay(props) {
     else if( selected === "Schematics" )    { option = "ListSchematics"; }
     else if( selected === "Transfers" )     { option = "ActiveTransfers"; }
   }
+  var menuWidth = "20%";
+  var contentWidth = "80%";
+  switch (menuType) {
+	case "dropdown" :
+	  menuWidth = "3%"
+	  contentWidth = "97%";
+	  break;
+	case "sidebar" :
+	  menuWidth = "20%";
+	  contentWidth = "80%";
+	  break;
+  }
+
   return (
     <table className="oms-table" width="100%">
       <tbody>
       <tr>
         <td colSpan="2">
-          <ClassificationMenu classifications={classifications}
+          <ClassificationMenu menuType={menuType}
+                              classifications={classifications}
                               selected={selected}
+                              option={option}
+                              handleMenuSelect={menuSelect}
                               handleCatSelect={catSelect}
+                              handleMouseEnter={mouseEnter}
+                              handleMouseLeave={mouseLeave}
           />
         </td>
       </tr>
       <tr>
-        <td className='oms-menu' width="20%">
-          <MenuList menus={menus}
+        <td className='oms-menu' width={menuWidth}>
+          <MenuList menuType={menuType}
+                    classifications={classifications}
                     selected={selected}
                     option={option}
                     handleMenuSelect={menuSelect}
           />
         </td>
-        <td width="80%">
-          <div id="admin" className="oms-intro">
+        <td name='contents' id='contents' width={contentWidth}>
+          <div name='admin' id="admin" className="oms-intro">
             <Contents selected={selected}
                       option={option}
                       stage="begin"
@@ -91,8 +114,8 @@ function AppDisplay(props) {
 AppDisplay.propTypes = {
 	classifications: PropTypes.any,
 	option: PropTypes.any,
-	menus: PropTypes.any,
 	selected: PropTypes.any,
+	menuType: PropTypes.string,
 	handleCatSelect: PropTypes.func,
 	handleMenuSelect: PropTypes.func
 }
@@ -100,11 +123,13 @@ AppDisplay.propTypes = {
 function MainDisplay(props) {
   if( props.loggedIn ) {
     return <AppDisplay classifications={props.classifications}
-                       menus={props.menus}
                        selected={props.selected}
                        option={props.option}
+                       menuType={props.menuType}
                        handleCatSelect={props.handleCatSelect}
                        handleMenuSelect={props.handleMenuSelect}
+                       handleMouseEnter={props.handleMouseEnter}
+                       handleMouseLeave={props.handleMouseLeave}
            />;
   } else {
     return <LoginDisplay alias={props.alias}
@@ -114,9 +139,7 @@ function MainDisplay(props) {
   }
 }
 
-function Category(t) { this.text = t; }
-function Menu(t,u,c,m) { this.text=t; this.uri=u; this.category=c; this.menuname=m; }
-function Validation(v,c,m) {this.valid=v; this.classes=c; this.menus=m; }
+function Validation(v,c,m) {this.valid=v; this.classes=c; }
 
 
 class OMS extends Component {
@@ -136,10 +159,13 @@ class OMS extends Component {
       selected: "Admin",
       option: "",
       activity: "",
+      menuType: "dropdown",
       timerID: null
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handleLogin       = this.handleLogin.bind(this);
+    this.handleMouseEnter  = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave  = this.handleMouseLeave.bind(this);
     this.handleCatSelect   = this.handleCatSelect.bind(this);
     this.handleMenuSelect  = this.handleMenuSelect.bind(this);
   }
@@ -183,12 +209,16 @@ class OMS extends Component {
     }).then(json => {
        if( json.valid === 1 ) {
 //         Log.info("User validated","OMS (handleLogin)");
-         var vx = new Validation( false, null, null );
+         var vx = new Validation( true, null, null );
          var classes = [];
          var menuList = [];
-         json.categories.map(function(n,x){var cat = new Category(n.text); return classes.push( cat ); } );
-         json.menus.map(function(n,x){var m = new Menu(n.text,n.uri,n.category,n.menuname); return menuList.push( m ); } );
-         vx = new Validation( true, classes, menuList );
+         json.categories.map(function(n,x){
+		   var menuList = [];
+		   n.menus.map(function(m,y) {var menu = new Menu(m.text,m.category,m.menuname); return menuList.push( menu ); } );
+           var cat = new Category(n.text, menuList);
+           return classes.push( cat ); }
+         );
+         vx.classes=classes;
        } else {
          alert("User name and password must match a valid account");
          vx = new Validation( false, null, null );
@@ -196,7 +226,6 @@ class OMS extends Component {
        var myTimerID = setTimeout(() => {this.setState({timerID: null, isLoggedIn:false})}, SESSIONLENGTH);
        this.setState({isLoggedIn: vx.valid,
                       classifications: vx.classes,
-                      menuList: vx.menus,
                       timerID: myTimerID
                      });
     }).catch(function(error) {
@@ -216,7 +245,50 @@ class OMS extends Component {
     if( z === undefined ) {z=event.z1;}
     if( z === undefined ) {z=event.z2;}
     if( z === undefined ) {z=event.z3;}
-    this.setState({option:z,activity:"menuSelect" });
+    let option = z;
+    let category = this.state.selected;
+    if( typeof z === "string" ) {
+      var opts = z.split(/\./);
+      if( opts.length===2 ) {
+        option = opts[1];
+        category = opts[0];
+      }
+    }
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+    this.setState({selected:category,option:option,activity:"menuSelect" });
+  }
+
+  handleMouseEnter(event) {
+    let t = event.t;
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+    document.getElementById(t).classList.toggle("show");
+  }
+
+  handleMouseLeave(event) {
+    if (!event.target.matches('dropbtn')) {
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+      var i;
+      for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
   }
 
   handleLoginChange(event) {
@@ -238,14 +310,16 @@ class OMS extends Component {
         </header>
         <MainDisplay loggedIn={this.state.isLoggedIn}
                      classifications={this.state.classifications}
-                     menus={this.state.menuList}
                      alias = {this.state.alias}
                      selected = {this.state.selected}
                      option = {this.state.option}
+                     menuType = {this.state.menuType}
                      handleLoginChange={this.handleLoginChange}
                      handleLogin={this.handleLogin}
                      handleCatSelect={this.handleCatSelect}
                      handleMenuSelect={this.handleMenuSelect}
+                     handleMouseEnter={this.handleMouseEnter}
+                     handleMouseLeave={this.handleMouseLeave}
         />
         <footer className="oms-footer">
           <div className="bottom-text">{footer}</div>

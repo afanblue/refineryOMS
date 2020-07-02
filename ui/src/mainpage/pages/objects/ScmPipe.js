@@ -39,13 +39,13 @@ export default class ScmPipe extends React.Component {
 
   static get propTypes() {
     return {
-      x: PropTypes.integer,
-      y: PropTypes.integer,
-      width: PropTypes.integer,
-      height: PropTypes.integer,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number,
       fill: PropTypes.any,
       stroke: PropTypes.string,
-      strokeWidth: PropTypes.integer,
+      strokeWidth: PropTypes.number,
       points: PropTypes.array,
       value: PropTypes.any
     }
@@ -60,9 +60,12 @@ export default class ScmPipe extends React.Component {
   render() {
 //    var xt = this.props.x;
 //    var yt = this.props.y;
+    var id = this.props.id;
+    var name = this.props.name;
+    var val = this.props.value*1;
     var pts = this.props.points;
     var stkw = this.props.strokeWidth;
-    var color = this.props.value===0?"red":"darkgreen";
+    var color = val===0?"red":"darkgreen";
     return (
       <Line points={pts} stroke={color} strokeWidth={stkw}  />
     );

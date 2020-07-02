@@ -16,7 +16,6 @@
  *******************************************************************************/
 package us.avn.ws;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;

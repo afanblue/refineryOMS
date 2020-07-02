@@ -22,15 +22,16 @@ import PropTypes          from 'prop-types';
 
 import { Stage, Layer, Rect } from 'react-konva';
 import {IMAGEHEIGHT, IMAGEWIDTH} from '../../../Parameters.js';
-import Scm3WayValve from '../objects/Scm3WayValve.js';
-import ScmGauge     from '../objects/ScmGauge.js';
-import ScmPump      from '../objects/ScmPump.js';
-import ScmPipe      from '../objects/ScmPipe.js';
-import ScmRefUnit   from '../objects/ScmRefUnit.js';
-import ScmShip      from '../objects/ScmShip.js';
-import ScmTank      from '../objects/ScmTank.js';
-import ScmText      from '../objects/ScmText.js';
-import ScmValve    from '../objects/ScmValve.js';
+import Scm3WayValve     from '../objects/Scm3WayValve.js';
+import ScmGauge         from '../objects/ScmGauge.js';
+import ScmPump          from '../objects/ScmPump.js';
+import ScmPipe          from '../objects/ScmPipe.js';
+import ScmProcessValue  from '../objects/ScmProcessValue.js';
+import ScmRefUnit       from '../objects/ScmRefUnit.js';
+import ScmShip          from '../objects/ScmShip.js';
+import ScmTank          from '../objects/ScmTank.js';
+import ScmText          from '../objects/ScmText.js';
+import ScmValve         from '../objects/ScmValve.js';
 
 
 class SchematicForm extends Component {
@@ -155,8 +156,8 @@ class SchematicForm extends Component {
     const mu     = this.props.handleMouseUp;
 
     let outSelect = <select id="sco.outTagId" name="sco.outTagId" value={sco.outTagId} onChange={fc}> { outTags.map( function(n,x){ return <option key={x} value={n.id}>{n.name}</option> } ) } </select>
-    if( (sco.misc === "G")  || (sco.misc === "P")  || (sco.misc === "RU") ||
-        (sco.misc === "SH") || (sco.misc === "TK") || (sco.misc === "TX")  ) {
+    if( (sco.misc === "G")  || (sco.misc === "P")  || (sco.misc === "PV") || (sco.misc === "RU") ||
+        (sco.misc === "SH") || (sco.misc === "TK") || (sco.misc === "TX") ) {
       outSelect = "no output required";
     }
 
@@ -243,63 +244,65 @@ class SchematicForm extends Component {
                                 } );
                               }
                             }
-                            let cv = (n.childValue===undefined||n.childValue===null?0:n.childValue);
-                            let tx = cv.toFixed(2).toString();
+                            let tx = n.childValue;
                             let mx = (n.childTagMax===undefined||n.childTagMax===null)?100:n.childTagMax;
                             let zero = (n.childTagZero===undefined||n.childTagZero===null)?0:n.childTagZero;
                             switch( n.misc ) {
                               case "3VB":
                                 return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
-                                                     value={cv} max={mx} zero={zero} fill={"green"}
+                                                     value={tx} max={mx} zero={zero} fill={"green"}
                                                      orient={"bottom"} />
                               case "3VL":
                                 return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
-                                                     value={cv} max={mx} zero={zero} fill={"green"}
+                                                     value={tx} max={mx} zero={zero} fill={"green"}
                                                      orient={"left"} />
                               case "3VR":
                                 return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
-                                                     value={cv} max={mx} zero={zero} fill={"green"}
+                                                     value={tx} max={mx} zero={zero} fill={"green"}
                                                      orient={"right"} />
                               case "3VT":
                                 return <Scm3WayValve key={z} x={x} y={y} width={width} height={height}
-                                                     value={cv} max={mx} zero={zero} fill={"green"}
+                                                     value={tx} max={mx} zero={zero} fill={"green"}
                                                      orient={"top"} />
                               case "G":
                                 return <ScmGauge key={z} x={x} y={y} width={width} height={height}
-                                                 value={cv} max={mx} zero={zero} fill={"green"} />
+                                                 value={tx} max={mx} zero={zero} fill={"green"} />
                               case "P":
                                 return <ScmPipe key={z} x={x} y={y} points={pts} strokeWidth={3}
-                                                value={cv} max={mx} zero={zero}  />
+                                                value={tx} max={mx} zero={zero}  />
                               case "PL":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"green"} orient={"PL"} />
+                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"PL"} />
                               case "PR":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"green"} orient={"PR"} />
+                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"PR"} />
                               case "PT":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"green"}  orient={"PT"}/>
+                                                value={tx} max={mx} zero={zero} fill={"green"}  orient={"PT"}/>
                               case "PB":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"green"}  orient={"PB"}/>
+                                                value={tx} max={mx} zero={zero} fill={"green"}  orient={"PB"}/>
+                              case "PV":
+                                return <ScmProcessValue key={z} x={x} y={y} width={width} height={height} text={tx}
+                                                strokeWidth={1} fontSize={14}/>
                               case "RU":
                                 return <ScmRefUnit key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero}  />
+                                                value={tx} max={mx} zero={zero}  />
                               case "SH":
                                 return <ScmShip key={z} x={x} y={y} width={width} height={height}
-                                                 value={cv} max={mx} zero={zero} fill={"green"} />
+                                                 value={tx} max={mx} zero={zero} fill={"green"} />
                               case "TK":
                                 return <ScmTank key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"red"} />
+                                                value={tx} max={mx} zero={zero} fill={"red"} />
                               case "TX":
                                 return <ScmText key={z} x={x} y={y} width={width} height={height} text={tx}
                                                 strokeWidth={1} fontSize={14}/>
                               case "VH":
                                 return <ScmValve key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"green"} orient={"horizontal"} />
+                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"horizontal"} />
                               case "VV":
                                 return <ScmValve key={z} x={x} y={y} width={width} height={height}
-                                                value={cv} max={mx} zero={zero} fill={"green"} orient={"vertical"} />
+                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"vertical"} />
                               default:
                                 return null
                             }

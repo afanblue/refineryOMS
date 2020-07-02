@@ -117,10 +117,14 @@ class UserAdmin extends Component {
     const b = JSON.stringify(user);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on user, id="+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("User update/insert complete for user = "+user.alias)
+        } else {
+          alert("User update/insert failed for user =  "+user.alias+":  " + response.status);
+        }
       } catch( error ) {
-        const emsg = "Problem "+(id===0?"inserting":"updating")+" user, id="+id;
+        const emsg = "Problem "+(id===0?"inserting":"updating")+" user ="+user.alias;
         alert(emsg+"\n"+error);
         Log.error(emsg+" - " + error,clsMthd);
       }

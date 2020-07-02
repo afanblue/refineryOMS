@@ -21,12 +21,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import us.avn.oms.domain.Config;
 import us.avn.oms.domain.Tag;
 import us.avn.oms.mapper.ConfigMapper;
 import us.avn.oms.service.ConfigService;
+
 
 public class ConfigServiceImpl implements ConfigService {
 

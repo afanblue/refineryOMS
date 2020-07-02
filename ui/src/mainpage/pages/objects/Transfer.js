@@ -17,18 +17,18 @@
  ***********************************************************************/
 import   moment   from 'moment';
 
-export function Transfer(i,n,sid,s,ttid,tt,srcid,src,destid,dest,est,eet,ev,ast,aet,av,d) { 
+export function Transfer(i,n,sid,s,ttid,tt,srcid,src,destid,dest,est,eet,ev,ast,aet,av,d) {
   let fmt = "YYYY-MM-DD HH:mm:ss";
-  this.id=i; this.name=n; 
-  this.statusId=(sid!=null?sid:0); this.status=s; 
-  this.transferTypeId=(ttid!==null?ttid:0); this.transferType=tt;
-  this.sourceId=(srcid!==null?srcid:0); this.source=src;
+  this.id=i; this.name=n;
+  this.statusId=(sid!=null?sid:0); this.status=s;
+  this.transferTypeId=(ttid!==null?ttid:-1); this.transferType=tt;
+  this.sourceId=(srcid!==null?srcid:-1); this.source=src;
   this.destinationId=(destid!==0?destid:0); this.destination=dest;
-  this.expStartTime=(est===null)?"":moment.utc(est*1).local().format(fmt); 
-  this.expEndTime=(eet===null)?"":moment.utc(eet*1).local().format(fmt); 
+  this.expStartTime=(est===null)?"":moment.utc(est*1).local().format(fmt);
+  this.expEndTime=(eet===null)?"":moment.utc(eet*1).local().format(fmt);
   this.expVolume=ev; this.delta=d;
-  this.actStartTime=(ast===null)?"":moment.utc(ast*1).local().format(fmt); 
-  this.actEndTime=(aet===null)?"":moment.utc(aet*1).local().format(fmt); 
+  this.actStartTime=(ast===null)?"":moment.utc(ast*1).local().format(fmt);
+  this.actEndTime=(aet===null)?"":moment.utc(aet*1).local().format(fmt);
   this.actVolume=av;
 }
 

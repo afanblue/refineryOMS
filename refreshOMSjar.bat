@@ -20,3 +20,7 @@ cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\watchdog\libs
 
 cp %M2REPO%\us\avn\ws\WeatherStation\0.0.1-SNAPSHOT\%WSJAR% %V2PROJ%\sim\libs
 cp %M2REPO%\us\avn\ws\WeatherStation\0.0.1-SNAPSHOT\%WSJAR% %V2PROJ%\devio\libs
+
+cp %M2REPO%\us\avn\oms\0.0.1-SNAPSHOT\%OMSJAR% %V2PROJ%\exec\libs
+cp %M2REPO%\us\avn\ws\WeatherStation\0.0.1-SNAPSHOT\%WSJAR% %V2PROJ%\exec\libs
+

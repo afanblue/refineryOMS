@@ -20,6 +20,8 @@
   </resultMap>
   
   
+  
+  <!-- rtt record here is used to specify ownership of Train ("C" => customer) -->  
   <select id="getAllTrains" resultMap="trm">
     select t.id, t.name, c.id owner_id, c.name owner
       from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id

@@ -6,4 +6,5 @@ Data,,,
 user_id,role_id
 admin,Admin
 operator,Operator
+fred,Operator
 End

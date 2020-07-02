@@ -87,7 +87,7 @@ public class ProcessUnitRestController {
 		log.debug("getting process unit " + nm);
 		ProcessUnit pu = new ProcessUnit(0L, "New process unit ...");
 		pu.setSiteLocation(cs.getSiteLocation());
-		Tag t = ts.getTagByName(nm,"PU");
+		Tag t = ts.getTagByName(nm,Tag.PROCESS_UNIT);
 		if( (t==null?false:(t.getId()!= 0)) ) {
 			pu.setTag(t);
 			pu.setChildTags(ts.getChildTags(t.getId()));
@@ -101,7 +101,7 @@ public class ProcessUnitRestController {
     @ResponseStatus(HttpStatus.OK)
 	public Collection<ProcessUnit> getAllProcessUnits( ) {
 		log.debug("getting all process units");
-		Collection<Tag> cts = ts.getAllTagsByType("PU");
+		Collection<Tag> cts = ts.getAllTagsByType(Tag.PROCESS_UNIT);
 		Collection<ProcessUnit> cpu = new Vector<ProcessUnit>();
 		for( Tag t: cts ) {
 			ProcessUnit pu = new ProcessUnit(t);

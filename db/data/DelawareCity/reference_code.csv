@@ -65,4 +65,5 @@ SCM_OBJECT,3WayValveTop,3VT,12,Three Way Valve,Y
 SCM_OBJECT,3WayValveRight,3VR,13,Three Way Valve,Y
 SCM_OBJECT,3WayValveLeft,3VL,14,Three Way Valve,Y
 SCM_OBJECT,3WayValveBtm,3VB,15,Three Way Valve,Y
+SCM_OBJECT,ProcessValue,PV,16,Value from process variable,Y
 End

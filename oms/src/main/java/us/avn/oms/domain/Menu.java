@@ -16,12 +16,8 @@
  *******************************************************************************/
 package us.avn.oms.domain;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Menu extends OMSObject implements Serializable {
 	
@@ -29,7 +25,6 @@ public class Menu extends OMSObject implements Serializable {
 	
 	private String text;
 	private Integer orderNo;
-	private String uri;
 	private String viewPriv;
 	private String execPriv;
 	private String category;
@@ -51,15 +46,6 @@ public class Menu extends OMSObject implements Serializable {
 	
 	public void setOrderno(Integer orderNo) {
 		this.orderNo = orderNo;
-	}
-	
-	
-	public String getUri() {
-		return uri;
-	}
-	
-	public void setUri(String uri) {
-		this.uri = uri;
 	}
 	
 	

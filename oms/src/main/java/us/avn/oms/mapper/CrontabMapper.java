@@ -16,12 +16,10 @@
  *******************************************************************************/
 package us.avn.oms.mapper;
 
-import java.sql.Timestamp;
 import java.util.Collection;
 
-import org.apache.logging.log4j.CloseableThreadContext.Instance;
-
 import us.avn.oms.domain.Crontab;
+
 
 public interface CrontabMapper {
 	

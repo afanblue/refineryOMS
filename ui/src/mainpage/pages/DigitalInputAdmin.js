@@ -152,8 +152,12 @@ class DigitalInputAdmin extends Component {
     var b = JSON.stringify( diNew );
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-         alert("Update/insert complete on "+diNew.tag.name)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("DI update/insert complete for id = "+id)
+        } else {
+          alert("DI update/insert failed for id =  "+id+":  " + response.status);
+        }
       } catch( error ) {
         alert("Problem "+(id===0?"inserting":"updating")+" digital input "
              +"id "+id+"\n"+error);

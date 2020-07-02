@@ -162,8 +162,7 @@ class ItemDisplay extends Component {
     const quit = this.state.quit;
     let fc = this.props.fieldChange;
 
-    var n = new Date();
-    var now = n.toLocaleString('en-US');
+    var now = moment().format('YYYY-MM-DD hh:mm:ss');
 
     let LabelZero = "";
     let AxisZero = "";

@@ -96,12 +96,12 @@ public class AnalogInputRestController {
 		HistoryRequest hr = new HistoryRequest(id, noDays);
 		HistoryData hd = new HistoryData();
 		AnalogInput ai = aiService.getBaseAnalogInput(id);
-		History h = new History();
-		h.setId(id);
-		h.setY(ai.getScanValue());
-		h.setX(ai.getScanTime().getEpochSecond());
+//		History h = new History();
+//		h.setId(id);
+//		h.setY(ai.getScanValue());
+//		h.setX(ai.getScanTime().getEpochSecond());
 		Collection<History> ch = histService.getTagHistory(hr);
-		ch.add(h);
+//		ch.add(h);
 		hd.setAiTag(ai);
 		hd.setHistory( ch );
 		return hd;

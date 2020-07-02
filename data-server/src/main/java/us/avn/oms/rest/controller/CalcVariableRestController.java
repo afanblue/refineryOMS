@@ -77,19 +77,7 @@ public class CalcVariableRestController {
 	public CalcVariable getCalcVariable( @PathVariable Long id  ) {
 		CalcVariable cv = cvs.getCalcVariable(id);
 		ArrayList<String> tl = new ArrayList<>(Arrays.asList("AI", "DI", "C"));
-		Collection<IdName> itl = cvs.getInputTagList(id);
-		cv.setInputTags(itl);
-//		Collection<IdName> pitl = ts.getAllIdNamesByTypeList(tl);
-//		if( itl != null ) {
-//			Iterator<IdName> itli = itl.iterator();
-//			while( itli.hasNext() ) {
-//				IdName it = itli.next();
-//				boolean rq = pitl.remove(it);
-//				log.debug("Remove: "+it+(rq?" true":" false"));
-//			}
-//		}
-//		cv.setInputTagList(pitl);
-//		cv.setOutputTagList(ais.getAllAIIdNameByType("C"));
+//		cv.setInputTags(tl);
 		return cv;
 	}
 	

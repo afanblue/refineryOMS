@@ -54,7 +54,7 @@ public class CarrierRestController {
 	CarrierService carrierService;
 
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
-	public Collection<Carrier> getAllcarriers( ) {
+	public Collection<Carrier> getAllCarriers( ) {
 		log.debug("get all carriers");
 		return carrierService.getAllCarriers();
 	}

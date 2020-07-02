@@ -170,8 +170,12 @@ class DockingAdmin extends Component {
     const b = JSON.stringify(tag);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on tag, id="+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Docking update/insert complete for id = "+id)
+        } else {
+          alert("Docking update/insert failed for id =  "+id+":  " + response.status);
+        }
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" tag, id="+id;
         alert(emsg+"\n"+error);

@@ -16,7 +16,9 @@
  *******************************************************************************/
 package us.avn.oms.rest.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,10 +53,18 @@ public class MenuRestController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{user}")
 	@ResponseBody
-	public Collection<Menu> getAllMenuItems( @PathVariable String user) {
-		
+	public Collection<Category> getAllMenuItems( @PathVariable String user) {
 		log.debug("getting all configuration records for "+user);
-		return menuService.getAllMenuItems(user);
+		Collection<Category> c = new ArrayList<Category>();
+		Collection<Category> cx = menuService.getAllMenuCategories();
+		Iterator<Category> ic = cx.iterator();
+		while( ic.hasNext() ) {
+			Category c0 = ic.next();
+			Collection<Menu> menus = menuService.getMenuItemsForCategory(user, c0.getText());
+			c0.setMenus(menus);
+			c.add(c0);
+		}
+		return c;
 	}
 	
 	

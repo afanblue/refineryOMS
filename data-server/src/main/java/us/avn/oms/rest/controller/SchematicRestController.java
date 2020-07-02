@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,8 +56,8 @@ public class SchematicRestController {
     /* Get actual class name to be printed on */
     private Logger log = LogManager.getLogger(this.getClass().getName());
     
-	static Double HEIGHT = 480D;    // shouldn't be defined this way
-	static Double WIDTH = 640D;		// see note on computeCoordinates
+	static Double BASE_HEIGHT = 480D;	// shouldn't be defined this way
+	static Double BASE_WIDTH = 640D;	// see note on computeCoordinates
 
 	@Autowired 
 	ConfigService cfgService;
@@ -70,7 +71,15 @@ public class SchematicRestController {
 	@Autowired
 	TransferService xferService;
 
-	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/all")
+	/**
+	 * Return a collection of all {@link us.avn.oms.domain.Schematic}s and 
+	 * active {@link us.avn.oms.domain.Transfer}s
+	 * as {@link us.avn.oms.domain.IdName}s.
+	 * 
+	 * @return collection of IdName objects
+	 * @see Collection
+	 */
+	@GetMapping(produces="application/json", value="/all")
     @ResponseStatus(HttpStatus.OK)
 	public Collection<IdName> getAllSchematics( ) {
 		log.debug("get all schematics");
@@ -84,6 +93,12 @@ public class SchematicRestController {
 		return cscm;
 	}
 	
+	/**
+	 * Return a collection of all {@link us.avn.oms.domain.TagType} objects
+	 * 
+	 * @return collection of all TagType objects 
+	 * @see Collection
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/objTypeList")
     @ResponseStatus(HttpStatus.OK)
 	public Collection<TagType> getSchematicObjectTypes( ) {
@@ -91,24 +106,28 @@ public class SchematicRestController {
 		return tagService.getSchematicObjectTypes();
 	}
 	
+	/**
+	 * Get the schematic specified by tag ID
+	 * 
+	 * @param id {@link us.avn.oms.domain.Tag#id}
+	 * @return {@link us.avn.oms.domain.Schematic}
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/{id}")
 	@ResponseBody
     @ResponseStatus(HttpStatus.OK)
 	public Schematic getSchematic( @PathVariable Long id) {
 		log.debug("getSchematic (w/id) "+id);
 		Schematic scm = new Schematic(0L, "New schematic");
-		Tag site = cfgService.getSiteLocation();
 		if( id >= 0 ) {
 			if( 0L != id ) {
 				Tag t = tagService.getTag(id);
 				scm = new Schematic(t);
 				Collection<ChildValue> ccv = tagService.getSCMChildValues(id);
-				Collection<ChildValue> vcv = addVerticesToSCObjs(ccv);
-				scm.setChildTags(vcv);
-//				scm.setChildTags(ccv);
+				scm.setChildTags(ccv);
 			}
 		} else {
 			Transfer x = xferService.getTransfer(-id);
+			Tag site = cfgService.getSiteLocation();
 			scm = new Schematic(id, x.getName());
 			Collection<ChildValue> csco = buildChildTags(x,site);
 			Collection<ChildValue> vsco = fixSchematicObjects(csco,site);
@@ -117,12 +136,18 @@ public class SchematicRestController {
 		return scm;
 	}	
 	
+	/**
+	 * Fetch the given schematic
+	 * 
+	 * @param nm Name of schematic to return
+	 * @return Schematic
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces="application/json", value="/name/{nm}")
 	@ResponseBody
     @ResponseStatus(HttpStatus.OK)
 	public Schematic getSchematicByName( @PathVariable String nm) {
 		log.debug("getSchematicByName: "+nm);
-		Tag t = tagService.getTagByName(nm, "SCM");
+		Tag t = tagService.getTagByName(nm, Tag.SCHEMATIC);
 		Schematic scm;
 		if( null == t ) {
 			scm = new Schematic(0L, "New schematic");
@@ -130,13 +155,16 @@ public class SchematicRestController {
 			scm = new Schematic(t);
 			Tag site = cfgService.getSiteLocation();
 			Collection<ChildValue> csco = tagService.getSCMChildValues(t.getId());
-			Collection<ChildValue> vsco = addVerticesToSCObjs(csco);
-			scm.setChildTags(vsco);
-//			scm.setChildTags(csco);
+			scm.setChildTags(csco);
 		}
 		return scm;
 	}
 	
+	/**
+	 * Update the specified schematic.  Change, as required, the TAG record
+	 * and update the REL_TAG_TAG records 
+	 * @param scm Schematic to update
+	 */
 	@RequestMapping(method = RequestMethod.PUT, value= "/update")
     @ResponseStatus(HttpStatus.OK)
 	public void updateSchematic( @RequestBody Schematic scm ) {
@@ -146,12 +174,23 @@ public class SchematicRestController {
 		updateRelationships(ccv);
 	}
 
+	/**
+	 * Delete the child tags (REL_TAG_TAG records) for the specified object
+	 *  
+	 * @param id Object specifier 
+	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/delete/children/{id}")
     @ResponseStatus(HttpStatus.OK)
 	public void deleteChildren( @PathVariable Long id ) {
 		tagService.deleteChildTags(id);
 	}
 	
+	/**
+	 * Update the child tag (REL_TAG_TAG records) for the given 
+	 * {@link RelTagTag} object
+	 * 
+	 * @param rtt object to update
+	 */
 	@RequestMapping(method = RequestMethod.PUT, value= "/update/child")
     @ResponseStatus(HttpStatus.OK)
 	public void updateRelationship( @RequestBody RelTagTag rtt ) {
@@ -163,6 +202,17 @@ public class SchematicRestController {
 		}
 	}
 
+	/**
+	 * Update the child tags (REL_TAG_TAG records) for the given set
+	 * of {@link ChildValue} objects.  The set of objects is for a 
+	 * schematic
+	 * <p>
+	 * This routine also looks at the input tags, output tags and 
+	 * updates/inserts the relationships as needed.  If the child
+	 * object is a pipe, it updates the objects vertices. 
+	 * 
+	 * @param ccv 
+	 */
 	@RequestMapping(method = RequestMethod.PUT, value= "/update/children")
     @ResponseStatus(HttpStatus.OK)
 	public void updateRelationships( @RequestBody Collection<ChildValue> ccv ) {
@@ -195,6 +245,12 @@ public class SchematicRestController {
 		}
 	}
 
+	/**
+	 * Insert a schematic.  A tag is added for the schematic and the child relationships
+	 * are created
+	 * 
+	 * @param scm Schematic to insert
+	 */
 	@RequestMapping(method = RequestMethod.POST, produces="application/json", value= "/insert")
 	@ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -211,6 +267,11 @@ public class SchematicRestController {
 		insertRelationships(ccv);
 	}
 	
+	/**
+	 * Insert the relationships (REL_TAG_TAG records) for a given schematic.
+	 *   
+	 * @param ccv Relationships to insert
+	 */
 	@RequestMapping(method = RequestMethod.POST, value= "/insert/children")
     @ResponseStatus(HttpStatus.CREATED)
 	public void insertRelationships( @RequestBody Collection<ChildValue> ccv ) {
@@ -236,11 +297,11 @@ public class SchematicRestController {
 	}
 	
 	/**
-	 * Method: buildChildTags
-	 * Description: Create the schematic's child tags for a transfer. 
-	 * @param scm
-	 * @return Collection<ChildValue> 
-	 * 
+	 * Create the schematic's child tags for a transfer.
+	 *  
+	 * @param x Transfer to build the schematic for
+	 * @param site site Tag, to use co-ordinates
+	 * @return Collection of ChildValue tags 
 	 */		
 	private Collection<ChildValue> buildChildTags( Transfer x, Tag site ) {
 		Collection<ChildValue> cvn = new Vector<ChildValue>();
@@ -271,23 +332,25 @@ public class SchematicRestController {
 	}
 	
 	/**
-	 * Method: computeCoordinates
-	 * Description: convert a tag's corner latitude (y)/longitude (x) to zero-based
-	 *        pixels for the site.
+	 * Convert a tag's corner latitude (y)/longitude (x) to zero-based
+	 * pixels for the site.
+	 *  <p>Notes: <ol><li> I assume here the dimensions of the image (height=480,
+	 *    width=640) which is defined in the Parameters.js
+	 *    of the UI.  Any additional scaling is done at the client
+	 *    side.</li>
+	 *    <li>trivial point: we assume a small enough section that Euclidean
+	 *    geometry is applicable.</li>
+	 *    </ol>
+	 *    
 	 * @param t - tag to locate (c1Lat, c1Long, c2Lat and c2Long used)
 	 * @param site - tag specifying site
-	 * @return Map<String,Integer> -> [("x",#x pixels), ("y",#y pixels)]
-	 * Notes: 1. This is terrible, but i assume here the dimensions of the image 
-	 *           (height=480, width=640) which is defined in the Parameters.js
-	 *           of the UI.  I'll have to think about a good way to share those
-	 *           values.  This isn't it.
-	 *        2. trivial point: we assume a small enough section that Euclidean
-	 *           geometry is applicable.
+	 * @return Map x, y coordinates, specified in pixels
+	 * @see Map
 	 */
 	private Map<String, Double> computeCoordinates(ChildValue t, Tag site) {
 		Map<String,Double> cc = new HashMap<String,Double>();
-		Double xFactor = WIDTH/(site.getC1Long()-site.getC2Long());
-		Double yFactor = HEIGHT/(site.getC1Lat()-site.getC2Lat());
+		Double xFactor = BASE_WIDTH/(site.getC1Long()-site.getC2Long());
+		Double yFactor = BASE_HEIGHT/(site.getC1Lat()-site.getC2Lat());
 		Double x = new Double( Math.round((site.getC1Long()-t.getC1Long())*xFactor) );
 		Double y = new Double( Math.round((site.getC1Lat() -t.getC1Lat()) *yFactor) );
 		cc.put("x1",x);
@@ -300,14 +363,16 @@ public class SchematicRestController {
 	}
 	
 	/**
-	 * Method: fixSchematicObjects
-	 * Description: 
-	 * @param ccv
-	 * @return
+	 * Correct the object locations from an actual latitude/longitude to pixel offsets
+	 * based on the site dimension.
+	 * 
+	 * @param ccv collection of ChildValue tags
+	 * @param site location of site, as a Tag with latitude and longitude 
+	 * @return corrected collection of ChildValue tags
 	 */
 	private Collection<ChildValue> fixSchematicObjects( Collection<ChildValue> ccv, Tag site ) {
-		Double xFactor = WIDTH/(site.getC1Long()-site.getC2Long());
-		Double yFactor = HEIGHT/(site.getC1Lat()-site.getC2Lat());
+		Double xFactor = BASE_WIDTH/(site.getC1Long()-site.getC2Long());
+		Double yFactor = BASE_HEIGHT/(site.getC1Lat()-site.getC2Lat());
 		Vector<ChildValue> vsco = new Vector<ChildValue>();
 		Iterator<ChildValue> isco = ccv.iterator();
 		while( isco.hasNext() ) {
@@ -325,18 +390,6 @@ public class SchematicRestController {
 				}
 				cv.setVtxList(vv);
 			}
-			vsco.add(cv);
-		}
-		return vsco;
-	}
-
-	private Collection<ChildValue> addVerticesToSCObjs( Collection<ChildValue> ccv ) {
-		Vector<ChildValue> vsco = new Vector<ChildValue>();
-		Iterator<ChildValue> isco = ccv.iterator();
-		while( isco.hasNext() ) {
-			ChildValue cv = isco.next();
-			Collection<Vertex> cav = vtxService.getAllVertices(cv.getId());
-			cv.setVtxList(cav);
 			vsco.add(cv);
 		}
 		return vsco;

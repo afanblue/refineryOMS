@@ -59,12 +59,13 @@ export default class Scm3WayValve extends React.Component {
   }
 
   render() {
+	var id = this.props.id;
     var xt = this.props.x;
     var ht = 15;
     var wd = 18;
     var yt = this.props.y;
     var orient = this.props.orient;
-    var val = this.props.value;
+    var val = this.props.value*1;
     var colorIn   = val===0?"red":(val===1?"darkgreen":"darkgreen");
     var colorOut1 = val===0?"red":(val===1?"darkgreen":"red");
     var colorOut2 = val===0?"red":(val===1?"red":"darkgreen");

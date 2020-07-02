@@ -56,6 +56,7 @@ public class Pmc {
         while( 1 == 1 ) {
         	try {
         		Thread.sleep( 60 * 60 * 1000);
+        		System.gc();
         	} catch (Exception e) {
     			StringWriter sw = new StringWriter();
     			e.printStackTrace(new PrintWriter(sw));

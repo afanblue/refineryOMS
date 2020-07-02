@@ -62,6 +62,7 @@ public class AnalogInput extends OMSObject implements Serializable {
 	public static final String MISCELLANEOUS = "S";
 	public static final String PRESSURE = "P";
 	public static final String TEMPERATURE = "T";
+	public static final String EXPERIMENTAL = "X";
 	
 	protected Long    tagId;
 	protected Tag      tag;
@@ -493,10 +494,8 @@ public class AnalogInput extends OMSObject implements Serializable {
 			History h = new History();
 			h.setTagId(tagId);
 			h.setX(scanTime.getEpochSecond());
-			
 //			intSinceLhs = (intSinceLhs==null)?0:intSinceLhs;
-			intSinceLhs = scanTime.getEpochSecond()-lastHistTime.getEpochSecond();
-//			log.debug("Hourly update flag: "+tagId+" - intSinceLhs "+intSinceLhs);
+			intSinceLhs = scanTime.getEpochSecond()-(lastHistTime==null?0:lastHistTime.getEpochSecond());			
 			if( (lastHistValue == null) 
 					|| (intSinceLhs >= (3600-60-15))  ) {
 //				log.debug("Hourly update ("+tagId+")");

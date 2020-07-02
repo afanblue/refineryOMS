@@ -31,7 +31,7 @@
         <Logger name="org.apache.ibatis" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
         </Logger>
-        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="ERROR" additivity="false">
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">
       		<AppenderRef ref="RollingFile"/>
       		<AppenderRef ref="Console"/>
         </Logger>

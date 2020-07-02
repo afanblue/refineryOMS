@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `active_order_vw`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `active_order_vw` (
-  `shipment_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
   `sc` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -174,7 +174,7 @@ CREATE TABLE `alarm` (
   CONSTRAINT `alarm_ibfk_1` FOREIGN KEY (`alarm_type_id`) REFERENCES `alarm_type` (`id`),
   CONSTRAINT `alarm_ibfk_2` FOREIGN KEY (`alarm_msg_id`) REFERENCES `alarm_message` (`id`),
   CONSTRAINT `alarm_tag_fk` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3706 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4818 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -688,7 +688,7 @@ DROP TABLE IF EXISTS `complete_order_vw`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `complete_order_vw` (
-  `shipment_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
   `sc` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -707,7 +707,7 @@ CREATE TABLE `config` (
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -843,7 +843,7 @@ CREATE TABLE `crontab` (
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='Intended as a "typical" chrontab entry, with the exception that a duration can be specified in some combination of hours and minutes.  The same syntax is used, i.e., * implies all,  n1,n2 implies n1 and n2, n1-n2 implies n1-n2.  It DOES NOT support the n1/n2 (*/3) specification.\nThe duration fields are to schedule orders and transfers w/starting and ending times.\n';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='Intended as a "typical" chrontab entry, with the exception that a duration can be specified in some combination of hours and minutes.  The same syntax is used, i.e., * implies all,  n1,n2 implies n1 and n2, n1-n2 implies n1-n2.  It DOES NOT support the n1/n2 (*/3) specification.\nThe duration fields are to schedule orders and transfers w/starting and ending times.\n';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1253,7 +1253,7 @@ CREATE TABLE `history` (
   KEY `hist_tag_nuk` (`tag_id`),
   KEY `hist_stime_nuk` (`scan_time`),
   CONSTRAINT `history_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1466676 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1650871 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1504,7 +1504,7 @@ CREATE TABLE `menu` (
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`menu_type_id`) REFERENCES `reference_code` (`id`),
   CONSTRAINT `menu_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `menu` (`id`),
   CONSTRAINT `menu_ibfk_3` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1610,7 +1610,7 @@ DROP TABLE IF EXISTS `order_carrier_vw`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `order_carrier_vw` (
-  `shipment_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
   `carrier` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -1624,7 +1624,7 @@ DROP TABLE IF EXISTS `order_contents_vw`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `order_contents_vw` (
-  `shipment_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
   `contents` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -1638,7 +1638,7 @@ DROP TABLE IF EXISTS `order_volume_vw`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `order_volume_vw` (
-  `shipment_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
   `content_cd` tinyint NOT NULL,
   `transfer_id` tinyint NOT NULL,
   `exp_volume` tinyint NOT NULL,
@@ -1667,7 +1667,7 @@ CREATE TABLE `page` (
   KEY `page_ex_priv_fk` (`exec_priv_id`),
   CONSTRAINT `page_ibfk_1` FOREIGN KEY (`view_priv_id`) REFERENCES `privilege` (`id`),
   CONSTRAINT `page_ibfk_2` FOREIGN KEY (`exec_priv_id`) REFERENCES `privilege` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1716,7 +1716,7 @@ DROP TABLE IF EXISTS `pending_order_vw`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `pending_order_vw` (
-  `shipment_id` tinyint NOT NULL,
+  `id` tinyint NOT NULL,
   `sc` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -1747,7 +1747,7 @@ CREATE TABLE `plot_group` (
   CONSTRAINT `plot_group_ibfk_2` FOREIGN KEY (`id2`) REFERENCES `analog_input` (`tag_id`),
   CONSTRAINT `plot_group_ibfk_3` FOREIGN KEY (`id3`) REFERENCES `analog_input` (`tag_id`),
   CONSTRAINT `plot_group_ibfk_4` FOREIGN KEY (`id4`) REFERENCES `analog_input` (`tag_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1801,7 +1801,7 @@ CREATE TABLE `privilege` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1914,7 +1914,7 @@ CREATE TABLE `reference_code` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `refcd_code_uk` (`category`,`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1964,8 +1964,9 @@ DROP TABLE IF EXISTS `rel_tag_tag`;
 CREATE TABLE `rel_tag_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_tag_id` int(11) NOT NULL,
-  `code` varchar(4) DEFAULT NULL COMMENT 'distinguishing field for multiple chains',
   `child_tag_id` int(11) NOT NULL,
+  `code` varchar(4) DEFAULT NULL COMMENT 'distinguishing field for multiple chains',
+  `code2` varchar(4) DEFAULT NULL,
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1973,7 +1974,7 @@ CREATE TABLE `rel_tag_tag` (
   KEY `tag_child_fk` (`child_tag_id`),
   CONSTRAINT `rel_tag_tag_ibfk_2` FOREIGN KEY (`parent_tag_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `rel_tag_tag_ibfk_3` FOREIGN KEY (`child_tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6023 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8613 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2145,7 +2146,8 @@ SET character_set_client = utf8;
   `child_tag_id` tinyint NOT NULL,
   `child` tinyint NOT NULL,
   `child_type` tinyint NOT NULL,
-  `code` tinyint NOT NULL
+  `code` tinyint NOT NULL,
+  `code2` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -2227,7 +2229,7 @@ DROP TABLE IF EXISTS `shipment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shipment` (
-  `shipment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   `purchase` varchar(1) DEFAULT 'P' COMMENT ' Purchase or Sale',
   `exp_date` timestamp NULL DEFAULT NULL COMMENT 'expected pickup (arrival) date ',
@@ -2236,10 +2238,10 @@ CREATE TABLE `shipment` (
   `act_date` timestamp NULL DEFAULT NULL COMMENT 'date "packed" and shipped',
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`shipment_id`),
+  PRIMARY KEY (`id`),
   KEY `shipment_cust_fk_idx` (`customer_id`),
   CONSTRAINT `shipment_cust_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9395 DEFAULT CHARSET=utf8 COMMENT='customer order, either a purchase or a sale';
+) ENGINE=InnoDB AUTO_INCREMENT=11572 DEFAULT CHARSET=utf8 COMMENT='customer order, either a purchase or a sale';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2289,20 +2291,20 @@ DROP TABLE IF EXISTS `shipment_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shipment_item` (
-  `shipment_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `item_no` int(11) NOT NULL DEFAULT 1,
   `active` varchar(1) DEFAULT 'P',
   `content_cd` varchar(3) NOT NULL DEFAULT 'C',
   `exp_volume_min` double DEFAULT 0,
   `exp_volume_max` double DEFAULT 100000,
-  `act_volume` double DEFAULT 0,
+  `act_volume` double(16,4) DEFAULT 0.0000,
   `carrier_id` int(11) DEFAULT NULL,
   `station_id` int(11) DEFAULT NULL COMMENT 'The station within the dock to/from which this particular item sends/gets its content.',
   `transfer_id` int(11) DEFAULT NULL COMMENT 'ID of transfer created to handle this order',
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`shipment_id`,`item_no`),
-  CONSTRAINT `item_shipment_fk` FOREIGN KEY (`shipment_id`) REFERENCES `shipment` (`shipment_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`,`item_no`),
+  CONSTRAINT `item_shipment_fk` FOREIGN KEY (`id`) REFERENCES `shipment` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -2425,7 +2427,7 @@ CREATE TABLE `tag` (
   `create_dt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag_name_ui` (`name`,`tag_type_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4283 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4549 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2455,12 +2457,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tagxfer_ai_trg AFTER INSERT on tag for each row
 begin
   if new.tag_type_code in ('AO','AI','DI','DO') then
-    insert into xfer(id) values(new.id);
+    insert into raw_data(id) values(new.id);
   end if;
 end */;;
 DELIMITER ;
@@ -2731,6 +2733,7 @@ CREATE TABLE `transfer` (
   `transfer_type_id` int(11) NOT NULL,
   `source_id` int(11) NOT NULL,
   `destination_id` int(11) NOT NULL,
+  `crontab_id` int(11) DEFAULT NULL,
   `exp_start_time` timestamp NULL DEFAULT NULL,
   `exp_end_time` timestamp NULL DEFAULT NULL,
   `exp_volume` double(16,4) DEFAULT NULL,
@@ -2745,7 +2748,7 @@ CREATE TABLE `transfer` (
   KEY `transfer_dest_id_fk` (`destination_id`),
   CONSTRAINT `transfer_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `transfer_ibfk_4` FOREIGN KEY (`destination_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6138 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9737 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3224,7 +3227,7 @@ CREATE TABLE `vertex` (
   PRIMARY KEY (`id`),
   KEY `vertex_ibfk_1` (`tag_id`),
   CONSTRAINT `vertex_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=425 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1898 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3408,7 +3411,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `active_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`shipment_id` union select `shipment_item`.`shipment_id` AS `shipment_id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`shipment_id` */;
+/*!50001 VIEW `active_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3460,12 +3463,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `ad_value_vw` AS select `ai`.`tag_id` AS `tag_id`,round(`ai`.`scan_value`,2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`analog_input` `ai` left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,`di`.`scan_value` AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_input` `di` join `alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,`ao`.`scan_value` AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`analog_output` `ao` join `alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,round(`d`.`scan_value`,2) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_output` `d` join `alarm_color_vw` `acv`) */;
+/*!50001 VIEW `ad_value_vw` AS select `ai`.`tag_id` AS `tag_id`,round(coalesce(`ai`.`scan_value`,0),2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`analog_input` `ai` left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,coalesce(`di`.`scan_value`,0) AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_input` `di` join `alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,coalesce(`ao`.`scan_value`,0) AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`analog_output` `ao` join `alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,coalesce(`d`.`scan_value`,0) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_output` `d` join `alarm_color_vw` `acv`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3636,7 +3639,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `complete_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`shipment_id` union select `shipment_item`.`shipment_id` AS `shipment_id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`shipment_id` */;
+/*!50001 VIEW `complete_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3864,7 +3867,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `order_carrier_vw` AS select `si`.`shipment_id` AS `shipment_id`,group_concat(`c`.`name` separator '<br>') AS `carrier` from (`shipment_item` `si` left join `tag` `c` on(`si`.`carrier_id` = `c`.`id`)) group by `si`.`shipment_id` */;
+/*!50001 VIEW `order_carrier_vw` AS select `x`.`id` AS `id`,group_concat(`x`.`name` separator '<br>') AS `carrier` from (select distinct `si`.`id` AS `id`,`c`.`name` AS `name` from (`oms`.`shipment_item` `si` left join `oms`.`tag` `c` on(`si`.`carrier_id` = `c`.`id`))) `x` group by `x`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3883,7 +3886,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `order_contents_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,group_concat(`shipment_item`.`content_cd` separator ',') AS `contents` from `shipment_item` group by `shipment_item`.`shipment_id` */;
+/*!50001 VIEW `order_contents_vw` AS select `x`.`id` AS `id`,group_concat(`x`.`content_cd` separator ',') AS `contents` from (select distinct `si`.`id` AS `id`,`si`.`content_cd` AS `content_cd` from `oms`.`shipment_item` `si`) `x` group by `x`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3897,12 +3900,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `order_volume_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,`shipment_item`.`content_cd` AS `content_cd`,`shipment_item`.`transfer_id` AS `transfer_id`,sum(`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`shipment_item`.`act_volume`) AS `act_volume` from `shipment_item` group by `shipment_item`.`shipment_id`,`shipment_item`.`content_cd`,`shipment_item`.`transfer_id` */;
+/*!50001 VIEW `order_volume_vw` AS select `shipment_item`.`id` AS `id`,`shipment_item`.`content_cd` AS `content_cd`,`shipment_item`.`transfer_id` AS `transfer_id`,sum(`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`shipment_item`.`act_volume`) AS `act_volume` from `shipment_item` group by `shipment_item`.`id`,`shipment_item`.`content_cd`,`shipment_item`.`transfer_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3921,7 +3924,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `pending_order_vw` AS select `shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` = 'P' group by `shipment_item`.`shipment_id` union select `shipment_item`.`shipment_id` AS `shipment_id`,if(count(0) > 0,0,0) AS `if(count(*)>0,0,0)` from `shipment_item` where `shipment_item`.`active` <> 'P' group by `shipment_item`.`shipment_id` */;
+/*!50001 VIEW `pending_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` = 'P' group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `if(count(*)>0,0,0)` from `shipment_item` where `shipment_item`.`active` <> 'P' group by `shipment_item`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3935,12 +3938,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `rtt_vw` AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code` from ((`rel_tag_tag` `rtt` join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name` */;
+/*!50001 VIEW `rtt_vw` AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code`,`rtt`.`code2` AS `code2` from ((`rel_tag_tag` `rtt` join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4220,4 +4223,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-15  0:30:03
+-- Dump completed on 2020-07-02  0:30:03

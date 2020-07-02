@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
 import moment             from 'moment';
@@ -35,7 +36,7 @@ class ActiveAlarmList extends Component {
   render() {
     var almList = this.state.alarmList;
     let handleSelect  = this.props.handleSelect;
-    var now = (new Date()).toLocaleString('en-US', {hour12:false});
+    var now = moment().format('YYYY-MM-DD hh:mm:ss');
     return (
       <div className="oms-tabs">
         <h2><div>

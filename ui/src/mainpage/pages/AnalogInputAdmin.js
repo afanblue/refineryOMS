@@ -199,8 +199,12 @@ class AnalogInputAdmin extends Component {
       var b = JSON.stringify( ai );
       const request = async () => {
         try {
-          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-          alert("Update/insert complete on analog input ");
+          const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          if( response.ok ) {
+            alert("AI update/insert complete on "+ai.tag.name)
+          } else {
+            alert("AI update/insert failed for "+ai.tag.name+":  " + response.status);
+          }
         } catch( error ) {
           alert("Problem "+(id===0?"inserting":"updating")+" analog input "
                +"id "+id+"\n"+error);

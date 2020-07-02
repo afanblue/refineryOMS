@@ -1,6 +1,9 @@
 package us.avn.oms.devio.device.simulator;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,7 +70,7 @@ public class Simulator extends IODevice {
 		String currentWindSpeedTag = (String)configuration.get(Config.CURRENT_WIND_SPEED);
 		String currentWindDirTag = (String)configuration.get(Config.CURRENT_WIND_DIR);
 		String currentPrecipTag = (String)configuration.get(Config.LAST_HOUR_PRECIP);
-		Tag ctTag = tgs.getTagByName(configuration.get(Config.CURRENT_TEMP), "AI");
+		Tag ctTag = tgs.getTagByName(configuration.get(Config.CURRENT_TEMP), Tag.ANALOG_INPUT);
 		AnalogInput ctAI = ais.getAnalogInput(ctTag.getId());
 		currentTempTime = ctAI.getScanTime();
 		currentTemp = ctAI.getScanValue();
@@ -122,6 +125,9 @@ public class Simulator extends IODevice {
 				case AnalogInput.MISCELLANEOUS:
 					updateOther( ai, currentScanTime );
 					break;
+				case AnalogInput.EXPERIMENTAL:
+					updateExperimental( adr, currentScanTime );
+					break;
 				default:
 					log.debug(aiName +" ignored: "+aiTypeCode+" not recognized");
 					break;
@@ -133,6 +139,14 @@ public class Simulator extends IODevice {
 		log.debug("End Simulator AI processing");
 	}
 
+	/**
+	 * update the analog outputs.  Note that the "address" for the output in this
+	 * case are the IDs of the pv and setpoint for this output.  This simulation just writes the
+	 * value of the output directly to the input.  A real address would depend on
+	 * something actually acting on this output which would then be reflected back
+	 * through the input. 
+	 * @param sec the current second, used to determine the tags to "scan".  
+	 */
 	@Override
 	public void setAnalogOutputs( Integer sec ) {
 		log.debug("Start Simulator AO processing");
@@ -142,34 +156,52 @@ public class Simulator extends IODevice {
 			Address addr = iadr.next();
 			if( null != addr.getScanValue() && addr.getUpdated() == 1 ) {
 				log.debug("Update: "+addr.getIaddr1()+" from "+addr.getId());
-				RawData x = new RawData();
-				x.setId(addr.getIaddr1());
+				RawData xpv = new RawData();
+				xpv.setId(addr.getIaddr1());
 //     	    	fake the collected data
 //				set the value to the current value of the input
-				x.setFloatValue(addr.getScanValue());
-				rds.updateRawData(x);
+				xpv.setFloatValue(addr.getScanValue());
+				rds.updateRawData(xpv);
+				RawData xsp = new RawData();
+				xsp.setId(addr.getIaddr2());
+				xsp.setFloatValue(addr.getScanValue());
+				rds.updateRawData(xsp);
 				rds.clearUpdated(addr.getId());
 			}
 		}
 		log.debug("End Simulator AO processing");
 	}
 
+	/**
+	 * No simulation is done on digital inputs.  If it's tied to an output
+	 * then the output simulates the input; otherwise, the setting of a 
+	 * simulated digital input is done by the Simulation process.
+	 * @param sec the current second, used to determine the tags to "scan".  
+	 */
 	@Override
 	public void getDigitalInputs( Integer sec ) {
 		log.debug("Start Simulator DI processing");
-		Collection<Address> cdi = 
+/*
+ 		Collection<Address> cdi = 
 				adrs.getActiveAddressesForDeviceByType(device.getId(),Tag.DIGITAL_INPUT, sec);
 		Iterator<Address> idi = cdi.iterator();
 		while( idi.hasNext() ) {
 			Address di = idi.next();
-/*
 			RawData rd = new RawData(di.getIaddr1(), di.getScanValue());
 			rds.updateRawData(rd);
-*/
 		}
+*/
 		log.debug("End Simulator DI processing");
 	}
 
+	/**
+	 * update the digital outputs.  Note that the "address" for the output in this
+	 * case is the ID of the input tag to update.  This simulation just writes the
+	 * value of the output directly to the input.  A real address would depend on
+	 * something actually acting on this output which would then be reflected back
+	 * through the input. 
+	 * @param sec the current second, used to determine the tags to "scan".  
+	 */
 	@Override
 	public void setDigitalOutputs( Integer sec ) {
 		log.debug("Start Simulator DO processing");
@@ -226,6 +258,24 @@ public class Simulator extends IODevice {
 		} else {
 			log.debug("Ignore: "+aiName+", current weather tag");
 		}		
+	}
+	
+	/**
+	 * Generate a sine wave signal for the given address.  param1 = cycle time,
+	 * param2 = offset, both of which are in minutes...
+	 * @param adr address of tag to update
+	 * @param cst current scan time
+	 */
+	private void updateExperimental( Address adr, Instant cst ) {
+		RawData x = new RawData();
+		x.setId(adr.getId());
+		ZonedDateTime zdt = ZonedDateTime.ofInstant(cst, ZoneId.systemDefault());
+		Double phi = 2D * Math.PI * ( (new Double(adr.getIaddr3())) + (new Double(zdt.get(ChronoField.MINUTE_OF_DAY))) )
+				     / (new Double(adr.getIaddr2()) ) ;
+		log.debug("Experimental value: "+adr.getId()+" - "+phi);
+		x.setFloatValue(Math.sin(phi));
+		x.setScanTime(cst);
+		rds.updateRawData(x);
 	}
 
 	
@@ -361,6 +411,7 @@ public class Simulator extends IODevice {
 			break;
 		case Tag.STATION :
 		case Tag.DOCK :
+		case Tag.SHIP :
 			Tank dstTk = tks.getTank(x.getDestinationId());
 			if( 0 == dstTk.getId() ) {
 				delta = 0D;

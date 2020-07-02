@@ -19,8 +19,9 @@
 
 import React from 'react';
 import PropTypes          from 'prop-types';
-
 import { Group, Line } from 'react-konva';
+
+import Log         from '../../requests/Log.js';
 
 
 export default class ScmValve extends React.Component {
@@ -40,13 +41,13 @@ export default class ScmValve extends React.Component {
 
    static get propTypes() {
      return {
-       x: PropTypes.integer,
-       y: PropTypes.integer,
-       width: PropTypes.integer,
-       height: PropTypes.integer,
+       x: PropTypes.number,
+       y: PropTypes.number,
+       width: PropTypes.number,
+       height: PropTypes.number,
        fill: PropTypes.any,
        stroke: PropTypes.string,
-       strokeWidth: PropTypes.integer,
+       strokeWidth: PropTypes.number,
        orient: PropTypes.any,
        value: PropTypes.any,
        handleMouseup: PropTypes.func
@@ -60,6 +61,10 @@ export default class ScmValve extends React.Component {
   }
 
   render() {
+	var id = this.props.id;
+	var name = this.props.name;
+	var val = this.props.value;
+//	Log.debug("Valve: object: "+name+"  id: "+id+"  value: "+val);
     var xt = this.props.x;
     var ht = 12;
     var wd = 24;
@@ -78,7 +83,7 @@ export default class ScmValve extends React.Component {
       pts4 = [xt, yt+ht/4, xt, yt+3*ht/4];
     }
     var stkw = 1;
-    var color = this.props.value===0?"red":"darkgreen";
+    var color = this.props.value*1===0?"red":"darkgreen";
     var mu = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu}>

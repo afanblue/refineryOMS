@@ -38,6 +38,12 @@ public class MenuServiceImpl implements MenuService {
 	public Collection<Menu> getAllMenuItems(String user) {
 		return menuMapper.getAllMenuItems(user);
 	}
+	
+	@Override
+	public Collection<Menu> getMenuItemsForCategory( String user, String category ) {
+		return menuMapper.getMenuItemsForCategory(user, category);
+	}
+	
 
 	@Override
 	public Collection<Category> getAllMenuCategories() {

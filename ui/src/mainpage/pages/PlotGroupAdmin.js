@@ -131,18 +131,22 @@ class PlotGroupAdmin extends Component {
     }
     delete pg.aiList;
     const b = JSON.stringify(pg);
-    fetch(url, {
-      method: method,
-      headers: {'Content-Type':'application/json'},
-      body: b
-    }).then(this.handleErrors)
-      .then(response => {
-        this.fetchFormData(id);
-    }).catch(function(error) {
-        alert("Problem "+(id===0?"inserting":"updating")+" PlotGroup "
+    const request = async () => {
+      try {
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Plot group update/insert complete for id = "+id)
+          this.fetchFormData(id);
+        } else {
+          alert("Plot group update/insert failed for id =  "+id+":  " + response.status);
+        }
+      } catch( error ) {
+        alert("Problem "+(id===0?"inserting":"updating")+" plot group "
              +"id "+id+"\n"+error);
-        Log.error("PlotGroupAdmin.PlotGroupUpdate: Error - " + error);
-    });
+        Log.error("Error - " + error,clsMthd);
+      }
+    }
+    request();
   }
 
   componentDidMount() {

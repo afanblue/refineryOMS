@@ -169,8 +169,12 @@ class DigitalOutputAdmin extends Component {
       var b = JSON.stringify( this.state.doObj );
       const request = async () => {
         try {
-          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-          alert("Update/insert complete on "+doObj.tag.name)
+          const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          if( response.ok ) {
+            alert("Digital output update/insert complete for id = "+id)
+          } else {
+            alert("Digital output update/insert failed for id =  "+id+":  " + response.status);
+          }
         } catch( error ) {
           alert("Problem "+(id===0?"inserting":"updating")+" digital output "
                +"id "+id+"\n"+error);

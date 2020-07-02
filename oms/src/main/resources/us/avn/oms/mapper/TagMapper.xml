@@ -16,7 +16,7 @@
 -->  
 
   <resultMap id="cvMap" type="ChildValue">
-    <result property="id"               column="id" />
+    <result property="id"               column="child_id" />
     <result property="name"             column="name" />
     <result property="description"      column="description" />
     <result property="tagTypeCode"      column="tag_type_code" />
@@ -26,6 +26,7 @@
     <result property="c2Lat"            column="c2_lat" />
     <result property="c2Long"           column="c2_long" />
     <result property="active"           column="active" />
+    <result property="endCode"          column="end_code" />
     <result property="relTagId"         column="rel_tag_id" />
     <result property="parentId"         column="parent_id" />
     <result property="inpTagId"         column="inp_id" />
@@ -44,6 +45,13 @@
     <result property="outMax"           column="out_max" />
     <result property="outZero"          column="out_zero" />
     <result property="outAlmColor"      column="out_alm_color" />
+    <collection property="vtxList" ofType="Vertex">
+      <id property="id"                 column="vtx_id"/>
+      <result property="tagId"          column="tag_id" />
+      <result property="seqNo"          column="seq_no" />
+      <result property="latitude"       column="latitude" />
+      <result property="longitude"      column="longitude" />
+    </collection>
   </resultMap>
   
   <resultMap id="tagResultMap" type="Tag">
@@ -82,11 +90,13 @@
   <resultMap id="tagRelationMap" type="RelTagTag">
     <result property="id" column="id" />
     <result property="parentTagId" column="parent_tag_id" />
-    <result property="parent" column="parent" />
-    <result property="childTagId" column="child_tag_id" />
-    <result property="child" column="child" />
+    <result property="parent"      column="parent" />
+    <result property="childTagId"  column="child_tag_id" />
+    <result property="child"       column="child" />
+    <result property="code"        column="code" />
+    <result property="code2"       column="code2" />
   </resultMap>
-
+  
   <select id="getTag" resultMap="tagResultMap">
     select t.id, t.name, t.description, t.tag_type_code, tt.id tag_type_id
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, t.active, t.misc
@@ -168,6 +178,7 @@
   
   <select id="getChildTags" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+         , rtt.code, rtt.code2
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
      where rtt.parent_tag_id = #{param1}
@@ -175,6 +186,7 @@
   
   <select id="getChildren" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+           rtt.code, rtt.code2
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
      where rtt.parent_tag_id = #{param1}
@@ -184,6 +196,7 @@
   
   <select id="getChildrenOfType" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+         , rtt.code, rtt.code2
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
      where rtt.parent_tag_id = #{param1} and rtt.code=#{param2}
@@ -191,6 +204,7 @@
   
   <select id="getParentOfType" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
+         , rtt.code, rtt.code2
       from rel_tag_tag rtt join tag tc on rtt.child_tag_id = tc.id
            join tag tp on rtt.parent_tag_id = tp.id 
      where rtt.child_tag_id = #{param1} and rtt.code=#{param2}
@@ -212,16 +226,20 @@
   <!--    -> {grandchild} (tag of type AI,DI,AO,DO                          -->
   <!--                     related via the rel_tag_tag table)               -->
   <select id="getSCMChildValues" resultMap="cvMap" >
-    select tp.id parent_id, rtt.id rel_tag_id, tc.id, tc.name, tc.description, tc.misc
-         , tc.tag_type_code, tc.active, tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long
-         , inp_rel_tag_id, inp_id, inp_tag, inp_type, inp_value, inp_max, inp_zero, inp_alm_color
+    select tp.id parent_id, rtt.id rel_tag_id, tc.id child_id, tc.name, tc.description, tc.misc
+         , tc.tag_type_code, tc.active, tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long, rtt.code2 end_code
+         , inp_rel_tag_id, inp_id, inp_tag, inp_type
+         , if(tc.misc='TX',tc.description,format(inp_value,2)) inp_value
+         , inp_max, inp_zero, inp_alm_color
          , out_rel_tag_id, out_id, out_tag, out_type, out_value, out_max, out_zero, out_alm_color
+         , v.id vtx_id, v.tag_id, v.seq_no, v.latitude, v.longitude
       from tag tp join rel_tag_tag rtt on tp.id=rtt.parent_tag_id 
       join tag tc on rtt.child_tag_id=tc.id 
       join sco_ref_tag_vw srtv on tc.id = srtv.id 
+      left outer join vertex v on tc.id = v.tag_id
      where tp.id = #{param1} 
        and tc.tag_type_code = 'SCO' 
-     order by tc.name
+     order by tc.name, v.tag_id, v.seq_no
   </select>
   
   <!-- This query retrieves the level child for a given tank to be used as -->
@@ -235,9 +253,9 @@
   <!-- One caveat: the source and destination must have an associated tag  -->
   <!-- for the object, ie, like a tag signifying the state of the object   -->
   <select id="getTransferTankLevelChild" resultMap="cvMap">
-    select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
+    select t.id child_id, t.name, t.description, t.misc, t.tag_type_code, t.active
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , av.tag_id inp_id, av.scan_value inp_value
+         , av.tag_id inp_id, format(av.scan_value,2) inp_value
          , tc.name inp_tag, tc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
       from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id 
@@ -250,7 +268,7 @@
     union
     select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
          , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , av.tag_id inp_id, av.scan_value inp_value
+         , av.tag_id inp_id, format(av.scan_value,2) inp_value
          , tc.name inp_tag, tc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color
       from tag t join rel_tag_tag rtt on t.id=rtt.parent_tag_id 
@@ -261,12 +279,12 @@
        and rtt.code is null
   </select>
   
-  <!-- This query retrieves the children for the end points for a transfer -->
-  <!--                                                                     -->
+  <!-- This query retrieves the children for the specified end point  -->
+  <!-- (parent_tag_id) for a transfer                                 -->
   <select id="getTransferChildValues" resultMap="cvMap">
-    select tc.id, tc.name, tc.description, tc.misc, tc.tag_type_code, tc.active
-         , tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long
-         , av.tag_id inp_id, av.scan_value inp_value
+    select tc.id child_id, tc.name, tc.description, tc.misc, tc.tag_type_code, tc.active
+         , tc.c1_lat, tc.c1_long, tc.c2_lat, tc.c2_long, rtt.code2 end_code
+         , av.tag_id inp_id, format(av.scan_value,2) inp_value
          , tgc.name inp_tag, tgc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
       from rel_tag_tag rtt join tag t on t.id=rtt.parent_tag_id
@@ -282,8 +300,8 @@
   <!--                                                                     -->
   <select id="getTransferSensorValues" resultMap="cvMap">
     select t.id, t.name, t.description, t.misc, t.tag_type_code, t.active
-         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long
-         , av.tag_id inp_id, av.scan_value inp_value
+         , t.c1_lat, t.c1_long, t.c2_lat, t.c2_long, rtt.code2 end_code
+         , av.tag_id inp_id, format(av.scan_value,2) inp_value
          , tc.name inp_tag, tc.tag_type_code inp_type
          , av.max_value inp_max, av.zero_value inp_zero, av.alarm_color inp_alm_color  
       from rel_tag_tag rtt join tag t on t.id=rtt.parent_tag_id
@@ -322,6 +340,7 @@
        set parent_tag_id = #{parentTagId}
          , child_tag_id = #{childTagId}
          , code = #{code}
+         , code2 = #{code2}
      where id = #{id}
  </update>
   
@@ -342,8 +361,8 @@
   </insert>
   
   <insert id="insertRelationship" parameterType="RelTagTag">
-    insert rel_tag_tag( parent_tag_id, child_tag_id, code )
-    values( #{parentTagId}, #{childTagId}, #{code} )
+    insert rel_tag_tag( parent_tag_id, child_tag_id, code, code2 )
+    values( #{parentTagId}, #{childTagId}, #{code}, #{code2} )
     <selectKey keyProperty="id" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID();
     </selectKey>

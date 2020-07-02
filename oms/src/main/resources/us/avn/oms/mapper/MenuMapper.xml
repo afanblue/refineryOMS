@@ -7,13 +7,13 @@
   <!-- cache /-->
     
   <resultMap id="categoryResultMap" type="Category">
+    <result property="id"   column="id" />
     <result property="text" column="text" />
   </resultMap>
   
   <resultMap id="menuItem" type="Menu">
     <result property="text"     column="text"/>
     <result property="orderno"  column="order_no" />
-    <result property="uri"      column="uri" />
     <result property="viewPriv" column="viewpriv" />
     <result property="execPriv" column="execpriv" />
     <result property="category" column="category" />
@@ -21,7 +21,7 @@
   </resultMap>
   
   <select id="getAllMenuItems" resultMap="menuItem">
-    select m.text, m.order_no, p.uri, pv.name viewpriv, px.name execpriv
+    select m.text, m.order_no, pv.name viewpriv, px.name execpriv
          , mt.text category, replace(m.text,' ','') menuname
 	  from menu m join page p on (m.page_id = p.id) 
                   join privilege pv on (pv.id = p.view_priv_id)
@@ -33,15 +33,36 @@
 	       or pv.name in (select privilege from user_priv
 				           where user= #{param1} ))
 	union
-	select dmi.text, dmi.order_no, dmi.uri, dmi.viewpriv, dmi.execpriv
+	select dmi.text, dmi.order_no, dmi.viewpriv, dmi.execpriv
 	     , dmi.category, dmi.menuname
 	  from dynamic_menu_items_vw dmi
 	 order by 6, 2
   </select>
 
+  <select id="getMenuItemsForCategory" resultMap="menuItem">
+    select m.text, m.order_no, pv.name viewpriv, px.name execpriv
+         , mt.text category, replace(m.text,' ','') menuname
+	  from menu m join page p on (m.page_id = p.id) 
+                  join privilege pv on (pv.id = p.view_priv_id)
+                  join privilege px on (px.id = p.exec_priv_id)
+                  join menu mt on (m.category_id = mt.id)     
+	 where m.active = 'Y'
+	   and (px.name in (select privilege from user_priv
+					     where user= #{param1} )
+	       or pv.name in (select privilege from user_priv
+				           where user= #{param1} ))
+	  and mt.text = #{param2}
+	union
+	select dmi.text, dmi.order_no, dmi.viewpriv, dmi.execpriv
+	     , dmi.category, dmi.menuname
+	  from dynamic_menu_items_vw dmi
+	 where dmi.category = #{param2}
+	 order by 6, 2
+  </select>
+
   <select id="getAllMenuCategories" resultMap="categoryResultMap">
-    select m.text
-      from menu m join reference_code r on m.menu_type_id = r.id
+    select mc.id, mc.text
+      from menu mc join reference_code r on mc.menu_type_id = r.id
 	 where r.category = 'MENU_TYPE'
 	   and r.code = 'HT'
 	 order by order_no

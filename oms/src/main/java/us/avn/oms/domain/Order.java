@@ -19,11 +19,9 @@ package us.avn.oms.domain;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
+
 
 /**
  * For an order, Sales are the transfer of product to a buyer and Purchases
@@ -49,7 +47,7 @@ public class Order extends OMSObject implements Serializable {
 	public static final String PURCHASE = "P";
 
 
-	private Long    shipmentId;
+	private Long    id;
 	private Long    customerId;
 	private String  customer;
 	private String  purchase;     // Purchase 'P', Sale 'S'
@@ -62,24 +60,26 @@ public class Order extends OMSObject implements Serializable {
 	private Double  actVolume;
 	private Long    crontabId;
 	private Integer delay;
+	private Long    carrierId;
+	private Long    transferId;
 	private Collection<Item> items;
 	
 	public Order() { }
 	
 	public Order( Long id ) {
-		shipmentId = id;
+		id = id;
 		customerId = 0L;
 		purchase = PURCHASE;
 		items = Collections.emptyList();
 		actDate = expDate = Instant.now();
 	}
 	
-	public Long getShipmentId() {
-		return shipmentId;
+	public Long getId() {
+		return id;
 	}
 	
-	public void setShipmentId(Long id) {
-		this.shipmentId = id;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	
@@ -153,21 +153,35 @@ public class Order extends OMSObject implements Serializable {
 	}
 	
 
-	public Instant getActDate() {
-		return actDate;
+	public Timestamp getActDate() {
+		if( actDate != null ) {
+			return Timestamp.from(actDate);
+		}
+		return null;
 	}
 	
-	public void setActDate( Instant ad ) {
-		actDate = ad;
+	public void setActDate( Timestamp ad ) {
+		try {
+			this.actDate = ad.toInstant();
+		} catch( Exception e) {
+			this.actDate = null;
+		}
 	}
 	
 
-	public Instant getExpDate() {
-		return expDate;
+	public Timestamp getExpDate() {
+		if( expDate != null ) {
+			return Timestamp.from(expDate);
+		}
+		return null;
 	}
 	
-	public void setExpDate( Instant xd ) {
-		expDate = xd;
+	public void setExpDate( Timestamp xd ) {
+		try {
+			this.expDate = xd.toInstant();
+		} catch( Exception e ) {
+			this.expDate = null;
+		}
 	}
 
 	
@@ -207,6 +221,36 @@ public class Order extends OMSObject implements Serializable {
 	}
 
 	
+	/**
+	 * @return the carrierId
+	 */
+	public Long getCarrierId() {
+		return carrierId;
+	}
+
+	/**
+	 * @param carrierId the carrierId to set
+	 */
+	public void setCarrierId(Long carrierId) {
+		this.carrierId = carrierId;
+	}
+	
+
+	/**
+	 * @return the transferId
+	 */
+	public Long getTransferId() {
+		return transferId;
+	}
+
+	/**
+	 * @param transferId the transferId to set
+	 */
+	public void setTransferId(Long transferId) {
+		this.transferId = transferId;
+	}
+	
+
 	public Collection<Item> getItems() {
 		return items;
 	}

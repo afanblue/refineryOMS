@@ -21,16 +21,16 @@ import Log                from './requests/Log.js';
 //import logo from './logo.svg';
 
 import ActiveAlarms       from './pages/ActiveAlarms.js';
-import ActiveTransfers    from './pages/ActiveTransfers.js';
 import AdHoc              from './pages/AdHoc.js';
 import AlarmMsgAdmin      from './pages/AlarmMsgAdmin.js';
 import AlarmTypeAdmin     from './pages/AlarmTypeAdmin.js';
 import AnalogInputAdmin   from './pages/AnalogInputAdmin.js';
 import AnalogOutputAdmin  from './pages/AnalogOutputAdmin.js';
 import CalcVarAdmin       from './pages/CalcVarAdmin.js';
-import ConfigAdmin        from './pages/ConfigAdmin.js';
 import CarrierAdmin       from './pages/CarrierAdmin.js';
+import ConfigAdmin        from './pages/ConfigAdmin.js';
 import ControlBlockAdmin  from './pages/ControlBlockAdmin.js';
+import CrontabAdmin        from './pages/CrontabAdmin.js';
 import DefaultContents    from './pages/DefaultContents.js';
 import DigitalInputAdmin  from './pages/DigitalInputAdmin.js';
 import DigitalOutputAdmin from './pages/DigitalOutputAdmin.js';
@@ -39,7 +39,6 @@ import DockingAdmin       from './pages/DockingAdmin.js';
 import FieldAdmin         from './pages/FieldAdmin.js';
 import Field              from './pages/Field.js';
 import GroupList          from './pages/GroupList.js';
-import Last7DaysTransfers from './pages/Last7DaysTransfers.js';
 import ListSchematics     from './pages/ListSchematics.js';
 import OrderAdmin         from './pages/OrderAdmin.js';
 import PipeAdmin          from './pages/PipeAdmin.js';
@@ -49,7 +48,6 @@ import ProcessUnit        from './pages/ProcessUnit.js';
 import ProcessUnitAdmin   from './pages/ProcessUnitAdmin.js';
 import ProcessUnitList    from './pages/ProcessUnitList.js';
 import RoleAdmin          from './pages/RoleAdmin.js';
-import ScheduledTransfers from './pages/ScheduledTransfers.js';
 import Schematic          from './pages/Schematic.js';
 import SchematicAdmin     from './pages/SchematicAdmin.js';
 import ShipAdmin          from './pages/ShipAdmin.js';
@@ -84,6 +82,8 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
           return <CarrierAdmin stage={stage} />
         case "ControlBlocks":
           return <ControlBlockAdmin stage={stage} />
+        case "Crontab":
+          return <CrontabAdmin stage={stage} />
         case "DigitalInputs":
           return <DigitalInputAdmin stage={stage} />
         case "DigitalOutputs":
@@ -196,17 +196,15 @@ function fetchContents( category, option, stage, jsonData, menuSelect ) {
       option = (((option==="")||(option===null))?"ActiveTransfers":option);
       switch ( option ) {
         case "AdminExecutable":
-          return <TransferAdmin stage={stage}
-                                type={'X'}/>
+          return <TransferAdmin stage={stage} type={'X'}/>
         case "AdminTemplate":
-          return <TransferAdmin stage={stage}
-                                type={'T'}/>
+          return <TransferAdmin stage={stage} type={'T'}/>
         case "ActiveTransfers":
-          return <ActiveTransfers stage={stage}/>
+          return <TransferAdmin stage={stage} type={'A'}/>
         case "Last7DaysTransfers":
-          return <Last7DaysTransfers stage={stage}/>
+          return <TransferAdmin stage={stage} type={'7'} />
         case "ScheduledTransfers":
-          return <ScheduledTransfers stage={stage}/>
+          return <TransferAdmin stage={stage} type={'S'} />
         default:
           return <DefaultContents pageName={pageName} />
       }

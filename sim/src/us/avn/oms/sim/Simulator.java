@@ -66,7 +66,7 @@ public class Simulator {
         int calMin = cal.get(Calendar.MINUTE);
         int delayMin = psed - calMin%psed - 1;
         int pseDelay = 1000 * (delayMin * 60 + (60 - cal.get(Calendar.SECOND)));
-        preTimer.scheduleAtFixedRate(prett, pseDelay, pseDelayInterval*60*1000);
+        preTimer.scheduleAtFixedRate(prett, pseDelay, psed*60*1000);
         log.debug("PSE scan started, delay: "+pseDelay+"/"+delayMin);
         int x = 1;
         while( x == 1 ) {

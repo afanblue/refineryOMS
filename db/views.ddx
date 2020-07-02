@@ -1,7 +1,7 @@
 *************************** 1. row ***************************
   notice: select 'active_order_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS active_order_vw;
-view_ddl: CREATE VIEW active_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` not in ('C','D') group by `oms`.`shipment_item`.`shipment_id` union select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,if(count(0) > 0,0,0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` in ('C','D') group by `oms`.`shipment_item`.`shipment_id`;
+view_ddl: CREATE VIEW active_order_vw AS select `oms`.`shipment_item`.`id` AS `id`,count(0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` not in ('C','D') group by `oms`.`shipment_item`.`id` union select `oms`.`shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` in ('C','D') group by `oms`.`shipment_item`.`id`;
 *************************** 2. row ***************************
   notice: select 'active_tank_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS active_tank_vw;
@@ -13,7 +13,7 @@ view_ddl: CREATE VIEW active_vw AS select `oms`.`reference_code`.`id` AS `id`,`o
 *************************** 4. row ***************************
   notice: select 'ad_value_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS ad_value_vw;
-view_ddl: CREATE VIEW ad_value_vw AS select `ai`.`tag_id` AS `tag_id`,round(`ai`.`scan_value`,2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`oms`.`analog_input` `ai` left join `oms`.`alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `oms`.`alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,`di`.`scan_value` AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`oms`.`digital_input` `di` join `oms`.`alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,`ao`.`scan_value` AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`oms`.`analog_output` `ao` join `oms`.`alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,round(`d`.`scan_value`,2) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`oms`.`digital_output` `d` join `oms`.`alarm_color_vw` `acv`);
+view_ddl: CREATE VIEW ad_value_vw AS select `ai`.`tag_id` AS `tag_id`,round(coalesce(`ai`.`scan_value`,0),2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`oms`.`analog_input` `ai` left join `oms`.`alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `oms`.`alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,coalesce(`di`.`scan_value`,0) AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`oms`.`digital_input` `di` join `oms`.`alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,coalesce(`ao`.`scan_value`,0) AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`oms`.`analog_output` `ao` join `oms`.`alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,coalesce(`d`.`scan_value`,0) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`oms`.`digital_output` `d` join `oms`.`alarm_color_vw` `acv`);
 *************************** 5. row ***************************
   notice: select 'alarm_color_list_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS alarm_color_list_vw;
@@ -45,7 +45,7 @@ view_ddl: CREATE VIEW carrier_vw AS select `oms`.`tag_type`.`id` AS `id`,`oms`.`
 *************************** 12. row ***************************
   notice: select 'complete_order_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS complete_order_vw;
-view_ddl: CREATE VIEW complete_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` in ('C','D') group by `oms`.`shipment_item`.`shipment_id` union select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,if(count(0) > 0,0,0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` not in ('C','D') group by `oms`.`shipment_item`.`shipment_id`;
+view_ddl: CREATE VIEW complete_order_vw AS select `oms`.`shipment_item`.`id` AS `id`,count(0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` in ('C','D') group by `oms`.`shipment_item`.`id` union select `oms`.`shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` not in ('C','D') group by `oms`.`shipment_item`.`id`;
 *************************** 13. row ***************************
   notice: select 'content_type_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS content_type_vw;
@@ -97,23 +97,23 @@ view_ddl: CREATE VIEW on_off_vw AS select `oms`.`reference_code`.`id` AS `id`,`o
 *************************** 25. row ***************************
   notice: select 'order_carrier_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS order_carrier_vw;
-view_ddl: CREATE VIEW order_carrier_vw AS select `si`.`shipment_id` AS `shipment_id`,group_concat(`c`.`name` separator '<br>') AS `carrier` from (`oms`.`shipment_item` `si` left join `oms`.`tag` `c` on(`si`.`carrier_id` = `c`.`id`)) group by `si`.`shipment_id`;
+view_ddl: CREATE VIEW order_carrier_vw AS select `x`.`id` AS `id`,group_concat(`x`.`name` separator '<br>') AS `carrier` from (select distinct `si`.`id` AS `id`,`c`.`name` AS `name` from (`oms`.`shipment_item` `si` left join `oms`.`tag` `c` on(`si`.`carrier_id` = `c`.`id`))) `x` group by `x`.`id`;
 *************************** 26. row ***************************
   notice: select 'order_contents_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS order_contents_vw;
-view_ddl: CREATE VIEW order_contents_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,group_concat(`oms`.`shipment_item`.`content_cd` separator ',') AS `contents` from `oms`.`shipment_item` group by `oms`.`shipment_item`.`shipment_id`;
+view_ddl: CREATE VIEW order_contents_vw AS select `x`.`id` AS `id`,group_concat(`x`.`content_cd` separator ',') AS `contents` from (select distinct `si`.`id` AS `id`,`si`.`content_cd` AS `content_cd` from `oms`.`shipment_item` `si`) `x` group by `x`.`id`;
 *************************** 27. row ***************************
   notice: select 'order_volume_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS order_volume_vw;
-view_ddl: CREATE VIEW order_volume_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,`oms`.`shipment_item`.`content_cd` AS `content_cd`,`oms`.`shipment_item`.`transfer_id` AS `transfer_id`,sum(`oms`.`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`oms`.`shipment_item`.`act_volume`) AS `act_volume` from `oms`.`shipment_item` group by `oms`.`shipment_item`.`shipment_id`,`oms`.`shipment_item`.`content_cd`,`oms`.`shipment_item`.`transfer_id`;
+view_ddl: CREATE VIEW order_volume_vw AS select `oms`.`shipment_item`.`id` AS `id`,`oms`.`shipment_item`.`content_cd` AS `content_cd`,`oms`.`shipment_item`.`transfer_id` AS `transfer_id`,sum(`oms`.`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`oms`.`shipment_item`.`act_volume`) AS `act_volume` from `oms`.`shipment_item` group by `oms`.`shipment_item`.`id`,`oms`.`shipment_item`.`content_cd`,`oms`.`shipment_item`.`transfer_id`;
 *************************** 28. row ***************************
   notice: select 'pending_order_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS pending_order_vw;
-view_ddl: CREATE VIEW pending_order_vw AS select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,count(0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` = 'P' group by `oms`.`shipment_item`.`shipment_id` union select `oms`.`shipment_item`.`shipment_id` AS `shipment_id`,if(count(0) > 0,0,0) AS `if(count(*)>0,0,0)` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` <> 'P' group by `oms`.`shipment_item`.`shipment_id`;
+view_ddl: CREATE VIEW pending_order_vw AS select `oms`.`shipment_item`.`id` AS `id`,count(0) AS `sc` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` = 'P' group by `oms`.`shipment_item`.`id` union select `oms`.`shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `if(count(*)>0,0,0)` from `oms`.`shipment_item` where `oms`.`shipment_item`.`active` <> 'P' group by `oms`.`shipment_item`.`id`;
 *************************** 29. row ***************************
   notice: select 'rtt_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS rtt_vw;
-view_ddl: CREATE VIEW rtt_vw AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code` from ((`oms`.`rel_tag_tag` `rtt` join `oms`.`tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `oms`.`tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name`;
+view_ddl: CREATE VIEW rtt_vw AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code`,`rtt`.`code2` AS `code2` from ((`oms`.`rel_tag_tag` `rtt` join `oms`.`tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `oms`.`tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name`;
 *************************** 30. row ***************************
   notice: select 'scm_object_vw' as action from dual;
  drop_vw: DROP VIEW IF EXISTS scm_object_vw;

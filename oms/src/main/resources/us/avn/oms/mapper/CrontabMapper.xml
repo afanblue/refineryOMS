@@ -29,7 +29,7 @@
   
 
   <select id="getAllCrontabRecords" resultMap="crontabResultMap">
-    select id, name, moh, hod, dom, moy, dow, hourDuration, minDuration from crontab order by 2
+    select id, name, moh, hod, dom, moy, dow, hour_duration, min_duration from crontab order by 2
   </select>
 
   <select id="getCrontabRecord" resultMap="crontabResultMap">

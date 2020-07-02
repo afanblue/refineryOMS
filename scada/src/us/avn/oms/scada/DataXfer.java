@@ -18,17 +18,16 @@ package us.avn.oms.scada;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimerTask;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -72,7 +71,8 @@ public class DataXfer extends TimerTask {
     private HashMap<String,AlarmType> almTypes = null;
  
 	public void run( ) {
-		log.debug("Start AI processing");
+		log.debug("Start - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
+		log.debug("Start DataXfer processing");
 		Calendar cal = Calendar.getInstance();
 		if( cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0 ) {
 			try {
@@ -100,23 +100,39 @@ public class DataXfer extends TimerTask {
 		
 		almTypes = getAlarmTypes(as);
 		
-		Calendar now = Calendar.getInstance();
-		if( now.get(Calendar.SECOND) == 0 ) {
+		if( cal.get(Calendar.SECOND) == 0 ) {
 			processAnalogInputs();
+			log.debug("After AI - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 		}
 /*  */
 		processDigitalInputs();
+		log.debug("After DI - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 		
 		processCalculatedVariables();
+		log.debug("After CV - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 		
 		processControlBlocks();
+		log.debug("After CB - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 		
 		processAnalogOutputs();
+		log.debug("After AO - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 		
 		processDigitalOutputs();
+		log.debug("After DO - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 
 		log.debug("End process variable processing");
+		log.debug("End - HeapMemory: "+getCurrentlyUsedMemory()+", TotalMemory: "+getTotalMemory());
 		return;
+	}
+	
+	private long getCurrentlyUsedMemory() {
+		return	ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() +
+				ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getUsed();
+	}
+	
+	private long getTotalMemory() {
+		return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getCommitted() +
+				ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getCommitted();
 	}
 	
 	private void processAnalogInputs() {
@@ -263,8 +279,8 @@ public class DataXfer extends TimerTask {
 	 * a history value needs to be written, and updating the DB record for the
 	 * AI.
 	 * @param ai analog input to modify
-	 * @param scanValue
-	 * @param scanTime
+	 * @param scanValue updated value 
+	 * @param scanTime time of updated value
 	 */
 	private void processAIValue( AnalogInput ai, Double scanValue, Instant scanTime ) {
 		try {
@@ -291,9 +307,9 @@ public class DataXfer extends TimerTask {
 	/**
 	 * Method: processDIValue 
 	 * Description: 
-	 * @param di
-	 * @param scanValue
-	 * @param scanTime
+	 * @param di digital input to modify
+	 * @param scanValue updated value
+	 * @param scanTime time of updated value
 	 */
 	private void processDIValue( DigitalInput di, Double scanValue, Instant scanTime ) {
 		di.setPrevValue(di.getScanValue());

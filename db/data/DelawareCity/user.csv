@@ -1,7 +1,8 @@
 Table,user,,
 ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
-alias,first_name,middle_name,last_name,email,password,state,status
+alias,first_name,middle_name,last_name,email,password,state,active
 admin,System,X,Admin,system.admin@nowhere.net,admin,A,Y
 operator,Plant,NULL,Operator,plant.operator@nowhere.net,operator,A,Y
+fred,fred,o,derf,fred.o.derf@nowhere.net,fred,,Y
 End

@@ -169,8 +169,12 @@ class AnalogOutputAdmin extends Component {
       var b = JSON.stringify( ao );
       const request = async () => {
         try {
-          await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-          alert("Update/insert complete on "+ao.tag.name)
+          const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+          if( response.ok ) {
+            alert("AO update/insert complete for "+ai.tag.name)
+          } else {
+            alert("AO update/insert failed for "+ai.tag.name+":  " + response.status);
+          }
         } catch( error ) {
           alert("Problem "+(id===0?"inserting":"updating")+" analog output "
                +"id "+id+" ("+ao.tag.name+")\n"+error);

@@ -79,10 +79,12 @@ class ProcessUnitAdmin extends Component {
   finishPUFetch( req ) {
     let pud = req;
     const tags = []
-    pud.childTags.map(function(n,x) { return tags.push(n.childTagId); } );
+    if( (pud.childTags !== null) && (pud.childTags !== undefined) ) {
+      pud.childTags.map(function(n,x) { return tags.push(n.childTagId); } );
+    }
     const pu = new ProcessUnit( pud.id, pud.name, pud.description, pud.tagTypeCode
-                              , pud.tagTypeId, pud.misc, pud.c1Lat, pud.c1Long
-                              , pud.c2Lat, pud.c2Long, pud.active, pud.childTags, tags );
+                                , pud.tagTypeId, pud.misc, pud.c1Lat, pud.c1Long
+                                , pud.c2Lat, pud.c2Long, pud.active, pud.childTags, tags );
     this.setState({stage: "itemRetrieved", updateDisplay: true, processUnit:pu });
   }
 
@@ -138,9 +140,14 @@ class ProcessUnitAdmin extends Component {
     const clsMthd = "ProcessUnitAdmin.update";
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
-        this.fetchFormData(myRequest);
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Role update/insert complete for id = "+id)
+          const myRequest=SERVERROOT + "/processunit/name/" + punew.name;
+          this.fetchFormData(myRequest);
+        } else {
+          alert("Role update/insert failed for id =  "+id+":  " + response.status);
+        }
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" XXXX "
              +"id "+id;
@@ -222,7 +229,7 @@ class ProcessUnitAdmin extends Component {
       const t = e.evt;
       var x = t.offsetX;
       var y = t.offsetY;
-      var l = this.state.returnedText.siteLocation;
+      var l = this.state.siteLocation;
       var lat = l.c1Lat + y * (l.c2Lat-l.c1Lat) / IMAGEHEIGHT;
       var long = l.c1Long + x * (l.c2Long-l.c1Long) / IMAGEWIDTH;
 //      Log.info( "ProcessUnitAdmin.mouseUp: siteLocation{(NW["+l.c1Lat+","+l.c1Long+"] SE("+l.c2Lat+","+l.c2Long+")]}");
@@ -238,7 +245,7 @@ class ProcessUnitAdmin extends Component {
         punew.c2Long = long;
         nextCorner = 1;
       }
-      this.setState( {tank: punew, nextCorner:nextCorner} );
+      this.setState( {processUnit: punew, nextCorner:nextCorner} );
   }
 
   handleQuit(event) {

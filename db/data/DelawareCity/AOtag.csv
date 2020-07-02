@@ -2,7 +2,7 @@ Table,tag,,
 ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
 name,description,tag_type_code,misc,c1_lat,c1_long,c2_lat,c2_long,active
-RU1CP-AO,Pump speed Unit 1 Crude Pump,AO,NULL,NULL,-75.625879,NULL,-75.62514,Y
+RU1CP-AO,Pump speed Unit 1 Crude Pump,AO,NULL,NULL,-75.625879,NULL,-75.62514,N
 RU1GP-AO,Pump speed Unit 1 Gasoline Pump,AO,NULL,NULL,-75.625879,NULL,-75.62514,Y
 RU1FOP-AO,Pump speed Unit 1 Fuel Oil Pump,AO,NULL,NULL,-75.625879,NULL,-75.62514,Y
 RU1JP-AO,Pump speed Unit 1 Jet Fuel Pump,AO,NULL,NULL,-75.625879,NULL,-75.62514,Y

@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
+/* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
 import { Stage, Layer, Arc, Line, Circle, Ellipse, Text } from 'react-konva';
@@ -35,14 +36,14 @@ class OmsEllipse extends React.Component {
       rotation: props.rotation
     };
   }
-  
+
   handleClick = () => {
     this.setState({
       color: Konva.Util.getRandomColor()
     });
   };
 
-  
+
   render() {
     return (
       <Ellipse
@@ -69,7 +70,7 @@ class OmsEllipse extends React.Component {
  *  6    80, 305      331, 160   OK
  *  7    65, 255      270, 193   OK
  *  8    71, 195      210, 199   OK
- *  9    84, 135      150, 199   OK 
+ *  9    84, 135      150, 199   OK
  * 10   106, 75        90, 192   OK
  */
 
@@ -92,11 +93,11 @@ class LoginDisplay extends Component {
     this.p2x = [240,225,210,195,180,165,150,135,120,105, 90, 75, 60, 45, 30, 45, 60, 75, 90,105,120,135,150,165,180,195,210,225,240,255,270,292,316,323,331,315,300,285,270,255];
     this.p2y = [196,197,199,199,199,199,199,198,196,194,192,189,185,179,160,142,136,131,128,126,124,122,120,120,120,120,121,123,124,126,128,134,144,149,160,177,184,188,193,195];
   }
-  
+
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  
+
   updateScreen() {
     let n = this.state.next + 1;
     if( n >= this.p1x.length ) {
@@ -106,15 +107,15 @@ class LoginDisplay extends Component {
                     pos2x:this.p2x[n], pos2y:this.p2y[n],
                     next: n } );
   }
-  
+
   render() {
     let alias = this.props.alias;
     let handleChange = this.props.handleLoginChange;
     let handleLogin = this.props.handleLogin;
-    
+
     const r1 = new Radius(150,40);
     const r2 = new Radius(40,150);
-    return( 
+    return(
       <div>
       <table className="oms-table">
         <tbody>
@@ -168,13 +169,13 @@ class LoginDisplay extends Component {
                           y = {0}
                           stroke={"#C3C2B9"}
                           strokeWidth={3} />
-                          
+
                 </Layer>
               </Stage>
 
             </td>
             <td className="oms-top">
-            
+
               <form id="omsLogin" onSubmit={handleLogin} >
               <table className="oms-table" width="320px" height="150px">
                 <tbody>
@@ -221,7 +222,7 @@ class LoginDisplay extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default LoginDisplay;

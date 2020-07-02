@@ -21,11 +21,7 @@ import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 //import java.util.HashMap;
 import java.util.Iterator;
@@ -48,7 +44,6 @@ import us.avn.oms.domain.Item;
 //import us.avn.oms.domain.Config;
 import us.avn.oms.domain.Order;
 import us.avn.oms.domain.RelTagTag;
-import us.avn.oms.domain.Ship;
 import us.avn.oms.domain.Tag;
 //import us.avn.oms.domain.ReferenceCode;
 //import us.avn.oms.domain.AnalogOutput;
@@ -128,22 +123,22 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 
 //	private Calendar cal;
 
-	static final Double WEEKS_ASPHALT  = 7  *   2000D;
-	static final Double MONTHS_CRUDE   = 30 * 120000D;
-	static final Double WEEKS_FUELOIL  = 7  *  36000D;
-	static final Double WEEKS_GASOLINE = 7  *  55000D;
-	static final Double WEEKS_JETFUEL  = 7  *  12000D;
-	static final Double WEEKS_LUBES    = 7  *   1200D;
-	static final Double WEEKS_NAPTHA   = 7  *   2000D;
-	static final Double WEEKS_WAX      = 7  *   1200D;
+	static final Double WEEKS_ASPHALT  = 7  *   2200D;
+	static final Double MONTHS_CRUDE   = 30 * 115000D;
+	static final Double WEEKS_FUELOIL  = 7  *  35500D;
+	static final Double WEEKS_GASOLINE = 7  *  54000D;
+	static final Double WEEKS_JETFUEL  = 7  *  11400D;
+	static final Double WEEKS_LUBES    = 7  *   1050D;
+	static final Double WEEKS_NAPTHA   = 7  *   2500D;
+	static final Double WEEKS_WAX      = 7  *      0D;
 	
 	private class TwoLongs { 
 		public Long carrierId;
-		public Long shipmentId;
+		public Long orderId;
 		
 		public TwoLongs( Long c, Long s ) {
 			this.carrierId = c;
-			this.shipmentId = s;
+			this.orderId = s;
 		}
 		
 	}
@@ -214,7 +209,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TANK_TRUCK, WEEKS_ASPHALT );
 					break;
 				case Tank.CRUDE :
-					o = createCrudeOrder(capacity, curVolume, orderAmount, Tank.CRUDE, Tag.TRAIN, MONTHS_CRUDE );
+					o = createCrudeOrder(capacity, curVolume, orderAmount, Tank.CRUDE, Tag.SHIP, 2 * MONTHS_CRUDE );
 					break;
 				case Tank.FUEL_OIL :
 					o = createRefinedOrder(capacity, curVolume, orderAmount, tv.getCode(), Tag.TRAIN, WEEKS_FUELOIL );
@@ -250,7 +245,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 					Iterator<Item> ii = o.getItems().iterator();
 					while( ii.hasNext() ) {
 						Item i = ii.next();
-						i.setShipmentId(o.getShipmentId());
+						i.setId(o.getId());
 						os.insertItem(i);
 					}
 				} else {
@@ -265,7 +260,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	/**
 	 * Check on order for expected start time and add the necessary record to
 	 * indicate that the given carrier is present ...
-	 * <br/>
+	 * <br>
 	 * So for all of the orders that have passed their expected start time, we
 	 * find an appropriate dock for the carrier and insert a record in the REL_TAG_TAG
 	 * w/carrier ID as parent, dock ID as child, and code DK.
@@ -275,7 +270,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Iterator<Order> ipo = os.getPendingOrders().iterator();
 		while( ipo.hasNext() ) {
 			Order o = ipo.next();
-			Iterator<Item> it = os.getPendingOrderItems(o.getShipmentId()).iterator();
+			Iterator<Item> it = os.getPendingOrderItems(o.getId()).iterator();
 			Vector<Long> carrierIds = new Vector<Long>();
 			while( it.hasNext() ) {
 				Item i = it.next();
@@ -292,13 +287,13 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 //						os.updateItem(i);
 					} else if( dockId.equals(0L) ) {
 						log.debug("addCarrierPresent: No available dock for carrier "
-								 +carrier.getName()+" for order "+o.getShipmentId());;
+								 +carrier.getName()+" for order "+o.getId());;
 					} else {
-						log.debug("addCarrierPresent: carrier "+i.getCarrierId()+"already docked"
-								 +"at dock ID "+dockId);
+						log.debug("addCarrierPresent: carrier "+i.getCarrierId()
+								 +" already docked at dock ID "+dockId);
 					}
 				} else {
-					log.debug("addCarrierPresent: carrier "+i.getCarrierId()+"already docked");
+					log.debug("addCarrierPresent: carrier "+i.getCarrierId()+" already docked");
 				}
 			}
 			carrierIds = null;
@@ -327,7 +322,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 					if( x.getStatusId() == xfrs.getTransferStatusId(Transfer.COMPLETE) ) {
 						if(it.getActive().equals(Item.DONE) ) {
 							log.debug("undockCarriers: transfer "+x.getId()
-							+" complete, order item "+it.getShipmentId()+"/"+it.getItemNo());
+							+" complete, order item "+it.getId()+"/"+it.getItemNo());
 							it.setActive(Item.COMPLETE);
 							os.updateItem(it);
 							TwoLongs tl = new TwoLongs(it.getCarrierId(),orderId);
@@ -336,7 +331,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 							}
 						}
 					} else {
-						log.debug("undockCarriers: order item "+it.getShipmentId()
+						log.debug("undockCarriers: order item "+it.getId()
 						+"/"+it.getItemNo()+" already complete");
 					}
 				}
@@ -346,9 +341,9 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Iterator<TwoLongs> icid = carrierIds.iterator();
 		while( icid.hasNext() ) {
 			TwoLongs cid = icid.next();
-			Long count = os.getNumberActiveItems(cid.shipmentId, cid.carrierId );
+			Long count = os.getNumberActiveItems(cid.orderId, cid.carrierId );
 			if( count == 0L ) {
-				log.debug("undockCarriers: carrierId "+cid.carrierId+" for shipment "+cid.shipmentId);
+				log.debug("undockCarriers: carrierId "+cid.carrierId+" for shipment "+cid.orderId);
 				tgs.deleteChildTagsOfType(cid.carrierId, Tag.DOCK);
 			}
 		}
@@ -356,11 +351,12 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	
 	/**
 	 * Create an order for crude oil if the current amount in inventory plus the total
-	 * amount ordered is less than the amount needed to run the refinery for a month.
+	 * amount ordered is less than the amount needed to run the refinery for 3 weeks.
 	 * We also limit the order amount to the quantity the carrier can hold.  Just in case.
-	 * @param tv Value object specifying current amount in inventory for given product
-	 * @param orderVolume 
-	 * @param productCode product code
+	 * @param capacity capacity of crude tanks
+	 * @param curVolume current amount of crude in tanks
+	 * @param orderVolume  amount in existing orders
+	 * @param productCode product code 
 	 * @param carrierType carrier type 
 	 * @param limit volume limit for contents
 	 * @return order object ready to insert
@@ -370,7 +366,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Order o = null;
 		log.debug("PRE: createCrudeOrder: capacity="+capacity+", curVolume="+curVolume+", orderVolume="+orderVolume
 				+", limit="+limit);
-		if( (capacity + curVolume + orderVolume) < limit ) {
+		if( (curVolume + orderVolume) < limit ) {
 			log.debug("PRE: createCrudeOrder: room enough and time ");
 			Carrier carrier = crs.getCrudeCarrier();
 			if( null != carrier ) {
@@ -396,7 +392,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 
 	/**
 	 * Create an order for the refined product given by the code in the value parameter
-	 * if the current volume plus the order volume < the limit
+	 * if the capacity - (current volume + order volume) less than the limit
 	 * @param capacity total capacity of tanks  
 	 * @param curVolume total current volume of tanks with content code 
 	 * @param orderVolume volume of contents currently on order
@@ -409,10 +405,11 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 									, String productCode, String carrierType, Double limit ) {
 		Order o = null;
 		Double expectedVolume = curVolume + orderVolume;
-		log.debug("PRE: createRefinedOrder, product code "+productCode+": curVol="+curVolume
-				+", orderVolume="+orderVolume+", expectedVolume="+expectedVolume+", limit="+limit);
-		if( expectedVolume < limit ) {
-			log.debug("PRE: createRefinedOrder for "+productCode);
+		log.debug("PRE: createRefinedOrder, product code "+productCode+", capacity: "+capacity
+				+", curVol="+curVolume+", orderVolume="+orderVolume+", expectedVolume="+expectedVolume
+				+", limit="+limit);
+		if( (capacity - expectedVolume) < limit ) {
+			log.debug("PRE: createRefinedOrder for "+productCode+" on "+ carrierType);
 			Carrier carrier = crs.getProductCarrier( carrierType, productCode, 
 									expectedVolume-limit  );
 			if( null != carrier ) {
@@ -449,7 +446,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		Duration delay = Duration.ofHours(orderDuration);
 		Instant expDate = Instant.now().plus(delay);
 //		o.setExpDate(Timestamp.from(expDate));
-		o.setExpDate(expDate);
+		o.setExpDate(Timestamp.from(expDate));
 
 		Collection<Item> ci = new Vector<Item>();
 		Iterator<Hold> ch = s.getHolds().iterator();
@@ -457,7 +454,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 		while( ch.hasNext() ) {
 			Hold h = ch.next();
 			itemNo++;
-			Item item = new Item(0L,itemNo,Item.ACTIVE);
+			Item item = new Item(0L,itemNo,Item.PENDING);
 			item.setContentCd(productCode);
 			item.setExpVolumeMax(h.getVolume()*h.getNoDuplicates());
 			item.setExpVolumeMin(h.getVolume()*h.getNoDuplicates());
@@ -507,7 +504,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 	 * }
 	 * If the carrier is already docked, return the object for that dock.
 	 * @param c Tag for carrier
-	 * @return ID for selected dock; 0 => no dock found; >0 ID of dock found
+	 * @return ID for selected dock; 0 =&gt; no dock found; &gt; 0 ID of dock found
 	 */
 	private Long getDockForCarrier( Tag c ) {
 		log.debug("Get dock for carrier "+c.getName());

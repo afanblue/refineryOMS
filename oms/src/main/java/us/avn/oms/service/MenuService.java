@@ -25,6 +25,8 @@ public interface MenuService {
 	
 	public Collection<Menu> getAllMenuItems(String user);
 	
+	public Collection<Menu> getMenuItemsForCategory( String user, String category );
+	
 	public Collection<Category> getAllMenuCategories();
 
 }

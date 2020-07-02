@@ -3,4 +3,10 @@ ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable
 Data,,,
 name,active,etherkey
 Customer 1,Y,nowh ereb utup
+Customer 2,Y,upsi dedo wnor back
+Customer 3,Y,abcd efgh
+Customer 4,Y,ijkl abcd efgh
+Customer 5,Y,ijkl mnop efgh
+Customer 6,Y,ijkl mnop qrst uvwx
+Customer 7,Y,ijkz mnop qrst uvwx
 End

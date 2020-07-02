@@ -246,14 +246,14 @@ public class TagRestController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value= "/output/{id}")
+	@RequestMapping(method = RequestMethod.PUT, value= "/output/{id}/{value}")
     @ResponseStatus(HttpStatus.OK)
-	public void updateRelationship( @PathVariable Long id ) {
+	public void updateRelationship( @PathVariable Long id, @PathVariable Double value ) {
 		Tag t = tagService.getTag(id);
 		if( "AO".equalsIgnoreCase(t.getTagTypeCode()) ) {
-			aoService.output(id);
+			aoService.output(id, value);
 		} else if( "DO".equalsIgnoreCase(t.getTagTypeCode())) {
-			doService.output(id);
+			doService.output(id, value );
 		}
 	}
 

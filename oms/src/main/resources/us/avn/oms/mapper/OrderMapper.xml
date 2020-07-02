@@ -7,7 +7,7 @@
   <!-- cache / -->
     
   <resultMap id="ordmap" type="Order">
-    <result property="shipmentId"     column="shipment_id" />
+    <result property="id"             column="id" />
     <result property="customerId"     column="customer_id" />
     <result property="customer"       column="customer" />
     <result property="purchase"       column="purchase" />
@@ -24,7 +24,7 @@
   </resultMap>
   
   <resultMap id="itemMap" type="Item">
-    <result property="shipmentId"     column="shipment_id"/>
+    <result property="id"             column="id"/>
     <result property="itemNo"         column="item_no" />
     <result property="newItem"        column="new_item" />
     <result property="active"         column="active" />
@@ -48,102 +48,434 @@
   
   
   <select id="countActiveItems" parameterType="Long" resultType="Long">
-    select count(*) actives from shipment_item where active="A" and shipment_id=#{param1}
+    select count(*) actives from shipment_item where active="A" and id=#{param1}
   </select>
 
   <select id="getOrderListByStatus" parameterType="String" resultType="Long">
-    select distinct shipment_id from shipment_item where active = #{param1}
+    select distinct id from shipment_item where active = #{param1}
   </select>
   
   <select id="getNumberActiveItems" resultType="Long">
     select count(*) from shipment_item 
      where active not in ('C','D')
-       and shipment_id=#{param1} and carrier_id=#{param2} 
+       and id=#{param1} and carrier_id=#{param2} 
   </select>
   
   <select id="getOrder" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume, ovv.act_volume, ovv.transfer_id
+    select s.id, s.customer_id, c.name customer
+         , s.purchase, s.exp_date, s.act_date, sum(ovv.exp_volume) exp_volume
+         , round(sum(ovv.act_volume),4) act_volume
       from shipment s join customer c on s.customer_id = c.id
-      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
-     where s.shipment_id = #{param1}
+      join order_volume_vw ovv on s.id = ovv.id 
+     where s.id = #{param1}
+     group by s.id
      order by s.exp_date desc
   </select>
   
   <select id="getOrderVolumesForContents" resultMap="valueMap">
-    select content_cd code, sum(exp_volume_max) value from shipment_item group by content_cd
+    select content_cd code, sum(exp_volume_min-coalesce(act_volume,0)) value 
+      from shipment_item
+     where active in ('A','P') 
+     group by content_cd
   </select>
   
   <select id="getOrderItems" resultMap="itemMap">
-    select i.shipment_id, i.item_no, coalesce(i.content_cd,'') content_cd
+    select i.id, i.item_no, coalesce(i.content_cd,'') content_cd
          , coalesce(i.content_cd,'N') new_item, i.active
          , coalesce(i.exp_volume_min,0) min_vol
          , coalesce(i.exp_volume_max,100000) max_vol
-         , coalesce(i.act_volume,0) act_vol
+         , round(coalesce(i.act_volume,0),4) act_vol
          , i.carrier_id, i.transfer_id, i.station_id
       from shipment_item i
-     where i.shipment_id = #{param1}
+     where i.id = #{param1}
     union 
-    select s.shipment_id, h.hold_no, '' content_cd, 'Y' new_item, null active
+    select s.id, h.hold_no, '' content_cd, 'Y' new_item, null active
          , 0 min_vol, coalesce(h.volume*h.no_duplicates,100000) max_vol
          , 0 act_vol, null carrier_id, null transfer_id, null station_id
-      from shipment s join shipment_item si on s.shipment_id=si.shipment_id 
+      from shipment s join shipment_item si on s.id=si.id 
      right outer join hold h on si.carrier_id=h.carrier_id
-     where s.shipment_id= #{param1}
-       and h.hold_no not in (select item_no from shipment_item where shipment_id=s.shipment_id)
+     where s.id= #{param1}
+       and h.hold_no not in (select item_no from shipment_item where id=s.id)
      order by item_no
   </select>
 
   <select id="getOrderItemByTransferId" resultMap="itemMap">
-    select i.shipment_id, i.item_no, i.carrier_id
+    select i.id, i.item_no, i.carrier_id
          , coalesce(i.content_cd,'') content_cd
          , coalesce(i.content_cd,'N') new_item
          , coalesce(i.exp_volume_min,0) min_vol
          , coalesce(i.exp_volume_max,100000) max_vol
-         , coalesce(i.act_volume,0) act_vol
+         , round(coalesce(i.act_volume,0),4) act_vol
          , i.active, i.transfer_id, i.station_id
       from shipment_item i
      where i.transfer_id = #{param1}
   </select>  
   
+  <select id="getActiveOrderItemForCarrier" resultMap="itemMap">
+    select i.id, i.item_no, i.carrier_id
+         , coalesce(i.content_cd,'') content_cd
+         , coalesce(i.content_cd,'N') new_item
+         , coalesce(i.exp_volume_min,0) min_vol
+         , coalesce(i.exp_volume_max,100000) max_vol
+         , round(coalesce(i.act_volume,0),4) act_vol
+         , i.active, i.transfer_id, i.station_id
+      from shipment_item i 
+     where i.active = 'A'
+       and i.carrier_id = #{param1}
+  </select>
+  
   <select id="getActiveOrders" resultMap="ordmap">
-    select distinct s.shipment_id, s.customer_id, c.name customer
-    	 , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-    	 , round(ovv.act_volume,4) act_volume
-    	 , 'A' active, ocv.contents, ocv2.carrier
-      from shipment s join customer c on s.customer_id = c.id
-      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
-      join active_order_vw aov on s.shipment_id = aov.shipment_id
-      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
-      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
+    select distinct s.id, s.customer_id, c.name customer
+    	 , s.purchase, s.exp_date, s.act_date
+    	 , sum(ovv.exp_volume) exp_volume
+    	 , sum(round(ovv.act_volume,4)) act_volume
+    	 , if( pov.sc!=0,'P','A') active
+    	 , ocv.contents, ocrv.carrier
+      from shipment s
+      join customer c on s.customer_id = c.id
+      join order_volume_vw ovv on s.id = ovv.id 
+      join pending_order_vw pov on s.id = pov.id
+      join active_order_vw aov on s.id = aov.id
+      join order_contents_vw ocv on s.id = ocv.id
+      join order_carrier_vw ocrv on s.id = ocrv.id
      where aov.sc != 0
        and coalesce(s.crontab_id,0) = 0
-     order by s.exp_date desc
+       and (ocv.contents = #{param1} or "T" = #{param1})
+     group by s.id
+     order by 9, s.exp_date
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
   </select>
 
   <select id="getRepeatOrders" resultMap="ordmap">
-    select distinct s.shipment_id, s.customer_id, c.name customer, s.purchase
+    select distinct s.id, s.customer_id, c.name customer, s.purchase
         , s.crontab_id, s.delay, s.act_date 
      from shipment s join customer c on s.customer_id = c.id 
     where coalesce(s.crontab_id,0) != 0
-    order by shipment_id asc
+    order by id asc
   </select>
 
   <select id="getPendingOrders" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer
+    select s.id, s.customer_id, c.name customer
          , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
          , round(ovv.act_volume,4) act_volume, ovv.transfer_id
          , 'P' active
-      from shipment s join shipment_item si on s.shipment_id=si.shipment_id
+      from shipment s join shipment_item si on s.id=si.id
       join customer c on s.customer_id = c.id
-      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
+      join order_volume_vw ovv on s.id = ovv.id 
      where si.active = 'P'
        and coalesce(s.crontab_id,0) = 0
      order by s.exp_date
   </select>
   
   <select id="getPendingOrderItems" resultMap="itemMap">
-    select si.shipment_id, si.item_no, si.active, coalesce(si.content_cd,'') content_cd
+    select si.id, si.item_no, si.active, coalesce(si.content_cd,'') content_cd
          , si.transfer_id, coalesce(si.content_cd,'N') new_item, si.carrier_id
          , coalesce(si.exp_volume_min,0) min_vol
          , coalesce(si.exp_volume_max,0) max_vol
@@ -151,7 +483,7 @@
       from shipment_item si
       left outer join tag t on si.carrier_id=t.id 
      where si.active = 'P'
-       and si.shipment_id = #{param1}
+       and si.id = #{param1}
   </select>
   
   <select id="getPendingOrderCountForContent" resultType="Long">
@@ -159,54 +491,63 @@
   </select>
 
   <select id="getOrdersByType" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-         , round(ovv.act_volume,4) act_volume
+    select distinct s.id, s.customer_id, c.name customer
+         , s.purchase, s.exp_date, s.act_date
+         , sum(ovv.exp_volume) exp_volume
+         , sum(round(ovv.act_volume,4)) act_volume
          , if( aov.sc!=0,'A', if( pov.sc!=0, 'P', 'C')) active
-         , ocv.contents, ocv2.carrier
+         , ocv.contents, ocrv.carrier
       from shipment s join customer c on s.customer_id = c.id
-      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id 
-      join active_order_vw aov on s.shipment_id = aov.shipment_id
-      join pending_order_vw pov on s.shipment_id = pov.shipment_id
-      join complete_order_vw cov on s.shipment_id = cov.shipment_id
-      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
-      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
+      join order_volume_vw ovv on s.id = ovv.id 
+      join active_order_vw aov on s.id = aov.id
+      join pending_order_vw pov on s.id = pov.id
+      join complete_order_vw cov on s.id = cov.id
+      join order_contents_vw ocv on s.id = ocv.id
+      join order_carrier_vw ocrv on s.id = ocrv.id
      where s.exp_date > current_date()-interval 1 month
        and s.purchase = #{param1}
+       and (ocv.contents = #{param2} or "T" = #{param2})
+     group by s.id
      order by s.exp_date desc
   </select>
 
   <select id="getLastWeeksOrders" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-         , round(ovv.act_volume,4) act_volume
+    select s.id, s.customer_id, c.name customer
+         , s.purchase, s.exp_date, s.act_date
+         , sum(ovv.exp_volume) exp_volume
+         , sum(round(ovv.act_volume,4)) act_volume
          , if( aov.sc!=0,'A', if( pov.sc!=0, 'P', 'C')) active
-         , ocv.contents, ocv2.carrier
+         , ocv.contents, ocrv.carrier
       from shipment s join customer c on s.customer_id = c.id
-      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
-      join active_order_vw aov on s.shipment_id = aov.shipment_id
-      join pending_order_vw pov on s.shipment_id = pov.shipment_id
-      join complete_order_vw cov on s.shipment_id = cov.shipment_id
-      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
-      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
+      join order_volume_vw ovv on s.id = ovv.id
+      join active_order_vw aov on s.id = aov.id
+      join pending_order_vw pov on s.id = pov.id
+      join complete_order_vw cov on s.id = cov.id
+      join order_contents_vw ocv on s.id = ocv.id
+      join order_carrier_vw ocrv on s.id = ocrv.id
      where s.exp_date > current_date()-interval 1 week 
+       and (ocv.contents = #{param1} or "T" = #{param1})
+     group by s.id
      order by s.exp_date desc
   </select>
   
   <select id="getLastMonthsOrders" resultMap="ordmap">
-    select s.shipment_id, s.customer_id, c.name customer
-         , s.purchase, s.exp_date, s.act_date, ovv.exp_volume
-         , round(ovv.act_volume,4) act_volume
+    select s.id, s.customer_id, c.name customer
+         , s.purchase, s.exp_date, s.act_date
+         , sum(ovv.exp_volume) exp_volume
+         , sum(round(ovv.act_volume,4)) act_volume
          , if( aov.sc!=0,'A', if( pov.sc!=0, 'P', 'C')) active
-         , ocv.contents, ocv2.carrier
+         , ocv.contents, ocrv.carrier
       from shipment s join customer c on s.customer_id = c.id
-      join order_volume_vw ovv on s.shipment_id = ovv.shipment_id
-      join order_contents_vw ocv on s.shipment_id = ocv.shipment_id
+      join order_volume_vw ovv on s.id = ovv.id
+      join order_contents_vw ocv on s.id = ocv.id
+      join active_order_vw aov on s.id = aov.id
+      join pending_order_vw pov on s.id = pov.id
+      join complete_order_vw cov on s.id = cov.id
+      join order_carrier_vw ocrv on s.id = ocrv.id
      where s.exp_date > current_date()-interval 1 month 
-      join active_order_vw aov on s.shipment_id = aov.shipment_id
-      join pending_order_vw pov on s.shipment_id = pov.shipment_id
-      join complete_order_vw cov on s.shipment_id = cov.shipment_id
-      join order_carrier_vw ocv2 on s.shipment_id = ocv2.shipment_id
+       and (ocv.contents = #{param2} or "T" = #{param2})
+     group by s.id
      order by s.exp_date desc
   </select>
     
@@ -216,7 +557,7 @@
          , purchase = #{purchase}
          , exp_date = #{expDate}
          , act_date = #{actDate}
-     where shipment_id = #{shipmentId}
+     where id = #{id}
   </update>
   
   <update id="updateItem" parameterType="Item">
@@ -229,7 +570,7 @@
          , act_volume = #{actVolume}
          , transfer_id = #{transferId}
          , station_id = #{stationId}
-     where shipment_id = #{shipmentId}
+     where id = #{id}
        and item_no = #{itemNo}
   </update>
   
@@ -237,17 +578,17 @@
     insert shipment
           ( customer_id,   purchase,    exp_date,   act_date )
     values( #{customerId}, #{purchase}, #{expDate}, #{actDate} )
-    <selectKey keyProperty="shipmentId" resultType="long" order="AFTER">
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID();
     </selectKey>
   </insert>
   
   <insert id="insertItem" parameterType="Item">
     insert shipment_item
-          ( shipment_id, item_no, carrier_id, active, content_cd
+          ( id, item_no, carrier_id, active, content_cd
           , exp_volume_min, exp_volume_max, act_volume
           , transfer_id, station_id )
-    values( #{shipmentId}, #{itemNo}, #{carrierId}, #{active}, #{contentCd}
+    values( #{id}, #{itemNo}, #{carrierId}, #{active}, #{contentCd}
           , #{expVolumeMin}, #{expVolumeMax}, #{actVolume}
           , #{transferId}, #{stationId} )
     on duplicate key update

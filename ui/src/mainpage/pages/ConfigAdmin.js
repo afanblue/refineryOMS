@@ -132,8 +132,13 @@ class ConfigAdmin extends Component {
     const b = JSON.stringify(cfg);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete for system configuration")
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Configuration update/insert complete");
+          this.fetchList();
+        } else {
+          alert("Configuration update/insert failed " + response.status);
+        }
       } catch( error ) {
         alert("Problem updating system configuration\n"+error);
         Log.error("Error - " + error,clsMthd);

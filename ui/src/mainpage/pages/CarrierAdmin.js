@@ -107,8 +107,12 @@ class CarrierAdmin extends Component {
     const clsMthd = "CarrierAdmin.carrierUpdate";
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on "+c.name)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Carrier update/insert complete for id = "+id);
+        } else {
+          alert("Carrier update/insert failed for id = "+id+":  " + response.status);
+        }
         this.fetchFormData(id);
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" carrier, id="+id;

@@ -99,8 +99,12 @@ class AlarmTypeAdmin extends Component {
     const b = JSON.stringify(this.state.type);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on alarm type # "+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("AI update/insert complete for id = "+id)
+        } else {
+          alert("AI update/insert failed for id = "+id+":  " + response.status);
+        }
       } catch( error ) {
         alert("Problem updating alarm type id "+id+"\n"+error);
         Log.error("Error - " + error,clsMthd);

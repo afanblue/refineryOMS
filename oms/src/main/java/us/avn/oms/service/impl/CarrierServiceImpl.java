@@ -51,17 +51,14 @@ public class CarrierServiceImpl implements CarrierService {
 	}
 	
 	
+	/**
+	 * Get the collection of carrier records
+	 * @return collection of carrier records (w/o their item data)
+	 */
 	@Override
 	public Collection<Carrier> getAllCarriers( ) {
 		Collection<Carrier> cc = carrierMapper.getAllCarriers( );
-		Collection<Carrier> ck = new Vector<Carrier>(cc.size());
-		Iterator<Carrier> icc = cc.iterator();
-		while( icc.hasNext() ) {
-			Carrier c = icc.next();
-			c.setHolds(this.getHolds(c.getId()));
-			ck.add(c);
-		}
-		return ck;
+		return cc;
 	}
 	
 	@Override
@@ -115,7 +112,7 @@ public class CarrierServiceImpl implements CarrierService {
 	 * Get a Tag of type S (ship) which is not being used (i.e., is not currently
 	 * docked) to use as a carrier for a crude order (remember: this is a simulation) 
 	 * 
-	 * @return
+	 * @return carrier record
 	 */
 	@Override
 	public Carrier getCrudeCarrier() {

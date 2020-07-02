@@ -41,17 +41,17 @@ export default class ScmGauge extends React.Component {
 
   static get propTypes() {
     return {
-      x: PropTypes.integer,
-      y: PropTypes.integer,
-      width: PropTypes.integer,
-      height: PropTypes.integer,
-      zero: PropTypes.integer,
-      max: PropTypes.integer,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number,
+      zero: PropTypes.number,
+      max: PropTypes.number,
       value: PropTypes.any,
       text: PropTypes.string,
       fill: PropTypes.any,
       stroke: PropTypes.string,
-      strokeWidth: PropTypes.integer,
+      strokeWidth: PropTypes.number,
       handleMouseup: PropTypes.func
       }
   }
@@ -63,6 +63,9 @@ export default class ScmGauge extends React.Component {
   }
 
   render() {
+	var id   = this.props.id;
+	var name = this.props.name;
+	var val  = this.props.value*1;
     var ht   = this.props.height;
     var wd   = this.props.width;
     var cx   = this.props.x + 0.5 * wd;
@@ -71,7 +74,7 @@ export default class ScmGauge extends React.Component {
     var stk  = this.props.fill;
     var scl  = (this.props.max - this.props.zero);
     scl = (scl===0)?360:scl;
-    var vscl = (360 * (this.props.value - this.props.zero)/scl) - 90;
+    var vscl = (360 * (val - this.props.zero)/scl) - 90;
     var phi  = Math.PI * vscl / 180;
     var ex   = r * Math.cos( phi );
     var ey   = r * Math.sin( phi );

@@ -16,21 +16,11 @@
  *******************************************************************************/
 package us.avn.oms.service.impl;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.Crontab;
 import us.avn.oms.mapper.CrontabMapper;

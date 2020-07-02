@@ -9,6 +9,7 @@
     <spring.version>5.2.3.RELEASE</spring.version>
     <mybatis.version>3.4.5</mybatis.version>
     <mariadb.driver.version>2.5.4</mariadb.driver.version>
+    <log4j.version>2.13.2</log4j.version>
   </properties>
   
     <dependencies>
@@ -84,7 +85,7 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
     	<artifactId>log4j-core</artifactId>
-    	<version>2.11.0</version>
+    	<version>${log4j.version}</version>
       </dependency>
 
       <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
@@ -114,12 +115,12 @@
       <dependency>
     	<groupId>org.apache.logging.log4j</groupId>
     	<artifactId>log4j-jcl</artifactId>
-    	<version>2.11.0</version>
+    	<version>${log4j.version}</version>
       </dependency>
       <dependency>
     	<groupId>org.apache.logging.log4j</groupId>
     	<artifactId>log4j-api</artifactId>
-    	<version>2.11.0</version>
+    	<version>${log4j.version}</version>
       </dependency>
     </dependencies>
   
@@ -163,6 +164,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
+          <show>private</show>
           <excludePackageNames> *.impl </excludePackageNames>
         </configuration>
       </plugin>
@@ -181,8 +183,8 @@
             </goals>
           </execution>
         </executions>
-        </plugin>
-     </plugins>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

@@ -119,8 +119,12 @@ class ShipAdmin extends Component {
     const b = JSON.stringify(ship);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on ship, id="+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Ship update/insert complete for  "+ship.name)
+        } else {
+          alert("Crontab update/insert failed for  "+ship.name+":  " + response.status);
+        }
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" ship, id="+id;
         alert(emsg+"\n"+error);

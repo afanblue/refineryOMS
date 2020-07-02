@@ -167,8 +167,12 @@ class TagAdmin extends Component {
     const b = JSON.stringify(tag);
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on tag, id="+id)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Tag update/insert complete for tag "+tag.name)
+        } else {
+          alert("Tag update/insert failed for tag  "+tag.name+":  " + response.status);
+        }
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" tag, id="+id;
         alert(emsg+"\n"+error);

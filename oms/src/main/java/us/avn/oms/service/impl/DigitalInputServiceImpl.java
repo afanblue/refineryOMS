@@ -17,15 +17,11 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.AIValue;
-import us.avn.oms.domain.Config;
 import us.avn.oms.domain.DigitalInput;
 import us.avn.oms.domain.ReferenceCode;
 import us.avn.oms.domain.Tag;

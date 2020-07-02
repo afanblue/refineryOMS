@@ -168,8 +168,12 @@ class TankAdmin extends Component {
     var b = JSON.stringify( this.state.tank );
     const request = async () => {
       try {
-        await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
-        alert("Update/insert complete on "+tk.tag.name)
+        const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
+        if( response.ok ) {
+          alert("Tank update/insert complete for id = "+id)
+        } else {
+          alert("Tank update/insert failed for id =  "+id+":  " + response.status);
+        }
         this.fetchTankData(id);
       } catch( error ) {
         const emsg = "Problem "+(id===0?"inserting":"updating")+" tank, id="+id;

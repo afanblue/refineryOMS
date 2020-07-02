@@ -19,9 +19,7 @@
 
 import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
-
-//import Calendar           from 'react-calendar';
-import Datetime  from 'react-datetime';
+import Datetime           from 'react-datetime';
 
 class OrderForm extends Component {
   constructor(props) {
@@ -33,7 +31,7 @@ class OrderForm extends Component {
       return {
           order: PropTypes.object,
           items: PropTypes.array,
-          shipmentId: PropTypes.number,
+          id: PropTypes.number,
           option: PropTypes.string,
           contents: PropTypes.any,
           customers: PropTypes.any,
@@ -56,11 +54,7 @@ class OrderForm extends Component {
   render() {
     var x          = this.props.order;
     var items      = x.items;
-    if( items.size === 0 ) {
-		var i = new Item(0,1,"Y","",0,0,0);
-		items.unshift(i);
-	}
-    var sid        = "000000"+x.shipmentId.toString();
+    var sid        = "000000"+x.id.toString();
     sid            = sid.substring(sid.length-6);
     const option   = this.props.option;
     const contents = this.props.contents;
@@ -68,9 +62,9 @@ class OrderForm extends Component {
     const carrs    = this.props.carriers;
     let defVal     = x.expDate;
     var fc       = this.props.fieldChange;
-    var purchaseSelect = <select id="purchase" name="purchase" value={x.purchase} onChange={fc} ><option value={"P"}>Purchase</option><option value={"S"}>Sale</option></select>
+    var purchaseSelect = <select id="purchase" name="purchase" value={x.purchase} onChange={fc} ><option value={""}>---</option><option value={"P"}>Purchase</option><option value={"S"}>Sale</option></select>
     var statusSelect = <select id="active" name="active" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>
-    if( x.shipmentId !== 0 ) {
+    if( x.id !== 0 ) {
       purchaseSelect = <select id="purchase" name="purchase" readOnly="READONLY" value={x.purchase} onChange={fc} ><option value={"P"}>Purchase</option><option value={"S"}>Sale</option></select>
       statusSelect = <select id="active" name="active" readOnly="READONLY" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>
     }
@@ -90,9 +84,9 @@ class OrderForm extends Component {
                     alt="" height="5px" width="180px"/></td>
               </tr>
               <tr>
-                <th className="oms-spacing-150">Order name:</th>
+                <th className="oms-spacing-150">Order ID:</th>
                 <td className="oms-spacing">
-                  <input type="hidden" name="shipmentId" value={x.shipmentId} />
+                  <input type="hidden" id="id" name="id" value={x.id} />
                   {sid}
                 </td>
               </tr>
@@ -109,27 +103,9 @@ class OrderForm extends Component {
                 </td>
               </tr>
               <tr>
-                <th className="oms-spacing-150">Carrier:</th>
-                <td className="oms-spacing">
-                  <select id="carrierId" name="carrierId" value={x.carrierId}
-                          onChange={fc} >
-                    { carrs.map(
-                      function(n,x){
-                        return <option key={x} value={n.id}>{n.name}</option>
-                      } )
-                    }
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <th className="oms-spacing-150">Status:</th>
-                <td className="oms-spacing">
-                  {statusSelect}
-                </td>
-              </tr>
-              <tr>
                 <th className="oms-spacing-150"> Order Type:</th>
                 <td className="oms-spacing">
+                  {purchaseSelect}
                 </td>
               </tr>
               <tr>
@@ -146,22 +122,19 @@ class OrderForm extends Component {
                 <td className="oms-spacing-150">Actual Date:</td>
                 <td className="oms-spacing">
                   {x.actDate}
-                   </td>
+                </td>
               </tr>
               <tr>
                 <th className="oms-spacing-150">Expected Volume (total):</th>
                 <td className="oms-spacing">
-                  <input type="text" id="expVolume" name="expVolume" value={x.expVolume}
-                         className={["oms-spacing-120","oms-fontsize-12"].join(' ')}
-                         size="20" maxLength="20" onChange={fc} />
-                  &nbsp;May not be meaningful&nbsp;
+                  {x.expVolume}&nbsp;May not be meaningful&nbsp;
                 </td>
               </tr>
               <tr>
                 <td className="oms-spacing-150">Actual Volume (total):</td>
                 <td className="oms-spacing">
                   {x.actVolume}
-                   </td>
+                </td>
               </tr>
 
               <tr><td colSpan="2">
@@ -170,6 +143,8 @@ class OrderForm extends Component {
                     <tr>
                       <th className="oms-spacing-80">Item No.</th>
                       <th className="oms-spacing-100">Contents</th>
+                      <th className="oms-spacing-150">Carrier:</th>
+                      <th className="oms-spacing-150">Status:</th>
                       <th className="oms-spacing-100">Exp Vol (min)</th>
                       <th className="oms-spacing-100">Exp Vol (max)</th>
                       <th className="oms-spacing-100">Act Volume</th>
@@ -183,9 +158,9 @@ class OrderForm extends Component {
                   return <tr key={x}>
                            <td className="oms-spacing-80">
                              &nbsp;
-                             <input id={["item",itemNdx,"shipmentId"].join('.')}
-                                    name={["item",itemNdx,"shipmentId"].join('.')}
-                                    type="hidden" value={n.shipmentId}/>&nbsp;
+                             <input id={["item",itemNdx,"id"].join('.')}
+                                    name={["item",itemNdx,"id"].join('.')}
+                                    type="hidden" value={n.id}/>&nbsp;
                              &nbsp;{n.itemNo}&nbsp;
                            </td>
                            <td className="oms-spacing-100">
@@ -200,6 +175,25 @@ class OrderForm extends Component {
                                  }
                                </select>
                              &nbsp;
+                           </td>
+                           <td className="oms-spacing">
+                             <select id={["item",itemNdx,"carrierId"].join('.')}
+                                     name={["item",itemNdx,"carrierId"].join('.')}
+                                     value={n.carrierId} onChange={fc} >
+                             { carrs.map(
+							  function(c,x){ return <option key={x} value={c.id}>{c.name}</option> } )
+							 }
+							 </select>
+                           </td>
+                           <td className="oms-spacing">
+                             <select id={["item",itemNdx,"active"].join('.')}
+                                     name={["item",itemNdx,"active"].join('.')}
+                                     value={n.active} onChange={fc} >
+                               <option value={"-"}>------</option>
+                               <option value={"A"}>Active</option>
+                               <option value={"C"}>Complete</option>
+                               <option value={"P"}>Pending</option>
+							 </select>
                            </td>
                            <td className="oms-spacing-100">
                              &nbsp;

@@ -19,8 +19,9 @@
 
 import React from 'react';
 import PropTypes          from 'prop-types';
-
 import { Group, Line, Circle } from 'react-konva';
+
+import Log         from '../../requests/Log.js';
 
 
 export default class ScmPump extends React.Component {
@@ -40,13 +41,13 @@ export default class ScmPump extends React.Component {
 
   static get propTypes() {
     return {
-      x: PropTypes.integer,
-      y: PropTypes.integer,
-      width: PropTypes.integer,
-      height: PropTypes.integer,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number,
       fill: PropTypes.any,
       stroke: PropTypes.any,
-      strokeWidth: PropTypes.integer,
+      strokeWidth: PropTypes.number,
       orient: PropTypes.any,
       value: PropTypes.any,
       handleMouseup: PropTypes.func
@@ -60,11 +61,15 @@ export default class ScmPump extends React.Component {
   }
 
   render() {
-    var rb = 8;             /* defines template radius */
-    var plb = rb + 4;        /* defines template pipe length */
+	var id = this.props.id;
+	var name = this.props.name;
+	var val = this.props.value*1;
+//	Log.debug("Pump: object: "+name+"  id: "+id+"  value: "+val);
+    var rb = 8;                /* defines template radius */
+    var plb = rb + 4;          /* defines template pipe length */
 //    var hb = 2 * (rb + plb); /* defines template height */
 //    var wb = 2 * rb;         /* defines template width  */
-    var pszb = 5;            /* defines template "pipe" width */
+    var pszb = 5;              /* defines template "pipe" width */
 
 //    var ht = this.props.height;
 //    var wd = this.props.width;
@@ -83,24 +88,24 @@ export default class ScmPump extends React.Component {
     var pts2 = [xt+2*r-psz/2, yt+pl       ,xt+2*r-psz/2, yt+2*pl];
     var xc = xt+r;
     var yc = yt+pl;
-    if( orient === "PB" ) {
+    if( orient === "bottom" ) {
       pts1 = [xt+psz/2    , yt+pl, xt+psz/2   , yt+2*pl];
       pts2 = [xt+2*r-psz/2, yt   ,xt+2*r-psz/2, yt+pl];
       xc = xt+r;
       yc = yt+pl;
-    }else if( orient === "PL" ) {
+    }else if( orient === "left" ) {
       pts1 = [xt          , yt+psz/2    ,xt+pl  , yt+psz/2];
       pts2 = [xt+pl       , yt+2*r-psz/2,xt+2*pl, yt+2*r-psz/2];
       xc = xt+pl;
       yc = yt+r;
-    } else if( orient === "PR" ) {
+    } else if( orient === "right" ) {
       pts1 = [xt+pl    , yt+psz/2    ,xt+2*pl,yt+psz/2];
       pts2 = [xt       , yt+2*r-psz/2,xt+pl  ,yt+2*r-psz/2];
       xc = xt+pl;
       yc = yt+r;
     }
 
-    var color = this.props.value===0?"red":"darkgreen";
+    var color = (val===0)?"red":"darkgreen";
     var mu = this.props.handleMouseup;
     return (
       <Group onMouseUp={mu} >

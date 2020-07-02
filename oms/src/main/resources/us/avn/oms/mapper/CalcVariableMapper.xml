@@ -7,7 +7,7 @@
   <!-- cache / -->
     
   <resultMap id="cvMap" type="CalcVariable">
-    <result property="id"              column="id" />
+    <id property="id"                  column="id" />
     <result property="tag.id"          column="id" />
     <result property="tag.name"        column="name" />
     <result property="tag.description" column="description" />
@@ -15,6 +15,10 @@
     <result property="tag.active"      column="active" />
     <result property="definition"      column="definition" />
     <result property="outputTagId"     column="output_tag_id" />
+    <collection property="inputTags"   ofType="IdName">
+      <id property="id"                column="param_id" />
+      <result property="name"          column="param_name" />
+    </collection>
   </resultMap>
   
   <resultMap id="coMap" type="CalcOperand">
@@ -35,14 +39,20 @@
   <select id="getCalcVariable" resultMap="cvMap">
     select cv.id, cv.definition, cv.output_tag_id
          , t.name, t.description, t.tag_type_code, t.active
+         , tc.id param_id, tc.name param_name
       from calculated cv join tag t on cv.id=t.id
+      join rtt_vw rtt on cv.id = rtt.parent_tag_id
+      join tag tc on rtt.child_tag_id = tc.id
 	 where cv.id = #{param1} 
   </select>
   
   <select id="getCalcVariableByName" resultMap="cvMap">
     select cv.id, cv.definition, cv.output_tag_id
          , t.name, t.description, t.tag_type_code, t.active
+         , tc.id param_id, tc.name param_name
       from calculated cv join tag t on cv.id=t.id
+      join rtt_vw rtt on cv.id = rtt.parent_tag_id
+      join tag tc on rtt.child_tag_id = tc.id
 	 where t.name = #{param1} 
   </select>
   
@@ -55,14 +65,14 @@
   <select id="getValuesForCalculation" resultMap="coMap">
     select t.id, t.name, "AI" type, coalesce(ai.scan_value,0.0) scan_value, rtt.code
       from rel_tag_tag rtt 
-           join tag t on rtt.child_tag_id = t.id
-           join analog_input ai on ai.tag_id = rtt.child_tag_id
+      join tag t on rtt.child_tag_id = t.id
+      join analog_input ai on ai.tag_id = rtt.child_tag_id
      where rtt.parent_tag_id = #{param1}
     union
     select t.id, t.name, "DI" type, coalesce(di.scan_value,0.0) scan_value, rtt.code
       from rel_tag_tag rtt 
-           join tag t on rtt.child_tag_id = t.id
-           join digital_input di on di.tag_id = rtt.child_tag_id
+      join tag t on rtt.child_tag_id = t.id
+      join digital_input di on di.tag_id = rtt.child_tag_id
      where rtt.parent_tag_id = #{param1}
      order by code
   </select>

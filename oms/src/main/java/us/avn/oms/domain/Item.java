@@ -4,7 +4,7 @@ public class Item extends OMSObject {
 
 	public static final long serialVersionUID = 20181229135530L;
 	
-    private Long    shipmentId;
+    private Long    id;
     private Long    itemNo;
     private String  contentCd;
     private String  newItem;
@@ -26,7 +26,7 @@ public class Item extends OMSObject {
 	
    
 	public Item() {	
-		shipmentId = 0L; 
+		id = 0L; 
 		itemNo=0L; 
 		active="P";
 		actVolume = 0D;
@@ -36,7 +36,7 @@ public class Item extends OMSObject {
 	}
 	
 	public Item( Long id, Long ino, String act ) {
-		shipmentId = id;
+		id = id;
 		itemNo = ino;
 		active = act;
 		carrierId = null;
@@ -47,12 +47,12 @@ public class Item extends OMSObject {
 		actVolume = 0D;
 	}
 	
-	public Long getShipmentId() {
-		return shipmentId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setShipmentId(Long sid) {
-		this.shipmentId = sid;
+	public void setId(Long sid) {
+		this.id = sid;
 	}
 
 	

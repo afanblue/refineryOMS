@@ -17,14 +17,9 @@
 package us.avn.oms.service.impl;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Vector;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.ControlBlock;
 import us.avn.oms.mapper.ControlBlockMapper;
-import us.avn.oms.mapper.TagMapper;
 import us.avn.oms.service.ControlBlockService;
 
 public class ControlBlockServiceImpl implements ControlBlockService {
