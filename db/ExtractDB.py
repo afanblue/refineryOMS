@@ -1,8 +1,11 @@
+#!python
 # -*- coding: utf-8 -*-
 
 '''
 Created on Nov 21, 2018
 Modified Sep 21, 2019 to re-order constraint fields
+
+Args: 1: DB password
 
 See LoadDB.py for a full explanation of all this stuff, though the queries used
 to actually generate the csv files are provided here.
@@ -10,13 +13,20 @@ to actually generate the csv files are provided here.
 @author: Allan
 '''
 # import os, sysconfig
-import mariadb
+import sys
+import re
+import mysql.connector
 
-# Function definition is here
+# Do the actual work of reading the table data and writing the file
+#  crsr is the cursor object
+#  tbl is the name of the table
+#  fname is the name of the file to create; usually the same as the table
+#  qry is the query used to extract the table rows
+#  prt is a "debug" flag; forces the results of the query to be printed
 
-def addData( crsr, tbl, qry, hdr, prt ) :
+def addData( crsr, tbl, fname, qry, hdr, prt ) :
     print ("Extracting {}".format(tbl))
-    tblFile = open(tbl+".csv", "w")
+    tblFile = open(fname+".csv", "w")
     for item in hdr :
         tblFile.write(item+"\n")
     
@@ -42,15 +52,19 @@ def addData( crsr, tbl, qry, hdr, prt ) :
     tblFile.close()
     return
 
+args = sys.argv
+#print( args )
+
+row = 1;
 config = {
   "user": "oms",
-  "password": "omsx",
+  "password": args[1],
   "host": "127.0.0.1",
-  "database": "oms",
-  "charset": "UTF-8"
+  "charset": "utf8",
+  "database": "oms"
 }
 
-cnx = mariadb.connect(**config)
+cnx = mysql.connector.connect(**config)
 crsr = cnx.cursor()
 
 ''' config '''
@@ -70,7 +84,7 @@ qry = ("select item_name, "
     "END item_value "
     "from config")
 
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' watchdog '''
@@ -79,7 +93,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, active from watchdog")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' crontab '''
@@ -88,7 +102,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select id, name, moh, hod, dom, moy, dow, hour_duration, min_duration from crontab")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' tag_type '''
@@ -97,7 +111,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select code, name, description, active from tag_type")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' unit_type '''
@@ -106,7 +120,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = "select name, code from unit_type"
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' unit '''
@@ -117,7 +131,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select u.name, u.code, ut.name unit_type_id from unit u "
      "join unit_type ut on u.unit_type_id = ut.id")
-addData( crsr, tbl, qry, hdr, True )
+addData( crsr, tbl, tbl, qry, hdr, True )
 
 
 ''' unit_conversion '''
@@ -130,7 +144,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ("select uf.name from_id, ut.name to_id, offset, factor from unit_conversion uc "
       "join unit uf on uc.from_id = uf.id "
      "join unit ut on uc.to_id = ut.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 ''' alarm message '''
 tbl = "alarm_message"
@@ -138,7 +152,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry    = "select abbr, message from alarm_message am "
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tlb, qry, hdr, False )
 
 
 ''' alarm type '''
@@ -150,7 +164,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ("select priority, am.abbr alarm_msg_id, code "
        "from alarm_type alt, alarm_message am "
        "where alt.alarm_msg_id = am.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' reference_code '''
@@ -159,7 +173,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = "select category, name, code, value, description, active from reference_code"
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' privilege '''
@@ -168,7 +182,7 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = "select name from privilege"
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' webpage '''
@@ -181,7 +195,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ("select p.name, uri, pv.name view_priv_id, pa.name exec_priv_id, p.active "
        "from page p, privilege pv, privilege pa "
        "where p.view_priv_id = pv.id and p.exec_priv_id = pa.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' menuAdmin '''
@@ -194,7 +208,7 @@ qry = ("select rc.code menu_type_id, m.text, m.order_no, m.active "
        "from menu m join reference_code rc on m.menu_type_id=rc.id "
        "where m.category_id is null")
 tbl = "menuAdmin"
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' menu '''
@@ -211,18 +225,18 @@ qry = ("select rc.code menu_type_id, c.text category_id, m.text, m.order_no"
        "join reference_code rc on m.menu_type_id=rc.id "
        "join page p on m.page_id = p.id "
        "where m.category_id is not null")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' role '''
 tbl = "role"
+fname = "roleParent"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
-tbl = "roleParent"
 qry = ("select r.name, r.active "
        "from role r where r.parent_id is null")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' role '''
@@ -233,7 +247,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select r.name, rp.name parent_id, r.active "
        "from role r, role rp where r.parent_id = rp.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' role_priv '''
@@ -246,7 +260,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ("select r.name role_id, p.name priv_id "
        "from role_priv rp, role r, privilege p "
        "where rp.role_id = r.id and rp.priv_id = p.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' user '''
@@ -256,7 +270,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select alias, first_name, middle_name, last_name, email, password, state, active "
        "from user")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' user_role '''
@@ -269,7 +283,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ("select u.alias user_id, r.name role_id "
        "from user_role ur join user u on ur.user_id = u.id "
        "join role r on ur.role_id = r.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' customer '''
@@ -278,67 +292,73 @@ hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry    = "select name, active, etherkey from customer "
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' AI tags '''
-tbl = "AItag"
+tbl = "tag"
+fname = "AItag"
 hdr = ( "Table,tag,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code = 'AI'")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' AO tags '''
-tbl = "AOtag"
+tbl = "tag"
+fname = "AOtag"
 hdr = ( "Table,tag,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code = 'AO'")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' DI tags '''
-tbl = "DItag"
+tbl = "tag"
+fname = "DItag"
 hdr = ( "Table,tag,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code = 'DI'")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' DO tags '''
-tbl = "DOtag"
+tbl = "tag"
+fname = "DOtag"
 hdr = ( "Table,tag,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code = 'DO'")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' Calc tags '''
-tbl = "CalcTag"
+tbl = "tag"
+fname = "CalcTag"
 hdr = ( "Table,tag,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code = 'C'")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' CB tags '''
-tbl = "CBtag"
+tbl = "tag"
+fname = "CBtag"
 hdr = ( "Table,tag,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code = 'CB'")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, fname, qry, hdr, False )
 
 
 ''' Everything else tags '''
@@ -348,7 +368,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select name, description, tag_type_code, misc, c1_lat, c1_long, c2_lat, c2_long, active "
        "from tag where tag_type_code not in ('AI','AO','DI','DO','C','CB')")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' rel-tag_tag '''
@@ -359,10 +379,10 @@ hdr = ( "Table,"+tbl+",,",
         "child_tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "Data,,,")
 qry = ("select concat(tp.name,'|',tp.tag_type_code) parent_tag_id"
-            ", concat(tc.name,'|',tc.tag_type_code) child_tag_id, rtt.code, rtt_code2 "
+            ", concat(tc.name,'|',tc.tag_type_code) child_tag_id, rtt.code, rtt.code2 "
        "from rel_tag_tag rtt, tag tp, tag tc "
        "where rtt.parent_tag_id=tp.id and rtt.child_tag_id = tc.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' field '''
@@ -373,7 +393,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select t.name id, road_image, satellite_image "
        "from field f, tag t where f.id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' hot_spot (link) '''
@@ -384,7 +404,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select t.name field_id, c1Lat, c1Long, c2Lat, c2Long, page_id, hs.active "
        "from hot_spot hs, tag t where hs.field_id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' vertex (end points of pipes) '''
@@ -395,7 +415,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, seq_no, latitude, longitude "
        "from vertex v, tag t where v.tag_id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' analog input '''
@@ -410,7 +430,7 @@ qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, u.name unit_id, analog
        ", zero_value, max_value, hist_type_code, percent, hh, hi, ll, lo "
        "from analog_input ai join tag t on ai.tag_id = t.id "
        "join unit u on ai.unit_id = u.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' analog output '''
@@ -420,10 +440,11 @@ hdr = ( "Table,"+tbl+",,",
         "tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "unit_id,unit,id,name",
         "Data,,,")
-qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, zero_value, max_value, hist_type_code, u.name "
+qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, zero_value, max_value"
+       ", hist_type_code, u.name unit_id "
        "from analog_output ao join tag t on ao.tag_id = t.id "
        "join unit u on ao.unit_id = u.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' digital input '''
@@ -435,7 +456,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, scan_int, scan_offset"
        ", alarm_code, alarm_state, value_view "
        "from digital_input di join tag t on di.tag_id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' digital output '''
@@ -446,7 +467,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) tag_id, value_view "
        "from digital_output od join tag t on od.tag_id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' calculated '''
@@ -459,7 +480,7 @@ hdr = ( "Table,"+tbl+",,,",
 qry = ("select tc.name id, c.definition, tx.name output_tag_id "
        "from calculated c join tag tc on c.id = tc.id "
        "join tag tx on c.output_tag_id = tx.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' device '''
@@ -470,11 +491,12 @@ hdr = ( "Table,"+tbl+",,,",
 qry = ("select description, type, model, param1, param2, param3"
        ", param4, cycle_time, offset, seq_no, active "
        "from device")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
-''' address '''
+''' address for Weather station tags '''
 tbl = "address"
+fname = "WSaddress"
 hdr = ( "Table,"+tbl+",,,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
         "id,tag,id,name,tag,tag_type_code,tag_type_code",
@@ -482,11 +504,49 @@ hdr = ( "Table,"+tbl+",,,",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) id, "
        "concat(d.type,'|',d.model) device_id, a.cycle_time, a.offset, "
-       "a.iaddr1, a.iaddr2, a.iaddr3, a.iaddr4, a.iaddr5, a.iaddr6, "
+       "concat(t.name,'|',t.tag_type_code) iaddr1, a.iaddr2, a.iaddr3, a.iaddr4, a.iaddr5, a.iaddr6, "
        "a.saddr1, a.saddr2, a.saddr3, a.saddr4, a.saddr5, a.saddr6 "
        "from address a join tag t on a.id=t.id "
-       "join device d on a.device_id=d.id ")
-addData(crsr, tbl, qry, hdr, False )
+       "join device d on a.device_id=d.id "
+       "where d.type = 'WS' ")
+addData(crsr, tbl, fname, qry, hdr, False )
+
+
+''' address for simulated tags '''
+tbl = "address"
+fname = "SIMaddress"
+hdr = ( "Table,"+tbl+",,,",
+        "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "id,tag,id,name,tag,tag_type_code,tag_type_code",
+        "device_id,device,id,type,device,model,model",
+        "iaddr1,tag,id,name,tag,tag_type_code,tag_type_code",
+        "Data,,,")
+qry = ("select concat(t.name,'|',t.tag_type_code) id, "
+       "concat(d.type,'|',d.model) device_id, a.cycle_time, a.offset, "
+       "concat(t.name,'|',t.tag_type_code) iaddr1, a.iaddr2, a.iaddr3, a.iaddr4, a.iaddr5, a.iaddr6, "
+       "a.saddr1, a.saddr2, a.saddr3, a.saddr4, a.saddr5, a.saddr6 "
+       "from address a join tag t on a.id=t.id "
+       "join device d on a.device_id=d.id "
+       "where d.type = 'SIM' ")
+addData(crsr, tbl, fname, qry, hdr, False )
+
+
+''' address for all other devices '''
+tbl = "address"
+fname = "address"
+hdr = ( "Table,"+tbl+",,,",
+        "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "id,tag,id,name,tag,tag_type_code,tag_type_code",
+        "device_id,device,id,type,device,model,model",
+        "Data,,,")
+qry = ("select concat(t.name,'|',t.tag_type_code) id, "
+       "concat(d.type,'|',d.model) device_id, a.cycle_time, a.offset, "
+       "concat(t.name,'|',t.tag_type_code) iaddr1, a.iaddr2, a.iaddr3, a.iaddr4, a.iaddr5, a.iaddr6, "
+       "a.saddr1, a.saddr2, a.saddr3, a.saddr4, a.saddr5, a.saddr6 "
+       "from address a join tag t on a.id=t.id "
+       "join device d on a.device_id=d.id "
+       "where d.type <> 'WS' and d.type <> 'SIM' ")
+addData(crsr, tbl, fname, qry, hdr, False )
 
 
 ''' control block '''
@@ -503,7 +563,7 @@ qry = ("select concat(tc.name,'|',tc.tag_type_code) id"
        "from control_block cb join tag tc on cb.id = tc.id "
        "join tag tx on cb.pv_id = tx.id "
        "left outer join tag ts on ts.id = cb.sp_id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' tank '''
@@ -514,7 +574,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) id, api, density, height, diameter, units, content_type_code "
        "from tank tk join tag t on tk.id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' volume (for tank) '''
@@ -525,7 +585,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ("select concat(t.name,'|',t.tag_type_code) tank_id, level, volume "
        "from volume v, tag t where v.tank_id = t.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' transfer (but only the Templates and Active transfers)'''
@@ -552,16 +612,18 @@ qry    = ("select x.name, tsv.name status_id, ttv.name transfer_type_id"
           "join transfer_type_vw ttv on x.transfer_type_id = ttv.value "
           "left outer join crontab ct on x.crontab_id = ct.id "
           "where tsv.code!='C'" )
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' raw_data '''
 tbl = "raw_data"
 hdr = ( "Table,"+tbl+",,",
         "ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence",
+        "tag_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "Data,,,")
-qry    = "select x.id from raw_data x"
-addData( crsr, tbl, qry, hdr, False )
+qry = ( "select concat(t.name,'|',t.tag_type_code) id "
+        "from raw_data x join tag t on x.id=t.id")
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 ''' carriers loaded as Tags '''
 ''' hold '''
@@ -572,7 +634,7 @@ hdr = ( "Table,"+tbl+",,",
         "Data,,,")
 qry = ( "select concat(t.name,'|',t.tag_type_code) carrier_id, hold_no, volume, no_duplicates "
         "from hold h join tag t on h.carrier_id = t.id" )
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' plot_group '''
@@ -592,7 +654,7 @@ qry = ( "select pg.id, pg.name"
         "from plot_group pg join tag t1 on pg.id1=t1.id "
         "join tag t2 on pg.id2=t2.id join tag t3 on pg.id3=t3.id "
         "join tag t4 on pg.id4=t4.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' sim_IO '''
@@ -605,7 +667,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ( "select concat(t1.name,'|',t1.tag_type_code) id"
         ", concat(t2.name,'|',t2.tag_type_code) in_id from sim_io sio "
         "join tag t1 on sio.id=t1.id join tag t2 on sio.in_id=t2.id")
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 ''' These are ACTIVE data files, and may be large, but this only has the data since the last archive '''
 
@@ -625,7 +687,7 @@ qry = ( "select at.code alarm_type_id, tt.code tag_type_id"
         "join tag t on a.tag_id = t.id "
         "join alarm_message am on a.alarm_msg_id=am.id "
         "join tag_type tt on a.tag_type_id = tt.id "  )
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' history '''
@@ -637,7 +699,7 @@ hdr = ( "Table,"+tbl+",,",
 qry = ( "select h.id, concat(t.name,'|',t.tag_type_code) tag_id"
         ", scan_value, scan_time, h.create_dt "
         "from history h join tag t on h.tag_id = t.id " )
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' shipment (order) '''
@@ -647,10 +709,10 @@ hdr = ( "Table,"+tbl+",,",
         "customer_id,customer,id,name",
         "crontab_id,crontab,id,name",
         "Data,,,")
-qry = ( "select c.name customer_id, purchase, exp_date, act_date, t.name crontab_id, s.create_dt "
+qry = ( "select s.id, c.name customer_id, purchase, exp_date, act_date, t.name crontab_id, s.create_dt "
         "from shipment s join customer c on s.customer_id = c.id " 
         "left outer join crontab t on s.crontab_id=t.id " )
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 ''' shipment_item  (order_item)'''
@@ -660,12 +722,12 @@ hdr = ( "Table,"+tbl+",,",
         "carrier_id,tag,id,name,tag,tag_type_code,tag_type_code",
         "transfer_id,transfer,id,name",
         "Data,,,")
-qry = ( "select si.shipment_id, si.item_no, si.active, si.content_cd, si.exp_volume_min"
+qry = ( "select si.id, si.item_no, si.active, si.content_cd, si.exp_volume_min"
         ", si.exp_volume_max, si.act_volume, concat(tc.name,'|',tc.tag_type_code) carrier_id"
         ", si.station_id, xfr.name transfer_id, si.create_dt "
-        "from shipment_item si join shipment s on s.shipment_id=si.shipment_id "
+        "from shipment_item si join shipment s on s.id=si.id "
         "join tag tc on si.carrier_id=tc.id join transfer xfr on xfr.id=si.transfer_id "  )
-addData( crsr, tbl, qry, hdr, False )
+addData( crsr, tbl, tbl, qry, hdr, False )
 
 
 

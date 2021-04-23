@@ -21,7 +21,7 @@ import React from 'react';
 import PropTypes          from 'prop-types';
 import { Group, Line } from 'react-konva';
 
-import Log         from '../../requests/Log.js';
+//import Log         from '../../requests/Log.js';
 
 
 export default class ScmValve extends React.Component {
@@ -61,9 +61,9 @@ export default class ScmValve extends React.Component {
   }
 
   render() {
-	var id = this.props.id;
-	var name = this.props.name;
-	var val = this.props.value;
+//	var id = this.props.id;
+//	var name = this.props.name;
+//	var val = this.props.value;
 //	Log.debug("Valve: object: "+name+"  id: "+id+"  value: "+val);
     var xt = this.props.x;
     var ht = 12;

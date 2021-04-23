@@ -3,9 +3,10 @@
   <version>0.0.1-SNAPSHOT</version>
   
   <properties>
-    <spring.version>5.2.3.RELEASE</spring.version>
-    <mybatis.version>3.4.5</mybatis.version>
+    <spring.version>5.3.5</spring.version>
+    <mybatis.version>3.5.6</mybatis.version>
     <mariadb.driver.version>2.5.4</mariadb.driver.version>
+    <mysql.connector.version>8.0.23</mysql.connector.version>
     <log4j.version>2.13.2</log4j.version>
   </properties>
   
@@ -47,13 +48,21 @@
       <version>20040616</version>
     </dependency>
 
-    <!-- MariaDB -->
+    <!-- MariaDB
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
       <version>${mariadb.driver.version}</version>
     </dependency>
+    -->
      
+    <!--  MySQL -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.connector.version}</version>
+    </dependency>
+    
     <!-- myBatis dependency -->
     <dependency>
       <groupId>org.mybatis</groupId>
@@ -89,7 +98,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -124,7 +133,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.1</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
@@ -132,7 +141,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.2.0</version>
         <configuration>
           <archive>
             <manifest>
@@ -147,10 +156,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <configuration>
           <show>private</show>
           <excludePackageNames> *.impl </excludePackageNames>
+          <javadocExecutable>/usr/bin/javadoc</javadocExecutable>
         </configuration>
       </plugin>
       <plugin>

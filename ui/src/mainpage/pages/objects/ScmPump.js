@@ -21,7 +21,7 @@ import React from 'react';
 import PropTypes          from 'prop-types';
 import { Group, Line, Circle } from 'react-konva';
 
-import Log         from '../../requests/Log.js';
+//import Log         from '../../requests/Log.js';
 
 
 export default class ScmPump extends React.Component {
@@ -61,8 +61,8 @@ export default class ScmPump extends React.Component {
   }
 
   render() {
-	var id = this.props.id;
-	var name = this.props.name;
+//	var id = this.props.id;
+//	var name = this.props.name;
 	var val = this.props.value*1;
 //	Log.debug("Pump: object: "+name+"  id: "+id+"  value: "+val);
     var rb = 8;                /* defines template radius */

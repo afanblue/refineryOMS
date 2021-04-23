@@ -177,6 +177,7 @@ class ControlBlockAdmin extends Component {
   handleUpdate(event) {
     event.preventDefault();
     const id = this.state.cb.tagId;
+    const clsMthd = "ControlBlockAdmin.handleUpdate";
     let method = "PUT";
     let url = SERVERROOT + "/cb/update";
     if( this.state.newCB ) {

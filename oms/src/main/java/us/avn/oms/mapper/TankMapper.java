@@ -32,9 +32,9 @@ public interface TankMapper {
 	
 	Value getEstTankVolume( Long id );
 	
-	Value getEmptiestTankForContent( String t );
+	Collection<Value> getEmptiestTankForContent( String t );
 	
-	Value getFullestTankForContent( String t );
+	Collection<Value> getFullestTankForContent( String t );
 	
 	Collection<Value> getTotalTankCapacitiesForContents();
 

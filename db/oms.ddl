@@ -1,4 +1,4 @@
--- MariaDB dump 10.17  Distrib 10.4.12-MariaDB, for Win64 (AMD64)
+/*-- MariaDB dump 10.17  Distrib 10.4.12-MariaDB, for Win64 (AMD64) */
 --
 -- Host: localhost    Database: oms
 -- ------------------------------------------------------
@@ -116,15 +116,15 @@ CREATE TABLE `address` (
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`localhost`*/ /*!50003 TRIGGER `oms`.`addr_bi_trg` BEFORE INSERT ON `address` FOR EACH ROW
+CREATE TRIGGER `oms`.`addr_bi_trg` BEFORE INSERT ON `address` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -137,12 +137,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`localhost`*/ /*!50003 TRIGGER `oms`.`addr_bu_trg` BEFORE UPDATE ON `address` FOR EACH ROW
+CREATE TRIGGER `oms`.`addr_bu_trg` BEFORE UPDATE ON `address` FOR EACH ROW
 BEGIN
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -174,7 +174,7 @@ CREATE TABLE `alarm` (
   CONSTRAINT `alarm_ibfk_1` FOREIGN KEY (`alarm_type_id`) REFERENCES `alarm_type` (`id`),
   CONSTRAINT `alarm_ibfk_2` FOREIGN KEY (`alarm_msg_id`) REFERENCES `alarm_message` (`id`),
   CONSTRAINT `alarm_tag_fk` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4818 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4829 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -183,15 +183,15 @@ CREATE TABLE `alarm` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER alm_bi_trg BEFORE INSERT ON alarm for each row
+CREATE TRIGGER alm_bi_trg BEFORE INSERT ON alarm for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -204,10 +204,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER alm_bu_trg BEFORE UPDATE ON alarm for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER alm_bu_trg BEFORE UPDATE ON alarm for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -292,15 +292,15 @@ CREATE TABLE `alarm_message` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER almsg_bi_trg BEFORE INSERT ON alarm_message for each row
+CREATE TRIGGER almsg_bi_trg BEFORE INSERT ON alarm_message for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -313,10 +313,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER almsg_bu_trg BEFORE UPDATE ON alarm_message for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER almsg_bu_trg   BEFORE UPDATE ON alarm_message for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -349,15 +349,15 @@ CREATE TABLE `alarm_type` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER altyp_bi_trg BEFORE INSERT ON alarm_type for each row
+CREATE TRIGGER altyp_bi_trg BEFORE INSERT ON alarm_type for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -370,10 +370,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER altyp_bu_trg BEFORE UPDATE ON alarm_type for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER altyp_bu_trg BEFORE UPDATE ON alarm_type for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -440,15 +440,15 @@ CREATE TABLE `analog_input` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ai_bi_trg BEFORE INSERT ON analog_input for each row
+CREATE TRIGGER ai_bi_trg BEFORE INSERT ON analog_input for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -461,10 +461,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ai_bu_trg BEFORE UPDATE ON analog_input for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER ai_bu_trg BEFORE UPDATE ON analog_input for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -507,15 +507,15 @@ CREATE TABLE `analog_output` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ao_bi_trg BEFORE INSERT ON analog_output for each row
+CREATE  TRIGGER ao_bi_trg BEFORE INSERT ON analog_output for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -528,10 +528,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ao_bu_trg BEFORE UPDATE ON analog_output for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER ao_bu_trg BEFORE UPDATE ON analog_output for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -582,15 +582,15 @@ CREATE TABLE `calculated` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`calc_bi_trg` BEFORE INSERT ON `calculated` FOR EACH ROW
+CREATE  TRIGGER `oms`.`calc_bi_trg` BEFORE INSERT ON `calculated` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -603,12 +603,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`calc_bu_trg` BEFORE UPDATE ON `calculated` FOR EACH ROW
+CREATE  TRIGGER `oms`.`calc_bu_trg` BEFORE UPDATE ON `calculated` FOR EACH ROW
 BEGIN
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -716,15 +716,15 @@ CREATE TABLE `config` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER conf_bi_trg BEFORE INSERT ON config for each row
+CREATE  TRIGGER conf_bi_trg BEFORE INSERT ON config for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -737,10 +737,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER conf_bu_trg BEFORE UPDATE ON config for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER conf_bu_trg BEFORE UPDATE ON config for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -790,15 +790,15 @@ CREATE TABLE `control_block` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`cb_bi_trg` BEFORE INSERT ON `control_block` FOR EACH ROW
+CREATE  TRIGGER `oms`.`cb_bi_trg` BEFORE INSERT ON `control_block` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -811,12 +811,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`cb_bu_trg` BEFORE UPDATE ON `control_block` FOR EACH ROW
+CREATE  TRIGGER `oms`.`cb_bu_trg` BEFORE UPDATE ON `control_block` FOR EACH ROW
 BEGIN
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -852,15 +852,15 @@ CREATE TABLE `crontab` (
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`localhost`*/ /*!50003 TRIGGER `oms`.`chrontab_bi_trg` BEFORE INSERT ON `crontab` FOR EACH ROW
+CREATE  TRIGGER `oms`.`chrontab_bi_trg` BEFORE INSERT ON `crontab` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -873,12 +873,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`localhost`*/ /*!50003 TRIGGER `oms`.`chrontab_bu_trg` BEFORE UPDATE ON `crontab` FOR EACH ROW
+CREATE  TRIGGER `oms`.`chrontab_bu_trg` BEFORE UPDATE ON `crontab` FOR EACH ROW
 BEGIN
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -909,16 +909,16 @@ CREATE TABLE `customer` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER cust_bi_trg BEFORE INSERT ON customer for each row
+CREATE TRIGGER cust_bi_trg BEFORE INSERT ON customer for each row
 begin
   declare newID int;
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -931,10 +931,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER cust_bu_trg BEFORE UPDATE ON customer for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER cust_bu_trg BEFORE UPDATE ON customer for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -973,15 +973,15 @@ CREATE TABLE `device` (
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`localhost`*/ /*!50003 TRIGGER `oms`.`dev_bi_trg` BEFORE INSERT ON `device` FOR EACH ROW
+CREATE  TRIGGER `oms`.`dev_bi_trg` BEFORE INSERT ON `device` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -994,12 +994,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`localhost`*/ /*!50003 TRIGGER `oms`.`dev_bu_trg` BEFORE UPDATE ON `device` FOR EACH ROW
+CREATE  TRIGGER `oms`.`dev_bu_trg` BEFORE UPDATE ON `device` FOR EACH ROW
 BEGIN
   set new.last_modified_dt = utc_timestamp();	
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1041,15 +1041,15 @@ CREATE TABLE `digital_input` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER di_bi_trg BEFORE INSERT ON digital_input for each row
+CREATE  TRIGGER di_bi_trg BEFORE INSERT ON digital_input for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1062,10 +1062,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER di_bu_trg BEFORE UPDATE ON digital_input for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER di_bu_trg BEFORE UPDATE ON digital_input for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1103,15 +1103,15 @@ CREATE TABLE `digital_output` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER do_bi_trg BEFORE INSERT ON digital_output for each row
+CREATE TRIGGER do_bi_trg BEFORE INSERT ON digital_output for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1124,10 +1124,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER do_bu_trg BEFORE UPDATE ON digital_output for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER do_bu_trg BEFORE UPDATE ON digital_output for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1176,15 +1176,15 @@ CREATE TABLE `field` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER fld_bi_trg BEFORE INSERT ON field for each row
+CREATE  TRIGGER fld_bi_trg BEFORE INSERT ON field for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1197,10 +1197,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER fld_bu_trg BEFORE UPDATE ON field for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER fld_bu_trg BEFORE UPDATE ON field for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1253,7 +1253,7 @@ CREATE TABLE `history` (
   KEY `hist_tag_nuk` (`tag_id`),
   KEY `hist_stime_nuk` (`scan_time`),
   CONSTRAINT `history_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1650871 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1654711 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1262,15 +1262,15 @@ CREATE TABLE `history` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hist_bi_trg BEFORE INSERT ON history for each row
+CREATE  TRIGGER hist_bi_trg BEFORE INSERT ON history for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1283,10 +1283,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hist_bu_trg BEFORE UPDATE ON history for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER hist_bu_trg BEFORE UPDATE ON history for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1353,15 +1353,15 @@ CREATE TABLE `hold` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`hold_bi_trg` BEFORE INSERT ON `hold` FOR EACH ROW
+CREATE  TRIGGER `oms`.`hold_bi_trg` BEFORE INSERT ON `hold` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1374,12 +1374,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`hold_bu_trg` BEFORE UPDATE ON `hold` FOR EACH ROW
+CREATE TRIGGER `oms`.`hold_bu_trg` BEFORE UPDATE ON `hold` FOR EACH ROW
 BEGIN
 	set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1436,15 +1436,15 @@ CREATE TABLE `hot_spot` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hs_bi_trg BEFORE INSERT ON hot_spot for each row
+CREATE TRIGGER hs_bi_trg BEFORE INSERT ON hot_spot for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1457,10 +1457,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER hs_bu_trg BEFORE UPDATE ON hot_spot for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER hs_bu_trg BEFORE UPDATE ON hot_spot for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1513,15 +1513,15 @@ CREATE TABLE `menu` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER menu_bi_trg BEFORE INSERT ON menu for each row
+CREATE TRIGGER menu_bi_trg BEFORE INSERT ON menu for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1534,10 +1534,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER menu_bu_trg BEFORE UPDATE ON menu for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER menu_bu_trg BEFORE UPDATE ON menu for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1676,15 +1676,15 @@ CREATE TABLE `page` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER page_bi_trg BEFORE INSERT ON page for each row
+CREATE TRIGGER page_bi_trg BEFORE INSERT ON page for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1697,10 +1697,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER page_bu_trg BEFORE UPDATE ON page for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER page_bu_trg BEFORE UPDATE ON page for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1756,15 +1756,15 @@ CREATE TABLE `plot_group` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER pltgrp_bi_trg BEFORE INSERT ON plot_group for each row
+CREATE TRIGGER pltgrp_bi_trg BEFORE INSERT ON plot_group for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1777,10 +1777,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER pltgrp_bu_trg BEFORE UPDATE ON plot_group for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER pltgrp_bu_trg BEFORE UPDATE ON plot_group for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1810,15 +1810,15 @@ CREATE TABLE `privilege` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER priv_bi_trg BEFORE INSERT ON privilege for each row
+CREATE  TRIGGER priv_bi_trg BEFORE INSERT ON privilege for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1831,10 +1831,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER priv_bu_trg BEFORE UPDATE ON privilege for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER priv_bu_trg BEFORE UPDATE ON privilege for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1867,13 +1867,13 @@ CREATE TABLE `raw_data` (
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`raw_data_bi_trg` BEFORE INSERT ON `raw_data` FOR EACH ROW
+CREATE TRIGGER `oms`.`raw_data_bi_trg` BEFORE INSERT ON `raw_data` FOR EACH ROW
 BEGIN
   if new.create_dt is null then set new.create_dt=utc_timestamp(); end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1886,9 +1886,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 trigger raw_data_bu_trg before update ON `raw_data` for each row set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER raw_data_bu_trg before update ON `raw_data` for each row set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1923,15 +1923,15 @@ CREATE TABLE `reference_code` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rc_bi_trg BEFORE INSERT ON reference_code for each row
+CREATE  TRIGGER rc_bi_trg BEFORE INSERT ON reference_code for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1944,10 +1944,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rc_bu_trg BEFORE UPDATE ON reference_code for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER rc_bu_trg BEFORE UPDATE ON reference_code for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1974,7 +1974,7 @@ CREATE TABLE `rel_tag_tag` (
   KEY `tag_child_fk` (`child_tag_id`),
   CONSTRAINT `rel_tag_tag_ibfk_2` FOREIGN KEY (`parent_tag_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `rel_tag_tag_ibfk_3` FOREIGN KEY (`child_tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8613 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12967 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1983,15 +1983,15 @@ CREATE TABLE `rel_tag_tag` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`rtt_bi_trg` BEFORE INSERT ON `rel_tag_tag` FOR EACH ROW
+CREATE TRIGGER `oms`.`rtt_bi_trg` BEFORE INSERT ON `rel_tag_tag` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2004,12 +2004,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`rtt_bu_trg` BEFORE UPDATE ON `rel_tag_tag` FOR EACH ROW
+CREATE  TRIGGER `oms`.`rtt_bu_trg` BEFORE UPDATE ON `rel_tag_tag` FOR EACH ROW
 BEGIN
  set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2043,15 +2043,15 @@ CREATE TABLE `role` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER role_bi_trg BEFORE INSERT ON role for each row
+CREATE TRIGGER role_bi_trg BEFORE INSERT ON role for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2064,10 +2064,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER role_bu_trg BEFORE UPDATE ON role for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER role_bu_trg BEFORE UPDATE ON role for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2099,15 +2099,15 @@ CREATE TABLE `role_priv` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rp_bi_trg BEFORE INSERT ON role_priv for each row
+CREATE  TRIGGER rp_bi_trg BEFORE INSERT ON role_priv for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2120,10 +2120,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER rp_bu_trg BEFORE UPDATE ON role_priv for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER rp_bu_trg BEFORE UPDATE ON role_priv for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2241,7 +2241,7 @@ CREATE TABLE `shipment` (
   PRIMARY KEY (`id`),
   KEY `shipment_cust_fk_idx` (`customer_id`),
   CONSTRAINT `shipment_cust_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11572 DEFAULT CHARSET=utf8 COMMENT='customer order, either a purchase or a sale';
+) ENGINE=InnoDB AUTO_INCREMENT=15926 DEFAULT CHARSET=utf8 COMMENT='customer order, either a purchase or a sale';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2250,15 +2250,15 @@ CREATE TABLE `shipment` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipment_bi_trg` BEFORE INSERT ON `shipment` FOR EACH ROW
+CREATE  TRIGGER `oms`.`shipment_bi_trg` BEFORE INSERT ON `shipment` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2271,12 +2271,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipment_bu_trg` BEFORE UPDATE ON `shipment` FOR EACH ROW
+CREATE  TRIGGER `oms`.`shipment_bu_trg` BEFORE UPDATE ON `shipment` FOR EACH ROW
 BEGIN
 	set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2314,15 +2314,15 @@ CREATE TABLE `shipment_item` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipmentitem_bi_trg` BEFORE INSERT ON `shipment_item` FOR EACH ROW
+CREATE  TRIGGER `oms`.`shipmentitem_bi_trg` BEFORE INSERT ON `shipment_item` FOR EACH ROW
 BEGIN
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2335,12 +2335,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`shipmentitem_bu_trg` BEFORE UPDATE ON `shipment_item` FOR EACH ROW
+CREATE  TRIGGER `oms`.`shipmentitem_bu_trg` BEFORE UPDATE ON `shipment_item` FOR EACH ROW
 BEGIN
 	set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2372,15 +2372,15 @@ CREATE TABLE `sim_io` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`soi_bi_trg` BEFORE INSERT ON `sim_io` FOR EACH ROW
+CREATE  TRIGGER `oms`.`soi_bi_trg` BEFORE INSERT ON `sim_io` FOR EACH ROW
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2393,12 +2393,12 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `oms`.`soi_bu_trg` BEFORE UPDATE ON `sim_io` FOR EACH ROW
+CREATE  TRIGGER `oms`.`soi_bu_trg` BEFORE UPDATE ON `sim_io` FOR EACH ROW
 BEGIN
   set new.last_modified_dt = utc_timestamp();
-END */;;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2436,15 +2436,15 @@ CREATE TABLE `tag` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tag_bi_trg BEFORE INSERT ON tag for each row
+CREATE TRIGGER tag_bi_trg BEFORE INSERT ON tag for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2457,14 +2457,14 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tagxfer_ai_trg AFTER INSERT on tag for each row
+CREATE  TRIGGER tagxfer_ai_trg AFTER INSERT on tag for each row
 begin
   if new.tag_type_code in ('AO','AI','DI','DO') then
     insert into raw_data(id) values(new.id);
   end if;
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2477,10 +2477,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tag_bu_trg BEFORE UPDATE ON tag for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER tag_bu_trg BEFORE UPDATE ON tag for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2514,15 +2514,15 @@ CREATE TABLE `tag_type` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tt_bi_trg BEFORE INSERT ON tag_type for each row
+CREATE TRIGGER tt_bi_trg BEFORE INSERT ON tag_type for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2535,10 +2535,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tt_bu_trg BEFORE UPDATE ON tag_type for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER tt_bu_trg BEFORE UPDATE ON tag_type for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2573,15 +2573,15 @@ CREATE TABLE `tank` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tank_bi_trg BEFORE INSERT ON tank for each row
+CREATE  TRIGGER tank_bi_trg BEFORE INSERT ON tank for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2594,10 +2594,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tank_bu_trg BEFORE UPDATE ON tank for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER tank_bu_trg BEFORE UPDATE ON tank for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2748,7 +2748,7 @@ CREATE TABLE `transfer` (
   KEY `transfer_dest_id_fk` (`destination_id`),
   CONSTRAINT `transfer_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `tag` (`id`),
   CONSTRAINT `transfer_ibfk_4` FOREIGN KEY (`destination_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9737 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16914 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2757,15 +2757,15 @@ CREATE TABLE `transfer` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER transfer_bi_trg BEFORE INSERT ON transfer for each row
+CREATE  TRIGGER transfer_bi_trg BEFORE INSERT ON transfer for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2778,10 +2778,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER transfer_bu_trg BEFORE UPDATE ON transfer for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER transfer_bu_trg BEFORE UPDATE ON transfer for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2810,16 +2810,16 @@ CREATE TABLE `transfer_point` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tp_bi_trg BEFORE INSERT ON transfer_point for each row
+CREATE  TRIGGER tp_bi_trg BEFORE INSERT ON transfer_point for each row
 begin
   declare newID int;
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2832,10 +2832,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER tp_bu_trg BEFORE UPDATE ON transfer_point for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER tp_bu_trg BEFORE UPDATE ON transfer_point for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2914,7 +2914,7 @@ DROP TABLE IF EXISTS `unit`;
 CREATE TABLE `unit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(12) DEFAULT NULL,
-  `code` char(3) DEFAULT NULL,
+  `code` char(4) DEFAULT NULL,
   `unit_type_id` int(11) NOT NULL,
   `last_modified_dt` timestamp NULL DEFAULT NULL,
   `create_dt` timestamp NULL DEFAULT NULL,
@@ -2931,15 +2931,15 @@ CREATE TABLE `unit` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unit_bi_trg BEFORE INSERT ON unit for each row
+CREATE TRIGGER unit_bi_trg BEFORE INSERT ON unit for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2952,10 +2952,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unit_bu_trg BEFORE UPDATE ON unit for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER unit_bu_trg BEFORE UPDATE ON unit for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2991,15 +2991,15 @@ CREATE TABLE `unit_conversion` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER uc_bi_trg BEFORE INSERT ON unit_conversion for each row
+CREATE TRIGGER uc_bi_trg BEFORE INSERT ON unit_conversion for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3012,10 +3012,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER uc_bu_trg BEFORE UPDATE ON unit_conversion for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER uc_bu_trg BEFORE UPDATE ON unit_conversion for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3045,15 +3045,15 @@ CREATE TABLE `unit_type` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unittype_bi_trg BEFORE INSERT ON unit_type for each row
+CREATE  TRIGGER unittype_bi_trg BEFORE INSERT ON unit_type for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3066,10 +3066,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER unittype_bu_trg BEFORE UPDATE ON unit_type for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER unittype_bu_trg BEFORE UPDATE ON unit_type for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3106,15 +3106,15 @@ CREATE TABLE `user` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER user_bi_trg BEFORE INSERT ON user for each row
+CREATE TRIGGER user_bi_trg BEFORE INSERT ON user for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3127,10 +3127,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER user_bu_trg BEFORE UPDATE ON user for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER user_bu_trg BEFORE UPDATE ON user for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3178,15 +3178,15 @@ CREATE TABLE `user_role` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ur_bi_trg BEFORE INSERT ON user_role for each row
+CREATE  TRIGGER ur_bi_trg BEFORE INSERT ON user_role for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3199,10 +3199,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER ur_bu_trg BEFORE UPDATE ON user_role for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER ur_bu_trg BEFORE UPDATE ON user_role for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3236,15 +3236,15 @@ CREATE TABLE `vertex` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vert_bi_trg BEFORE INSERT ON `vertex` for each row
+CREATE  TRIGGER vert_bi_trg BEFORE INSERT ON `vertex` for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3257,10 +3257,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vert_bu_trg BEFORE UPDATE ON `vertex` for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER vert_bu_trg BEFORE UPDATE ON `vertex` for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3310,15 +3310,15 @@ CREATE TABLE `volume` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vol_bi_trg BEFORE INSERT ON volume for each row
+CREATE  TRIGGER vol_bi_trg BEFORE INSERT ON volume for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3331,10 +3331,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER vol_bu_trg BEFORE UPDATE ON volume for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE  TRIGGER vol_bu_trg BEFORE UPDATE ON volume for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3366,15 +3366,15 @@ CREATE TABLE `watchdog` (
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER wdog_bi_trg BEFORE INSERT ON watchdog for each row
+CREATE TRIGGER wdog_bi_trg BEFORE INSERT ON watchdog for each row
 begin
   if new.create_dt is null then
     set new.create_dt = utc_timestamp();
   end if;
   set new.last_modified_dt = utc_timestamp();
-end */;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3387,10 +3387,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = cp850 */ ;
 /*!50003 SET collation_connection  = cp850_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`oms`@`%`*/ /*!50003 TRIGGER wdog_bu_trg BEFORE UPDATE ON watchdog for each row
-  set new.last_modified_dt = utc_timestamp() */;;
+CREATE TRIGGER wdog_bu_trg BEFORE UPDATE ON watchdog for each row
+  set new.last_modified_dt = utc_timestamp() ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3409,9 +3409,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `active_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`id` */;
+/*!50001 CREATE VIEW `active_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3428,9 +3426,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `active_tank_vw` AS select `xfr`.`source_id` AS `end_point_id` from (`transfer` `xfr` join `transfer_status_vw` `tsv` on(`xfr`.`status_id` = `tsv`.`value`)) where `tsv`.`code` in ('A','S') union select `xfr`.`destination_id` AS `end_point_id` from (`transfer` `xfr` join `transfer_status_vw` `tsv` on(`xfr`.`status_id` = `tsv`.`value`)) where `tsv`.`code` in ('A','S') */;
+/*!50001 CREATE VIEW `active_tank_vw` AS select `xfr`.`source_id` AS `end_point_id` from (`transfer` `xfr` join `transfer_status_vw` `tsv` on(`xfr`.`status_id` = `tsv`.`value`)) where `tsv`.`code` in ('A','S') union select `xfr`.`destination_id` AS `end_point_id` from (`transfer` `xfr` join `transfer_status_vw` `tsv` on(`xfr`.`status_id` = `tsv`.`value`)) where `tsv`.`code` in ('A','S') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3447,9 +3443,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `active_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ACTIVE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `active_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ACTIVE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3466,9 +3460,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `ad_value_vw` AS select `ai`.`tag_id` AS `tag_id`,round(coalesce(`ai`.`scan_value`,0),2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`analog_input` `ai` left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,coalesce(`di`.`scan_value`,0) AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_input` `di` join `alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,coalesce(`ao`.`scan_value`,0) AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`analog_output` `ao` join `alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,coalesce(`d`.`scan_value`,0) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_output` `d` join `alarm_color_vw` `acv`) */;
+/*!50001 CREATE VIEW `ad_value_vw` AS select `ai`.`tag_id` AS `tag_id`,round(coalesce(`ai`.`scan_value`,0),2) AS `scan_value`,`ai`.`scan_time` AS `scan_time`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from ((`analog_input` `ai` left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) union select `di`.`tag_id` AS `tag_id`,coalesce(`di`.`scan_value`,0) AS `scan_value`,`di`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_input` `di` join `alarm_color_vw` `acv`) union select `ao`.`tag_id` AS `tag_id`,coalesce(`ao`.`scan_value`,0) AS `scan_value`,`ao`.`scan_time` AS `scan_time`,`ao`.`max_value` AS `max_value`,`ao`.`zero_value` AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`analog_output` `ao` join `alarm_color_vw` `acv`) union select `d`.`tag_id` AS `tag_id`,coalesce(`d`.`scan_value`,0) AS `scan_value`,`d`.`scan_time` AS `scan_time`,1 AS `max_value`,0 AS `zero_value`,`acv`.`norm_color` AS `alarm_color` from (`digital_output` `d` join `alarm_color_vw` `acv`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3485,9 +3477,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `alarm_color_list_vw` AS select 1 AS `id`,substr(`config`.`item_name`,1,octet_length(`config`.`item_name`) - 5) AS `item_name`,`config`.`item_value` AS `item_value` from `config` where `config`.`item_name` like '%COLOR' */;
+/*!50001 CREATE VIEW `alarm_color_list_vw` AS select 1 AS `id`,substr(`config`.`item_name`,1,octet_length(`config`.`item_name`) - 5) AS `item_name`,`config`.`item_value` AS `item_value` from `config` where `config`.`item_name` like '%COLOR' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3504,9 +3494,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `alarm_color_vw` AS select `x`.`id` AS `id`,max(case when `x`.`item_name` = 'LL' then `x`.`item_value` else NULL end) AS `ll_color`,max(case when `x`.`item_name` = 'LO' then `x`.`item_value` else NULL end) AS `lo_color`,max(case when `x`.`item_name` = 'NORM' then `x`.`item_value` else NULL end) AS `norm_color`,max(case when `x`.`item_name` = 'HI' then `x`.`item_value` else NULL end) AS `hi_color`,max(case when `x`.`item_name` = 'HH' then `x`.`item_value` else NULL end) AS `hh_color` from `alarm_color_list_vw` `x` group by `x`.`id` */;
+/*!50001 CREATE VIEW `alarm_color_vw` AS select `x`.`id` AS `id`,max(case when `x`.`item_name` = 'LL' then `x`.`item_value` else NULL end) AS `ll_color`,max(case when `x`.`item_name` = 'LO' then `x`.`item_value` else NULL end) AS `lo_color`,max(case when `x`.`item_name` = 'NORM' then `x`.`item_value` else NULL end) AS `norm_color`,max(case when `x`.`item_name` = 'HI' then `x`.`item_value` else NULL end) AS `hi_color`,max(case when `x`.`item_name` = 'HH' then `x`.`item_value` else NULL end) AS `hh_color` from `alarm_color_list_vw` `x` group by `x`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3523,9 +3511,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `alarm_info` AS select `a`.`id` AS `id`,`a`.`tag_id` AS `tag_id`,`a`.`alm_occurred` AS `alm_occurred`,`a`.`acknowledged` AS `acknowledged`,`a`.`active` AS `active`,ifnull(`a`.`alarm_msg_id`,`at`.`alarm_msg_id`) AS `alarm_msg_id`,`at`.`priority` AS `priority`,`at`.`code` AS `code`,`acl`.`item_value` AS `color`,`ai`.`scan_value` AS `value` from (((`alarm` `a` join `alarm_type` `at` on(`a`.`alarm_type_id` = `at`.`id`)) join `alarm_color_list_vw` `acl` on(`at`.`code` = `acl`.`item_name`)) join `analog_input` `ai` on(`a`.`tag_id` = `ai`.`tag_id`)) where `a`.`active` = 'Y' */;
+/*!50001 CREATE VIEW `alarm_info` AS select `a`.`id` AS `id`,`a`.`tag_id` AS `tag_id`,`a`.`alm_occurred` AS `alm_occurred`,`a`.`acknowledged` AS `acknowledged`,`a`.`active` AS `active`,ifnull(`a`.`alarm_msg_id`,`at`.`alarm_msg_id`) AS `alarm_msg_id`,`at`.`priority` AS `priority`,`at`.`code` AS `code`,`acl`.`item_value` AS `color`,`ai`.`scan_value` AS `value` from (((`alarm` `a` join `alarm_type` `at` on(`a`.`alarm_type_id` = `at`.`id`)) join `alarm_color_list_vw` `acl` on(`at`.`code` = `acl`.`item_name`)) join `analog_input` `ai` on(`a`.`tag_id` = `ai`.`tag_id`)) where `a`.`active` = 'Y' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3542,9 +3528,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `all_fields` AS select `f`.`id` AS `id`,`t`.`name` AS `name`,`f`.`id` AS `parent_id`,`t`.`name` AS `parent` from (`field` `f` join `tag` `t`) where `f`.`id` = `t`.`id` and `t`.`active` = 'Y' and `t`.`tag_type_code` = 'FLD' and !(`t`.`id` in (select `rel_tag_tag`.`child_tag_id` from `rel_tag_tag`)) union select `t`.`id` AS `id`,`t`.`name` AS `name`,`tp`.`id` AS `pid`,`tp`.`name` AS `pname` from ((`rel_tag_tag` `rtt` join `tag` `t` on(`rtt`.`child_tag_id` = `t`.`id`)) join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) where `t`.`tag_type_code` = 'FLD' and `tp`.`tag_type_code` = 'FLD' */;
+/*!50001 CREATE VIEW `all_fields` AS select `f`.`id` AS `id`,`t`.`name` AS `name`,`f`.`id` AS `parent_id`,`t`.`name` AS `parent` from (`field` `f` join `tag` `t`) where `f`.`id` = `t`.`id` and `t`.`active` = 'Y' and `t`.`tag_type_code` = 'FLD' and !(`t`.`id` in (select `rel_tag_tag`.`child_tag_id` from `rel_tag_tag`)) union select `t`.`id` AS `id`,`t`.`name` AS `name`,`tp`.`id` AS `pid`,`tp`.`name` AS `pname` from ((`rel_tag_tag` `rtt` join `tag` `t` on(`rtt`.`child_tag_id` = `t`.`id`)) join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) where `t`.`tag_type_code` = 'FLD' and `tp`.`tag_type_code` = 'FLD' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3561,9 +3545,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `analog_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ANALOG-TYPE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `analog_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ANALOG-TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3580,9 +3562,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `calculation_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'CALCULATION_TYPE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `calculation_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'CALCULATION_TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3599,9 +3579,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `carrier_vw` AS select `tag_type`.`id` AS `id`,`tag_type`.`code` AS `code`,`tag_type`.`name` AS `name`,`tag_type`.`description` AS `description`,`tag_type`.`js_draw_file` AS `js_draw_file`,`tag_type`.`active` AS `active` from `tag_type` where `tag_type`.`code` in ('TT','S','T') */;
+/*!50001 CREATE VIEW `carrier_vw` AS select `tag_type`.`id` AS `id`,`tag_type`.`code` AS `code`,`tag_type`.`name` AS `name`,`tag_type`.`description` AS `description`,`tag_type`.`js_draw_file` AS `js_draw_file`,`tag_type`.`active` AS `active` from `tag_type` where `tag_type`.`code` in ('TT','S','T') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3618,9 +3596,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `child_value_vw` AS select `tp`.`id` AS `parent_id`,`rtt`.`id` AS `rel_tag_id`,`tc`.`id` AS `id`,`tc`.`name` AS `name`,`tc`.`description` AS `description`,`tc`.`tag_type_code` AS `tag_type_code`,`tc`.`active` AS `active`,`tc`.`c1_lat` AS `c1_lat`,`tc`.`c1_long` AS `c1_long`,`tc`.`c2_lat` AS `c2_lat`,`tc`.`c2_long` AS `c2_long`,`tt`.`id` AS `child_tag_id`,`tt`.`name` AS `child_tag_name`,`pv`.`scan_value` AS `child_value`,`pv`.`scan_time` AS `child_time` from (((((`tag` `tp` join `rel_tag_tag` `rtt` on(`tp`.`id` = `rtt`.`parent_tag_id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) join `rel_tag_tag` `rtt1` on(`rtt1`.`parent_tag_id` = `tc`.`id`)) join `tag` `tt` on(`rtt1`.`child_tag_id` = `tt`.`id`)) join `ad_value_vw` `pv` on(`tt`.`id` = `pv`.`tag_id`)) order by `tp`.`id`,`tc`.`id` */;
+/*!50001 CREATE VIEW `child_value_vw` AS select `tp`.`id` AS `parent_id`,`rtt`.`id` AS `rel_tag_id`,`tc`.`id` AS `id`,`tc`.`name` AS `name`,`tc`.`description` AS `description`,`tc`.`tag_type_code` AS `tag_type_code`,`tc`.`active` AS `active`,`tc`.`c1_lat` AS `c1_lat`,`tc`.`c1_long` AS `c1_long`,`tc`.`c2_lat` AS `c2_lat`,`tc`.`c2_long` AS `c2_long`,`tt`.`id` AS `child_tag_id`,`tt`.`name` AS `child_tag_name`,`pv`.`scan_value` AS `child_value`,`pv`.`scan_time` AS `child_time` from (((((`tag` `tp` join `rel_tag_tag` `rtt` on(`tp`.`id` = `rtt`.`parent_tag_id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) join `rel_tag_tag` `rtt1` on(`rtt1`.`parent_tag_id` = `tc`.`id`)) join `tag` `tt` on(`rtt1`.`child_tag_id` = `tt`.`id`)) join `ad_value_vw` `pv` on(`tt`.`id` = `pv`.`tag_id`)) order by `tp`.`id`,`tc`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3637,9 +3613,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `complete_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`id` */;
+/*!50001 CREATE VIEW `complete_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` in ('C','D') group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `sc` from `shipment_item` where `shipment_item`.`active` not in ('C','D') group by `shipment_item`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3656,9 +3630,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `content_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'CONTENT-TYPE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `content_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'CONTENT-TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3675,9 +3647,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `dynamic_menu_items_vw` AS select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/processunit/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where `t`.`tag_type_code` = 'PU' and `t`.`active` = 'Y' and `p`.`name` = 'View Process Units' and `m`.`text` = 'Process Units' union select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/field/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where `t`.`tag_type_code` = 'FLD' and `t`.`active` = 'Y' and `p`.`name` = 'View Fields' and `m`.`text` = 'Field Displays' */;
+/*!50001 CREATE VIEW `dynamic_menu_items_vw` AS select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/processunit/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where `t`.`tag_type_code` = 'PU' and `t`.`active` = 'Y' and `p`.`name` = 'View Process Units' and `m`.`text` = 'Process Units' union select distinct `t`.`name` AS `text`,`t`.`id` AS `order_no`,concat('oms/field/',`t`.`id`) AS `uri`,`p`.`name` AS `viewpriv`,`p`.`name` AS `execpriv`,`m`.`text` AS `category`,replace(`t`.`name`,' ','') AS `menuname` from ((`tag` `t` join `privilege` `p`) join `menu` `m`) where `t`.`tag_type_code` = 'FLD' and `t`.`active` = 'Y' and `p`.`name` = 'View Fields' and `m`.`text` = 'Field Displays' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3694,9 +3664,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `field_tag_deep_vw` AS select `ft`.`field_tag_id` AS `field_tag_id`,`ft`.`child_tag_id` AS `child_tag_id` from (`field_tag_vw` `ft` join `tag` `t` on(`ft`.`child_tag_id` = `t`.`id`)) where `t`.`tag_type_code` <> 'FLD' union select `ft1`.`field_tag_id` AS `field_tag_id`,`ft2`.`child_tag_id` AS `child_tag_id` from (((`field_tag_vw` `ft1` join `field_tag_vw` `ft2` on(`ft1`.`child_tag_id` = `ft2`.`field_tag_id`)) join `tag` `t1` on(`ft1`.`child_tag_id` = `t1`.`id`)) join `tag` `t2` on(`ft2`.`child_tag_id` = `t2`.`id`)) where `t1`.`tag_type_code` = 'FLD' */;
+/*!50001 CREATE VIEW `field_tag_deep_vw` AS select `ft`.`field_tag_id` AS `field_tag_id`,`ft`.`child_tag_id` AS `child_tag_id` from (`field_tag_vw` `ft` join `tag` `t` on(`ft`.`child_tag_id` = `t`.`id`)) where `t`.`tag_type_code` <> 'FLD' union select `ft1`.`field_tag_id` AS `field_tag_id`,`ft2`.`child_tag_id` AS `child_tag_id` from (((`field_tag_vw` `ft1` join `field_tag_vw` `ft2` on(`ft1`.`child_tag_id` = `ft2`.`field_tag_id`)) join `tag` `t1` on(`ft1`.`child_tag_id` = `t1`.`id`)) join `tag` `t2` on(`ft2`.`child_tag_id` = `t2`.`id`)) where `t1`.`tag_type_code` = 'FLD' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3713,9 +3681,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `field_tag_vw` AS select `rt`.`parent_tag_id` AS `field_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where `rt`.`parent_tag_id` = `t`.`id` and `t`.`tag_type_code` = 'FLD' */;
+/*!50001 CREATE VIEW `field_tag_vw` AS select `rt`.`parent_tag_id` AS `field_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where `rt`.`parent_tag_id` = `t`.`id` and `t`.`tag_type_code` = 'FLD' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3732,9 +3698,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `history_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'HISTORY-TYPE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `history_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'HISTORY-TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3751,9 +3715,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `history_vw` AS select `h`.`id` AS `id`,`t`.`id` AS `tag_id`,`t`.`name` AS `name`,round(`h`.`scan_value`,4) AS `scan_value`,from_unixtime(`h`.`scan_time`) AS `scan_time` from (`tag` `t` join `history` `h` on(`t`.`id` = `h`.`tag_id`)) */;
+/*!50001 CREATE VIEW `history_vw` AS select `h`.`id` AS `id`,`t`.`id` AS `tag_id`,`t`.`name` AS `name`,round(`h`.`scan_value`,4) AS `scan_value`,from_unixtime(`h`.`scan_time`) AS `scan_time` from (`tag` `t` join `history` `h` on(`t`.`id` = `h`.`tag_id`)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3770,9 +3732,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `horizontal_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on(`m`.`menu_type_id` = `rc`.`id`)) where `rc`.`category` = 'MENU_TYPE' and `rc`.`code` = 'HT' */;
+/*!50001 CREATE VIEW `horizontal_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on(`m`.`menu_type_id` = `rc`.`id`)) where `rc`.`category` = 'MENU_TYPE' and `rc`.`code` = 'HT' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3789,9 +3749,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `integer_list_vw` AS select `c`.`id` - `m`.`cmin` AS `ordinal` from (`oms`.`config` `c` join (select min(`oms`.`config`.`id`) AS `cmin` from `oms`.`config`) `m`) */;
+/*!50001 CREATE VIEW `integer_list_vw` AS select `c`.`id` - `m`.`cmin` AS `ordinal` from (`oms`.`config` `c` join (select min(`oms`.`config`.`id`) AS `cmin` from `oms`.`config`) `m`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3808,9 +3766,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `menu_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'MENU_TYPE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `menu_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'MENU_TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3827,9 +3783,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `off_on_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'OFF-ON' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `off_on_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'OFF-ON' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3846,9 +3800,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `on_off_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ON-OFF' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `on_off_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'ON-OFF' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3865,9 +3817,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `order_carrier_vw` AS select `x`.`id` AS `id`,group_concat(`x`.`name` separator '<br>') AS `carrier` from (select distinct `si`.`id` AS `id`,`c`.`name` AS `name` from (`oms`.`shipment_item` `si` left join `oms`.`tag` `c` on(`si`.`carrier_id` = `c`.`id`))) `x` group by `x`.`id` */;
+/*!50001 CREATE VIEW `order_carrier_vw` AS select `x`.`id` AS `id`,group_concat(`x`.`name` separator '<br>') AS `carrier` from (select distinct `si`.`id` AS `id`,`c`.`name` AS `name` from (`oms`.`shipment_item` `si` left join `oms`.`tag` `c` on(`si`.`carrier_id` = `c`.`id`))) `x` group by `x`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3884,9 +3834,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `order_contents_vw` AS select `x`.`id` AS `id`,group_concat(`x`.`content_cd` separator ',') AS `contents` from (select distinct `si`.`id` AS `id`,`si`.`content_cd` AS `content_cd` from `oms`.`shipment_item` `si`) `x` group by `x`.`id` */;
+/*!50001 CREATE VIEW `order_contents_vw` AS select `x`.`id` AS `id`,group_concat(`x`.`content_cd` separator ',') AS `contents` from (select distinct `si`.`id` AS `id`,`si`.`content_cd` AS `content_cd` from `oms`.`shipment_item` `si`) `x` group by `x`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3903,9 +3851,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `order_volume_vw` AS select `shipment_item`.`id` AS `id`,`shipment_item`.`content_cd` AS `content_cd`,`shipment_item`.`transfer_id` AS `transfer_id`,sum(`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`shipment_item`.`act_volume`) AS `act_volume` from `shipment_item` group by `shipment_item`.`id`,`shipment_item`.`content_cd`,`shipment_item`.`transfer_id` */;
+/*!50001 CREATE VIEW `order_volume_vw` AS select `shipment_item`.`id` AS `id`,`shipment_item`.`content_cd` AS `content_cd`,`shipment_item`.`transfer_id` AS `transfer_id`,sum(`shipment_item`.`exp_volume_max`) AS `exp_volume`,sum(`shipment_item`.`act_volume`) AS `act_volume` from `shipment_item` group by `shipment_item`.`id`,`shipment_item`.`content_cd`,`shipment_item`.`transfer_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3922,9 +3868,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `pending_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` = 'P' group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `if(count(*)>0,0,0)` from `shipment_item` where `shipment_item`.`active` <> 'P' group by `shipment_item`.`id` */;
+/*!50001 CREATE VIEW `pending_order_vw` AS select `shipment_item`.`id` AS `id`,count(0) AS `sc` from `shipment_item` where `shipment_item`.`active` = 'P' group by `shipment_item`.`id` union select `shipment_item`.`id` AS `id`,if(count(0) > 0,0,0) AS `if(count(*)>0,0,0)` from `shipment_item` where `shipment_item`.`active` <> 'P' group by `shipment_item`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3941,9 +3885,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `rtt_vw` AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code`,`rtt`.`code2` AS `code2` from ((`rel_tag_tag` `rtt` join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name` */;
+/*!50001 CREATE VIEW `rtt_vw` AS select `rtt`.`id` AS `id`,`rtt`.`parent_tag_id` AS `parent_tag_id`,`tp`.`name` AS `parent`,`tp`.`tag_type_code` AS `parent_type`,`rtt`.`child_tag_id` AS `child_tag_id`,`tc`.`name` AS `child`,`tc`.`tag_type_code` AS `child_type`,`rtt`.`code` AS `code`,`rtt`.`code2` AS `code2` from ((`rel_tag_tag` `rtt` join `tag` `tp` on(`rtt`.`parent_tag_id` = `tp`.`id`)) join `tag` `tc` on(`rtt`.`child_tag_id` = `tc`.`id`)) order by `tp`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3960,9 +3902,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `scm_object_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'SCM_OBJECT' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `scm_object_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'SCM_OBJECT' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3979,9 +3919,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `sco_ref_tag_row_vw` AS select `tc`.`id` AS `id`,`rtt1`.`id` AS `gc_rel_tag_id`,`tt`.`id` AS `gc_tag_id`,`tt`.`name` AS `gc_tag_name`,`tt`.`tag_type_code` AS `gc_type_code`,round(`pv`.`scan_value`,2) AS `gc_value`,`pv`.`scan_time` AS `gc_time`,`pv`.`max_value` AS `max_value`,`pv`.`zero_value` AS `zero_value`,`pv`.`alarm_color` AS `alarm_color` from (((`tag` `tc` join `rel_tag_tag` `rtt1` on(`rtt1`.`parent_tag_id` = `tc`.`id`)) join `tag` `tt` on(`rtt1`.`child_tag_id` = `tt`.`id`)) join `ad_value_vw` `pv` on(`tt`.`id` = `pv`.`tag_id`)) where `tc`.`tag_type_code` = 'SCO' */;
+/*!50001 CREATE VIEW `sco_ref_tag_row_vw` AS select `tc`.`id` AS `id`,`rtt1`.`id` AS `gc_rel_tag_id`,`tt`.`id` AS `gc_tag_id`,`tt`.`name` AS `gc_tag_name`,`tt`.`tag_type_code` AS `gc_type_code`,round(`pv`.`scan_value`,2) AS `gc_value`,`pv`.`scan_time` AS `gc_time`,`pv`.`max_value` AS `max_value`,`pv`.`zero_value` AS `zero_value`,`pv`.`alarm_color` AS `alarm_color` from (((`tag` `tc` join `rel_tag_tag` `rtt1` on(`rtt1`.`parent_tag_id` = `tc`.`id`)) join `tag` `tt` on(`rtt1`.`child_tag_id` = `tt`.`id`)) join `ad_value_vw` `pv` on(`tt`.`id` = `pv`.`tag_id`)) where `tc`.`tag_type_code` = 'SCO' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3998,9 +3936,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `sco_ref_tag_vw` AS select `srtrv`.`id` AS `id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_rel_tag_id` end) AS `inp_rel_tag_id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_tag_id` end) AS `inp_id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_tag_name` end) AS `inp_tag`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_type_code` end) AS `inp_type`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_value` end) AS `inp_value`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`max_value` end) AS `inp_max`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`zero_value` end) AS `inp_zero`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`alarm_color` end) AS `inp_alm_color`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_rel_tag_id` end) AS `out_rel_tag_id`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_tag_id` end) AS `out_id`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_tag_name` end) AS `out_tag`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_type_code` end) AS `out_type`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_value` end) AS `out_value`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`max_value` end) AS `out_max`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`zero_value` end) AS `out_zero`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`alarm_color` end) AS `out_alm_color` from `sco_ref_tag_row_vw` `srtrv` group by `srtrv`.`id` */;
+/*!50001 CREATE VIEW `sco_ref_tag_vw` AS select `srtrv`.`id` AS `id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_rel_tag_id` end) AS `inp_rel_tag_id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_tag_id` end) AS `inp_id`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_tag_name` end) AS `inp_tag`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_type_code` end) AS `inp_type`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`gc_value` end) AS `inp_value`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`max_value` end) AS `inp_max`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`zero_value` end) AS `inp_zero`,max(case when `srtrv`.`gc_type_code` in ('AI','DI') then `srtrv`.`alarm_color` end) AS `inp_alm_color`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_rel_tag_id` end) AS `out_rel_tag_id`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_tag_id` end) AS `out_id`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_tag_name` end) AS `out_tag`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_type_code` end) AS `out_type`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`gc_value` end) AS `out_value`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`max_value` end) AS `out_max`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`zero_value` end) AS `out_zero`,max(case when `srtrv`.`gc_type_code` in ('AO','DO') then `srtrv`.`alarm_color` end) AS `out_alm_color` from `sco_ref_tag_row_vw` `srtrv` group by `srtrv`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4017,9 +3953,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_level_vw` AS select `tk`.`id` AS `tank_id`,`t`.`name` AS `tank`,`ai`.`tag_id` AS `level_id`,`l`.`name` AS `level` from ((((`tank` `tk` join `rel_tag_tag` `rtt` on(`tk`.`id` = `rtt`.`parent_tag_id`)) join `analog_input` `ai` on(`rtt`.`child_tag_id` = `ai`.`tag_id`)) join `tag` `t` on(`tk`.`id` = `t`.`id`)) join `tag` `l` on(`rtt`.`child_tag_id` = `l`.`id`)) where `ai`.`analog_type_code` = 'L' */;
+/*!50001 CREATE VIEW `tank_level_vw` AS select `tk`.`id` AS `tank_id`,`t`.`name` AS `tank`,`ai`.`tag_id` AS `level_id`,`l`.`name` AS `level` from ((((`tank` `tk` join `rel_tag_tag` `rtt` on(`tk`.`id` = `rtt`.`parent_tag_id`)) join `analog_input` `ai` on(`rtt`.`child_tag_id` = `ai`.`tag_id`)) join `tag` `t` on(`tk`.`id` = `t`.`id`)) join `tag` `l` on(`rtt`.`child_tag_id` = `l`.`id`)) where `ai`.`analog_type_code` = 'L' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4036,9 +3970,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_ref_tag_row_vw` AS select `rtt`.`parent_tag_id` AS `id`,`rtt`.`id` AS `rtt_id`,`t`.`id` AS `child_tag_id`,`t`.`name` AS `child`,`ai`.`analog_type_code` AS `analog_type_code`,round(`ai`.`scan_value`,2) AS `value`,concat(convert(format(`ai`.`scan_value`,2) using utf8),' ',`u`.`code`) AS `value_text`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from (((((`rel_tag_tag` `rtt` join `tag` `t` on(`t`.`id` = `rtt`.`child_tag_id`)) join `analog_input` `ai` on(`t`.`id` = `ai`.`tag_id`)) join `unit` `u` on(`ai`.`unit_id` = `u`.`id`)) left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) */;
+/*!50001 CREATE VIEW `tank_ref_tag_row_vw` AS select `rtt`.`parent_tag_id` AS `id`,`rtt`.`id` AS `rtt_id`,`t`.`id` AS `child_tag_id`,`t`.`name` AS `child`,`ai`.`analog_type_code` AS `analog_type_code`,round(`ai`.`scan_value`,2) AS `value`,concat(convert(format(`ai`.`scan_value`,2) using utf8),' ',`u`.`code`) AS `value_text`,`ai`.`max_value` AS `max_value`,`ai`.`zero_value` AS `zero_value`,coalesce(`an`.`color`,`acv`.`norm_color`) AS `alarm_color` from (((((`rel_tag_tag` `rtt` join `tag` `t` on(`t`.`id` = `rtt`.`child_tag_id`)) join `analog_input` `ai` on(`t`.`id` = `ai`.`tag_id`)) join `unit` `u` on(`ai`.`unit_id` = `u`.`id`)) left join `alarm_info` `an` on(`ai`.`tag_id` = `an`.`tag_id`)) join `alarm_color_vw` `acv`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4055,9 +3987,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_ref_tag_vw` AS select `trtrv`.`id` AS `id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`child` end) AS `level_tag`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`child_tag_id` end) AS `level_tag_id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`rtt_id` end) AS `level_rtt_id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`value` end) AS `level`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`value_text` end) AS `level_text`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`max_value` end) AS `level_max`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`zero_value` end) AS `level_zero`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`alarm_color` end) AS `level_alm_color`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`child` end) AS `temp_tag`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`child_tag_id` end) AS `temp_tag_id`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`rtt_id` end) AS `temp_rtt_id`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`value` end) AS `temp`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`value_text` end) AS `temp_text`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`max_value` end) AS `temp_max`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`zero_value` end) AS `temp_zero`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`alarm_color` end) AS `temp_alm_color` from `tank_ref_tag_row_vw` `trtrv` group by `trtrv`.`id` */;
+/*!50001 CREATE VIEW `tank_ref_tag_vw` AS select `trtrv`.`id` AS `id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`child` end) AS `level_tag`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`child_tag_id` end) AS `level_tag_id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`rtt_id` end) AS `level_rtt_id`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`value` end) AS `level`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`value_text` end) AS `level_text`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`max_value` end) AS `level_max`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`zero_value` end) AS `level_zero`,max(case when `trtrv`.`analog_type_code` = 'L' then `trtrv`.`alarm_color` end) AS `level_alm_color`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`child` end) AS `temp_tag`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`child_tag_id` end) AS `temp_tag_id`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`rtt_id` end) AS `temp_rtt_id`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`value` end) AS `temp`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`value_text` end) AS `temp_text`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`max_value` end) AS `temp_max`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`zero_value` end) AS `temp_zero`,max(case when `trtrv`.`analog_type_code` = 'T' then `trtrv`.`alarm_color` end) AS `temp_alm_color` from `tank_ref_tag_row_vw` `trtrv` group by `trtrv`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4074,9 +4004,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_tag_vw` AS select `rt`.`parent_tag_id` AS `parent_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where `rt`.`parent_tag_id` = `t`.`id` and `t`.`tag_type_code` = 'TK' */;
+/*!50001 CREATE VIEW `tank_tag_vw` AS select `rt`.`parent_tag_id` AS `parent_tag_id`,`rt`.`child_tag_id` AS `child_tag_id` from (`rel_tag_tag` `rt` join `tag` `t`) where `rt`.`parent_tag_id` = `t`.`id` and `t`.`tag_type_code` = 'TK' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4093,9 +4021,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tank_temperature_vw` AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `temperature_id` from ((`tank` `t` join `rel_tag_tag` `rtt`) join `analog_input` `ai`) where `t`.`id` = `rtt`.`parent_tag_id` and `rtt`.`child_tag_id` = `ai`.`tag_id` and `ai`.`analog_type_code` = 'T' */;
+/*!50001 CREATE VIEW `tank_temperature_vw` AS select `t`.`id` AS `tank_id`,`ai`.`tag_id` AS `temperature_id` from ((`tank` `t` join `rel_tag_tag` `rtt`) join `analog_input` `ai`) where `t`.`id` = `rtt`.`parent_tag_id` and `rtt`.`child_tag_id` = `ai`.`tag_id` and `ai`.`analog_type_code` = 'T' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4112,9 +4038,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tf_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TF' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `tf_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TF' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4131,9 +4055,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transfer_status_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TRANSFER_STATUS' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `transfer_status_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TRANSFER_STATUS' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4150,9 +4072,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transfer_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TRANSFER_TYPE' order by `reference_code`.`name` */;
+/*!50001 CREATE VIEW `transfer_type_vw` AS select `reference_code`.`id` AS `id`,`reference_code`.`category` AS `category`,`reference_code`.`name` AS `name`,`reference_code`.`code` AS `code`,`reference_code`.`value` AS `value`,`reference_code`.`description` AS `description`,`reference_code`.`active` AS `active` from `reference_code` where `reference_code`.`category` = 'TRANSFER_TYPE' order by `reference_code`.`name` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4169,9 +4089,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transfer_vw` AS select `t`.`id` AS `id`,`t`.`name` AS `name`,`tsv`.`code` AS `status`,`ttv`.`code` AS `type`,`ts`.`name` AS `source`,`td`.`name` AS `destination`,`t`.`exp_start_time` AS `exp_start_time`,`t`.`exp_end_time` AS `exp_end_time`,`t`.`exp_volume` AS `exp_volume`,`t`.`act_start_time` AS `act_start_time`,`t`.`act_end_time` AS `act_end_time`,`t`.`act_volume` AS `act_volume` from ((((`transfer` `t` join `transfer_status_vw` `tsv` on(`t`.`status_id` = `tsv`.`id`)) join `transfer_type_vw` `ttv` on(`t`.`transfer_type_id` = `ttv`.`id`)) join `tag` `ts` on(`t`.`source_id` = `ts`.`id`)) join `tag` `td` on(`t`.`destination_id` = `td`.`id`)) */;
+/*!50001 CREATE VIEW `transfer_vw` AS select `t`.`id` AS `id`,`t`.`name` AS `name`,`tsv`.`code` AS `status`,`ttv`.`code` AS `type`,`ts`.`name` AS `source`,`td`.`name` AS `destination`,`t`.`exp_start_time` AS `exp_start_time`,`t`.`exp_end_time` AS `exp_end_time`,`t`.`exp_volume` AS `exp_volume`,`t`.`act_start_time` AS `act_start_time`,`t`.`act_end_time` AS `act_end_time`,`t`.`act_volume` AS `act_volume` from ((((`transfer` `t` join `transfer_status_vw` `tsv` on(`t`.`status_id` = `tsv`.`id`)) join `transfer_type_vw` `ttv` on(`t`.`transfer_type_id` = `ttv`.`id`)) join `tag` `ts` on(`t`.`source_id` = `ts`.`id`)) join `tag` `td` on(`t`.`destination_id` = `td`.`id`)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4188,9 +4106,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `user_priv` AS select `u`.`alias` AS `user`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where `ur`.`user_id` = `u`.`id` and `ur`.`role_id` = `r`.`id` and `rp`.`role_id` = `r`.`id` and `rp`.`priv_id` = `p`.`id` union select `u`.`alias` AS `alias`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where `ur`.`user_id` = `u`.`id` and `rp`.`role_id` = `r`.`id` and `rp`.`priv_id` = `p`.`id` and `r`.`parent_id` in (select `r`.`id` from ((`user` `u` join `role` `r`) join `user_role` `ur`) where `ur`.`user_id` = `u`.`id` and `ur`.`role_id` = `r`.`id`) */;
+/*!50001 CREATE VIEW `user_priv` AS select `u`.`alias` AS `user`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where `ur`.`user_id` = `u`.`id` and `ur`.`role_id` = `r`.`id` and `rp`.`role_id` = `r`.`id` and `rp`.`priv_id` = `p`.`id` union select `u`.`alias` AS `alias`,`p`.`name` AS `privilege` from ((((`user` `u` join `role` `r`) join `user_role` `ur`) join `privilege` `p`) join `role_priv` `rp`) where `ur`.`user_id` = `u`.`id` and `rp`.`role_id` = `r`.`id` and `rp`.`priv_id` = `p`.`id` and `r`.`parent_id` in (select `r`.`id` from ((`user` `u` join `role` `r`) join `user_role` `ur`) where `ur`.`user_id` = `u`.`id` and `ur`.`role_id` = `r`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4207,9 +4123,7 @@ DELIMITER ;
 /*!50001 SET character_set_client      = cp850 */;
 /*!50001 SET character_set_results     = cp850 */;
 /*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`oms`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vertical_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on(`m`.`menu_type_id` = `rc`.`id`)) where `rc`.`category` = 'MENU_TYPE' and `rc`.`code` = 'VT' */;
+/*!50001 CREATE VIEW `vertical_menu_vw` AS select `m`.`id` AS `id`,`m`.`menu_type_id` AS `menu_type_id`,`m`.`category_id` AS `category_id`,`m`.`text` AS `text`,`m`.`page_id` AS `page_id`,`m`.`order_no` AS `order_no`,`m`.`active` AS `active` from (`menu` `m` join `reference_code` `rc` on(`m`.`menu_type_id` = `rc`.`id`)) where `rc`.`category` = 'MENU_TYPE' and `rc`.`code` = 'VT' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4223,4 +4137,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-02  0:30:03
+-- Dump completed on 2021-03-03  0:30:03

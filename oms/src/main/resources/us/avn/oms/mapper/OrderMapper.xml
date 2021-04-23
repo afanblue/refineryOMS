@@ -141,7 +141,7 @@
      where aov.sc != 0
        and coalesce(s.crontab_id,0) = 0
        and (ocv.contents = #{param1} or "T" = #{param1})
-     group by s.id
+     group by s.id, pov.sc
      order by 9, s.exp_date
      
      
@@ -507,7 +507,7 @@
      where s.exp_date > current_date()-interval 1 month
        and s.purchase = #{param1}
        and (ocv.contents = #{param2} or "T" = #{param2})
-     group by s.id
+     group by s.id, aov.sc, pov.sc
      order by s.exp_date desc
   </select>
 
@@ -527,7 +527,7 @@
       join order_carrier_vw ocrv on s.id = ocrv.id
      where s.exp_date > current_date()-interval 1 week 
        and (ocv.contents = #{param1} or "T" = #{param1})
-     group by s.id
+     group by s.id, aov.sc, pov.sc
      order by s.exp_date desc
   </select>
   
@@ -547,7 +547,7 @@
       join order_carrier_vw ocrv on s.id = ocrv.id
      where s.exp_date > current_date()-interval 1 month 
        and (ocv.contents = #{param2} or "T" = #{param2})
-     group by s.id
+     group by s.id, aov.sc, pov.sc
      order by s.exp_date desc
   </select>
     

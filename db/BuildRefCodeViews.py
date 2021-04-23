@@ -7,7 +7,7 @@ Created on Nov 21, 2018
 '''
 # import os, sysconfig
 import sys
-import mariadb
+import mysql.connector
 
 args = sys.argv
 #print( args )
@@ -16,11 +16,11 @@ config = {
   "user": "oms",
   "password": args[1],
   "host": "127.0.0.1",
-  "database": "oms",
-  "charset": "UTF-8"
+  "charset": "utf8",
+  "database": "oms"
 }
 
-cnx = mariadb.connect(**config)
+cnx = mysql.connector.connect(**config)
 crsr = cnx.cursor()
 
 

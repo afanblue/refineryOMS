@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>oms</name>
+	<name>OMS</name>
 	<comment></comment>
 	<projects>
-		<project>oms</project>
+		<project>oms-shared</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

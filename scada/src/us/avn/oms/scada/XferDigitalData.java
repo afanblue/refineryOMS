@@ -96,7 +96,7 @@ public class XferDigitalData extends TimerTask {
 				Instant now = Instant.now();
 				di.setPrevValue(di.getScanValue());
 				di.setPrevScanTime(di.getScanTime());
-				di.setScanValue(new Double(di.getSimValue()));
+				di.setScanValue(Double.valueOf(di.getSimValue()));
 				di.setScanTime(now);
 				dis.updateDigitalInput(di);
 			}

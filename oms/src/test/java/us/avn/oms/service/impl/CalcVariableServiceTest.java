@@ -42,18 +42,20 @@ public class CalcVariableServiceTest {
 			CalcVariableMapper mapper = sqlSession.getMapper(CalcVariableMapper.class);
 			Collection<CalcVariable> ct = mapper.getAllCalcVariables();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
 	
+	
+/*
 	@Test
 	void shouldGetACalcVariable() {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 			CalcVariableMapper mapper = sqlSession.getMapper(CalcVariableMapper.class);
 			Collection<CalcVariable> ct = mapper.getAllCalcVariables();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<CalcVariable> ict = ct.iterator();
 			CalcVariable cv = ict.next();
@@ -70,7 +72,7 @@ public class CalcVariableServiceTest {
 			CalcVariableMapper mapper = sqlSession.getMapper(CalcVariableMapper.class);
 			Collection<CalcVariable> ct = mapper.getAllCalcVariables();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<CalcVariable> ict = ct.iterator();
 			CalcVariable cv = ict.next();
@@ -81,14 +83,15 @@ public class CalcVariableServiceTest {
 			Assertions.assertEquals(cv.getId(), tag.getId());
 		}
 	}
-
+*/
+	
 	@Test
 	void shouldGetValuesForCalculation() {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 			CalcVariableMapper mapper = sqlSession.getMapper(CalcVariableMapper.class);
 			Collection<CalcVariable> ct = mapper.getAllCalcVariables();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<CalcVariable> ict = ct.iterator();
 			CalcVariable cv = ict.next();

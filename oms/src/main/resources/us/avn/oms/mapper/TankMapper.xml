@@ -92,7 +92,7 @@
       join analog_input ai on ai.tag_id=tlv.level_id 
      where tk.id not in (select end_point_id from active_tank_vw)
        and tk.content_type_code= #{param1} 
-     group by tk.content_type_code
+     group by tk.content_type_code, tk.id
   </select>
   
   <select id="getFullestTankForContent" resultMap="valueMap">
@@ -101,7 +101,7 @@
       join analog_input ai on ai.tag_id=tlv.level_id 
      where tk.id not in (select end_point_id from active_tank_vw)
        and tk.content_type_code= #{param1}   
-     group by tk.content_type_code
+     group by tk.content_type_code, tk.id
   </select>
   
   <select id="getTotalTankCapacitiesForContents" resultMap="valueMap">

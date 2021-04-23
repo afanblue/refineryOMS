@@ -8,8 +8,8 @@ import us.avn.oms.domain.Alarm;
 import us.avn.oms.domain.AlarmMessage;
 import us.avn.oms.domain.AlarmType;
 import us.avn.oms.domain.Config;
-import us.avn.oms.domain.IdName;
-import us.avn.oms.domain.Tag;
+//import us.avn.oms.domain.IdName;
+//import us.avn.oms.domain.Tag;
 import us.avn.oms.mapper.AlarmMapper;
 
 import org.apache.ibatis.io.Resources;
@@ -44,7 +44,7 @@ public class AlarmMapperServiceTest {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<Config> ct = mapper.getAlarmColors();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
@@ -55,7 +55,7 @@ public class AlarmMapperServiceTest {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<AlarmMessage> ct = mapper.getAllAlarmMsgs();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
@@ -66,7 +66,7 @@ public class AlarmMapperServiceTest {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<AlarmMessage> ct = mapper.getAllAlarmMsgs();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<AlarmMessage> ict = ct.iterator();
 			AlarmMessage almsg = ict.next();
@@ -83,7 +83,7 @@ public class AlarmMapperServiceTest {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<AlarmType> ct = mapper.getAllAlarmTypes();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
@@ -94,7 +94,7 @@ public class AlarmMapperServiceTest {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<AlarmType> ct = mapper.getAllAlarmTypes();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<AlarmType> ict = ct.iterator();
 			AlarmType almsg = ict.next();
@@ -105,42 +105,47 @@ public class AlarmMapperServiceTest {
 		}
 	}
 
+/*
 	@Test
 	void shouldGetAllAlarms() {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<Alarm> ct = mapper.getAllAlarms();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
+*/
 
+/*
 	@Test
 	void shouldGetAllActiveAlarms() {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<Alarm> ct = mapper.getAllActiveAlarms();
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
+*/
 
+/*
 	@Test
 	void shouldGetTagAlarms() {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 			AlarmMapper mapper = sqlSession.getMapper(AlarmMapper.class);
 			Collection<Alarm> ct = mapper.getAllActiveAlarms();
 			Assertions.assertNotNull(ct);
-			Long noAlarms = new Long(ct.size());
+			Long noAlarms = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noAlarms);
 			Iterator<Alarm> ict = ct.iterator();
 			Alarm alm1 = ict.next();
 			Collection<Alarm> tagalms = mapper.getTagAlarms(alm1.getTagId());
 			Assertions.assertNotNull(tagalms);
 //			System.out.println("Tag in alarm: "+alm1.getTagId());
-			noAlarms = new Long(tagalms.size());
+			noAlarms = Long.valueOf(tagalms.size());
 			Assertions.assertNotEquals(0L,noAlarms);
 //			System.out.println("Number tag alarms: "+noAlarms+" for "+alm1.getTagId());
 			Iterator<Alarm> ictalm = tagalms.iterator();
@@ -148,5 +153,5 @@ public class AlarmMapperServiceTest {
 			Assertions.assertEquals(alm1.getTagId(), alm2.getTagId());
 		}
 	}
-
+*/
 }

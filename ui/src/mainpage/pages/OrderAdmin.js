@@ -187,48 +187,43 @@ class OrderAdmin extends Component {
   validateForm( x ) {
     let doSubmit = true;
     let msg = "The following fields ";
+    let delim = " ";
     if( x.purchase === "" ) {
         doSubmit = false;
-        msg += "order status, ";
-    }
-    if(x.orderTypeId === 0) {
-        doSubmit = false;
-        msg = "order type, ";
+        msg += "Order Type ";
+        delim = ", ";
     }
     if(x.customerId === 0) {
         doSubmit = false;
-        msg = "order source, ";
+        msg += delim + "Customer, ";
+        delim = ", ";
     }
     var items = x.items;
     items.map(
       function(n,y){
-		if( n.contentCd === "" && n.carrierId === 0 && n.active === "" &&
+        if( n.contentCd === "" && n.carrierId === 0 && n.active === "" &&
 		    n.expVolumeMin === 0 && n.expVolumeMax === 0 ) {
-		  doSubmit = doSubmit;
-		} else {
+          doSubmit = doSubmit || true;
+		  } else {
           if( n.active === "" ) {
-            doSubmit = false;
-		  }
-		  if( n.contentCd === "" ) {
-			doSubmit = false;
-		  }
-		  if( n.carrierId === 0 ) {
-			doSubmit = false;
-		  }
-		  if( n.expVolumeMin === 0 ) {
-			doSubmit = false;
-		  }
-		  if( n.expVolumeMax === 0 ) {
-			doSubmit = false;
-		  }
+              doSubmit = false;
+	  	    }
+		    if( n.contentCd === "" ) {
+			     doSubmit = false;
+		    }
+		    if( n.carrierId === 0 ) {
+			     doSubmit = false;
+		    }
+		    if( n.expVolumeMin === 0 ) {
+			     doSubmit = false;
+		    }
+		    if( n.expVolumeMax === 0 ) {
+			     doSubmit = false;
+		    }
         }
         return doSubmit;
-	  } )
+	   } )
 
-    if(x.destinationId === 0) {
-        doSubmit = false;
-        msg = "order destination ";
-    }
     if( ! doSubmit ) {
       msg += " must be selected!";
       alert(msg);
@@ -247,7 +242,7 @@ class OrderAdmin extends Component {
       url = SERVERROOT + "/order/insert";
     }
     // format the time
-    var at = moment(newo.actDate,"YYYY-MM-DD hh:mm:ss");
+    var at = moment(newo.actDate,"YYYY-MM-DD HH:mm:ss");
     var xt = moment(newo.expDate,"YYYY-MM-DD HH:mm:ss");
     newo.actDate = moment(at).format();
     newo.expDate = moment(xt).format();
@@ -408,9 +403,9 @@ class OrderAdmin extends Component {
 
   handleQuit(event) {
     event.preventDefault();
-    var myTimerId = null;
+    var myTimerID = null;
     if( "B" === this.state.option ) {
-      var myTimerID = setInterval(() => {this.fetchList("B")}, 60000 );
+      myTimerID = setInterval(() => {this.fetchList("B")}, 60000 );
     }
     this.fetchList(this.state.option);
     this.setState( {returnedText: null,

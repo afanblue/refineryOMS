@@ -18,7 +18,7 @@
 /* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
-import PropTypes          from 'prop-types';
+//import PropTypes          from 'prop-types';
 
 import {SERVERROOT}    from '../../Parameters.js';
 import ActiveAlarmList from './lists/ActiveAlarmList.js';
@@ -90,12 +90,12 @@ class ActiveAlarms extends Component {
         try {
           const response = await fetch(myRequest,{
                 method: 'GET',
-                headers: {'Content-Type':'application/json',
-                          'Cache-Control':'no-cache, no-store, max-age=0' }
+                headers: {'Content-Type':'application/json' }
              });
           const json = await response.json();
           var almList = [];
           json.map( function(n,x) {
+          	Log.debug("Tag: "+n.alarmTag.name+" - "+(n.acknowledged==="Y"?"ack":"active"));
             var t = new Tag( n.alarmTag.id, n.alarmTag.name, n.alarmTag.description
                            , n.alarmTag.tagTypeCode, n.alarmTag.tagTypeId, null
                            , null, null, null, null, 'Y');

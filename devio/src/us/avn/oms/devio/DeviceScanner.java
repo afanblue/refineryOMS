@@ -90,7 +90,7 @@ public class DeviceScanner extends TimerTask {
 		
 		Calendar now = Calendar.getInstance();
 		Integer sec = now.get(Calendar.MINUTE)*60+now.get(Calendar.SECOND); 
-
+		log.debug("Get all active IO devices @ "+sec);
 		Iterator<Device> idev = devs.getAllActiveDevices(sec).iterator();
 	    IODeviceFactory iodf = new IODeviceFactory();
 		while( idev.hasNext() ) {

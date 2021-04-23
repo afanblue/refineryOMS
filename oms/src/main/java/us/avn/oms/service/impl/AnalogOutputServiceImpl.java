@@ -18,17 +18,12 @@ package us.avn.oms.service.impl;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 
-import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.AnalogOutput;
-//import us.avn.oms.domain.IdName;
-import us.avn.oms.domain.ReferenceCode;
 import us.avn.oms.domain.Tag;
 import us.avn.oms.mapper.AnalogOutputMapper;
-import us.avn.oms.mapper.ConfigMapper;
 import us.avn.oms.mapper.TagMapper;
-import us.avn.oms.mapper.UnitMapper;
 import us.avn.oms.service.AnalogOutputService;
 
 public class AnalogOutputServiceImpl implements AnalogOutputService {

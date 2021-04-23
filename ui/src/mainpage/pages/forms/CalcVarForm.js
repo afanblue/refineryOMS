@@ -79,7 +79,7 @@ class CalcVarForm extends Component {
       option.name = name;
       cv.inputTagIds.push(id);
       cv.inputTags.push(option);
-      inpTagList = inpTagList.filter(n => n.id !== id);
+//      inpTagList = inpTagList.filter(n => n.id !== id);
       this.props.requestRender();
     }
   }

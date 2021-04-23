@@ -124,7 +124,7 @@ public class WsCSV extends WeatherStation {
 								ZonedDateTime d = ZonedDateTime.of(ld, ZoneId.of(tz));
 								Instant id = d.toInstant();
 
-								cc.put(conditionNames[i], new Double(id.getEpochSecond()) );
+								cc.put(conditionNames[i], Double.valueOf(id.getEpochSecond()) );
 							}
 						}
 					}
@@ -152,7 +152,7 @@ public class WsCSV extends WeatherStation {
 	protected Integer newInt( String s ) {
 		Integer ni = -1;
 		try {
-			ni = new Integer(s);
+			ni = Integer.valueOf(s);
 		} catch( Exception e ) {
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
@@ -172,7 +172,7 @@ public class WsCSV extends WeatherStation {
 	protected Double newDouble( String s ) {
 		Double d = -1D;
 		try {
-			d = new Double(s);
+			d = Double.valueOf(s);
 		} catch( Exception e ) {
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));

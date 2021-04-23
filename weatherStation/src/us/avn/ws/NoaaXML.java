@@ -124,9 +124,9 @@ public class NoaaXML extends WeatherStation {
 					ZonedDateTime d = ZonedDateTime.parse(seVal, sdf );
 					Instant id = d.toInstant();
 					log.debug("Observation time - ZDT: "+d.toString()+", Instant: "+id.toString());
-					eVal = new Double(id.getEpochSecond());
+					eVal = Double.valueOf(id.getEpochSecond());
 				} else {
-					eVal = new Double(seVal);
+					eVal = Double.valueOf(seVal);
 				}
 				cc.put(conditionNames[i], eVal);
 			}

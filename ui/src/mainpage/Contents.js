@@ -17,7 +17,7 @@
  ***********************************************************************/
 
 import React, {Component} from 'react';
-import Log                from './requests/Log.js';
+//import Log                from './requests/Log.js';
 //import logo from './logo.svg';
 
 import ActiveAlarms       from './pages/ActiveAlarms.js';
@@ -58,7 +58,7 @@ import TankAdmin          from './pages/TankAdmin.js';
 import TransferAdmin      from './pages/TransferAdmin.js';
 import UserAdmin          from './pages/UserAdmin.js';
 //require('es6-promise').polyfill();
-require('isomorphic-fetch');
+//require('isomorphic-fetch');
 
 
 

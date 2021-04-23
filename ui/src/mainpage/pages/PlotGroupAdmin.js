@@ -112,6 +112,7 @@ class PlotGroupAdmin extends Component {
 
   handleUpdate(event) {
     event.preventDefault();
+    const clsMthd = "PlotGroupAdmin.handleUpdate";
     const id = this.state.plotGroup.id;
     let method = "PUT";
     let url = SERVERROOT + "/plotGroup/update";

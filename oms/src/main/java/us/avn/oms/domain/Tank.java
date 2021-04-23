@@ -36,6 +36,9 @@ public class Tank extends OMSObject implements Serializable {
 	public static final String ASPHALT = "A";
 	public static final String STILL_GAS = "SG";
 	
+	public static final String SOURCE = "S";
+	public static final String DESTINATION = "D";
+	
 	private Long id;
 	private Tag  tag;
 	private Double api;

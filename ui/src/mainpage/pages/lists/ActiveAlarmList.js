@@ -34,9 +34,9 @@ class ActiveAlarmList extends Component {
 
 
   render() {
-    var almList = this.state.alarmList;
+    var almList = this.props.alarmList;
     let handleSelect  = this.props.handleSelect;
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
     return (
       <div className="oms-tabs">
         <h2><div>

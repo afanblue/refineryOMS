@@ -51,7 +51,6 @@ public class Simulator extends IODevice {
 	private Double currentTemp;
 
 	public Simulator() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Simulator(Device d, AddressService adrs
@@ -86,7 +85,8 @@ public class Simulator extends IODevice {
 	 * Get the values for all of the analog inputs.  For the simulation, the changes
 	 * due to transfers are first calculated, then the changes for most of the other
 	 * analog values.  The changes due to transfers are first calculated and a collection
-	 * of endpoint tag IDs is returned.  The  
+	 * of endpoint tag IDs is returned.  The address used (iaddr1) contains the tag ID
+	 * for the source 
 	 * @param sec the current second, used to determine the tags to "scan". 
 	 */
 	@Override
@@ -270,8 +270,8 @@ public class Simulator extends IODevice {
 		RawData x = new RawData();
 		x.setId(adr.getId());
 		ZonedDateTime zdt = ZonedDateTime.ofInstant(cst, ZoneId.systemDefault());
-		Double phi = 2D * Math.PI * ( (new Double(adr.getIaddr3())) + (new Double(zdt.get(ChronoField.MINUTE_OF_DAY))) )
-				     / (new Double(adr.getIaddr2()) ) ;
+		Double phi = 2D * Math.PI * ( (Double.valueOf(adr.getIaddr3())) + (Double.valueOf(zdt.get(ChronoField.MINUTE_OF_DAY))) )
+				     / (Double.valueOf(adr.getIaddr2()) ) ;
 		log.debug("Experimental value: "+adr.getId()+" - "+phi);
 		x.setFloatValue(Math.sin(phi));
 		x.setScanTime(cst);
@@ -283,6 +283,7 @@ public class Simulator extends IODevice {
 	 * Check the active transfers to be able to set the changes in the 
 	 * analog values for the tank levels.  No changes are made to the transfer
 	 * @param cst current scan time
+	 * @param sec the current second (from gatAnalogInput, passed to decrementSource and incrementDestination)
 	 * @return list of IDs of all source and destination tags
 	 */
 	private Vector<Long> checkTransfers( Instant cst, Integer sec ) {
@@ -292,7 +293,7 @@ public class Simulator extends IODevice {
 			Transfer x = ix.next();
 			log.debug("checkTransfers: Transfer "+x.toString());
 			Double delta = specifyVolumeChange( x );
-			log.debug("Transfer "+x.getName()+"/"+x.getId()+" - Change: "+delta);
+			log.debug("checkTransfers: Transfer "+x.getName()+"/"+x.getId()+" - Change: "+delta);
 			Long srcId = decrementSource( x.getSourceId(), delta, sec, cst );
 			if( null != srcId ) { endPointIDs.add(srcId); }
 			Long destId = incrementDestination( x.getDestinationId(), delta, sec, cst );
@@ -405,7 +406,7 @@ public class Simulator extends IODevice {
 				String fString = (String)configuration.get(code);
 				fString = (fString==null?"0":fString);
 				log.debug("Fraction: "+destTk.getContentTypeCode()+" = "+fString);
-				Double f = new Double( fString );
+				Double f = Double.valueOf( fString );
 				delta = Transfer.FAST * f / 100D;
 			}
 			break;

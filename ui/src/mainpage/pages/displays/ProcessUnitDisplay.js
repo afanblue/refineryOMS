@@ -21,8 +21,8 @@ import React, {Component} from 'react';
 import PropTypes          from 'prop-types';
 import moment             from 'moment';
 
-import {AIValue}  from '../objects/AIValue.js';
-import {IL3}      from '../objects/ListObjects.js';
+//import {AIValue}  from '../objects/AIValue.js';
+//import {IL3}      from '../objects/ListObjects.js';
 
 
 
@@ -57,8 +57,8 @@ class ProcessUnitDisplay extends Component {
   render () {
     let itemSelect = this.state.itemSelect;
     let it = this.state.items;
-    let puColumns = [];
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+//    let puColumns = [];
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
     return(
       <div>
       <h2>
@@ -82,6 +82,10 @@ class ProcessUnitDisplay extends Component {
               <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
               Value
             </td>
+            <td className={"oms-spacing-90"}>
+              <img src="./images/spacer.png" alt="" height="1px" width="5px"/>
+              Scan Time
+            </td>
           </tr>
         </thead>
         <tbody className={"scrollContent"}>
@@ -104,6 +108,9 @@ class ProcessUnitDisplay extends Component {
                   </td>
                   <td className={"oms-spacing-90"}>
                     <div style={{"color":zx1c}}>{zx1.valueText}</div>
+                  </td>
+                  <td className={"oms-spacing-90"}>
+                    <div style={{"color":zx1c}}>{zx1.scanTime}</div>
                   </td>
                 </tr>
               )

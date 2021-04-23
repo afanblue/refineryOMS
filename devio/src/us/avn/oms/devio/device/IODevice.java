@@ -61,7 +61,6 @@ public abstract class IODevice {
 	protected TransferService tfs;
 	
 	public IODevice() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public IODevice( Device d, AddressService adrs, AnalogInputService ais

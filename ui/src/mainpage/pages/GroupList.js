@@ -106,7 +106,7 @@ class GroupList extends Component {
     let menuSelect = this.menuSelect;
     let data = this.state.returnedText;
 //    let puColumns = [];
-	if( data.length != 0 ) {
+	if( data.length !== 0 ) {
       if( data[0].id === 0) {
         data.shift(1);
       }

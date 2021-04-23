@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.AnalogInput;
-import us.avn.oms.domain.Field;
+//import us.avn.oms.domain.Field;
 import us.avn.oms.domain.History;
 import us.avn.oms.domain.HistoryData;
 import us.avn.oms.domain.HistoryRequest;
@@ -49,7 +49,7 @@ public class AnalogInputRestController {
 	
     /* Get actual class name to be printed on */
     private Logger log = LogManager.getLogger(this.getClass().getName());
-    private Long MAXPLOTIDS = 4L;
+//    private Long MAXPLOTIDS = 4L;
     
 	@Autowired 
 	AnalogInputService aiService;

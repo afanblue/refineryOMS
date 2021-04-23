@@ -18,7 +18,7 @@ package us.avn.oms.service.impl;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.Alarm;
 import us.avn.oms.domain.AlarmMessage;

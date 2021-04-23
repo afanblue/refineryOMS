@@ -170,7 +170,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public void updateRelationship( RelTagTag rtt ) {
-		if( (new Long(0L)).equals(rtt.getId()) ) {
+		if( (Long.valueOf(0L)).equals(rtt.getId()) ) {
 			tagMapper.insertRelationship(rtt);
 		} else {
 			tagMapper.updateRelationship(rtt);
@@ -186,7 +186,7 @@ public class TagServiceImpl implements TagService {
 	
 	@Override
 	public Long insertRelationship( RelTagTag rtt ) {
-		if( (new Long(0L)).equals(rtt.getId()) ) {
+		if( (Long.valueOf(0L)).equals(rtt.getId()) ) {
 			tagMapper.insertRelationship(rtt);
 			return 1L;
 		}

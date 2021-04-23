@@ -17,7 +17,7 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
+//import java.util.Collection;
 
 /*
  * AlarmMessage: id, obj_id, abbr, message

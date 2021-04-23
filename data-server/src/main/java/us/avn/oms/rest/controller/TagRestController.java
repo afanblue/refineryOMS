@@ -171,7 +171,7 @@ public class TagRestController {
 	
 	private Long getChildTagId( Long id, String code ) {
 		Iterator<Long> il = getChildTagIdList(id, code ).iterator();
-		Long l = new Long(0L);
+		Long l = Long.valueOf(0L);
 		if( il.hasNext() ) {
 			l = il.next();
 		}

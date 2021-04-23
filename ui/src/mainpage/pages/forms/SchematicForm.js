@@ -272,16 +272,16 @@ class SchematicForm extends Component {
                                                 value={tx} max={mx} zero={zero}  />
                               case "PL":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"PL"} />
+                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"left"} />
                               case "PR":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"PR"} />
+                                                value={tx} max={mx} zero={zero} fill={"green"} orient={"right"} />
                               case "PT":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={tx} max={mx} zero={zero} fill={"green"}  orient={"PT"}/>
+                                                value={tx} max={mx} zero={zero} fill={"green"}  orient={"top"}/>
                               case "PB":
                                 return <ScmPump key={z} x={x} y={y} width={width} height={height}
-                                                value={tx} max={mx} zero={zero} fill={"green"}  orient={"PB"}/>
+                                                value={tx} max={mx} zero={zero} fill={"green"}  orient={"bottom"}/>
                               case "PV":
                                 return <ScmProcessValue key={z} x={x} y={y} width={width} height={height} text={tx}
                                                 strokeWidth={1} fontSize={14}/>

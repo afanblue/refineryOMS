@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="ERROR">
     <Properties>
-        <Property name="filename">${env:OMS_LOGS}/devio.log</Property>
+        <Property name="filename">../logs/devio</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
         <RollingFile name="RollingFile">
-            <FileName>${filename}</FileName>
-            <FilePattern>${env:OMS_LOGS}/devio-%d{yyyy-MM-dd-HH-mm}.log.gz</FilePattern>
+            <FileName>${filename}.log</FileName>
+            <FilePattern>${filename}-%d{yyyy-MM-dd-HH-mm}.log.gz</FilePattern>
             <PatternLayout>
-                <Pattern>%d{yyyy-MMM-dd HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
             </PatternLayout>
             <Policies>
                 <CronTriggeringPolicy schedule="59 23 0 * * ?" evaluateOnStartup="true" />
@@ -22,7 +22,6 @@
     </Appenders>
     <Loggers>
         <Root level="ERROR">
-            <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile"/>
         </Root>
         <Logger name="com.mysql" level="DEBUG" additivity="false">

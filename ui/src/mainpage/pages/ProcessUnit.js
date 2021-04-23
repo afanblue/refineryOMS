@@ -86,7 +86,7 @@ class ProcessUnit extends Component {
   }
 
   componentDidUpdate( prevProps, prevState ) {
-	if( this.state.option != prevState.option ) {
+	if( this.state.option !== prevState.option ) {
       this.fetchList(this.state.option);
     }
   }

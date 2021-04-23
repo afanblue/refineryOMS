@@ -51,21 +51,16 @@
      where id= #{id}
   </update>
   
-  <insert id="insertConfigurationItem" parameterType="Crontab">
-    insert config
+  <insert id="insertCrontab" parameterType="Crontab" useGeneratedKeys="true"
+          keyProperty="id" keyColumn="ID">
+    insert crontab
          ( name, moh, hod, dom, moy, dow
          , hour_duration, min_duration) 
     values( #{name}, #{moh}, #{hod}, #{dom}, #{moy}, #{dow}
           , #{hourDuration}, #{minDuration})
-    on duplicate key 
-    update name = #{name}
-         , moh = #{moh}
-         , hod = #{hod}
-         , dom = #{dom}
-         , moy = #{moy}
-         , dow = #{dow}
-         , hour_duration = #{hourDuration}
-         , min_duration = #{minDuration}
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
   </insert>
   
 </mapper>

@@ -172,22 +172,31 @@ class TransferAdmin extends Component {
 
   validateForm( x ) {
     let doSubmit = true;
-    let msg = "The following fields ";
+    let msg = "The following fields";
+    let delim = " ";
     if( x.statusId === -1 ) {
         doSubmit = false;
-        msg += "transfer status, ";
+        msg += "transfer status";
+        delim = ", ";
     }
     if( (x.transferTypeId === -1) ) {
         doSubmit = false;
-        msg = "transfer type, ";
+        msg += delim + "transfer type";
+        delim = ", ";
     }
     if(x.sourceId === 0) {
         doSubmit = false;
-        msg = "transfer source, ";
+        msg += delim + "transfer source";
+        delim = ", ";
     }
     if(x.destinationId === 0) {
         doSubmit = false;
-        msg = "transfer destination ";
+        msg += delim + "transfer destination";
+        delim = ", ";
+    }
+    if( x.delta === null ) {
+    	  doSubmit = false;
+    	  msg = delim + "repeat interval";
     }
     if( ! doSubmit ) {
       msg += " must be selected!";
@@ -207,7 +216,7 @@ class TransferAdmin extends Component {
       url = SERVERROOT + "/transfer/insert";
     }
     // format the time
-    var fmt = "YYYY-MM-DD hh:mm:ss";
+    var fmt = "YYYY-MM-DD HH:mm:ss";
     var xet = moment(newt.expEndTime,fmt);
     var xst = moment(newt.expStartTime,fmt);
     newt.expEndTime = moment(xet).format();
@@ -318,7 +327,7 @@ class TransferAdmin extends Component {
         myRequest = SERVERROOT + "/transfer/all/X" ;
         break;
       default:
-        type = "A";
+//        type = "A";
         myRequest = SERVERROOT + "/transfer/active" ;
         break;
     }
@@ -344,14 +353,16 @@ class TransferAdmin extends Component {
 
   handleQuit(event) {
     event.preventDefault();
+    var timerID = null;
     if( "A" === this.state.type ) {
-      var myTimerID = setInterval(() => {this.fetchList("A")}, 60000 );
+      timerID = setInterval(() => {this.fetchList("A")}, 60000 );
     }
     this.fetchList(this.state.type);
     this.setState( {returnedText: null,
                     updateData: true,
                     updateDisplay:true,
                     transfer: null,
+                    myTimeID: timerID,
                     stage: "begin" } );
   }
 

@@ -17,7 +17,7 @@
 package us.avn.oms.rest.controller;
 
 import java.util.Collection;
-import java.util.Vector;
+//import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,13 +29,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import us.avn.oms.domain.AIValue;
+//import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.AnalogOutput;
-import us.avn.oms.domain.Field;
-import us.avn.oms.domain.History;
-import us.avn.oms.domain.HistoryData;
-import us.avn.oms.domain.HistoryRequest;
-import us.avn.oms.domain.PlotGroup;
+//import us.avn.oms.domain.Field;
+//import us.avn.oms.domain.History;
+//import us.avn.oms.domain.HistoryData;
+//import us.avn.oms.domain.HistoryRequest;
+//import us.avn.oms.domain.PlotGroup;
 import us.avn.oms.service.AnalogOutputService;
 import us.avn.oms.service.HistoryService;
 import us.avn.oms.service.PlotGroupService;
@@ -48,7 +48,7 @@ public class AnalogOutputRestController {
 	
     /* Get actual class name to be printed on */
     private Logger log = LogManager.getLogger(this.getClass().getName());
-    private Long MAXPLOTIDS = 4L;
+//    private Long MAXPLOTIDS = 4L;
     
 	@Autowired 
 	AnalogOutputService aoService;

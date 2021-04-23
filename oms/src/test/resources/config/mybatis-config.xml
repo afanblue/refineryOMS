@@ -59,13 +59,19 @@
         <typeAlias alias="Watchdog"       type="us.avn.oms.domain.Watchdog" />
      </typeAliases>
 
-<!-- -->      
+<!-- MariaDB
+                <property name="driver"   value="org.mariadb.jdbc.Driver"/>
+                <property name="url"      value="jdbc:mariadb://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes"/> 
+or MySQL
+                <property name="driver"   value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"      value="jdbc:mysql://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes
+-->      
      <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-                <property name="driver"   value="org.mariadb.jdbc.Driver"/>
-                <property name="url"      value="jdbc:mariadb://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes"/> 
+                <property name="driver"   value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"      value="jdbc:mysql://localhost:3306/oms?autoReconnect=true&amp;useUnicode=yes&amp;useSSL=FALSE&amp;allowPublicKeyRetrieval=TRUE"/>
                 <property name="username" value="oms"/> 
                 <property name="password" value="omsx"/>
             </dataSource>

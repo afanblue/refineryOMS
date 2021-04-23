@@ -86,7 +86,7 @@ class Field extends Component {
   }
 
   componentDidUpdate( prevProps, prevState ) {
-	if( this.state.fieldName != prevState.fieldName ) {
+	if( this.state.fieldName !== prevState.fieldName ) {
       this.fetchSite(this.state.fieldName);
     }
   }

@@ -19,8 +19,8 @@
 
 import React, { Component } from 'react';
 
-import {Category}   from '../mainpage/pages/objects/Category.js';
-import {Menu}       from '../mainpage/pages/objects/Category.js';
+//import {Category}   from '../mainpage/pages/objects/Category.js';
+//import {Menu}       from '../mainpage/pages/objects/Category.js';
 
 
 class MenuList extends Component {
@@ -31,8 +31,9 @@ class MenuList extends Component {
 
   sidebarMenus( classList, selected, option, menuSelect ) {
 	let menuList = []
+	let menus = []
 	classList.map(function(c,x){ if( selected.localeCompare(c.text)===0 ) { return menuList.push(c.menus); } else return null; } );
-	menus = menuList[0];
+	 menus = menuList[0];
     return (
       <div className="oms-left-menu">
         <table>
@@ -44,7 +45,7 @@ class MenuList extends Component {
             </tr>
             {menus.map(
             function(n,x){
-              let t=n.category.replace(" ","");
+//              let t=n.category.replace(" ","");
               let z=n.menuname;
               return(
                 <tr key={x}>
@@ -72,12 +73,12 @@ class MenuList extends Component {
   }
 
   render() {
-    var menuType = this.props.menuType;
+//    var menuType = this.props.menuType;
     var classList = this.props.classifications;
     var selected = this.props.selected;
     var option   = this.props.option;
     var menuSelect = this.props.handleMenuSelect;
-    if( "sidebar" == this.props.menuType ) {
+    if( "sidebar" === this.props.menuType ) {
       return this.sidebarMenus( classList, selected, option, menuSelect );
     } else {
       return this.dropdownMenus( );

@@ -90,7 +90,7 @@ class Field extends Component {
     var sX = this.scaleX;
     var sY = this.scaleY;
     var tType = this.state.tankType;
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
     return (
       <div>
       <table><tbody><tr><td>{now}</td></tr></tbody></table>

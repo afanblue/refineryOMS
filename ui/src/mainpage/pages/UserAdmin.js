@@ -148,7 +148,7 @@ class UserAdmin extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    let np = name.split(".");
+//    let np = name.split(".");
     let unew = Object.assign({},this.state.user);
     if( "roleId" === name ) {
       unew[name] = parseInt(value,10);

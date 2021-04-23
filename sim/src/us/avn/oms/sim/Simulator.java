@@ -56,7 +56,7 @@ public class Simulator {
         if( 0 < args.length ) {
         	log.debug("First arg: "+args[0]);
         	try {
-        		psed = new Integer(args[0]);
+        		psed = Integer.valueOf(args[0]);
         		if( 0 == psed ) { psed = pseDelayInterval; }
         	} catch( Exception e ) {
         		psed = pseDelayInterval;

@@ -2,7 +2,7 @@ status=error
 dest = err
 name = devio
  
-property.fileName = ${env:OMS_LOGS}/devio
+property.fileName = ../logs/devio
  
 filter.threshold.type = ThresholdFilter
 filter.threshold.level = debug

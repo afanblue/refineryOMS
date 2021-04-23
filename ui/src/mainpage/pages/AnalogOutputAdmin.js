@@ -171,9 +171,9 @@ class AnalogOutputAdmin extends Component {
         try {
           const response = await fetch(url, {method:method, headers:{'Content-Type':'application/json'}, body: b});
           if( response.ok ) {
-            alert("AO update/insert complete for "+ai.tag.name)
+            alert("AO update/insert complete for "+ao.tag.name)
           } else {
-            alert("AO update/insert failed for "+ai.tag.name+":  " + response.status);
+            alert("AO update/insert failed for "+ao.tag.name+":  " + response.status);
           }
         } catch( error ) {
           alert("Problem "+(id===0?"inserting":"updating")+" analog output "

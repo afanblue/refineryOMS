@@ -63,10 +63,10 @@ class OrderForm extends Component {
     let defVal     = x.expDate;
     var fc       = this.props.fieldChange;
     var purchaseSelect = <select id="purchase" name="purchase" value={x.purchase} onChange={fc} ><option value={""}>---</option><option value={"P"}>Purchase</option><option value={"S"}>Sale</option></select>
-    var statusSelect = <select id="active" name="active" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>
+//    var statusSelect = <select id="active" name="active" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>
     if( x.id !== 0 ) {
       purchaseSelect = <select id="purchase" name="purchase" readOnly="READONLY" value={x.purchase} onChange={fc} ><option value={"P"}>Purchase</option><option value={"S"}>Sale</option></select>
-      statusSelect = <select id="active" name="active" readOnly="READONLY" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>
+//      statusSelect = <select id="active" name="active" readOnly="READONLY" value={x.active} onChange={fc} ><option value={"A"}>Active</option><option value={"C"}>Complete</option><option value={"P"}>Pending</option></select>
     }
     return (
       <table width="100%">

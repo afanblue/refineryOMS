@@ -18,10 +18,10 @@ package us.avn.oms.service;
 
 import java.util.Collection;
 
-import us.avn.oms.domain.AIValue;
+//import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.CalcOperand;
 import us.avn.oms.domain.CalcVariable;
-import us.avn.oms.domain.Field;
+//import us.avn.oms.domain.Field;
 import us.avn.oms.domain.IdName;
 
 public interface CalcVariableService {

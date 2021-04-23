@@ -141,7 +141,7 @@ public class NoaaApi extends WeatherStation {
 						ZonedDateTime d = ZonedDateTime.parse(value, dtf );
 						Instant id = d.toInstant();
 						log.debug("Observation time - ZDT: "+d.toString()+", Instant: "+id.toString());
-						valnum = new Double(id.getEpochSecond());
+						valnum = Double.valueOf(id.getEpochSecond());
 						log.debug("VALUE_STRING: "+saveKey+": "+valnum);
 						cc.put(saveKey, valnum);
 						saveKey = null;

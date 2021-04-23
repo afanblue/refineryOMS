@@ -18,8 +18,8 @@
 /* eslint-env node, browser, es6 */
 
 import React, {Component} from 'react';
-import PropTypes          from 'prop-types';
-import axios              from 'axios';
+//import PropTypes          from 'prop-types';
+//import axios              from 'axios';
 
 import {SERVERROOT}    from '../../Parameters.js';
 import Log             from '../requests/Log.js';

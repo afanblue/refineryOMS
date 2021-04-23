@@ -73,8 +73,8 @@ class SchematicDisplay extends Component {
     var scrnHt = rat * IMAGEHEIGHT;
     var scrnWid = rat * IMAGEWIDTH;
     Log.debug("schmDisp: ratio: "+rat+" - "+ht+"/"+wid);
-    var n = new Date();
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+//    var n = new Date();
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
     return(
       <div>
       <h2>

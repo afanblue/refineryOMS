@@ -4,14 +4,14 @@ cd $OMS_HOME/db
 pushd .
 
 # get the tables
-mysqldump -d -uoms -pomsx oms > oms.ddl
+mysqldump -d -u oms -p $1 oms > oms.ddl
 # and the views
-mysql -uoms -pomsx -Doms -E --execute="source extractViews.sql" >views.ddx
+mysql -uoms -p $1 -Doms -E --execute="source extractViews.sql" >views.ddx
 rm views.ddl
 php ./parseViews.php views.ddx views.ddl
 
 # get the data
 cd $OMS_HOME/db/data/DelawareCity
 
-php ../../ExtractDB.php
+php ../../ExtractDB.php $1
 popd

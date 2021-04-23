@@ -3,8 +3,8 @@ package us.avn.oms.service;
 import java.util.Collection;
 
 import us.avn.oms.domain.Address;
-import us.avn.oms.domain.Device;
-import us.avn.oms.domain.IdName;
+//import us.avn.oms.domain.Device;
+//import us.avn.oms.domain.IdName;
 
 public interface AddressService {
 

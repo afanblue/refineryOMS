@@ -75,13 +75,13 @@ class Schematic extends Component {
 /* */
   reqOut( id, name, val ) {
     const clsMthd = "Schematic.reqOut";
-    const myRequest=SERVERROOT + "/tag/output/" + id + "/" + val;
+    const myRequest = SERVERROOT + "/tag/output/" + id + "/" + val;
     const request = async () => {
       try {
         await fetch(myRequest, {method:"PUT", headers:{'Content-Type':'application/json'} });
         alert("Output complete on "+name+", id = "+id)
       } catch( error ) {
-        alert("Problem writing "+" id "+id+"\n"+error);
+        alert("Problem writing id "+id+"\n"+error);
         Log.error("Error - " + error,clsMthd);
       }
     }
@@ -121,9 +121,9 @@ class Schematic extends Component {
 
   fetchList(opt) {
     const clsMthd = "Schematic.fetchList";
-    var cntnts = document.getElementById('contents');
-    var width = cntnts.offsetWidth;
-    var height = cntnts.offsetHeight;
+//   var cntnts = document.getElementById('contents');
+//    var width = cntnts.offsetWidth;
+//    var height = cntnts.offsetHeight;
     const myRequest = SERVERROOT + "/schematic/" + opt;
     if( myRequest !== null ) {
       const request = async () => {

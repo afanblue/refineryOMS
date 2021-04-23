@@ -19,7 +19,7 @@
 import React, {Component} from 'react';
 import {PlotDetails} from '../objects/PlotGroup.js';
 
-import { VictoryAxis, VictoryChart, VictoryLabel, VictoryLine, VictoryTheme } from 'victory';
+import { VictoryAxis, VictoryLabel, VictoryLine } from 'victory';
 import moment from 'moment';
 
 
@@ -207,11 +207,11 @@ class GroupPlot extends Component {
 
   render () {
     let styles = this.getStyles();
-    let d0 = ((this.state.d0!==null)&&(this.state.d0!==undefined))?this.state.d0:null;
-    let d1 = ((this.state.d1!==null)&&(this.state.d1!==undefined))?this.state.d1:null;
-    let d2 = ((this.state.d2!==null)&&(this.state.d2!==undefined))?this.state.d2:null;
-    let d3 = ((this.state.d3!==null)&&(this.state.d3!==undefined))?this.state.d3:null;
-    let pd = this.state.plotDetails;
+    let d0 = ((this.props.d0!==null)&&(this.props.d0!==undefined))?this.props.d0:null;
+    let d1 = ((this.props.d1!==null)&&(this.props.d1!==undefined))?this.props.d1:null;
+    let d2 = ((this.props.d2!==null)&&(this.props.d2!==undefined))?this.props.d2:null;
+    let d3 = ((this.props.d3!==null)&&(this.props.d3!==undefined))?this.props.d3:null;
+    let pd = this.props.plotDetails;
     if( (pd===null) || (pd===undefined) ) { pd = new PlotDetails(); }
     let fc = this.props.fieldChange;
 
@@ -306,8 +306,8 @@ class GroupPlot extends Component {
 
     const tickValues = this.getTickValues(minTime, maxTime);
 
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
-    var gstyle = { width:500, height:3};
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
+//    var gstyle = { width:500, height:3};
     return(
       <div>
       <form>

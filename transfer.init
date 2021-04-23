@@ -1,28 +1,38 @@
 #!/bin/sh
 #
-# /etc/init.d/transfer -- -- startup script for the OMS transfer
+# /etc/init.d/oms -- -- startup script for the OMS daemons
 # modified from /etc/init.d/tomcat7 (see that for credits)
 #
 #
 ### BEGIN INIT INFO
-# Provides:          oms/transfer
+# Provides:          oms
 # Required-Start:    $local_fs $remote_fs $network
 # Required-Stop:     $local_fs $remote_fs $network
 # Should-Start:      $named
 # Should-Stop:       $named
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start OMS Transfer.
-# Description:       Start the OMS transfer service.
+# Short-Description: Start various OMS daemons
+# Description:       Start the OMS pmc service.
+#
+# Arg 1: start|stop|restart|status|try-restart
+# Arg 2: OMS daemon name devio|order|pmc|sim|transfer|watchdog
+# Arg 3: OMS daemon home directory  devio|order|scada|sim|transfer|watchdog
+# Arg 4: run shell script runDevIO|runOrder|runPmc|runSimulate|runTransfer|runWatchdog
+#
+# Args 2-4 are all "paired", ie, "devio devio runDevIO"
+#
 ### END INIT INFO
 
 set -e
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME=transfer
-DESC="OMS transfer engine"
-DEFAULT=/etc/default/oms
-JVM_TMP=/tmp/transfer-$NAME-tmp
+HOME=transfer
+SCRIPT=runTransfer
+DESC="OMS $NAME engine"
+DEFAULT=/media/WD1TB/projects/oms/v2
+JVM_TMP=/tmp/$NAME-$NAME-tmp
 
 if [ `id -u` -ne 0 ]; then
 	echo "You need root privileges to run this script"
@@ -38,7 +48,7 @@ fi
 # and status_of_proc is working.
 . /lib/lsb/init-functions
 
-# Run transfer as this user ID and group ID
+# Run pmc as this user ID and group ID
 OMS_USER=oms
 OMS_GROUP=oms
 
@@ -62,7 +72,7 @@ find_openjdks
 # defined in $DEFAULT)
 JDK_DIRS="/usr/lib/jvm/default-java ${OPENJDKS} /usr/lib/jvm/java-6-openjdk /usr/lib/jvm/java-8-oracle"
 
-# Look for the right JVM to use
+
 for jdir in $JDK_DIRS; do
     if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
 	JAVA_HOME="$jdir"
@@ -70,9 +80,10 @@ for jdir in $JDK_DIRS; do
 done
 export JAVA_HOME
 
-# Directory where the Transfer binary distribution resides
-OMS_HOME=/usr/share/oms
-TRANSFER_HOME=$OMS_HOME/$NAME
+# Directory where the Pmc binary distribution resides
+OMS_HOME=/media/WD1TB/projects/oms/v2
+OMS_EXEC=$OMS_HOME/exec
+DAEMON_HOME=$OMS_HOME/$HOME
 
 # overwrite settings from default file
 if [ -f "$DEFAULT" ]; then
@@ -80,28 +91,29 @@ if [ -f "$DEFAULT" ]; then
 fi
 
 # Define other required variables
-TRANSFER_PID="/var/run/$NAME.pid"
-TRANSFER_SH="$OMS_HOME/runTransfer.sh"
-CLASSPATH=$TRANSFER_HOME:$TRANSFER_HOME/target/classes:$TRANSFER_HOME/libs/*
+OMS_PID="/var/run/$NAME.pid"
+OMS_SH="$OMS_HOME/$SCRIPT.sh"
+CLASSPATH=$OMS_EXEC/pmc.jar:$OMS_EXEC/libs/*
 
 
-transfer_sh() {
+oms_sh() {
 
-	# Define the command to run the transfer.sh as a daemon
+	# Define the command to run the $NAME.sh as a daemon
 	# set -a tells sh to export assigned variables to spawned shells.
-	TRANSFER_SH="set -a; \
-		TRANSFER_HOME=\"$TRANSFER_HOME\"; \
-		TRANSFER_PID=\"$TRANSFER_PID\"; \
-		cd \"$TRANSFER_HOME\"; \
-		$TRANSFER_SH $@"
+	DAEMON_SH="set -a; \
+		OMS_HOME=\"$OMS_HOME\"; \
+		OMS_EXEC=\"$OMS_EXEC\"; \
+		OMS_PID=\"$OMS_PID\"; \
+		cd \"$OMS_EXEC\"; \
+		\"$OMS_SH\" $@"
 
-	# Run the transfer.sh script as a daemon
+	# Run the $NAME.sh script as a daemon
 	set +e
-	install -o $OMS_USER -g adm -m 644 /dev/null "$TRANSFER_PID"
-	start-stop-daemon --start --background \
-		--chuid "$OMS_USER" --chdir "$OMS_HOME" \
-		--pidfile "$TRANSFER_PID" \
-		--exec /bin/bash -- -c "$TRANSFER_SH"
+	install -o $OMS_USER -g $OMS_GROUP -m 644 /dev/null "$OMS_PID"
+	log_daemon_msg "sh=$DAEMON_SH"
+	start-stop-daemon --start --background --verbose \
+		--chuid "$OMS_USER" --chdir $OMS_EXEC --pidfile "$OMS_PID" \
+		--exec /bin/bash -- -c "$DAEMON_SH"
 	status="$?"
 	set +a -e
 	return $status
@@ -115,20 +127,20 @@ case "$1" in
 	fi
 
 	log_daemon_msg "Starting $DESC" "$NAME"
-
-	log_daemon_msg "Calling test"
-	if start-stop-daemon --test --start --pidfile "$TRANSFER_PID" \
+	if start-stop-daemon --test --start --pidfile "$OMS_PID" \
 		--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
 		>/dev/null; then
 
-		log_daemon_msg "Calling transfer-sh"
-		transfer_sh start
+		oms_sh start 
 		sleep 5
-        	if start-stop-daemon --test --start --pidfile "$TRANSFER_PID" \
-				--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
+        	if start-stop-daemon --test --start --pidfile "$OMS_PID" \
+			--user $OMS_USER  \
+			--exec "$JAVA_HOME/bin/java" \
 			>/dev/null; then
-			if [ -f "$TRANSFER_PID" ]; then
-				rm -f "$TRANSFER_PID"
+			log_daemon_msg "Tested OK"
+			if [ -f "$OMS_PID" ]; then
+				log_daemon_msg "No pid file"
+				rm -f "$OMS_PID"
 			fi
 			log_end_msg 1
 		else
@@ -143,18 +155,18 @@ case "$1" in
 	log_daemon_msg "Stopping $DESC" "$NAME"
 
 	set +e
-	if [ -f "$TRANSFER_PID" ]; then 
-		start-stop-daemon --stop --pidfile "$TRANSFER_PID" \
+	if [ -f "$OMS_PID" ]; then 
+		start-stop-daemon --stop --pidfile "$OMS_PID" \
 			--user "$OMS_USER" \
 			--retry=TERM/20/KILL/5 >/dev/null
 		if [ $? -eq 1 ]; then
 			log_progress_msg "$DESC is not running but pid file exists, cleaning up"
 		elif [ $? -eq 3 ]; then
-			PID="`cat $TRANSFER_PID`"
+			PID="`cat $OMS_PID`"
 			log_failure_msg "Failed to stop $NAME (pid $PID)"
 			exit 1
 		fi
-		rm -f "$TRANSFER_PID"
+		rm -f "$OMS_PID"
 	else
 		log_progress_msg "(not running)"
 	fi
@@ -163,12 +175,12 @@ case "$1" in
 	;;
    status)
 	set +e
-	start-stop-daemon --test --start --pidfile "$TRANSFER_PID" \
+	start-stop-daemon --test --start --pidfile "$OMS_PID" \
 		--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
 		>/dev/null 2>&1
 	if [ "$?" = "0" ]; then
 
-		if [ -f "$TRANSFER_PID" ]; then
+		if [ -f "$OMS_PID" ]; then
 		    log_success_msg "$DESC is not running, but pid file exists."
 			exit 1
 		else
@@ -176,19 +188,19 @@ case "$1" in
 			exit 3
 		fi
 	else
-		log_success_msg "$DESC is running with pid `cat $TRANSFER_PID`"
+		log_success_msg "$DESC is running with pid `cat $OMS_PID`"
 	fi
 	set -e
         ;;
   restart)
-	if [ -f "$TRANSFER_PID" ]; then
+	if [ -f "$OMS_PID" ]; then
 		$0 stop
 		sleep 1
 	fi
 	$0 start
 	;;
   try-restart)
-        if start-stop-daemon --test --start --pidfile "$TRANSFER_PID" \
+        if start-stop-daemon --test --start --pidfile "$OMS_PID" \
 		--user $OMS_USER --exec "$JAVA_HOME/bin/java" \
 		>/dev/null; then
 		$0 start

@@ -485,7 +485,7 @@ public class PseudoRandomEventSimulator extends TimerTask  {
 			Iterator<Customer> icc = cc.iterator();
 			c = icc.next();
 		} else if ( 1 < noCusts ) {
-			int idx = new Integer((new Double(Math.random())).intValue() *100) % noCusts;
+			int idx = Integer.valueOf((Double.valueOf(Math.random())).intValue() *100) % noCusts;
 			c = (Customer) cc.toArray()[idx];
 		}
 		return c;

@@ -22,13 +22,13 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Year;
+//import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -128,11 +128,11 @@ public class TransferUpdater extends TimerTask {
     	case 1:
     		newTransferHour = null;
     		newTransferMinute = null;
-    		newTransferInterval = new Integer(args[0]);
+    		newTransferInterval = Integer.valueOf(args[0]);
     		break;
     	case 2:
-    		this.newTransferHour = new Integer(args[0]);
-    		this.newTransferMinute = new Integer(args[1]);
+    		this.newTransferHour = Integer.valueOf(args[0]);
+    		this.newTransferMinute = Integer.valueOf(args[1]);
     		this.newTransferInterval = null;
     	}
     }
@@ -216,17 +216,17 @@ public class TransferUpdater extends TimerTask {
 	 * the end point is changed if the tank is too low (source) or too high (destination)
 	 */
 	private void updateTransfers() {
-		log.debug("updateTransfers");
+		log.debug("updateTransfers...start");
 		Iterator<Transfer> ixat = xfrs.getActiveTransfers().iterator();
 		while( ixat.hasNext() ) {
 			Transfer xfr = ixat.next();
-			log.debug("updateTransfer "+xfr.getId()+"/"+xfr.getName());
 			Double delta = computeSourceChange(xfr.getSourceId());
 			if( null == delta ) {
 				delta = computeDestinationChange(xfr.getDestinationId());
 			}
 			Double newVolume = xfr.getActVolume()+(delta==null?0D:delta);
 			xfr.setActVolume(newVolume);
+			log.debug("updateTransfer "+xfr.getId()+"/"+xfr.getName()+" "+newVolume);
 			incrementOrderItem(xfr.getId(),delta);
 			checkEndPointTanks(xfr);
 			xfrs.updateTransfer(xfr);
@@ -238,12 +238,12 @@ public class TransferUpdater extends TimerTask {
 	 * has elapsed or volume has been transferred
 	 */
 	private void completeTransfers( ) {
-		log.debug("completeTransfers");
+		log.debug("completeTransfers...start");
 		Iterator<Transfer> ixet = xfrs.getEndingTransfers().iterator();
 		while( ixet.hasNext() ) {
 			Transfer x = ixet.next();
 			log.debug("completeTransfers: check active transfer "+x.getId()+"/"+x.getName());
-			Value v = new Value(x.getId(), "D", 0D);
+			Value v = new Value(x.getId(), Item.DONE, 0D);
 			if( x.getEndDiff() <= 0 ) {
 				log.debug("completeTransfer (time) "+x.getName() + "/" + x.getId());
 				changeTransferState(x,"OFF");
@@ -263,7 +263,7 @@ public class TransferUpdater extends TimerTask {
 	 * is earlier than the current time
 	 */
 	private void startTransfers() {
-		log.debug("startTransfers");
+		log.debug("startTransfers...start");
 		Iterator<Transfer> ixst = xfrs.getStartingTransfers().iterator();
 		while( ixst.hasNext() ) {
 			Transfer x = ixst.next();
@@ -286,7 +286,7 @@ public class TransferUpdater extends TimerTask {
 	 * @param ldt local time, used to check for time to create the scheduled transfers
 	 */
 	private void createScheduledTransfers( LocalDateTime ldt ) {
-
+		log.debug("createScheduledTransfer...start");
 		Iterator<Transfer> ixpt = xfrs.getPendingTemplates().iterator();
 		while( ixpt.hasNext() ) {
 			Transfer x = ixpt.next();
@@ -310,7 +310,7 @@ public class TransferUpdater extends TimerTask {
 	 *        </ol>
 	 */
 	private void createTransfersFromOrders() {
-		log.debug("createTransfersFromOrders");
+		log.debug("createTransfersFromOrders...start");
 		Iterator<Order> iord = ords.getPendingOrders().iterator();
 		while( iord.hasNext() ) {
 			Order order = iord.next();
@@ -402,8 +402,9 @@ public class TransferUpdater extends TimerTask {
 			/* expected start and end times */
 			newXfr.setExpStartTime(Timestamp.from(expStart));
 			Crontab c = crns.getCrontabRecord(xfr.getCrontabId());
-			Integer minuteDelay = 60 * c.getHourDuration() + c.getMinDuration();
-			Instant expEnd = expStart.plus(minuteDelay, ChronoUnit.MINUTES);
+			/* how long is this supposed to last? */
+			Integer minutesDuration = 60 * c.getHourDuration() + c.getMinDuration();
+			Instant expEnd = expStart.plus(minutesDuration, ChronoUnit.MINUTES);
 			newXfr.setExpEndTime(Timestamp.from(expEnd));
 			log.debug("insertNewTransfer: "+newXfr.getId()+"/"+newXfr.getName()
 			+", sourceId: "+newXfr.getSourceId()+", destId: "+newXfr.getDestinationId());
@@ -712,14 +713,14 @@ public class TransferUpdater extends TimerTask {
 		Tag src = tgs.getTag(xfr.getSourceId());
 		Tag dest = tgs.getTag(xfr.getDestinationId());
 		if( Tag.TANK.equals(src.getTagTypeCode()) ) {
-			Long newSrcId = checkTank( "S", src );
+			Long newSrcId = checkTank( Tank.SOURCE, src );
 			if( null != newSrcId ) {
 				xfr.setSourceId(newSrcId);
 //				xfrs.updateTransfer(xfr);  // shouldn't be needed
 			}
 		}
 		if( Tag.TANK.equals(dest.getTagTypeCode()) ) {
-			Long newDestId = checkTank( "D", dest );
+			Long newDestId = checkTank( Tank.DESTINATION, dest );
 			if( null != newDestId ) {
 				xfr.setDestinationId(newDestId);
 //				xfrs.updateTransfer(xfr);  // shouldn't be needed
@@ -728,17 +729,17 @@ public class TransferUpdater extends TimerTask {
 	}
 
 	private Long checkTank( String option, Tag endPoint ) {
-		log.debug("checkTank: "+option+" - "+endPoint.getMisc());
+		log.debug("checkTank: "+(option=="S"?"Source":"Destination")+" - "+endPoint.getName());
 		Tank tk = tks.getTank( endPoint.getId() );
 		AnalogInput l = ais.getAnalogInput(tk.getLevelId());
 		Long newTankId = null;
-		if( "S".equals(option) ) {
+		if( Tank.SOURCE.equals(option) ) {
 			Double almLimit = l.getLo()!=null?l.getLo():(l.getLl()!=null?l.getLl():0D);
 			if(l.getScanValue() <= almLimit ) {
 				Value v = tks.getFullestTankForContent(endPoint.getMisc());
 				newTankId = v.getId();
 			}
-		} else if( "D".equals(option) && (l.getScanValue() >= l.getHi() )) {
+		} else if( Tank.DESTINATION.equals(option) && (l.getScanValue() >= l.getHi() )) {
 			Double almLimit = l.getHi()!=null?l.getHi():(l.getHh()!=null?l.getHh():Double.MAX_VALUE);
 			if(l.getScanValue() >= almLimit ) {
 				Value v = tks.getEmptiestTankForContent(endPoint.getMisc());

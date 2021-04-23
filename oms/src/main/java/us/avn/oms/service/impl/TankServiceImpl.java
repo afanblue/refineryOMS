@@ -99,7 +99,8 @@ public class TankServiceImpl implements TankService {
 	 * @return Value object (tank ID, code, volume)
 	 */
 	public Value getEmptiestTankForContent( String t ) {
-		return tankMapper.getEmptiestTankForContent(t);
+		Collection<Value>ct = tankMapper.getEmptiestTankForContent(t);
+		return (Value)ct.toArray()[0];
 	}
 	
 	/**
@@ -112,7 +113,8 @@ public class TankServiceImpl implements TankService {
 	 */
 	@Override
 	public Value getFullestTankForContent( String t ) {
-		return tankMapper.getFullestTankForContent(t);
+		Collection<Value> ct = tankMapper.getFullestTankForContent(t);
+		return (Value)ct.toArray()[0];
 	}
 	
 	/**

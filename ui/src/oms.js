@@ -35,7 +35,7 @@ import Contents     from './mainpage/Contents.js';
 import {Category}   from './mainpage/pages/objects/Category.js';
 import {Menu}   from './mainpage/pages/objects/Category.js';
 //require('es6-promise').polyfill();
-require('isomorphic-fetch');
+//require('isomorphic-fetch');
 
 
 
@@ -68,6 +68,10 @@ function AppDisplay(props) {
 	case "sidebar" :
 	  menuWidth = "20%";
 	  contentWidth = "80%";
+	  break;
+	default:
+	  menuWidth = "3%"
+	  contentWidth = "97%";
 	  break;
   }
 
@@ -211,7 +215,6 @@ class OMS extends Component {
 //         Log.info("User validated","OMS (handleLogin)");
          var vx = new Validation( true, null, null );
          var classes = [];
-         var menuList = [];
          json.categories.map(function(n,x){
 		   var menuList = [];
 		   n.menus.map(function(m,y) {var menu = new Menu(m.text,m.category,m.menuname); return menuList.push( menu ); } );

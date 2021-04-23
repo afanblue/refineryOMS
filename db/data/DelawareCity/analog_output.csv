@@ -3,7 +3,7 @@ ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable
 tag_id,tag,id,name,tag,tag_type_code,tag_type_code
 unit_id,unit,id,name
 Data,,,
-tag_id,zero_value,max_value,hist_type_code,name
+tag_id,zero_value,max_value,hist_type_code,unit_id
 RU1CP-AO|AO,0.0,440.0,L,bbl/min
 RU1GP-AO|AO,0.0,440.0,N,bbl/min
 RU1FOP-AO|AO,0.0,440.0,N,bbl/min

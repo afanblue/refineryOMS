@@ -11,7 +11,7 @@ given in parameter 1
 '''
 import sys
 import re
-import mariadb
+import mysql
 
 # Function definition is here
 
@@ -48,11 +48,11 @@ config = {
   "user": "oms",
   "password": args[1],
   "host": "127.0.0.1",
-  "database": "oms",
-  "charset": "UTF-8"
+  "encoding": "utf8",
+  "database": "oms"
 }
 
-cnx = mariadb.connect(**config)
+cnx = mysql.connect(**config)
 crsr = cnx.cursor()
 
 

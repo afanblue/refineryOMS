@@ -63,9 +63,7 @@ export default class ScmGauge extends React.Component {
   }
 
   render() {
-	var id   = this.props.id;
-	var name = this.props.name;
-	var val  = this.props.value*1;
+    var val  = this.props.value*1;
     var ht   = this.props.height;
     var wd   = this.props.width;
     var cx   = this.props.x + 0.5 * wd;

@@ -17,7 +17,7 @@
 package us.avn.oms.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
+//import java.util.Collection;
 
 /*
  * AlarmType: id, priority, alarm_msg_id, code

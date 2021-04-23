@@ -2,14 +2,14 @@ Table,crontab,,
 ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable,2ndField,2ndEquivalence
 Data,,,
 id,name,moh,hod,dom,moy,dow,hour_duration,min_duration
-1,At Midnight, every day, all day,0,23,*,*,0-5,24,0
-2,At 7, 10, 13, MWF,0,7,10,15,17,19,*,*,0-5,24,0
-3,At Midnight:02, every day,2,0,*,*,0-5,NULL,NULL
-4,At 6, 9, 14, 16 - S, T, W,0,6,9,*,*,0-5,NULL,NULL
-5,At 4, 7, 10, 13, T,Th,S,0,4, 7, 10, 13,*,*,0-5,NULL,NULL
-6,At 5, 6, 11, 17, M,T,Th,S,0,5, 6, 11, 17,*,*,0-5,NULL,NULL
-7,Every 15 minutes, every day,0,15,30,45,*,*,*,0-5,NULL,NULL
-8,AT 2,4,6,8,17,19,21 S-F,0,2,4,6,8,17,19,21,*,*,0-5,NULL,NULL
-9,Every day @ noon &21 thirty,30,10,19,*,*,0,2,4,NULL,NULL
-10,At 4 MWF,0,4,*,*,1,3,5,NULL,NULL
+1,At Midnight-every day-all day,0,23,*,*,0-5,24,0
+2,At 7; 10; 13; MWF,0,"7,10,15,17,19",*,*,0-5,24,0
+3,At Midnight:02-every day,2,0,*,*,0-5,NULL,NULL
+4,At 6;9;14;16 - S;T;W,0,"6,9",*,*,0-5,NULL,NULL
+5,At 4;7;10;13 - T;Th;S,0,"4,7,10,13",*,*,0-5,NULL,NULL
+6,At 5;6;11;17 - M;T;Th;S,0,"5, 6, 11, 17",*,*,0-5,NULL,NULL
+7,Every 15 minutes-every day,0,"15,30,45",*,*,*,0-5,NULL,NULL
+8,AT 2;4;6;8;17;19;21 - S-F,0,"2,4,6,8,17,19,21",*,*,0-5,NULL,NULL
+9,Every day @ noon & 21 thirty,30,"10,19",*,*,"0,2,4",NULL,NULL
+10,At 4 MWF,0,4,*,*,"1,3,5",NULL,NULL
 End

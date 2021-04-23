@@ -8,11 +8,12 @@
   <url>http://maven.apache.org</url>
   
   <properties>
-    <spring.version>5.2.3.RELEASE</spring.version>
+    <spring.version>5.3.5</spring.version>
     <slf4j.version>1.7.25</slf4j.version>
     <tiles.version>3.0.8</tiles.version>
-    <mybatis.version>3.4.5</mybatis.version>
+    <mybatis.version>3.5.6</mybatis.version>
     <mariadb.driver.version>2.5.4</mariadb.driver.version>
+    <mysql.connector.version>8.0.23</mysql.connector.version>
     <fasterxml.jackson.version>2.10.0</fasterxml.jackson.version>
     <junit.jupiter.version>5.5.2</junit.jupiter.version>
     <junit.platform.version>1.5.2</junit.platform.version>
@@ -104,13 +105,21 @@
       </exclusions>
     </dependency>
    
-    <!-- MariaDB -->
+    <!-- MariaDB 
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
       <version>${mariadb.driver.version}</version>
     </dependency>
-     
+    -->
+
+    <!--  MySQL -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.connector.version}</version>
+    </dependency>
+         
     <!-- JSTL -->
     <dependency>
         <groupId>javax.servlet</groupId>
@@ -166,7 +175,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -207,7 +216,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
+          <version>3.8.1</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -215,7 +224,7 @@
         </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.3.1</version>
         <configuration>
           <warSourceDirectory>src/main/webapp</warSourceDirectory>
           <failOnMissingWebXml>true</failOnMissingWebXml>
@@ -224,10 +233,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <configuration>
           <show>private</show>
           <excludePackageNames> *.impl </excludePackageNames>
+          <javadocExecutable>/usr/bin/javadoc</javadocExecutable>
         </configuration>
       </plugin>
     </plugins>

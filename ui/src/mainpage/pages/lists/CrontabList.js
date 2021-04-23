@@ -30,6 +30,9 @@ class CrontabList extends Component {
     var json = this.props.ctabData;
     var ctabSelect = this.props.ctabSelect;
     var ctabList = [];
+    const z = 0;
+    var ctb0 = new Crontab(0, 'Create new Crontab','','','','','','','');
+    ctabList.push(ctb0);
     json.map(function(n,x){var ctb = new Crontab(n.id, n.name, n.moh, n.hod, n.dom, n.moy, n.dow, n.hourDuration, n.minuteDuration);
                            return ctabList.push( ctb ); } );
     return (
@@ -49,13 +52,6 @@ class CrontabList extends Component {
             </tr>
           </thead>
           <tbody className="scrollContent">
-            <tr>
-              <td className={["oms-spacing-240","oms-cursor-pointer","oms-fontsize-12"].join(' ')} colSpan="2">
-                <button type="button" className="link-button"
-                        onClick={() => {ctabSelect(0)}} >Create New Crontab
-                </button>
-              </td>
-            </tr>
           {ctabList.map(
             function(n,x){
               const z = n.id;

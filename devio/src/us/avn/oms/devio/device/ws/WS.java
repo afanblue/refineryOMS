@@ -63,7 +63,6 @@ public class WS extends IODevice {
     private static WeatherStationFactory wsf = new WeatherStationFactory();
 
 	public WS() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -92,7 +91,6 @@ public class WS extends IODevice {
 			, OrderService ords, RawDataService rds, TagService tgs
 			, TankService tks, TransferService tfs ) {
 		super(d, adrs, ais, aos, cs, cbs, dis, dos, ords, rds, tgs, tks, tfs);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

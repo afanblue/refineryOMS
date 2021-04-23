@@ -9,7 +9,6 @@ import us.avn.oms.service.AddressService;
 public class AddressServiceImpl implements AddressService {
 
 	public AddressServiceImpl() {
-		// TODO Auto-generated constructor stub
 	}
 
 	private AddressMapper addrMapper;

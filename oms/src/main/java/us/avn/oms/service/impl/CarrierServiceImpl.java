@@ -30,7 +30,7 @@ import us.avn.oms.domain.Hold;
 import us.avn.oms.domain.RelTagTag;
 import us.avn.oms.domain.Tag;
 import us.avn.oms.mapper.CarrierMapper;
-import us.avn.oms.mapper.CustomerMapper;
+//import us.avn.oms.mapper.CustomerMapper;
 import us.avn.oms.mapper.TagMapper;
 import us.avn.oms.service.CarrierService;
 
@@ -172,7 +172,7 @@ public class CarrierServiceImpl implements CarrierService {
 			h.setCarrierId(t.getId());
 			Long noCars = 1 + Math.min(volRequired.longValue()/Carrier.TANK_CAR,100L);
 			h.setHoldNo(1L);
-			h.setVolume(new Double(Carrier.TANK_CAR));
+			h.setVolume(Double.valueOf(Carrier.TANK_CAR));
 			h.setNoDuplicates(noCars);
 			carrierMapper.insertHold(h);
 			carrier = new Carrier(t);

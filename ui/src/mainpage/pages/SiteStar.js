@@ -112,7 +112,7 @@ class SiteStar extends Component {
         var cpy = scrnHt/2;
         var json = this.state.returnedText;
         var aDelt = 360/json.length;
-        var now = moment().format('YYYY-MM-DD hh:mm:ss');
+        var now = moment().format('YYYY-MM-DD HH:mm:ss');
         return (
           <Stage height={scrnHt} width={scrnWid}>
             <Layer>

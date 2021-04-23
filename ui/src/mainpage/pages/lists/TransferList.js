@@ -55,7 +55,7 @@ class TransferList extends Component {
 	}
     var transferList = [];
     let aVolHdr = null;
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
 
     if( (type === 'X') || (type==='T') ) {
       var z = new Transfer( 0, "New Transfer", 0, "", 0, "", 0, "", 0, ""

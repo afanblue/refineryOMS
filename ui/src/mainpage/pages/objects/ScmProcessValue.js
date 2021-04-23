@@ -64,8 +64,8 @@ export default class ScmProcessValue extends React.Component {
   }
 
   render() {
-	var id = this.props.id;
-	var name = this.props.name;
+//    var id = this.props.id;
+//    var name = this.props.name;
     var xt = this.props.x;
     var ht = this.props.height;
     var wd = this.props.width;

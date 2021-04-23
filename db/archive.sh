@@ -3,7 +3,7 @@
 #          archive.bat pwd 30  --will keep the last 30 days of history and transfers
 
 
-pd=`date +%y%m%d --date="-$2 days"`
+pd=`date +%Y%m%d --date="-$2 days"`
 echo $pd
 
 pushd .

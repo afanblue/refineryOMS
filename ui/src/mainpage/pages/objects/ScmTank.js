@@ -62,8 +62,6 @@ export default class ScmTank extends React.Component {
   }
 
   render() {
-	var id = this.props.id;
-	var name = this.props.name;
     var ch = 0.05 * this.props.height;
     ch = (ch===0?2:ch);
     var val = this.props.value===null?0:this.props.value;

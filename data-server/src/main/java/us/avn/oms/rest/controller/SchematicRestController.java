@@ -58,6 +58,7 @@ public class SchematicRestController {
     
 	static Double BASE_HEIGHT = 480D;	// shouldn't be defined this way
 	static Double BASE_WIDTH = 640D;	// see note on computeCoordinates
+	static Long ZERO = 0L;
 
 	@Autowired 
 	ConfigService cfgService;
@@ -195,7 +196,7 @@ public class SchematicRestController {
     @ResponseStatus(HttpStatus.OK)
 	public void updateRelationship( @RequestBody RelTagTag rtt ) {
 		log.debug("updateRelationship: "+rtt);
-		if( (new Long(0L).equals(rtt.getId()) ) ) {
+		if( ZERO.equals(rtt.getId() ) ) {
 			tagService.insertRelationship(rtt);
 		} else {
 			tagService.updateRelationship(rtt);
@@ -211,7 +212,7 @@ public class SchematicRestController {
 	 * updates/inserts the relationships as needed.  If the child
 	 * object is a pipe, it updates the objects vertices. 
 	 * 
-	 * @param ccv 
+	 * @param ccv  collection of child values
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value= "/update/children")
     @ResponseStatus(HttpStatus.OK)
@@ -221,7 +222,7 @@ public class SchematicRestController {
 			ChildValue cv = iccv.next();
 			log.debug("update ChildValue "+cv.toString());
 			Long id = cv.getId();
-			if( (new Long(0L)).equals(cv.getId()) ) {
+			if( ZERO.equals(cv.getId()) ) {
 				id = tagService.insertTag(cv);
 				cv.setId(id);
 			} else {
@@ -351,12 +352,12 @@ public class SchematicRestController {
 		Map<String,Double> cc = new HashMap<String,Double>();
 		Double xFactor = BASE_WIDTH/(site.getC1Long()-site.getC2Long());
 		Double yFactor = BASE_HEIGHT/(site.getC1Lat()-site.getC2Lat());
-		Double x = new Double( Math.round((site.getC1Long()-t.getC1Long())*xFactor) );
+		Double x = new Double(Math.round((site.getC1Long()-t.getC1Long())*xFactor));
 		Double y = new Double( Math.round((site.getC1Lat() -t.getC1Lat()) *yFactor) );
 		cc.put("x1",x);
 		cc.put("y1",y);
-		x = new Double( Math.round((site.getC1Long()-t.getC2Long())*xFactor) );
-		y = new Double( Math.round((site.getC1Lat() -t.getC2Lat()) *yFactor) );
+		x = Double.valueOf( Math.round((site.getC1Long()-t.getC2Long())*xFactor) );
+		y = Double.valueOf( Math.round((site.getC1Lat() -t.getC2Lat()) *yFactor) );
 		cc.put("x2",x);
 		cc.put("y2",y);
 		return cc;
@@ -382,8 +383,8 @@ public class SchematicRestController {
 				Vector<Vertex> vv = new Vector<Vertex>();
 				while( iav.hasNext() ) {
 					Vertex v = iav.next();
-					Double px = new Double( Math.round((site.getC1Long()-v.getLongitude())*xFactor) );
-					Double py = new Double( Math.round((site.getC1Lat() -v.getLatitude()) *yFactor) );
+					Double px = Double.valueOf( Math.round((site.getC1Long()-v.getLongitude())*xFactor) );
+					Double py = Double.valueOf( Math.round((site.getC1Lat() -v.getLatitude()) *yFactor) );
 					v.setLongitude(px);
 					v.setLatitude(py);
 					vv.add(v);

@@ -71,7 +71,7 @@ class PlotGroupVars extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    if( state.stage == "generatePlot" ) {
+    if( state.stage === "generatePlot" ) {
       if( nextProps.stage !== state.stage && nextProps.stage === "begin")
       {
  //       if( state.unitTimer !== null ) { clearInterval(state.unitTimer); }
@@ -82,7 +82,7 @@ class PlotGroupVars extends Component {
   }
 
   componentDidUpdate( prevProps, prevState ) {
-    if( this.state.id != prevState.id ) {
+    if( this.state.id !== prevState.id ) {
       clearInterval(this.state.unitTimer);
       this.fetchData(this.state.id);
     }

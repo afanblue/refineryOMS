@@ -93,11 +93,11 @@ public class CrontabServiceImpl implements CrontabService {
 	public boolean checkSchedule( LocalDateTime ldt, Long id ) {
 		boolean ok = false;
 		Crontab crn = getCrontabRecord(id);
-		Long minuteOfHour = new Long(ldt.getMinute());
-		Long hourOfDay = new Long(ldt.getHour());
-		Long dayOfMonth = new Long(ldt.getDayOfMonth());
-		Long monthOfYear = new Long(ldt.getMonthValue());
-		Long dayOfWeek = new Long(ldt.getDayOfWeek().getValue( ) % 7);
+		Long minuteOfHour = Long.valueOf(ldt.getMinute());
+		Long hourOfDay = Long.valueOf(ldt.getHour());
+		Long dayOfMonth = Long.valueOf(ldt.getDayOfMonth());
+		Long monthOfYear = Long.valueOf(ldt.getMonthValue());
+		Long dayOfWeek = Long.valueOf(ldt.getDayOfWeek().getValue( ) % 7);
 
 		if( ALL.equals(crn.getMoy()) && ALL.equals(crn.getDom()) ) {
 			if( ! ALL.equals(crn.getDow()) ) {
@@ -161,10 +161,10 @@ public class CrontabServiceImpl implements CrontabService {
 			while( iList.hasNext() ) {
 				String item = iList.next().trim();
 				Iterator<String> eList = Arrays.asList(item.split("-")).iterator();
-				Long start = new Long(eList.next());
+				Long start = Long.valueOf(eList.next());
 				rtnList.add(start++);
 				if( eList.hasNext() ) {
-					Long end = new Long(eList.next());
+					Long end = Long.valueOf(eList.next());
 					do {
 						rtnList.add(start++);
 					} while( start <= end );

@@ -6,8 +6,6 @@ name,code,unit_type_id
 none,---,length
 meter,m,length
 foot,ft,length
-deg F,°F,temperature
-deg C,°C,temperature
 gallons,gal,volume
 barrels,bbl,volume
 cubic feet,ft3,volume
@@ -16,6 +14,8 @@ Pascals,PA,pressure
 mm HG,mm,pressure
 mile/hr,mph,speed
 m/sec,m/s,speed
-degrees,°,direction
 bbl/min,bpm,rate
+degrees,deg,direction
+deg F,degF,temperature
+deg C,degC,temperature
 End

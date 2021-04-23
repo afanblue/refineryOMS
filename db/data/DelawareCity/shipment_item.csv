@@ -3,7 +3,7 @@ ColumnConstrained,ConstraintTable,ConstraintField,ConstraintEquivalence,2ndTable
 carrier_id,tag,id,name,tag,tag_type_code,tag_type_code
 transfer_id,transfer,id,name
 Data,,,
-shipment_id,item_no,active,content_cd,exp_volume_min,exp_volume_max,act_volume,carrier_id,station_id,transfer_id,create_dt
+id,item_no,active,content_cd,exp_volume_min,exp_volume_max,act_volume,carrier_id,station_id,transfer_id,create_dt
 9264,1,C,A,750.0,800.0,839.9453469749997,TT317A-05|TT,NULL,AtoTrkDk11-202002262201,2020-02-27 04:00:43
 9265,1,C,L,750.0,800.0,639.9986511438768,TT317L-02|TT,NULL,LtoTrkDk21-202002262201,2020-02-27 04:00:44
 9266,1,C,A,750.0,800.0,839.9453469749997,TT317A-01|TT,NULL,AtoTrkDk11-202002262231,2020-02-27 04:30:16

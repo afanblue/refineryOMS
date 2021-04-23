@@ -1,21 +1,28 @@
 #!/bin/sh
 
 . /etc/profile
+. /etc/environment
 
 
-cd  $OMS_HOME/sim
+export OMS_SIM=$OMS_HOME/sim
+export OMS_EXEC=$OMS_HOME/exec
 
-export CLASSPATH=target/sim.jar:libs/*
-export LOG=logs/simError.txt
+pd=`date +%Y%m%d%H%M`
+mv $OMS_HOME/logs/simError.txt $OMS_HOME/logs/simError-$pd.txt
+gzip $OMS_HOME/logs/simError-$pd.txt
+
+export CLASSPATH=$OMS_EXEC/sim.jar:$OMS_EXEC/libs/*
+export LOG=$OMS_LOGS/simError.txt
+
 date >> $LOG
 echo "cp=$CLASSPATH" >> $LOG
-pwd >> $LOG
+echo $OMS_HOME >> $LOG
 
-java -cp $CLASSPATH us.avn.oms.sim.Sim >>$LOG 2>&1 &
+java -cp $CLASSPATH us.avn.oms.sim.Simulator >>$LOG 2>&1 &
 
-echo "pidfile=$SIM_PID" >> logs/simError.txt 2>&1
-if [ ! -z "$SIM_PID" ]; then
-  echo $! > "$SIM_PID"
+echo "pidfile=$OMS_PID" >> $OMS_LOGS/simError.txt 2>&1
+if [ ! -z "$OMS_PID" ]; then
+  echo $! > "$OMS_PID"
 fi
 date >> $LOG
 

@@ -18,7 +18,7 @@ package us.avn.oms.service.impl;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 
 import us.avn.oms.domain.AIValue;
 import us.avn.oms.domain.AnalogInput;
@@ -37,7 +37,7 @@ public class AnalogInputServiceImpl implements AnalogInputService {
 	private AnalogInputMapper aiMapper;
 	private ConfigMapper cfgMapper;
 	private TagMapper tagMapper;
-	private UnitMapper unitMapper;
+//	private UnitMapper unitMapper;
 	
 	public void setAnalogInputMapper( AnalogInputMapper aim ) {
 		this.aiMapper =aim;

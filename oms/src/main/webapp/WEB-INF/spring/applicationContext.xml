@@ -30,7 +30,7 @@
 	      class="org.springframework.web.servlet.view.ResourceBundleViewResolver" 
 	      p:basename="views" />
 	      
-   <bean id="mysqlDS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+   <bean id="mysqlDS" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource" destroy-method="close">
       <property name="driverClassName" value="${db.driverClass}"/>
       <property name="url"             value="${db.url}"/>
       <property name="username"        value="${db.user}"/>

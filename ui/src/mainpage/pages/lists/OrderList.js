@@ -64,7 +64,7 @@ class OrderList extends Component {
         typeHdr = " ???? " ;
         break;
     }
-    var now = moment().format('YYYY-MM-DD hh:mm:ss');
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
     json.map(function(xd,x){
         var xf = new Order( xd.id, xd.customerId, xd.customer
                           , xd.active, xd.purchase, xd.expDate, xd.actDate

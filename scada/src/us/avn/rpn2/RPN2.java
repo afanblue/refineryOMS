@@ -197,7 +197,7 @@ public class RPN2 {
                 op1 = 0D;
                 op2 = 0D;
                 result = evaluateSingleOperator(token, op1, op2);
-                stack.push(new Double(result));                
+                stack.push(Double.valueOf(result));                
             } else if( nops.equals(1) ) {
             	if( ! stack.isEmpty() ) {
             		op1 = (stack.pop()).doubleValue();
@@ -206,14 +206,14 @@ public class RPN2 {
             	}
                 op2 = 0D;
                 result = evaluateSingleOperator(token, op1, op2);
-                stack.push(new Double(result));
+                stack.push(Double.valueOf(result));
             } else if( nops.equals(2) ) {
             	op1 = 0D;
             	op2 = 0D;
                 if( ! stack.isEmpty() ) { op2 = (stack.pop()).doubleValue(); }
             	if( ! stack.isEmpty() ) { op1 = (stack.pop()).doubleValue(); }
                 result = evaluateSingleOperator(token, op1, op2);
-                stack.push(new Double(result));
+                stack.push(Double.valueOf(result));
             }
         }
         return result;
@@ -237,7 +237,7 @@ public class RPN2 {
         Integer nops = null;
         
         while (parser.hasNext()) {
-            token = parser.next();          
+            token = parser.next();
 //            System.out.println("In  "+token+" - Stack size: "+stack.size()+", result: "+result+", control: "+control);
             if( "e".equals(control) || "T".equals(control) ) {
             	if( null != (nops = isControl(token)) ) {
@@ -252,12 +252,12 @@ public class RPN2 {
                     int ndx = Character.getNumericValue(token.charAt(1));
                     stack.push( values[ndx] ); 
                 } else {
-                    stack.push(new Double(Double.parseDouble(token)));
+                    stack.push(Double.valueOf(Double.parseDouble(token)));
                 }
             }
-            parser.close();
- //           System.out.println("Out "+token+" - Stack size: "+stack.size()+", result: "+result+", control: "+control);
         }
+        parser.close();
+//        System.out.println("Out "+token+" - Stack size: "+stack.size()+", result: "+result+", control: "+control);
         return (stack.pop()).doubleValue();
     }
     
@@ -427,7 +427,7 @@ public class RPN2 {
             	break;
             case "now":
             	Long n = Instant.now().getEpochSecond();
-            	result = new Double(n);
+            	result = Double.valueOf(n);
         }
         return result;
     }

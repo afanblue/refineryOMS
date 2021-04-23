@@ -572,6 +572,7 @@ GPP-R2GT14,Pipe from R2 to gas tank 14,SCO,P,0.0,0.0,0.0,0.0,Y
 GPP-R2GT15,Pipe from R2 to gas tank 15,SCO,P,0.0,0.0,0.0,0.0,Y
 GPP-R2GT09,Pipe from R2 to gas tank  9,SCO,P,0.0,0.0,0.0,0.0,Y
 GPP-R2GT08,Pipe from R2 to gas tank  8,SCO,P,0.0,0.0,0.0,0.0,Y
+GDelivery,Gasoline Delivery,SCM,0,0.0,0.0,0.0,0.0,Y
 Dock1,Ship Dock 1 northernmost,DK,S,0.0,0.0,0.0,0.0,Y
 Dock2,Ship Dock 2,DK,S,0.0,0.0,0.0,0.0,Y
 Dock3,Ship Dock 3,DK,S,0.0,0.0,0.0,0.0,Y

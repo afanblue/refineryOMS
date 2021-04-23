@@ -76,7 +76,7 @@ public class CalcVariableRestController {
     @ResponseStatus(HttpStatus.OK)
 	public CalcVariable getCalcVariable( @PathVariable Long id  ) {
 		CalcVariable cv = cvs.getCalcVariable(id);
-		ArrayList<String> tl = new ArrayList<>(Arrays.asList("AI", "DI", "C"));
+//		ArrayList<String> tl = new ArrayList<>(Arrays.asList("AI", "DI", "C"));
 //		cv.setInputTags(tl);
 		return cv;
 	}

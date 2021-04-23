@@ -10,7 +10,6 @@ import us.avn.oms.service.DeviceService;
 public class DeviceServiceImpl implements DeviceService {
 
 	public DeviceServiceImpl() {
-		// TODO Auto-generated constructor stub
 	}
 
 	private DeviceMapper deviceMapper;

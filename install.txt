@@ -42,35 +42,56 @@ Things to do/know:
     *  The DB instance is "oms".  If you don't create a user/schema of oms
        then you'll probably need to make lots of changes.
 
-    *  The DB, username, and password are in www/includes/constants.php.  They're
-       also in the various application context XML files for the java-based stuff.
+    *  The DB, username, and password are in the various application context XML files for the java-based stuff.
        
-    *  Tomcat has the CORS filters set up.
+    *  Tomcat has the CORS filters set up.  Add the following to the web.xml file.  The "init-param" stuff wasn't
+       included in the basic setup. FWIW, GET, POST, and OPTIONS are allowed by default
+        <filter>
+           <filter-name>CorsFilter</filter-name>
+              <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+              <init-param>
+                 <param-name>cors.allowed.origins</param-name>
+                 <param-value>*</param-value>
+              </init-param>
+              <init-param>
+                 <param-name>cors.allowed.methods</param-name>
+                 <param-value>GET,POST,OPTIONS,PUT</param-value>
+              </init-param>
+           </filter>
+           <filter-mapping>
+              <filter-name>CorsFilter</filter-name>
+              <url-pattern>/*</url-pattern>
+           </filter-mapping>
+                             
 
     *  To install the database, from the command line.  FWIW, the only {site name}
        that is available is 'DelawareCity'.  Setting up a site is non-trivial, 
        though it can be done via csv-based files.
 
        Linux: 
-	       cd {oms}/includes/db
-           oms.bash  {oms password} {site name} 
+	       cd {oms}/db
+           oms.bash  {systempwd} {site name} {debug:Y|N}
        Windows:
-           cd {oms}\includes\db
-           oms.bat {omspwd} {site name}
-	   To redirect all output to a file db.log
-	       oms.bat {omspwd} {site name} >db.log 2>&1
+           cd {oms}\db
+           oms.bat {omspwd} {site name} {debug:Y|N}
+
+	To redirect all output to a file db.log
+	   oms.bat {systempwd} {site name} {debug} >db.log 2>&1
 	       
-	   The log file can be checked to verify that all tables and views have 
-	   been created and all the records have been inserted.  Look for 
-	   occurrences of
+	The log file can be checked to verify that all tables and views have 
+	een created and all the records have been inserted.  Look for 
+	occurrences of
 	   
-	       'mysql' which isn't a warning that the password shouldn't be 
-	               entered on the command line.  There should be 2 of these.
-	       'false' (not case sensitive) There should be two entries found on 
-	               one line for an insert
-	       '0 row' the DB insert will sometimes indicate success, but 0 rows
-	               inserted.  This is an error, usually indicating that either
-	               a lookup or the select used for the insert has failed.
+	   'mysql' which isn't a warning that the password shouldn't be 
+	           entered on the command line.  There should be 2 of these.
+	   'Error'/'ERROR' which probably indicates a version skew problem in either
+	          python or MySQL (eh, I tried MariaDB, but it was missing some critical
+	          features)
+	  'false' (not case sensitive) There should be two entries found on 
+	          one line for an insert
+	  '0 row' the DB insert will sometimes indicate success, but 0 rows
+	          inserted.  This is an error, usually indicating that either
+	          a lookup or the select used for the insert has failed.
 	      
     *  The webapp must be deployed to Tomcat.
     

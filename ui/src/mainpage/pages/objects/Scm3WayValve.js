@@ -59,7 +59,7 @@ export default class Scm3WayValve extends React.Component {
   }
 
   render() {
-	var id = this.props.id;
+//	var id = this.props.id;
     var xt = this.props.x;
     var ht = 15;
     var wd = 18;

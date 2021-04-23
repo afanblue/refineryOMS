@@ -19,8 +19,8 @@ package us.avn.oms.mapper;
 import java.util.Collection;
 
 import us.avn.oms.domain.AnalogOutput;
-import us.avn.oms.domain.IdName;
-import us.avn.oms.domain.ReferenceCode;
+//import us.avn.oms.domain.IdName;
+//import us.avn.oms.domain.ReferenceCode;
 
 public interface AnalogOutputMapper {
 	

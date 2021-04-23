@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import us.avn.ws.WsCSV;
+//import us.avn.ws.WsCSV;
 
 /**
  * Class: AcuRite
@@ -48,7 +48,7 @@ import us.avn.ws.WsCSV;
  */
 public class AcuRite extends WsCSV {
 
-	private Logger log = LogManager.getLogger( this.getClass() );
+//	private Logger log = LogManager.getLogger( this.getClass() );
 //  Condition names specify offsets for time, outdoor temperature, 
 //  barometricPressure, windSpeed, windDirection, precipitationLastHour
     private static String[] csvConditionNames= { "0", "1", "6", "8", "11", "7"};

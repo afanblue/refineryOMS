@@ -58,8 +58,8 @@ export default class ScmRefUnit extends React.Component {
   }
 
   render() {
-	var id = this.props.id;
-	var name = this.props.name;
+//	var id = this.props.id;
+//	var name = this.props.name;
     var val = this.props.value*1;
     var xt = this.props.x;
     var ht = 36;

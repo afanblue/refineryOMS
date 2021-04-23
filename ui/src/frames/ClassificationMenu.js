@@ -20,8 +20,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {Category}   from '../mainpage/pages/objects/Category.js';
-import {Menu}       from '../mainpage/pages/objects/Category.js';
+//import {Category}   from '../mainpage/pages/objects/Category.js';
+//import {Menu}       from '../mainpage/pages/objects/Category.js';
 
 class ClassificationMenu extends Component {
   constructor(props) {
@@ -91,7 +91,7 @@ class ClassificationMenu extends Component {
                            {menus.map( function(m,x){
                              let z=t+"."+m.menuname.replace(" ","");
                              return(
-                             <a key={x} style={anchorStyle} onClick={() => { menuSelect({z})} } >{m.text}</a>
+                             <a key={x} href="#" style={anchorStyle} onClick={() => { menuSelect({z})} } >{m.text}</a>
                              );
                            } ) }
                          </div>
@@ -110,7 +110,7 @@ class ClassificationMenu extends Component {
     var selected = this.props.selected;
     var catSelected = this.props.handleCatSelect;
     var lineStyle = { marginTop:10, border:0, height:3};
-    if( "dropdown" == this.props.menuType ) {
+    if( "dropdown" === this.props.menuType ) {
       var option = this.props.option;
       var menuSelect = this.props.handleMenuSelect;
       var mouseEnter = this.props.handleMouseEnter;

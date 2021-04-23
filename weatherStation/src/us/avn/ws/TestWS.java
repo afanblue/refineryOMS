@@ -58,7 +58,7 @@ public class TestWS {
 	private Long longArg( String s ) {
 		Long l = 0L;
 		try {
-			l = new Long(s);
+			l = Long.valueOf(s);
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

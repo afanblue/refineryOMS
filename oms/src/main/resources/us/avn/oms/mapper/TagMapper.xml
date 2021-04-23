@@ -186,7 +186,7 @@
   
   <select id="getChildren" resultMap="tagRelationMap" >
     select rtt.id, rtt.parent_tag_id, tp.name parent, rtt.child_tag_id, tc.name child
-           rtt.code, rtt.code2
+         , rtt.code, rtt.code2
       from rel_tag_tag rtt join tag tp on rtt.parent_tag_id = tp.id
            join tag tc on rtt.child_tag_id = tc.id 
      where rtt.parent_tag_id = #{param1}

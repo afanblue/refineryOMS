@@ -61,11 +61,11 @@ public class CrontabRestController {
 		Crontab cb = new Crontab();
 		if( ! id.equals(0L) ) { 
 			cb = crontabService.getCrontabRecord(id);
-			if( null == cb ) {
-				cb = new Crontab();
-				cb.setId(0L);
-				cb.setName("New record");
-			}
+		}
+		if( id.equals(0L) || null == cb ) {
+			cb = new Crontab();
+			cb.setId(0L);
+			cb.setName("New record");
 		}
 		return cb;
 	}

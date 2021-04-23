@@ -47,6 +47,7 @@ public class OrderMgr {
 	 * Start the thread that creates scheduled orders.  It runs once a minute 
 	 * but it doesn't really do a lot when it runs.
 	 * 
+	 * @param args start up arguments
 	 */
 	public void execute(String[]args) {
 		Integer interval = DEFAULT_INTERVAL;

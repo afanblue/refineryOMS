@@ -183,9 +183,9 @@ public class DataXfer extends TimerTask {
 				cvin[coi] = co.getScanValue();
 				coi++;
 			}
+			log.debug("CV: "+cv.getTag()+" Defn: "+cv.getDefinition()+" using input "+cvin[0]);
 			Double result = evaluator.evaluate(cv.getDefinition(), cvin );
-			log.debug("CV: "+cv.getTag() +" Defn: "+cv.getDefinition()+" using input "+cvin[0]
-					 +" yields "+result);
+			log.debug("CV: "+cv.getTag() + " yields "+result);
 			Instant now = Instant.now();
 			AnalogInput ai = ais.getAnalogInput(cv.getOutputTagId());
 			if( null != ai ) {

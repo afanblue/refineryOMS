@@ -1,3 +1,4 @@
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 '''
@@ -12,12 +13,14 @@ Load the csv file into the oms DB
 '''
 import sys
 import re
-import mariadb 
+import csv
+import mysql.connector
+import datetime
 
 '''
  * Args: 1: DB password
  *       2: File to load
- *       3: Debug flag (Y => don't actually do the insert, default value = N)
+ *       3: Debug flag (Y => don't actually do the insert, P => print, default value = N)
  *
  * Format of file:
  *         Row 1: 'Table',TableName
@@ -161,8 +164,6 @@ def AddColumns( columns, constraints, columnIndex, data) :
     print( rtn ) 
     return rtn;
 
-args = sys.argv
-#print( args )
 
 def SelectFrom( constraints, columnIndex, data ):
     selectFrom = ""
@@ -172,7 +173,7 @@ def SelectFrom( constraints, columnIndex, data ):
         selectFrom = " from "
         delim = ""
         for k, cx in constraints.items() :
-#           print (cx)
+#            print (cx)
             index = columnIndex[cx[0]]
             if data[index] != "" and data[index].lower() != "null" :
                 selectFrom = selectFrom + "{} {} t{}".format(delim,cx[2],cx[1])
@@ -182,20 +183,23 @@ def SelectFrom( constraints, columnIndex, data ):
             selectFrom = selectFrom + "dual "
     return selectFrom;    
 
-def InsertInto():
+def InsertInto( table, columns ):
     insInto = "insert into " + table + " ("
     delim = ""
     for k, col in columns.items() :
-#        print (col)
+#        print ("InsertInto - col: ",col)
         # if there's data add it.  otherwise skip the field
         if col[0] != "" :
             insInto = insInto + delim + col[0]
             delim = ","
-                    
-        insInto = insInto + ") select"
-        delim = " "
-                
+        
+    insInto = insInto + ") select "
+    delim = " "
+    
     return insInto;
+
+args = sys.argv
+print( args )
 
 row = 1;
 text = ( "Table", "ColumnConstrained", "Data", "x", "End" );
@@ -204,14 +208,15 @@ config = {
   "user": "oms",
   "password": args[1],
   "host": "127.0.0.1",
-  "database": "oms",
-  "charset": "UTF-8"
+  "charset": "utf8",
+  "database": "oms"
 }
 
-cnx = mariadb.connect(**config)
+cnx = mysql.connector.connect(**config)
 crsr = cnx.cursor()
 
-file = open(args[2], "r")
+file = open(args[2], "r", encoding="utf-8")
+rdr = csv.reader(file, delimiter=',')
 looking = 0
 found = -1
 noRows = 0;
@@ -220,36 +225,36 @@ constraints = {}
 columns = {} 
 columnIndex = {}
 debug = "N"
-if( len(args) > 2 ) :
+if( len(args) > 3 ) :
     debug = args[3]
     
-for line in file :
+for row in rdr :
     noRows = noRows + 1
-    data = re.split(',|\n',line)
+#    data = re.split(',|\n',line)
 #    print( data )
     
-    if data[0] == "--" :
+    if row[0] == "--" :
         print ("Found a comment")
         # a comment; just ignore this
-    elif data[0] == text[0] :
+    elif row[0] == text[0] :
         # found the first row, extract the table name
 #        print ("Found table name: "+data[1])
         found = looking
-        table = data[1]
+        table = row[1]
         looking = 1
-    elif data[0] == text[1] :
+    elif row[0] == text[1] :
 #        print ("Found constraint header info")
         # found the constraint table info header
         found = looking
         looking = 2
-    elif data[0] == text[2] :
+    elif row[0] == text[2] :
 #        print ("Finished constraints: "+text[2])
 #        print ( constraints )
         # finished up the constraints, found the Data header
         found = looking
         ''' which we'll never find! '''
         looking = 3
-    elif data[0] == text[4]:
+    elif row[0] == text[4]:
 #        print ("found end")
         # found end; quit.
         break
@@ -264,10 +269,10 @@ for line in file :
 #            3 = constraint equivalence
 #            So field constrained <0> = select <2> from <1> where <3> =  
             nc = len(constraints)
-            if  len(data) < 7 :
-                c = ( data[0], nc, data[1], data[2], data[3] )
+            if  len(row) < 7 :
+                c = ( row[0], nc, row[1], row[2], row[3] )
             else :
-                c = ( data[0], nc, data[1], data[2], data[3], data[4], data[5], data[6] )
+                c = ( row[0], nc, row[1], row[2], row[3], row[4], row[5], row[6] )
             nc = c[0]
             constraints[ nc ] = c
 
@@ -275,7 +280,7 @@ for line in file :
 #            print ("found data columns, show constraints (next)")
             # get the column names
             ndx = 0
-            for col in data :
+            for col in row :
 #                print (col)
                 if col != "" and col != "\n" :
                     dataType = GetDataType(table,col)
@@ -297,28 +302,34 @@ for line in file :
 #            print( "selectFrom: "+selectFrom )
             if debug == "N" :
                 insQuery = insQuery + InsertInto( table, columns )
-#                print(insQuery)
+#                print("insQuery: ",insQuery)
             else :
                 insQuery = insQuery + "select "
             
-            insQuery = insQuery + AddColumns(columns, constraints, columnIndex, data)
-            insQuery = insQuery + SelectFrom( constraints, columnIndex, data )
+            insQuery = insQuery + AddColumns(columns, constraints, columnIndex, row)
+#            print("insQuery: ",insQuery)
+            insQuery = insQuery + SelectFrom( constraints, columnIndex, row )
 
 #            print("insQuery: ",insQuery)
-            insQuery = insQuery + AddWhereClause( constraints, columnIndex, data )
+            insQuery = insQuery + AddWhereClause( constraints, columnIndex, row )
             print("insQuery: ",insQuery)
-            if debug == "N" :
+            if debug == "N" or debug == "P" :
+                if debug == "P" :
+                    print("insQuery: ",insQuery)
                 try:
                     insSet = crsr.execute(insQuery)
                     cnx.commit()
-                    if insSet :
-                        print(" -- True {} row(s) inserted\n".format(crsr.rowcount))
-                    else :
-                        print(" -- False\n\n")
+                    dt_utc = datetime.datetime.now(datetime.timezone.utc)
+#                   gonna depend on exceptions to report errors ...
+#                    print(dt_utc)
+#                    if crsr.rowcount == 0 :
+#                        print(" -- True {} row(s) inserted\n".format(crsr.rowcount))
+#                    else :
+#                        print(" -- False, no rows inserted\n{}\n\n".format(insQuery))
                 except: 
-                    print("Error ",sys.exc_info()[0]," row {}\n".format(noDataRows))
+                    print("Error ",sys.exc_info()[0]," row {} {}\n".format(noDataRows,insQuery))
             else :
-                print( " -- insert not processed")
+                print( " -- insert {} not processed".format(insQuery))
 print ("{} data rows processed\n".format(noDataRows))
 #print ("{} processed\n".format(noRows))
 file.close()

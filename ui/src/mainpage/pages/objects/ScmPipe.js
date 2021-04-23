@@ -60,8 +60,8 @@ export default class ScmPipe extends React.Component {
   render() {
 //    var xt = this.props.x;
 //    var yt = this.props.y;
-    var id = this.props.id;
-    var name = this.props.name;
+//    var id = this.props.id;
+//    var name = this.props.name;
     var val = this.props.value*1;
     var pts = this.props.points;
     var stkw = this.props.strokeWidth;

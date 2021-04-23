@@ -93,7 +93,7 @@ public class WatchdogCheck extends TimerTask {
     		emailInterval = DEFAULT_INTERVAL;
     	} else {
     		try {
-    			emailInterval = new Long(args[1]);
+    			emailInterval = Long.valueOf(args[1]);
     		} catch( Exception e ) {
     			emailInterval = DEFAULT_INTERVAL;
     		}

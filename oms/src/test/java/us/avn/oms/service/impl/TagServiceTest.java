@@ -41,7 +41,7 @@ public class TagServiceTest {
 			TagMapper mapper = sqlSession.getMapper(TagMapper.class);
 			Collection<Tag> ct = mapper.getAllTagsByType(Tag.ANALOG_INPUT);
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 		}
 	}
@@ -52,7 +52,7 @@ public class TagServiceTest {
 			TagMapper mapper = sqlSession.getMapper(TagMapper.class);
 			Collection<Tag> ct = mapper.getAllTagsByType(Tag.ANALOG_INPUT);
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<Tag> ict = ct.iterator();
 			Tag ai = ict.next();
@@ -69,7 +69,7 @@ public class TagServiceTest {
 			TagMapper mapper = sqlSession.getMapper(TagMapper.class);
 			Collection<Tag> ct = mapper.getAllTagsByType(Tag.ANALOG_INPUT);
 			Assertions.assertNotNull(ct);
-			Long noCalculated = new Long(ct.size());
+			Long noCalculated = Long.valueOf(ct.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<Tag> ict = ct.iterator();
 			Tag ai = ict.next();
@@ -85,7 +85,7 @@ public class TagServiceTest {
 			TagMapper mapper = sqlSession.getMapper(TagMapper.class);
 			Collection<Tag> cscm = mapper.getAllTagsByType(Tag.SCHEMATIC);
 			Assertions.assertNotNull(cscm);
-			Long noCalculated = new Long(cscm.size());
+			Long noCalculated = Long.valueOf(cscm.size());
 			Assertions.assertNotEquals(0L,noCalculated);
 			Iterator<Tag> icscm = cscm.iterator();
 			Tag scm = icscm.next();
