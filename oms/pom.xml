@@ -14,7 +14,7 @@
     <mybatis.version>3.5.6</mybatis.version>
     <mariadb.driver.version>2.5.4</mariadb.driver.version>
     <mysql.connector.version>8.0.23</mysql.connector.version>
-    <fasterxml.jackson.version>2.10.0</fasterxml.jackson.version>
+    <fasterxml.jackson.version>2.13.4.1</fasterxml.jackson.version>
     <junit.jupiter.version>5.5.2</junit.jupiter.version>
     <junit.platform.version>1.5.2</junit.platform.version>
   </properties>
